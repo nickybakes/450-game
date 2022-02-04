@@ -142,6 +142,13 @@ public class NeonHeightsCharacterController : NeonHeightsPhysicsObject
 
     public void ApplyVerticalCollisions()
     {
+        // float velocitySlope = (velocity.y / velocity.x);
+        // if (velocitySlope == float.NegativeInfinity)
+        // {
+        //     velocitySlope = -100000;
+        // }
+        // Debug.Log(velocitySlope);
+        // && velocitySlope <= groundCollision.segment.slope
         if (bottomCollision != null)
         {
             transform.position = new Vector2(transform.position.x, Mathf.Max(transform.position.y + yOffset + (velocity.y * Time.deltaTime), bottomCollision.collisionPosition.y) - yOffset);
@@ -177,7 +184,7 @@ public class NeonHeightsCharacterController : NeonHeightsPhysicsObject
         // {
         //     ApplyVelocityX();
         // }
-        
+
         if (leftCollision != null)
         {
             transform.position = new Vector2(Mathf.Max(transform.position.x + xOffset + velocity.x * Time.deltaTime, leftCollision.collisionPosition.x) - xOffset, transform.position.y);
@@ -576,7 +583,7 @@ public class NeonHeightsCharacterController : NeonHeightsPhysicsObject
 
 
 
-    
+
 
     // Update is called once per frame
     void Update()
