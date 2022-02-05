@@ -5,6 +5,7 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     public int speed; //Multiplies this by time.deltaTime to increase the speed
+    public float timer;
     
     // Start is called before the first frame update
     void Start()
@@ -13,11 +14,27 @@ public class Bullet : MonoBehaviour
         {
             speed = 1;
         }
+
+        //Sets a default value if the given one isn't good
+        if (timer <= 0)
+        {
+            timer = 10.0f;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
         transform.Translate(Vector3.right * Time.deltaTime * speed, Space.World);
+    }
+
+    private void FixedUpdate()
+    {
+        timer -= Time.deltaTime;
+        
+        if(timer <= 0)
+        {
+            Destroy(this.gameObject);
+        }
     }
 }
