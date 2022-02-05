@@ -71,7 +71,10 @@ public class CollisionMapEditor : Editor
 
             foreach (CollisionSegment s in segments)
             {
-                Handles.color = map.segmentColor * .7f;
+                if (s.semiSolidPlatform)
+                    Handles.color = map.semiSolidPlatformColor * .7f;
+                else
+                    Handles.color = map.segmentColor * .7f;
                 Vector3 a = new Vector3(-s.a.transform.position.x, s.a.transform.position.y, 0);
                 Vector3 b = new Vector3(-s.b.transform.position.x, s.b.transform.position.y, 0);
                 Handles.DrawLine(a, b, 2);

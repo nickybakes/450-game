@@ -17,6 +17,7 @@ public class CollisionMap : MonoBehaviour
 
     public Color vertexColor = Color.red;
     public Color segmentColor = Color.red;
+    public Color semiSolidPlatformColor = Color.blue;
     public Color segmentNormalColor = Color.green;
     [Range(0, 25)]
     public float segmentNormalLength = 1.3f;
@@ -70,10 +71,10 @@ public class CollisionMap : MonoBehaviour
         List<CollisionSegment> segs = segments;
         foreach(CollisionSegment segment in segs)
         {
-            newMap.AddSegment(segment.a.transform.position, segment.b.transform.position);
+            newMap.AddSegment(segment.a.transform.position, segment.b.transform.position, segment.semiSolidPlatform);
             if (mirrorHorizontal)
             {
-                newMap.AddSegment(new Vector2(-segment.b.transform.position.x, segment.b.transform.position.y), new Vector2(-segment.a.transform.position.x, segment.a.transform.position.y));
+                newMap.AddSegment(new Vector2(-segment.b.transform.position.x, segment.b.transform.position.y), new Vector2(-segment.a.transform.position.x, segment.a.transform.position.y), segment.semiSolidPlatform);
             }
         }
         newMap.Init();

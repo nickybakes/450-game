@@ -174,8 +174,10 @@ public class CollisionSegmentEditor : Editor
         }
         else
         {
-            //Handles.color = Color.red;
-            Gizmos.color = map.segmentColor;
+            if(segment.semiSolidPlatform)
+                Gizmos.color = map.semiSolidPlatformColor;
+            else
+                Gizmos.color = map.segmentColor;
         }
         //Handles.DrawSolidDisc(pos, Vector3.back, .5f);
         //Gizmos.DrawSphere(pos, .4f);

@@ -20,6 +20,8 @@ public class NeonHeightsPhysicsObject : MonoBehaviour
     public float collisionCheckExtension = .04f;
     public float bottomCollisionCheckExtension = .5f;
 
+    public float groundCollisionCheckExtension = 4f;
+
     public StaticCollisionMap staticCollisionMap;
 
     public Vector2 velocity;
@@ -196,9 +198,9 @@ public class NeonHeightsPhysicsObject : MonoBehaviour
 
 
         groundRect.x = transform.position.x + xOffset;
-        groundRect.y = transform.position.y + yOffset + hitBoxInset + 2f;
+        groundRect.y = transform.position.y + yOffset + hitBoxInset + (groundCollisionCheckExtension/2.0f);
         groundRect.width = width;
-        groundRect.height = -hitBoxInset - 4;
+        groundRect.height = -hitBoxInset - groundCollisionCheckExtension;
 
         Debug.DrawLine(groundRect.position, groundRect.max, Color.green);
 
