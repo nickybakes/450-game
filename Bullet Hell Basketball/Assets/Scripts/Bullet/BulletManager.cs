@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class BulletManager : MonoBehaviour
 {
+    public GameObject bullet;
+    public int timer; //Controls how long between bullets this will fire 
+    
+    
     // Start is called before the first frame update
     void Start()
     {
