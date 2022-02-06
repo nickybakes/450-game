@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
-    [Range(0.0f, 100.0f)]
-    public float speed = 1;
-    [Range(89.0f, -89.0f)]
-    public float angle = 0; //in degrees
-    public float arcHeight = 20.0f;
-
-    private float midPointX;
+    [Range(0.1f, 10.0f)]
+    public float speed = 30;
+    public float ballHeight = 10;
+    //private float midPointX;
+    //private Vector3 midPoint;
+    private Vector3 startPoint;
+    private float timer = 0.0f;
 
     // Update is called once per frame
     void Update()
@@ -18,70 +18,80 @@ public class Ball : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Mouse0) && transform.parent != null)
         {
             GameObject target = GameObject.FindWithTag("Target");
-            midPointX = (transform.position.x + target.transform.position.x) / 2;
+            //midPointX = (transform.position.x + target.transform.position.x) / 2;
+
+            //midPoint = CalculateMidPoint(target, ballHeight);
+            startPoint = transform.position;
 
             //changes midpoint based on height difference between player and target.
-            float ratio = 0.001f;
-            if (transform.position.y > target.transform.position.y)
-            {
-                midPointX -= ((transform.position.y + target.transform.position.y) / 2) * ratio;
-            }
-            else
-            {
-                midPointX += ((transform.position.y + target.transform.position.y) / 2) * ratio;
-            }
-
+            //float ratio = 0.01f;
+            //if (transform.position.y > target.transform.position.y)
+            //{
+            //    midPointX -= Mathf.Sqrt(Mathf.Abs(transform.position.y - target.transform.position.y));
+            //}
+            //else
+            //{
+            //    midPointX += Mathf.Sqrt(Mathf.Abs(transform.position.y - target.transform.position.y));
+            //}
+            timer = 0;
             //unparents ball from player.
             transform.parent = null;
-
-            
-            CreateArc(this.transform.position, target.transform.position, 10, 3);
-            //remove previous nodes
-            //create new nodes
-            //begin trajectory
-
         }
 
         if (transform.parent == null)
         {
-            //transform.position += GetVector(); //placeholder, throws in one direction
+            GameObject target = GameObject.FindWithTag("Target");
+            //transform.position += CalculateArc(startPoint, midPoint, target.transform.position);
 
-            //for now, line up to a height, line down to target
-            transform.position += FakeArc(midPointX);
+            //transform.position += FakeArc(midPointX);
+
+            timer += Time.deltaTime * speed; //completes the parabola trip in one second
+            transform.position = SampleParabola(startPoint, target.transform.position, ballHeight, timer);
         }
     }
 
-    private Vector3 FakeArc(float midPointX)
-    {
-        //adding a decimal value slows down the ball.
-        float y = speed * (midPointX - transform.position.x);
+    //private Vector3 FakeArc(float midPointX)
+    //{
+    //    //adding a decimal value slows down the ball.
+    //    float y = (speed * (midPointX - transform.position.x));
 
-        return new Vector3(speed * Time.deltaTime, y * Time.deltaTime, 0);
-    }
-
-    /// <summary>
-    /// Calculates a parabola given the two "endpoints", the height, and the resolution (amount of nodes).
-    /// Then places the nodes in space.
-    /// </summary>
-    /// <param name="ballPos">The position of the ball at release.</param>
-    /// <param name="targetPos">The position of the target.</param>
-    /// <param name="height">The height of the arc.</param>
-    /// <param name="resolution">The amount of nodes to create on the arc. (higher = smoother)</param>
-    private void CreateArc(Vector3 ballPos, Vector3 targetPos, float height, int resolution)
-    {
-
-    }
+    //    return new Vector3(speed * Time.deltaTime, y * Time.deltaTime, 0);
+    //}
 
     /// <summary>
-    /// gets angle of throw.
+    /// Find the midpoint of the parabola.
     /// </summary>
-    /// <returns>Vector3 for ball.</returns>
-    private Vector3 GetVector()
-    {
-        //x * tan(theta) = y
-        //Cannot be thrown backwards since Tan only works in Quadrants I & IV.
-        float y = speed * Mathf.Tan(Mathf.Deg2Rad * angle);
+    /// <param name="target">Target the ball is aiming towards.</param>
+    /// <returns>Vector3 of the midpoint position.</returns>
+    //private Vector3 CalculateMidPoint(GameObject target, float ballHeight)
+    //{
+    //    Vector3 midPoint = new Vector3(0.0f,0.0f,0.0f);
 
-        return new Vector3(speed * Time.deltaTime, y * Time.deltaTime, 0);
+    //    midPoint.x = (transform.position.x + target.transform.position.x) / 2;
+
+    //    if (transform.position.y > target.transform.position.y)
+    //        midPoint.y = (transform.position.y + ballHeight) + Random.Range(-3.0f, 3.0f);
+    //    else
+    //        midPoint.y = (target.transform.position.y + ballHeight) + Random.Range(-3.0f, 3.0f);
+
+    //    return midPoint;
+    //}
+
+
+    ///Is very glitchy, can calculate a parabola, but it can be at an angle, randomly teleports ball instantly to target, or halfway through arc.
+    ///Attained from this forum:
+    ///https://forum.unity.com/threads/generating-dynamic-parabola.211681/#post-1426169
+    Vector3 SampleParabola(Vector3 start, Vector3 end, float height, float t)
+    {
+        float parabolicT = t * 2 - 1;
+        //start and end are not level, gets more complicated
+        Vector3 travelDirection = end - start;
+        Vector3 levelDirecteion = end - new Vector3(start.x, end.y, start.z);
+        Vector3 right = Vector3.Cross(travelDirection, levelDirecteion);
+        Vector3 up = Vector3.Cross(right, travelDirection);
+        if (end.y > start.y) up = -up;
+        Vector3 result = start + t * travelDirection;
+        result += ((-parabolicT * parabolicT + 1) * height) * up.normalized;
+        return result;
     }
 }
