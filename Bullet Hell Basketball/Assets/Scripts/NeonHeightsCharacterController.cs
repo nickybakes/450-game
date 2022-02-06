@@ -158,100 +158,6 @@ public class NeonHeightsCharacterController : NeonHeightsPhysicsObject
 
     public void ApplyVerticalCollisions()
     {
-        // float velocitySlope = (velocity.y / velocity.x);
-        // if (velocitySlope == float.NegativeInfinity)
-        // {
-        //     velocitySlope = -100000;
-        // }
-        // Debug.Log(velocitySlope);
-        // && velocitySlope <= groundCollision.segment.slope
-
-        // bool leftBottomCornerOver = false;
-        // bool rightBottomCornerOver = false;
-        // Vector2 bottomLeftCorner = new Vector2();
-        // Vector2 bottomRightCorner = new Vector2();
-
-        // if(groundCollision != null){
-        //     bottomLeftCorner = new Vector2(transform.position.x + xOffset + (velocity.x * Time.deltaTime), transform.position.y + yOffset + (velocity.y * Time.deltaTime));
-        //     bottomRightCorner = new Vector2(transform.position.x + xOffset + width + (velocity.x * Time.deltaTime), transform.position.y + yOffset + (velocity.y * Time.deltaTime));
-
-        //     leftBottomCornerOver = bottomLeftCorner.y - groundCollision.segment.GetYFromX(bottomLeftCorner.x) <= 1;
-        //     rightBottomCornerOver = bottomRightCorner.y - groundCollision.segment.GetYFromX(bottomRightCorner.x) <= 1;
-        // }
-
-        // bool bottomCollisionGood = false;
-        // bool groundCollisionGood = false;
-        // if (bottomCollision != null && bottomCollision.segment.semiSolidPlatform)
-        // {
-        //     Debug.Log("a " + Time.frameCount);
-        //     bool leftBottomCornerOver = false;
-        //     bool rightBottomCornerOver = false;
-        //     Vector2 bottomLeftCorner = new Vector2();
-        //     Vector2 bottomRightCorner = new Vector2();
-
-        //     bottomLeftCorner = new Vector2(transform.position.x + xOffset + (velocity.x * Time.deltaTime), transform.position.y + yOffset + (velocity.y * Time.deltaTime));
-        //     bottomRightCorner = new Vector2(transform.position.x + xOffset + width + (velocity.x * Time.deltaTime), transform.position.y + yOffset + (velocity.y * Time.deltaTime));
-
-        //     leftBottomCornerOver = bottomLeftCorner.y - bottomCollision.segment.GetYFromX(bottomLeftCorner.x) >= -.5;
-        //     rightBottomCornerOver = bottomRightCorner.y - bottomCollision.segment.GetYFromX(bottomRightCorner.x) >= -.5;
-
-        //     if (leftBottomCornerOver && rightBottomCornerOver)
-        //     {
-        //         transform.position = new Vector2(transform.position.x, Mathf.Max(transform.position.y + yOffset + (velocity.y * Time.deltaTime), bottomCollision.collisionPosition.y) - yOffset);
-        //         grounded = true;
-        //         bottomCollisionGood = true;
-        //     }
-        //     else
-        //     {
-        //         ApplyVelocityY();
-        //     }
-        // }
-        // else if (bottomCollision != null && !bottomCollision.segment.semiSolidPlatform || (bottomCollision != null && bottomCollision.segment.semiSolidPlatform && grounded))
-        // {
-        //     Debug.Log("b " + Time.frameCount);
-
-        //     // Debug.Log("L: " + bottomLeftCorner.y + ", " + bottomCollision.segment.GetYFromX(bottomLeftCorner.x));
-        //     // Debug.Log("R: " + bottomRightCorner.y + ", " + bottomCollision.segment.GetYFromX(bottomRightCorner.x));
-        //     // Debug.Log(bottomCollision.segment.gameObject);
-        //     transform.position = new Vector2(transform.position.x, Mathf.Max(transform.position.y + yOffset + (velocity.y * Time.deltaTime), bottomCollision.collisionPosition.y) - yOffset);
-        //     grounded = true;
-        // }
-        // else if (groundCollision != null && groundCollision.segment.semiSolidPlatform)
-        // {
-        //     Debug.Log("c " + Time.frameCount);
-
-        //     bool leftBottomCornerOver = false;
-        //     bool rightBottomCornerOver = false;
-        //     Vector2 bottomLeftCorner = new Vector2();
-        //     Vector2 bottomRightCorner = new Vector2();
-
-        //     bottomLeftCorner = new Vector2(transform.position.x + xOffset + (velocity.x * Time.deltaTime), transform.position.y + yOffset + (velocity.y * Time.deltaTime));
-        //     bottomRightCorner = new Vector2(transform.position.x + xOffset + width + (velocity.x * Time.deltaTime), transform.position.y + yOffset + (velocity.y * Time.deltaTime));
-
-        //     leftBottomCornerOver = bottomLeftCorner.y - groundCollision.segment.GetYFromX(bottomLeftCorner.x) >= -.5;
-        //     rightBottomCornerOver = bottomRightCorner.y - groundCollision.segment.GetYFromX(bottomRightCorner.x) >= -.5;
-
-        //     if (leftBottomCornerOver && rightBottomCornerOver)
-        //     {
-        //         transform.position = new Vector2(transform.position.x, Mathf.Max(transform.position.y + yOffset + (velocity.y * Time.deltaTime), groundCollision.collisionPosition.y) - yOffset);
-        //         groundCollisionGood = true;
-        //     }
-        //     else{
-        //         ApplyVelocityY();
-        //     }
-        // }
-        // else if (groundCollision != null && !groundCollision.segment.semiSolidPlatform || (groundCollision != null && groundCollision.segment.semiSolidPlatform && grounded))
-        // {
-        //     Debug.Log("d " + Time.frameCount);
-
-        //     transform.position = new Vector2(transform.position.x, Mathf.Max(transform.position.y + yOffset + (velocity.y * Time.deltaTime), groundCollision.collisionPosition.y) - yOffset);
-        // }
-        // else if (groundCollision == null && bottomCollision == null && velocity.y < 0)
-        // {
-        //     Debug.Log("e " + Time.frameCount);
-
-        //     ApplyVelocityY();
-        // }
 
         if (bottomCollision != null && !bottomCollision.segment.semiSolidPlatform)
         {
@@ -302,6 +208,7 @@ public class NeonHeightsCharacterController : NeonHeightsPhysicsObject
         {
             transform.position = new Vector2(Mathf.Min(transform.position.x + width + xOffset + velocity.x * Time.deltaTime, rightCollision.collisionPosition.x) - width - xOffset, transform.position.y);
         }
+
         // else if (rightCollision == null && velocity.x > 0)
         // {
         //     ApplyVelocityX();
@@ -502,17 +409,22 @@ public class NeonHeightsCharacterController : NeonHeightsPhysicsObject
                     // velocity.x = groundCollision.segment.downPointingTangent.x * 50;
                     // ApplyVelocityToTransform();
                 }
-                else if (!grounded && rightCollision != null && rightCollision.segment.angleFromHorizontalDegrees <= groundAngleLimit)
+                else if (!grounded && rightCollision != null && rightCollision.segment.angleFromHorizontalDegrees <= groundAngleLimit && !rightCollision.segment.semiSolidPlatform)
                 {
                     ApplyHorizontalCollisions();
                     ApplyVerticalCollisions();
                     //Debug.Log("e");
                 }
-                else if (!grounded && rightCollision != null && rightCollision.segment.angleFromHorizontalDegrees > groundAngleLimit)
+                else if (!grounded && rightCollision != null && rightCollision.segment.angleFromHorizontalDegrees > groundAngleLimit && !rightCollision.segment.semiSolidPlatform)
                 {
                     // ApplyHorizontalCollisions();
                     grounded = false;
                     //Debug.Log("f");
+                }
+                else if (!grounded && rightCollision != null && rightCollision.segment.semiSolidPlatform)
+                {
+                    //Debug.Log("f-2");
+                    ApplyVelocityX();
                 }
                 else if (!grounded && rightCollision == null)
                 {
@@ -573,17 +485,22 @@ public class NeonHeightsCharacterController : NeonHeightsPhysicsObject
                     // velocity.x = groundCollision.segment.downPointingTangent.x * 50;
                     // ApplyVelocityToTransform();
                 }
-                else if (!grounded && leftCollision != null && leftCollision.segment.angleFromHorizontalDegrees <= groundAngleLimit)
+                else if (!grounded && leftCollision != null && leftCollision.segment.angleFromHorizontalDegrees <= groundAngleLimit && !leftCollision.segment.semiSolidPlatform)
                 {
                     //Debug.Log("E");
                     ApplyHorizontalCollisions();
                     ApplyVerticalCollisions();
                 }
-                else if (!grounded && leftCollision != null && leftCollision.segment.angleFromHorizontalDegrees > groundAngleLimit)
+                else if (!grounded && leftCollision != null && leftCollision.segment.angleFromHorizontalDegrees > groundAngleLimit && !leftCollision.segment.semiSolidPlatform)
                 {
                     //Debug.Log("F");
                     grounded = false;
                     //ApplyHorizontalCollisions();
+                }
+                else if (!grounded && leftCollision != null && leftCollision.segment.semiSolidPlatform)
+                {
+                    //Debug.Log("F-2");
+                    ApplyVelocityX();
                 }
                 else if (!grounded && leftCollision == null)
                 {
