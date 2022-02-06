@@ -17,13 +17,25 @@ public class Ball : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Mouse0) && transform.parent != null)
         {
-            midPointX = (transform.position.x + GameObject.FindWithTag("Target").transform.position.x) / 2;
+            GameObject target = GameObject.FindWithTag("Target");
+            midPointX = (transform.position.x + target.transform.position.x) / 2;
+
+            //changes midpoint based on height difference between player and target.
+            float ratio = 0.001f;
+            if (transform.position.y > target.transform.position.y)
+            {
+                midPointX -= ((transform.position.y + target.transform.position.y) / 2) * ratio;
+            }
+            else
+            {
+                midPointX += ((transform.position.y + target.transform.position.y) / 2) * ratio;
+            }
 
             //unparents ball from player.
             transform.parent = null;
 
             
-            CreateArc(this.transform.position, GameObject.FindWithTag("Target").transform.position, 10, 3);
+            CreateArc(this.transform.position, target.transform.position, 10, 3);
             //remove previous nodes
             //create new nodes
             //begin trajectory
