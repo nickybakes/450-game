@@ -8,13 +8,17 @@ public class Ball : MonoBehaviour
     public float speed = 1;
     [Range(89.0f, -89.0f)]
     public float angle = 0; //in degrees
+    public float arcHeight = 20.0f;
 
+    private float midPointX;
 
     // Update is called once per frame
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Mouse0) && transform.parent != null)
         {
+            midPointX = (transform.position.x + GameObject.FindWithTag("Target").transform.position.x) / 2;
+
             //unparents ball from player.
             transform.parent = null;
 
@@ -23,19 +27,24 @@ public class Ball : MonoBehaviour
             //remove previous nodes
             //create new nodes
             //begin trajectory
+
         }
 
         if (transform.parent == null)
         {
-            transform.position += GetVector(); //placeholder, throws in one direction
+            //transform.position += GetVector(); //placeholder, throws in one direction
 
-            //calculate the trajectory, creating a parabola.
-            //then, use this parabola to plot out points, being given a value for the resolution.
-            //then, actually update the movement in real time along the nodes.
-
-            //Basically, we have the 2 endpoints of the parabola (they won't always end up at the same y height, so the whole parabola might be tilted)
-            //It will also need a "random" parabola height.
+            //for now, line up to a height, line down to target
+            transform.position += FakeArc(midPointX);
         }
+    }
+
+    private Vector3 FakeArc(float midPointX)
+    {
+        //adding a decimal value slows down the ball.
+        float y = speed * (midPointX - transform.position.x);
+
+        return new Vector3(speed * Time.deltaTime, y * Time.deltaTime, 0);
     }
 
     /// <summary>

@@ -13,8 +13,10 @@ public class TargetCollision : MonoBehaviour
         //re-parent the ball to the player and set its position to the player(s hand).
         if (collision.gameObject.tag == "Ball" && ball.transform.parent == null)
         {
+            Vector3 positionToHand = new Vector3(1.8f, 1.1f, 0.0f);
+
             ball.transform.parent = player.transform;
-            ball.transform.position = player.transform.position;
+            ball.transform.position = (player.transform.position + positionToHand);
         }
     }
 }
