@@ -9,6 +9,8 @@ public class CollisionSegment : MonoBehaviour
     public CollisionVertex a;
     public CollisionVertex b;
 
+    public bool semiSolidPlatform = false;
+
 
     public Vector2 normal
     {

@@ -8,6 +8,8 @@ public class StaticCollisionSegment : MonoBehaviour
 
     private LineRenderer lineRenderer;
 
+    public bool semiSolidPlatform;
+
     public Vector2 a;
     public Vector2 b;
 
@@ -42,10 +44,11 @@ public class StaticCollisionSegment : MonoBehaviour
         lineRenderer.positionCount = 4;
     }
 
-    public void Init(Vector2 a, Vector2 b)
+    public void Init(Vector2 a, Vector2 b, bool semiSolidPlatform)
     {
         this.a = a;
         this.b = b;
+        this.semiSolidPlatform = semiSolidPlatform;
         if (b.y > a.y)
         {
             topVertex = b;
@@ -93,7 +96,14 @@ public class StaticCollisionSegment : MonoBehaviour
             yInt = a.y - (slope * a.x);
         }
 
-        lineRenderer.startColor = new Color(angleFromHorizontalDegrees / 180, angleFromHorizontalDegrees / 180, 0);
+        if (this.semiSolidPlatform)
+        {
+            lineRenderer.startColor = new Color((180 - angleFromHorizontalDegrees) / 180, 0, (180 - angleFromHorizontalDegrees) / 180);
+        }
+        else
+        {
+            lineRenderer.startColor = new Color(angleFromHorizontalDegrees / 180, angleFromHorizontalDegrees / 180, 0);
+        }
         lineRenderer.endColor = lineRenderer.startColor;
     }
 
@@ -105,5 +115,10 @@ public class StaticCollisionSegment : MonoBehaviour
         lineRenderer.SetPosition(2, midPoint);
         lineRenderer.SetPosition(3, midPoint + 1.3f * normalNormalized);
 
+    }
+
+    public float GetYFromX(float x)
+    {
+        return a.y + slope * (x - a.x);
     }
 }
