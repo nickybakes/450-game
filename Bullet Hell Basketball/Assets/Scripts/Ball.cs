@@ -6,8 +6,11 @@ public class Ball : MonoBehaviour
 {
     [Range(0.1f, 10.0f)]
     public float speed = 30;
+    [Range(0.0f, 100.0f)]
     public float ballHeight = 10;
-    //private float midPointX;
+    [Range(0.0f, 100.0f)]
+    public float maxThrowDist = 10;
+    private bool boolThrow = true;
     //private Vector3 midPoint;
     private Vector3 startPoint;
     private float timer = 0.0f;
@@ -18,22 +21,14 @@ public class Ball : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Mouse0) && transform.parent != null)
         {
             GameObject target = GameObject.FindWithTag("Target");
-            //midPointX = (transform.position.x + target.transform.position.x) / 2;
 
             //midPoint = CalculateMidPoint(target, ballHeight);
             startPoint = transform.position;
 
-            //changes midpoint based on height difference between player and target.
-            //float ratio = 0.01f;
-            //if (transform.position.y > target.transform.position.y)
-            //{
-            //    midPointX -= Mathf.Sqrt(Mathf.Abs(transform.position.y - target.transform.position.y));
-            //}
-            //else
-            //{
-            //    midPointX += Mathf.Sqrt(Mathf.Abs(transform.position.y - target.transform.position.y));
-            //}
+            //reset timer
             timer = 0;
+            //resets bool
+            boolThrow = true;
             //unparents ball from player.
             transform.parent = null;
         }
@@ -41,19 +36,24 @@ public class Ball : MonoBehaviour
         if (transform.parent == null)
         {
             GameObject target = GameObject.FindWithTag("Target");
-            //transform.position += CalculateArc(startPoint, midPoint, target.transform.position);
 
-            //transform.position += FakeArc(midPointX);
+            //If the ball is too far away from the basket (maxThrowDist), uses old arc to MISS the basket.
+            if (Mathf.Abs(transform.position.x - target.transform.position.x) > maxThrowDist && !boolThrow)
+            {
+                boolThrow = false;
+                //transform.position += FakeArc()
+            }
 
             timer += Time.deltaTime * speed; //completes the parabola trip in one second
             transform.position = SampleParabola(startPoint, target.transform.position, ballHeight, timer);
         }
     }
 
-    //private Vector3 FakeArc(float midPointX)
+    /// Use later for shots that are too far to make the shot.
+    //private Vector3 FakeArc(float midPoint.x)
     //{
     //    //adding a decimal value slows down the ball.
-    //    float y = (speed * (midPointX - transform.position.x));
+    //    float y = (speed * (midPoint.x - transform.position.x));
 
     //    return new Vector3(speed * Time.deltaTime, y * Time.deltaTime, 0);
     //}
@@ -77,8 +77,7 @@ public class Ball : MonoBehaviour
     //    return midPoint;
     //}
 
-
-    ///Is very glitchy, can calculate a parabola, but it can be at an angle, randomly teleports ball instantly to target, or halfway through arc.
+    ///Calculates a parabola at an angle based on the height difference between the player and target.
     ///Attained from this forum:
     ///https://forum.unity.com/threads/generating-dynamic-parabola.211681/#post-1426169
     Vector3 SampleParabola(Vector3 start, Vector3 end, float height, float t)
@@ -86,8 +85,8 @@ public class Ball : MonoBehaviour
         float parabolicT = t * 2 - 1;
         //start and end are not level, gets more complicated
         Vector3 travelDirection = end - start;
-        Vector3 levelDirecteion = end - new Vector3(start.x, end.y, start.z);
-        Vector3 right = Vector3.Cross(travelDirection, levelDirecteion);
+        Vector3 levelDirection = end - new Vector3(start.x, end.y, start.z);
+        Vector3 right = Vector3.Cross(travelDirection, levelDirection);
         Vector3 up = Vector3.Cross(right, travelDirection);
         if (end.y > start.y) up = -up;
         Vector3 result = start + t * travelDirection;

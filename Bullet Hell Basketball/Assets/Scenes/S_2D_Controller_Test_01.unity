@@ -948,7 +948,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2986ed624ec0aa04bb357c5b8eeef304, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 2
+  speed: 1
   ballHeight: 20
 --- !u!135 &1636875538
 SphereCollider:
@@ -1087,7 +1087,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collisionVertexPrefab: {fileID: 2382589878411412825, guid: de94585aa4ffe794c8cc1e98a3d925ff, type: 3}
   collisionSegmentPrefab: {fileID: 71431853401964895, guid: 2d19e55d322709d41b35224430022a18, type: 3}
-  editorUpdateFrame: 1
+  editorUpdateFrame: 0
   vertexColor: {r: 1, g: 0, b: 0, a: 1}
   segmentColor: {r: 1, g: 0, b: 0, a: 1}
   semiSolidPlatformColor: {r: 0, g: 0, b: 1, a: 1}
