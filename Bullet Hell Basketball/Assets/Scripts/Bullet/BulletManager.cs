@@ -7,18 +7,20 @@ public class BulletManager : MonoBehaviour
     public GameObject bullet;
     public float timer; //Controls how long between bullets this will fire
     private float maxTime;
-    public Transform bulletSpawn;
-    
-    
+
+    private float rotationAmountDegrees;
+    public float rotationSpeed = 10;
+
+
     // Start is called before the first frame update
     void Start()
     {
         //Sets a default value if the given one isn't good
-        if(timer <= 0)
+        if (timer <= 0)
         {
             timer = 10.0f;
         }
-        
+
         maxTime = timer;
     }
 
@@ -26,10 +28,19 @@ public class BulletManager : MonoBehaviour
     {
         timer -= Time.deltaTime;
 
-        if(timer <= 0)
+        rotationAmountDegrees += Time.deltaTime * rotationSpeed;
+
+        if (timer <= 0)
         {
-            Instantiate(bullet, bulletSpawn);
-            timer = maxTime;
+            for (int i = 0; i < 360; i += 90)
+            {
+                GameObject newBullet = Instantiate(bullet);
+                newBullet.transform.position = gameObject.transform.position;
+                Bullet bulletScript = newBullet.GetComponent<Bullet>();
+                bulletScript.direction = new Vector2(Mathf.Cos(Mathf.Deg2Rad * (rotationAmountDegrees + i)), Mathf.Sin(Mathf.Deg2Rad * (rotationAmountDegrees + i)));
+                timer = maxTime;
+            }
+
         }
     }
 }
