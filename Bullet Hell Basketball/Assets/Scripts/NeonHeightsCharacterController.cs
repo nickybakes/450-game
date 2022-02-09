@@ -109,6 +109,8 @@ public class NeonHeightsCharacterController : NeonHeightsPhysicsObject
     /// </summary>
     public int jumpsInAirMax = 2;
 
+    protected bool runningLeft, runningRight, jumping;
+
 
     // Start is called before the first frame update
     void Start()
@@ -525,17 +527,17 @@ public class NeonHeightsCharacterController : NeonHeightsPhysicsObject
 
         if (grounded)
         {
-            if (Input.GetKey(KeyCode.A))
+            if (runningLeft)
             {
                 //velocity.x = Mathf.Max(-baseRunSpeed, velocity.x -= (baseRunSpeed * 8) * Time.deltaTime);
                 velocity.x = -1 * baseRunSpeed;
             }
-            if (Input.GetKey(KeyCode.D))
+            if (runningRight)
             {
                 velocity.x = baseRunSpeed;
                 //velocity.x = Mathf.Min(baseRunSpeed, velocity.x += (baseRunSpeed * 8) * Time.deltaTime);
             }
-            if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+            if (!runningLeft && !runningRight)
             {
                 velocity.x = 0;
                 // if (velocity.x > 0)
@@ -550,15 +552,15 @@ public class NeonHeightsCharacterController : NeonHeightsPhysicsObject
         }
         else
         {
-            if (Input.GetKey(KeyCode.A))
+            if (runningLeft)
             {
                 velocity.x = Mathf.Max(-baseRunSpeed, velocity.x -= (baseRunSpeed * 8) * Time.deltaTime);
             }
-            if (Input.GetKey(KeyCode.D))
+            if (runningRight)
             {
                 velocity.x = Mathf.Min(baseRunSpeed, velocity.x += (baseRunSpeed * 8) * Time.deltaTime);
             }
-            if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+            if (!runningLeft && !runningRight)
             {
                 if (velocity.x > 0)
                 {
@@ -586,7 +588,7 @@ public class NeonHeightsCharacterController : NeonHeightsPhysicsObject
 
 
         //jumping from the ground
-        if (Input.GetKeyDown(KeyCode.Space) && (grounded || (!grounded && timeInAir < roadRunnerTimeMax)) && topCollision == null)
+        if (jumping && (grounded || (!grounded && timeInAir < roadRunnerTimeMax)) && topCollision == null)
         {
             jumpHoldTimer = 0;
             grounded = false;
@@ -594,7 +596,7 @@ public class NeonHeightsCharacterController : NeonHeightsPhysicsObject
             timeInAir = roadRunnerTimeMax;
         }
         //"double" jumping in the air
-        else if (Input.GetKeyDown(KeyCode.Space) && !grounded && topCollision == null && jumpsInAir < jumpsInAirMax)
+        else if (jumping && !grounded && topCollision == null && jumpsInAir < jumpsInAirMax)
         {
             jumpHoldTimer = 0;
             grounded = false;
