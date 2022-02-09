@@ -10,25 +10,34 @@ public class Ball : MonoBehaviour
     public float ballHeight = 10;
     [Range(0.0f, 100.0f)]
     public float maxThrowDist = 10;
-    private bool boolThrow = true;
-    //private Vector3 midPoint;
+
+    private bool boolWillHit = true;
+    private bool calculateOnce = true;
+
     private Vector3 startPoint;
     private float timer = 0.0f;
 
     // Update is called once per frame
     void Update()
     {
+        //returns ball to players hand (for miss/testing)
+        if (Input.GetKeyDown(KeyCode.Mouse1))
+        {
+            Vector3 positionToHand = new Vector3(1.8f, 1.1f, 0.0f);
+
+            transform.parent = GameObject.FindGameObjectWithTag("Player").transform;
+            transform.position = (transform.parent.position + positionToHand);
+        }
+        //shoots the ball
         if (Input.GetKeyDown(KeyCode.Mouse0) && transform.parent != null)
         {
             GameObject target = GameObject.FindWithTag("Target");
-
-            //midPoint = CalculateMidPoint(target, ballHeight);
             startPoint = transform.position;
 
             //reset timer
             timer = 0;
             //resets bool
-            boolThrow = true;
+            calculateOnce = true;
             //unparents ball from player.
             transform.parent = null;
         }
@@ -38,44 +47,40 @@ public class Ball : MonoBehaviour
             GameObject target = GameObject.FindWithTag("Target");
 
             //If the ball is too far away from the basket (maxThrowDist), uses old arc to MISS the basket.
-            if (Mathf.Abs(transform.position.x - target.transform.position.x) > maxThrowDist && !boolThrow)
+            if (calculateOnce)
             {
-                boolThrow = false;
-                //transform.position += FakeArc()
+                boolWillHit = Mathf.Abs(transform.position.x - target.transform.position.x) < maxThrowDist;
+                calculateOnce = false;
             }
 
-            timer += Time.deltaTime * speed; //completes the parabola trip in one second
-            transform.position = SampleParabola(startPoint, target.transform.position, ballHeight, timer);
+            if (boolWillHit)
+            {
+                timer += Time.deltaTime * speed; //completes the parabola trip in one second
+                transform.position = SampleParabola(startPoint, target.transform.position, ballHeight, timer);
+            }
+            else
+            {
+                transform.position += FakeArc();
+            }
         }
     }
 
-    /// Use later for shots that are too far to make the shot.
-    //private Vector3 FakeArc(float midPoint.x)
-    //{
-    //    //adding a decimal value slows down the ball.
-    //    float y = (speed * (midPoint.x - transform.position.x));
-
-    //    return new Vector3(speed * Time.deltaTime, y * Time.deltaTime, 0);
-    //}
-
     /// <summary>
-    /// Find the midpoint of the parabola.
+    /// Used for dunking the ball, and opposing player.
     /// </summary>
-    /// <param name="target">Target the ball is aiming towards.</param>
-    /// <returns>Vector3 of the midpoint position.</returns>
-    //private Vector3 CalculateMidPoint(GameObject target, float ballHeight)
-    //{
-    //    Vector3 midPoint = new Vector3(0.0f,0.0f,0.0f);
+    /// <param name="collision"></param>
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.collider.CompareTag("Target"))
+            Debug.Log("Get Dunked On!");
+    }
 
-    //    midPoint.x = (transform.position.x + target.transform.position.x) / 2;
-
-    //    if (transform.position.y > target.transform.position.y)
-    //        midPoint.y = (transform.position.y + ballHeight) + Random.Range(-3.0f, 3.0f);
-    //    else
-    //        midPoint.y = (target.transform.position.y + ballHeight) + Random.Range(-3.0f, 3.0f);
-
-    //    return midPoint;
-    //}
+    /// Use later for shots that are too far to make the shot.
+    private Vector3 FakeArc()
+    {
+        //use Nick gravity to throw in regular parabola.
+        return new Vector3(speed / 10, 0.0f, 0.0f);
+    }
 
     ///Calculates a parabola at an angle based on the height difference between the player and target.
     ///Attained from this forum:
