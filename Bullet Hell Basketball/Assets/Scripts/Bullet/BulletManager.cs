@@ -11,6 +11,9 @@ public class BulletManager : MonoBehaviour
     private float rotationAmountDegrees;
     public float rotationSpeed = 10;
 
+    private vector2 direction; //Which way the spawner is moving
+
+    public float radius;
 
     // Start is called before the first frame update
     void Start()
