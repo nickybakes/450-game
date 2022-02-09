@@ -77,6 +77,94 @@ public class NeonHeightsPhysicsObject : MonoBehaviour
     {
         transform.position = new Vector3(x, transform.position.y);
     }
+    
+    public bool IsOverSegment(StaticCollisionSegment segment)
+    {
+        bool leftBottomCornerOver = false;
+        bool rightBottomCornerOver = false;
+        Vector2 bottomLeftCorner = new Vector2();
+        Vector2 bottomRightCorner = new Vector2();
+
+        bottomLeftCorner = new Vector2(transform.position.x + xOffset + (velocity.x * Time.deltaTime), transform.position.y + yOffset + (velocity.y * Time.deltaTime));
+        bottomRightCorner = new Vector2(transform.position.x + xOffset + width + (velocity.x * Time.deltaTime), transform.position.y + yOffset + (velocity.y * Time.deltaTime));
+
+        leftBottomCornerOver = bottomLeftCorner.y - segment.GetYFromX(bottomLeftCorner.x) >= -.75;
+        rightBottomCornerOver = bottomRightCorner.y - segment.GetYFromX(bottomRightCorner.x) >= -.75;
+
+        return leftBottomCornerOver && rightBottomCornerOver;
+    }
+
+    
+    public void ApplyVerticalCollisions()
+    {
+        if (bottomCollision != null && !bottomCollision.segment.semiSolidPlatform)
+        {
+            transform.position = new Vector2(transform.position.x, Mathf.Max(transform.position.y + yOffset + (velocity.y * Time.deltaTime), bottomCollision.collisionPosition.y) - yOffset);
+            grounded = true;
+        }
+        else if (bottomCollision != null && bottomCollision.segment.semiSolidPlatform && ((IsOverSegment(bottomCollision.segment) && !onFlatGround) || (onFlatGround)) && !grounded)
+        {
+            transform.position = new Vector2(transform.position.x, Mathf.Max(transform.position.y + yOffset + (velocity.y * Time.deltaTime), bottomCollision.collisionPosition.y) - yOffset);
+            grounded = true;
+        }
+        else if (groundCollision != null && !groundCollision.segment.semiSolidPlatform)
+        {
+            transform.position = new Vector2(transform.position.x, Mathf.Max(transform.position.y + yOffset + (velocity.y * Time.deltaTime), groundCollision.collisionPosition.y) - yOffset);
+        }
+        else if (groundCollision != null && groundCollision.segment.semiSolidPlatform && IsOverSegment(groundCollision.segment) && !grounded && velocity.y < 0)
+        {
+            transform.position = new Vector2(transform.position.x, Mathf.Max(transform.position.y + yOffset + (velocity.y * Time.deltaTime), groundCollision.collisionPosition.y) - yOffset);
+        }
+        else if (groundCollision != null && groundCollision.segment.semiSolidPlatform && grounded)
+        {
+            transform.position = new Vector2(transform.position.x, Mathf.Max(transform.position.y + yOffset + (velocity.y * Time.deltaTime), groundCollision.collisionPosition.y) - yOffset);
+        }
+        else if (groundCollision == null && bottomCollision == null && velocity.y < 0 || (groundCollision != null && groundCollision.segment.semiSolidPlatform && !IsOverSegment(groundCollision.segment) && !onFlatGround) || (bottomCollision != null && bottomCollision.segment.semiSolidPlatform && !IsOverSegment(bottomCollision.segment) && !onFlatGround))
+        {
+            ApplyVelocityY();
+        }
+
+        if (topCollision != null)
+        {
+            transform.position = new Vector2(transform.position.x, Mathf.Min(transform.position.y + height + yOffset + velocity.y * Time.deltaTime, topCollision.collisionPosition.y) - height - yOffset);
+            velocity.y = 0;
+        }
+        else if (topCollision == null && velocity.y > 0)
+        {
+            ApplyVelocityY();
+        }
+    }
+
+    public void ApplyHorizontalCollisions()
+    {
+        
+        if (rightCollision != null && !rightCollision.segment.semiSolidPlatform)
+        {
+            transform.position = new Vector2(Mathf.Min(transform.position.x + width + xOffset + velocity.x * Time.deltaTime, rightCollision.collisionPosition.x) - width - xOffset, transform.position.y);
+        }
+        else if (rightCollision != null && rightCollision.segment.semiSolidPlatform && IsOverSegment(rightCollision.segment))
+        {
+            transform.position = new Vector2(Mathf.Min(transform.position.x + width + xOffset + velocity.x * Time.deltaTime, rightCollision.collisionPosition.x) - width - xOffset, transform.position.y);
+        }
+
+        // else if (rightCollision == null && velocity.x > 0)
+        // {
+        //     ApplyVelocityX();
+        // }
+
+        if (leftCollision != null && !leftCollision.segment.semiSolidPlatform)
+        {
+            transform.position = new Vector2(Mathf.Max(transform.position.x + xOffset + velocity.x * Time.deltaTime, leftCollision.collisionPosition.x) - xOffset, transform.position.y);
+        }
+        if (leftCollision != null && leftCollision.segment.semiSolidPlatform && IsOverSegment(leftCollision.segment))
+        {
+            transform.position = new Vector2(Mathf.Max(transform.position.x + xOffset + velocity.x * Time.deltaTime, leftCollision.collisionPosition.x) - xOffset, transform.position.y);
+        }
+        // else if (leftCollision == null && velocity.x < 0)
+        // {
+        //     ApplyVelocityX();
+        // }
+    }
 
     public void CheckForCollisionsVertical()
     {
