@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0.99999905, b: 0.99999905, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -455,7 +455,6 @@ GameObject:
   - component: {fileID: 513481877}
   - component: {fileID: 513481876}
   - component: {fileID: 513481875}
-  - component: {fileID: 513481878}
   - component: {fileID: 513481879}
   m_Layer: 0
   m_Name: Target
@@ -527,20 +526,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
---- !u!114 &513481878
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 513481874}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 772e78b139c2cbf41bf6b0cc01a908bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ball: {fileID: 1636875537}
-  player: {fileID: 179795031}
 --- !u!65 &513481879
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1050,6 +1035,7 @@ GameObject:
   - component: {fileID: 1636875538}
   - component: {fileID: 1636875537}
   - component: {fileID: 1636875542}
+  - component: {fileID: 1636875541}
   m_Layer: 0
   m_Name: Ball
   m_TagString: Ball
@@ -1087,6 +1073,7 @@ MonoBehaviour:
   speed: 1
   ballHeight: 20
   maxThrowDist: 35
+  physics: {fileID: 1636875541}
 --- !u!135 &1636875538
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1149,6 +1136,35 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1636875535}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1636875541
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1636875535}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 009fff4766f449141a66d806829eac10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  width: 1.54
+  height: 1.54
+  xOffset: -0.77
+  yOffset: -0.77
+  hitBoxInset: 0.5
+  collisionCheckExtension: 0
+  bottomCollisionCheckExtension: 0.5
+  groundCollisionCheckExtension: 1
+  staticCollisionMap: {fileID: 0}
+  velocity: {x: 0, y: 0}
+  gravity: {x: 0, y: -100}
+  enableGravity: 0
+  grounded: 0
+  onFlatGround: 0
+  stepHeight: 0
+  simulatePhysics: 1
+  currentSpeed: 0
 --- !u!54 &1636875542
 Rigidbody:
   m_ObjectHideFlags: 0

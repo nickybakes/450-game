@@ -15,7 +15,7 @@ public class BhbBallPhysics : NeonHeightsPhysicsObject
 
     }
 
-    private void SimulatePhysics()
+    public void SimulatePhysics()
     {
         DrawBoundingRect();
 
