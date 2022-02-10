@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.Collections;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
@@ -23,6 +25,13 @@ public class GameManager : MonoBehaviour
     public int player2Score = 0;
 
     [HideInInspector] public bool winConditionMet = false;
+
+    //Spawn locations
+    //public vector2 player1Spawn;
+    //public vector2 player2Spawn;
+
+    //public vector2 basketLeftSpawn;
+    //public vector2 basketRightSpawn;
 
     // Set up singleton here
     private void Awake()
