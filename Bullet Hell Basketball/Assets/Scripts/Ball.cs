@@ -71,8 +71,29 @@ public class Ball : MonoBehaviour
     /// <param name="collision"></param>
     private void OnCollisionEnter(Collision collision)
     {
+        //if the ball is touching the basket...
         if (collision.collider.CompareTag("Target"))
-            Debug.Log("Get Dunked On!");
+        {
+            //...and the player is not holding it.
+            if (transform.parent == null)
+            {
+                GameObject player = GameObject.FindGameObjectWithTag("Player");
+                Vector3 positionToHand = new Vector3(1.8f, 1.1f, 0.0f);
+
+                transform.parent = player.transform;
+                transform.position = (player.transform.position + positionToHand);
+            }
+            //...and the player is holding it.
+            else
+            {
+                Debug.Log("Get Dunked On!");
+            }
+        }
+        else
+        {
+            //deals with physics collisions.
+        }
+
     }
 
     /// Use later for shots that are too far to make the shot.
