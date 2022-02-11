@@ -75,11 +75,21 @@ public class BhbPlayerController : NeonHeightsCharacterController
             if (Vector2.Distance(ball.transform.position, gameObject.transform.position) > pickupRadius)
                 return;
 
-            ball.GetComponent<BhbBallPhysics>().simulatePhysics = false;
-            Vector3 positionToHand = new Vector3(1.8f, 1.1f, 0.0f);
+            Ball ballScript = ball.GetComponent<Ball>();
 
-            ball.transform.parent = gameObject.transform;
-            ball.transform.position = (gameObject.transform.position + positionToHand);
+            //if holding the ball...
+            if (ball.transform.parent)
+            {
+                ballScript.ShootBall();
+            }
+            else
+            {
+                ball.GetComponent<BhbBallPhysics>().simulatePhysics = false;
+                Vector3 positionToHand = new Vector3(1.8f, 1.1f, 0.0f);
+
+                ball.transform.parent = gameObject.transform;
+                ball.transform.position = (gameObject.transform.position + positionToHand);
+            }
         }
 
         stoppedJumping = GetControlUp(Control.Jump);

@@ -127,6 +127,9 @@ public class GameManager : MonoBehaviour
         player2.transform.position = player2SpawnPosition;
         ball.transform.position = ballSpawnPosition;
 
+        ball.transform.parent = null;
+        ballPhysicsScript.velocity = Vector2.zero;
+
         ballPhysicsScript.simulatePhysics = true;
     }
 }

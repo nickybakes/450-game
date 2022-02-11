@@ -23,25 +23,6 @@ public class Ball : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //shoots the ball
-        if (Input.GetKeyDown(KeyCode.Mouse0) && transform.parent != null)
-        {
-            GameObject target = GameObject.FindWithTag("Target");
-            startPoint = transform.position;
-
-            //reset timer
-            timer = 0;
-            //resets bool
-            calculateOnce = true;
-            //resets previous position (used to calculate velocity).
-            prevPos = transform.parent.position;
-            //unparents ball from player.
-            transform.parent = null;
-
-            //turns off physics
-            physics.simulatePhysics = false;
-        }
-
         if (transform.parent == null && physics.simulatePhysics == false)
         {
             GameObject target = GameObject.FindWithTag("Target");
@@ -60,11 +41,29 @@ public class Ball : MonoBehaviour
             }
             else
             {
-                transform.position += PhysicsArc();
+                PhysicsArc();
             }
         }
     }
 
+    public void ShootBall()
+    {
+        //shoots the ball
+        GameObject target = GameObject.FindWithTag("Target");
+        startPoint = transform.position;
+
+        //reset timer
+        timer = 0;
+        //resets bool
+        calculateOnce = true;
+        //resets previous position (used to calculate velocity).
+        prevPos = transform.parent.position;
+        //unparents ball from player.
+        transform.parent = null;
+
+        //turns off physics
+        physics.simulatePhysics = false;
+    }
     /// <summary>
     /// Used for all ball collisions. Dunking, bouncing, players, bullets.
     /// </summary>
@@ -74,23 +73,7 @@ public class Ball : MonoBehaviour
         //if the ball is touching the basket...
         if (collision.collider.CompareTag("Target"))
         {
-            //...and the player is not holding it.
-            if (transform.parent == null)
-            {
-                //turns off physics
-                physics.simulatePhysics = false;
-
-                GameObject player = GameObject.FindGameObjectWithTag("Player");
-                Vector3 positionToHand = new Vector3(1.8f, 1.1f, 0.0f);
-                
-                transform.parent = player.transform;
-                transform.position = (player.transform.position + positionToHand);
-            }
-            //...and the player is holding it.
-            else
-            {
-                Debug.Log("Get Dunked On!");
-            }
+            FindObjectOfType<GameManager>().ResetPlayersAndBall();
         }
         else
         {
@@ -112,13 +95,10 @@ public class Ball : MonoBehaviour
     }
 
     /// Use later for shots that are too far to make the shot.
-    private Vector3 PhysicsArc()
+    private void PhysicsArc()
     {
-        //use Nick gravity to throw in regular parabola.
-        return new Vector3(speed / 10, 0.0f, 0.0f);
-
-        //give it an initial velocity, then use gravity.
-        //physics.SimulatePhysics();
+        physics.simulatePhysics = true;
+        physics.velocity = new Vector2(30, 50);
     }
 
     ///Calculates a parabola at an angle based on the height difference between the player and target.
