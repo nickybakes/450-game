@@ -17,8 +17,10 @@ public class GameManager : MonoBehaviour
     public GameObject playerPrefab;
     public GameObject ballPrefab;
 
+    //Spawning
     public Transform playerSpawnLocation;
-    public Transform basketLocation;
+    public Transform leftBasketLocation;
+    public Transform rightBasketLocation;
 
     public Transform ballSpawnHeight;
 
@@ -28,7 +30,7 @@ public class GameManager : MonoBehaviour
     private Vector2 ballSpawnPosition;
 
 
-    //[SerializeField] private NeonHeightsCharacterController player1;
+    //Players and Ball
     [HideInInspector]
     public GameObject player1;
     [HideInInspector]
@@ -47,22 +49,11 @@ public class GameManager : MonoBehaviour
 
     public Ball ballControlScript;
 
-
-    //TO ADD: Player 2
-    //[SerializeField] private NeonHeightsCharacterController player2;
-
     //Score Tracker
     public int player1Score = 0;
     public int player2Score = 0;
 
     [HideInInspector] public bool winConditionMet = false;
-
-    //Spawn locations
-    //public vector2 player1Spawn;
-    //public vector2 player2Spawn;
-
-    //public vector2 basketLeftSpawn;
-    //public vector2 basketRightSpawn;
 
     // Set up singleton here
     private void Awake()
@@ -81,7 +72,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        //TO ADD: Initialization for both players, the ball, basket, bullet spawners, and walls
+        //TO ADD: Initialization for both basket, bullet spawners
         player1Score = 0;
         player2Score = 0;
 
