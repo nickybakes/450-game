@@ -78,6 +78,7 @@ public class GameManager : MonoBehaviour
 
         player1SpawnPosition = new Vector2(playerSpawnLocation.position.x, playerSpawnLocation.position.y);
         player2SpawnPosition = new Vector2(-playerSpawnLocation.position.x, playerSpawnLocation.position.y);
+        ballSpawnPosition = new Vector2(0, ballSpawnHeight.position.y);
 
         player1 = Instantiate(playerPrefab);
         player1Script = player1.GetComponent<BhbPlayerController>();
