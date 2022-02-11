@@ -23,17 +23,6 @@ public class Ball : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //returns ball to players hand (for miss/testing)
-        if (Input.GetKeyDown(KeyCode.Mouse1))
-        {
-            Vector3 positionToHand = new Vector3(1.8f, 1.1f, 0.0f);
-
-            transform.parent = GameObject.FindGameObjectWithTag("Player").transform;
-            transform.position = (transform.parent.position + positionToHand);
-
-            //turns off physics
-            //physics.simulatePhysics = false;
-        }
         //shoots the ball
         if (Input.GetKeyDown(KeyCode.Mouse0) && transform.parent != null)
         {
@@ -50,10 +39,10 @@ public class Ball : MonoBehaviour
             transform.parent = null;
 
             //turns off physics
-            //physics.simulatePhysics = false;
+            physics.simulatePhysics = false;
         }
 
-        if (transform.parent == null)
+        if (transform.parent == null && physics.simulatePhysics == false)
         {
             GameObject target = GameObject.FindWithTag("Target");
 
@@ -89,7 +78,7 @@ public class Ball : MonoBehaviour
             if (transform.parent == null)
             {
                 //turns off physics
-                //physics.simulatePhysics = false;
+                physics.simulatePhysics = false;
 
                 GameObject player = GameObject.FindGameObjectWithTag("Player");
                 Vector3 positionToHand = new Vector3(1.8f, 1.1f, 0.0f);
