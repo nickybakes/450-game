@@ -110,4 +110,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bullet: {fileID: 2649196223168556797, guid: 0d018b114476535428b7651de079dd4d, type: 3}
   timer: 3
-  bulletSpawn: {fileID: 0}
+  rotationSpeed: 10
+  radius: 10
+  angularSpeed: 1

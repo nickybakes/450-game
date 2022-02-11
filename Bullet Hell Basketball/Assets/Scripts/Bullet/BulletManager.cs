@@ -13,7 +13,10 @@ public class BulletManager : MonoBehaviour
 
     public float radius;
 
-    private float rotationTimer; //Controls the rotation of the spawner
+    public float angularSpeed;
+
+    private Vector3 fixedPoint;
+    private float currentAngle;
 
     // Start is called before the first frame update
     void Start()
@@ -26,7 +29,7 @@ public class BulletManager : MonoBehaviour
 
         maxTime = timer;
 
-        rotationTimer = 0;
+        fixedPoint = transform.position;
     }
 
     private void FixedUpdate()
@@ -48,12 +51,10 @@ public class BulletManager : MonoBehaviour
 
         }
 
-        rotationTimer += Time.deltaTime;
-
-        float x = Mathf.Cos(rotationTimer);
-        float y = Mathf.Sin(rotationTimer);
-        float z = transform.position.z;
-
-        transform.position = new Vector3(x, y, z);
+        //Spawner rotation 
+        //Source: https://forum.unity.com/threads/circular-movement.572797/
+        currentAngle += angularSpeed * Time.deltaTime;
+        Vector3 offset = new Vector3(Mathf.Sin(currentAngle), Mathf.Cos(currentAngle), fixedPoint.z) * radius;
+        transform.position = fixedPoint + offset;
     }
 }
