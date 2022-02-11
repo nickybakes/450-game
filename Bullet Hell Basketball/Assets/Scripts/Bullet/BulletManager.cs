@@ -11,7 +11,7 @@ public class BulletManager : MonoBehaviour
     private float rotationAmountDegrees;
     public float rotationSpeed = 10;
 
-    private vector2 direction; //Which way the spawner is moving
+    private Vector2 direction; //Which way the spawner is moving
 
     public float radius;
 
