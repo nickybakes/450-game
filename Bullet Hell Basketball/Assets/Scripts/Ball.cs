@@ -20,24 +20,45 @@ public class Ball : MonoBehaviour
 
     public BhbBallPhysics physics;
 
+    [HideInInspector]
+    public GameObject leftBasket;
+    [HideInInspector]
+    public GameObject rightBasket;
+
+    public GameObject currentTarget;
+
     // Update is called once per frame
     void Update()
     {
         if (transform.parent == null && physics.simulatePhysics == false)
         {
-            GameObject target = GameObject.FindWithTag("Target");
+
+            if (currentTarget == null)
+            {
+                physics.simulatePhysics = true;
+                return;
+            }
 
             //If the ball is too far away from the basket (maxThrowDist), uses old arc to MISS the basket.
             if (calculateOnce)
             {
-                boolWillHit = Mathf.Abs(transform.position.x - target.transform.position.x) < maxThrowDist;
+                //check whether the ball was thrown from the side with the target basket (will go in)
+                //or not (will miss)
+                if (currentTarget == leftBasket)
+                {
+                    boolWillHit = transform.position.x < 0;
+                }
+                else if (currentTarget == rightBasket)
+                {
+                    boolWillHit = transform.position.x > 0;
+                }
                 calculateOnce = false;
             }
 
             if (boolWillHit)
             {
                 timer += Time.deltaTime * speed; //completes the parabola trip in one second
-                transform.position = CalculateParabola(startPoint, target.transform.position, ballHeight, timer);
+                transform.position = CalculateParabola(startPoint, currentTarget.transform.position, ballHeight, timer);
             }
             else
             {
@@ -46,10 +67,17 @@ public class Ball : MonoBehaviour
         }
     }
 
-    public void ShootBall()
+    public void ShootBall(int playerNumber)
     {
+        if (playerNumber == 0)
+        {
+            currentTarget = rightBasket;
+        }
+        else
+        {
+            currentTarget = leftBasket;
+        }
         //shoots the ball
-        GameObject target = GameObject.FindWithTag("Target");
         startPoint = transform.position;
 
         //reset timer
@@ -64,6 +92,8 @@ public class Ball : MonoBehaviour
         //turns off physics
         physics.simulatePhysics = false;
     }
+
+
     /// <summary>
     /// Used for all ball collisions. Dunking, bouncing, players, bullets.
     /// </summary>
@@ -98,7 +128,14 @@ public class Ball : MonoBehaviour
     private void PhysicsArc()
     {
         physics.simulatePhysics = true;
-        physics.velocity = new Vector2(30, 50);
+        if (currentTarget == rightBasket)
+        {
+            physics.velocity = new Vector2(30, 50);
+        }
+        else if (currentTarget == leftBasket)
+        {
+            physics.velocity = new Vector2(-30, 50);
+        }
     }
 
     ///Calculates a parabola at an angle based on the height difference between the player and target.

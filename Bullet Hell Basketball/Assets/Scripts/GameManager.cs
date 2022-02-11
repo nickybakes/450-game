@@ -16,19 +16,17 @@ public class GameManager : MonoBehaviour
 
     public GameObject playerPrefab;
     public GameObject ballPrefab;
+    public GameObject basketPrefab;
 
     //Spawning
     public Transform playerSpawnLocation;
-    public Transform leftBasketLocation;
-    public Transform rightBasketLocation;
-
+    public Transform basketLocation;
     public Transform ballSpawnHeight;
 
 
     private Vector2 player1SpawnPosition;
     private Vector2 player2SpawnPosition;
     private Vector2 ballSpawnPosition;
-
 
     //Players and Ball
     [HideInInspector]
@@ -37,6 +35,13 @@ public class GameManager : MonoBehaviour
     public GameObject player2;
     [HideInInspector]
     public GameObject ball;
+
+
+    [HideInInspector]
+    public GameObject leftBasket;
+
+    [HideInInspector]
+    public GameObject rightBasket;
 
     [HideInInspector]
     public BhbPlayerController player1Script;
@@ -48,6 +53,9 @@ public class GameManager : MonoBehaviour
     [HideInInspector]
 
     public Ball ballControlScript;
+
+    public GameObject tempHud;
+
 
     //Score Tracker
     public int player1Score = 0;
@@ -67,7 +75,7 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Is the game paused?
     /// </summary>
-    public bool Paused { get; set; } = true;
+    public bool Paused { get; set; } = false;
 
     // Start is called before the first frame update
     private void Start()
@@ -92,38 +100,54 @@ public class GameManager : MonoBehaviour
         ballControlScript = ball.GetComponent<Ball>();
         ballPhysicsScript = ball.GetComponent<BhbBallPhysics>();
 
+        leftBasket = Instantiate(basketPrefab);
+        leftBasket.transform.position = new Vector2(basketLocation.position.x, basketLocation.position.y);
+        ballControlScript.leftBasket = leftBasket;
+
+        rightBasket = Instantiate(basketPrefab);
+        rightBasket.transform.position = new Vector2(-basketLocation.position.x, basketLocation.position.y);
+        ballControlScript.rightBasket = rightBasket;
+
+
         BeginRound();
     }
 
-    private void BeginRound(){
+    private void BeginRound()
+    {
         ResetPlayersAndBall();
     }
 
-    private void Update()
+    void Update()
     {
-        if (Paused)
-            return;
+        // if (Paused)
+        //     return;
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            tempHud.SetActive(!tempHud.activeSelf);
+        }
 
 
         //TO ADD: This is where the Pause menu will appear.
         //if (Input.GetKeyDown(KeyCode.Escape))
-            //menu.Pause();
+        //menu.Pause();
 
         //if(player1 or 2 reaches the score limit)
         //{
-            // End the game
+        // End the game
         //}
     }
 
     private void EndGame()
     {
         //if (winConditionMet)
-            //TO ADD: A WAY TO END THIS NEVER ENDING RIDE
+        //TO ADD: A WAY TO END THIS NEVER ENDING RIDE
         //else
-            //TO ADD: Player 2 win thingy
+        //TO ADD: Player 2 win thingy
     }
 
-    public void ResetPlayersAndBall(){
+    public void ResetPlayersAndBall()
+    {
         player1.transform.position = player1SpawnPosition;
         player2.transform.position = player2SpawnPosition;
         ball.transform.position = ballSpawnPosition;
@@ -132,5 +156,6 @@ public class GameManager : MonoBehaviour
         ballPhysicsScript.velocity = Vector2.zero;
 
         ballPhysicsScript.simulatePhysics = true;
+        ballControlScript.currentTarget = null;
     }
 }

@@ -80,12 +80,16 @@ public class BhbPlayerController : NeonHeightsCharacterController
             //if holding the ball...
             if (ball.transform.parent)
             {
-                ballScript.ShootBall();
+                ballScript.ShootBall(playerNumber);
             }
             else
             {
                 ball.GetComponent<BhbBallPhysics>().simulatePhysics = false;
                 Vector3 positionToHand = new Vector3(1.8f, 1.1f, 0.0f);
+
+                if(playerNumber == 1){
+                    positionToHand = new Vector3(-1.8f, 1.1f, 0.0f);
+                }
 
                 ball.transform.parent = gameObject.transform;
                 ball.transform.position = (gameObject.transform.position + positionToHand);
