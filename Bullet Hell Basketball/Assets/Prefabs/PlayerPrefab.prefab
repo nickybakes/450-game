@@ -136,3 +136,4 @@ MonoBehaviour:
   jumpsInAir: 0
   jumpsInAirMax: 2
   playerNumber: 0
+  player2Sprite: {fileID: 2100000, guid: 354bff9f490c4cc47afa506070ddf72d, type: 2}

@@ -21,8 +21,14 @@ public class BhbPlayerController : NeonHeightsCharacterController
     private KeyCode[] player2Controls = { KeyCode.P, KeyCode.Semicolon, KeyCode.L, KeyCode.Quote, KeyCode.RightControl, KeyCode.LeftArrow, KeyCode.RightArrow, KeyCode.Escape };
     public int playerNumber;
 
+    public Material player2Sprite;
+
     public void Init(int playerNumber){
         this.playerNumber = playerNumber;
+
+        if(playerNumber == 1){
+            gameObject.GetComponent<MeshRenderer>().material = player2Sprite;
+        }
     }
 
 
