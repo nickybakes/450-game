@@ -14,8 +14,39 @@ public class GameManager : MonoBehaviour
     //TO ADD: MENU
     //[SerializeField] private MainMenu menu;
 
+    public GameObject playerPrefab;
+    public GameObject ballPrefab;
 
-    [SerializeField] private NeonHeightsCharacterController player1;
+    public Transform playerSpawnLocation;
+    public Transform basketLocation;
+
+    public Transform ballSpawnHeight;
+
+
+    private Vector2 player1SpawnPosition;
+    private Vector2 player2SpawnPosition;
+    private Vector2 ballSpawnPosition;
+
+
+    //[SerializeField] private NeonHeightsCharacterController player1;
+    [HideInInspector]
+    public GameObject player1;
+    [HideInInspector]
+    public GameObject player2;
+    [HideInInspector]
+    public GameObject ball;
+
+    [HideInInspector]
+    public BhbPlayerController player1Script;
+    [HideInInspector]
+    public BhbPlayerController player2Script;
+    [HideInInspector]
+
+    public BhbBallPhysics ballPhysicsScript;
+    [HideInInspector]
+
+    public Ball ballControlScript;
+
 
     //TO ADD: Player 2
     //[SerializeField] private NeonHeightsCharacterController player2;
@@ -53,6 +84,27 @@ public class GameManager : MonoBehaviour
         //TO ADD: Initialization for both players, the ball, basket, bullet spawners, and walls
         player1Score = 0;
         player2Score = 0;
+
+        player1SpawnPosition = new Vector2(playerSpawnLocation.position.x, playerSpawnLocation.position.y);
+        player2SpawnPosition = new Vector2(-playerSpawnLocation.position.x, playerSpawnLocation.position.y);
+
+        player1 = Instantiate(playerPrefab);
+        player1Script = player1.GetComponent<BhbPlayerController>();
+        player1Script.Init(0);
+
+        player2 = Instantiate(playerPrefab);
+        player2Script = player2.GetComponent<BhbPlayerController>();
+        player2Script.Init(1);
+
+        ball = Instantiate(ballPrefab);
+        ballControlScript = ball.GetComponent<Ball>();
+        ballPhysicsScript = ball.GetComponent<BhbBallPhysics>();
+
+        BeginRound();
+    }
+
+    private void BeginRound(){
+        ResetPlayersAndBall();
     }
 
     private void Update()
@@ -77,5 +129,13 @@ public class GameManager : MonoBehaviour
             //TO ADD: A WAY TO END THIS NEVER ENDING RIDE
         //else
             //TO ADD: Player 2 win thingy
+    }
+
+    public void ResetPlayersAndBall(){
+        player1.transform.position = player1SpawnPosition;
+        player2.transform.position = player2SpawnPosition;
+        ball.transform.position = ballSpawnPosition;
+
+        ballPhysicsScript.simulatePhysics = true;
     }
 }

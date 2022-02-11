@@ -21,6 +21,10 @@ public class BhbPlayerController : NeonHeightsCharacterController
     private KeyCode[] player2Controls = { KeyCode.P, KeyCode.Semicolon, KeyCode.L, KeyCode.Quote, KeyCode.RightControl, KeyCode.LeftArrow, KeyCode.RightArrow, KeyCode.Escape };
     public int playerNumber;
 
+    public void Init(int playerNumber){
+        this.playerNumber = playerNumber;
+    }
+
 
     // Start is called before the first frame update
     void Start()
@@ -56,6 +60,8 @@ public class BhbPlayerController : NeonHeightsCharacterController
         {
             jumping = false;
         }
+
+        stoppedJumping = GetControlUp(Control.Jump);
 
         UpdateAugust();
     }
@@ -93,7 +99,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
         {
             if (action == Control.Jump)
             {
-                return Input.GetKeyDown(player1Controls[((int)Control.Jump)]) || Input.GetKey(player1Controls[((int)Control.Jump2)]);
+                return Input.GetKeyDown(player1Controls[((int)Control.Jump)]) || Input.GetKeyDown(player1Controls[((int)Control.Jump2)]);
             }
             else
             {
@@ -104,11 +110,38 @@ public class BhbPlayerController : NeonHeightsCharacterController
         {
             if (action == Control.Jump)
             {
-                return Input.GetKeyDown(player2Controls[((int)Control.Jump)]) || Input.GetKey(player2Controls[((int)Control.Jump2)]);
+                return Input.GetKeyDown(player2Controls[((int)Control.Jump)]) || Input.GetKeyDown(player2Controls[((int)Control.Jump2)]);
             }
             else
             {
                 return Input.GetKeyDown(player2Controls[((int)action)]);
+            }
+        }
+        return false;
+    }
+
+    bool GetControlUp(Control action)
+    {
+        if (playerNumber == 0)
+        {
+            if (action == Control.Jump)
+            {
+                return Input.GetKeyUp(player1Controls[((int)Control.Jump)]) || Input.GetKeyUp(player1Controls[((int)Control.Jump2)]);
+            }
+            else
+            {
+                return Input.GetKeyUp(player1Controls[((int)action)]);
+            }
+        }
+        else if (playerNumber == 1)
+        {
+            if (action == Control.Jump)
+            {
+                return Input.GetKeyUp(player2Controls[((int)Control.Jump)]) || Input.GetKeyUp(player2Controls[((int)Control.Jump2)]);
+            }
+            else
+            {
+                return Input.GetKeyUp(player2Controls[((int)action)]);
             }
         }
         return false;

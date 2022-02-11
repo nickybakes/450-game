@@ -109,7 +109,7 @@ public class NeonHeightsCharacterController : NeonHeightsPhysicsObject
     /// </summary>
     public int jumpsInAirMax = 2;
 
-    protected bool runningLeft, runningRight, jumping;
+    protected bool runningLeft, runningRight, jumping, stoppedJumping;
 
 
     // Start is called before the first frame update
@@ -524,17 +524,17 @@ public class NeonHeightsCharacterController : NeonHeightsPhysicsObject
         }
 
         //limit how long the button can be held for extra hight
-        if (jumpHoldTimer >= jumpHoldTimerMax || Input.GetKeyUp(KeyCode.Space) || grounded)
+        if (jumpHoldTimer >= jumpHoldTimerMax || stoppedJumping || grounded)
         {
             holdingJump = false;
         }
 
         //reset the position of the player in the test map
-        if (Input.GetKey(KeyCode.R))
-        {
-            transform.position = new Vector2(-14.65f, 5.54f);
-            velocity = Vector2.zero;
-        }
+        // if (Input.GetKey(KeyCode.R))
+        // {
+        //     transform.position = new Vector2(-14.65f, 5.54f);
+        //     velocity = Vector2.zero;
+        // }
 
         UpdateCollisionRect();
     }
