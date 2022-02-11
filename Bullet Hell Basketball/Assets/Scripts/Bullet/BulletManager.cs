@@ -11,9 +11,9 @@ public class BulletManager : MonoBehaviour
     private float rotationAmountDegrees;
     public float rotationSpeed = 10;
 
-    private Vector2 direction; //Which way the spawner is moving
-
     public float radius;
+
+    private float rotationTimer; //Controls the rotation of the spawner
 
     // Start is called before the first frame update
     void Start()
@@ -25,6 +25,8 @@ public class BulletManager : MonoBehaviour
         }
 
         maxTime = timer;
+
+        rotationTimer = 0;
     }
 
     private void FixedUpdate()
@@ -45,5 +47,13 @@ public class BulletManager : MonoBehaviour
             }
 
         }
+
+        rotationTimer += Time.deltaTime;
+
+        float x = Mathf.Cos(rotationTimer);
+        float y = Mathf.Sin(rotationTimer);
+        float z = transform.position.z;
+
+        transform.position = new Vector3(x, y, z);
     }
 }
