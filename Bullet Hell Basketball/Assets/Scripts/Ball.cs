@@ -26,6 +26,12 @@ public class Ball : MonoBehaviour
     public GameObject rightBasket;
 
     public GameObject currentTarget;
+    private GameManager gameManager;
+
+    private void Start()
+    {
+        gameManager = FindObjectOfType<GameManager>();
+    }
 
     // Update is called once per frame
     void Update()
@@ -93,7 +99,6 @@ public class Ball : MonoBehaviour
         physics.simulatePhysics = false;
     }
 
-
     /// <summary>
     /// Used for all ball collisions. Dunking, bouncing, players, bullets.
     /// </summary>
@@ -103,7 +108,7 @@ public class Ball : MonoBehaviour
         //if the ball is touching the basket...
         if (collision.collider.CompareTag("Target"))
         {
-            FindObjectOfType<GameManager>().ResetPlayersAndBall();
+            gameManager.ResetPlayersAndBall();
         }
         else
         {
@@ -124,7 +129,7 @@ public class Ball : MonoBehaviour
         }
     }
 
-    /// Use later for shots that are too far to make the shot.
+    /// Used for shots that are too far to make the shot.
     private void PhysicsArc()
     {
         physics.simulatePhysics = true;
