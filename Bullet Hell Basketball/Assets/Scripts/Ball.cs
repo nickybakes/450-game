@@ -29,6 +29,7 @@ public class Ball : MonoBehaviour
 
     public GameObject currentTarget;
     private GameManager gameManager;
+    public LineRenderer lineRenderer;
 
     private void Start()
     {
@@ -91,16 +92,16 @@ public class Ball : MonoBehaviour
             {
                 if (transform.position.x < 0)
                 {
-                    Debug.Log("targeting The left basket");
-                    PreviewParabola(startPoint, currentTarget.transform.position, ballHeight, 5);
+                    Vector3[] pointsArray = PreviewParabola(transform.position, currentTarget.transform.position, ballHeight, previewArcSmoothness);
+                    lineRenderer.SetPositions(pointsArray);
                 }
             }
             else if (currentTarget == rightBasket)
             {
                 if (transform.position.x > 0)
                 {
-                    Debug.Log("targeting The right basket");
-                    PreviewParabola(startPoint, currentTarget.transform.position, ballHeight, 5);
+                    Vector3[] pointsArray = PreviewParabola(transform.position, currentTarget.transform.position, ballHeight, previewArcSmoothness);
+                    lineRenderer.SetPositions(pointsArray);
                 }
             }
         }
@@ -214,7 +215,7 @@ public class Ball : MonoBehaviour
         //t is a value from 0 to 1 for time, convert arraySize (equally spaced points) into decimal values between this.
         for (int i = 0; i < arraySize; i++)
         {
-            drawnParabola[i] = CalculateParabola(start, end, height, i / (arraySize - 1));
+            drawnParabola[i] = CalculateParabola(start, end, height, (float)i / (arraySize - 1));
         }
 
         return drawnParabola;
