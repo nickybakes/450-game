@@ -10,6 +10,8 @@ public class Ball : MonoBehaviour
     public float ballHeight = 10;
     [Range(0.0f, 100.0f)]
     public float maxThrowDist = 10;
+    [Range(2, 100)]
+    public int previewArcSmoothness;
 
     private bool boolWillHit = true;
     private bool calculateOnce = true;
@@ -69,6 +71,37 @@ public class Ball : MonoBehaviour
             else
             {
                 PhysicsArc();
+            }
+        }
+        else if (transform.parent != null && physics.simulatePhysics == false)
+        {
+            int playerNumber = transform.parent.GetComponent<BhbPlayerController>().playerNumber;
+
+            if (playerNumber == 0)
+            {
+                currentTarget = rightBasket;
+            }
+            else
+            {
+                currentTarget = leftBasket;
+            }
+
+            //the ball is currently being held, now checks if the ball is targeting a basket, if so, shows previewParabola.
+            if (currentTarget == leftBasket)
+            {
+                if (transform.position.x < 0)
+                {
+                    Debug.Log("targeting The left basket");
+                    PreviewParabola(startPoint, currentTarget.transform.position, ballHeight, 5);
+                }
+            }
+            else if (currentTarget == rightBasket)
+            {
+                if (transform.position.x > 0)
+                {
+                    Debug.Log("targeting The right basket");
+                    PreviewParabola(startPoint, currentTarget.transform.position, ballHeight, 5);
+                }
             }
         }
     }
@@ -158,5 +191,32 @@ public class Ball : MonoBehaviour
         Vector3 result = start + t * travelDirection;
         result += ((-parabolicT * parabolicT + 1) * height) * up.normalized;
         return result;
+    }
+
+    /// <summary>
+    /// Draws a preview of the parabola when a player has the ball and is inside the appropriate shot line.
+    /// </summary>
+    /// <param name="start">Starting point of the parabola. (changes every update)</param>
+    /// <param name="end">Ending point of the parabola. (changes based on which basket is targeted)</param>
+    /// <param name="height">Changes based on how long the player holds the action button down for.</param>
+    /// <param name="arraySize">Changes how smooth the arc looks.</param>
+    /// <returns></returns>
+    private Vector3[] PreviewParabola(Vector3 start, Vector3 end, float height, int arraySize)
+    {
+        if (arraySize < 2)
+        {
+            Debug.LogError("Error, PreviewParabola arraySize cannot be less than 2. Current value: " + arraySize);
+            return null;
+        }
+
+        Vector3[] drawnParabola = new Vector3[arraySize];
+
+        //t is a value from 0 to 1 for time, convert arraySize (equally spaced points) into decimal values between this.
+        for (int i = 0; i < arraySize; i++)
+        {
+            drawnParabola[i] = CalculateParabola(start, end, height, i / (arraySize - 1));
+        }
+
+        return drawnParabola;
     }
 }
