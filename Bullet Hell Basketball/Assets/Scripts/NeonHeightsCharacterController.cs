@@ -109,6 +109,8 @@ public class NeonHeightsCharacterController : NeonHeightsPhysicsObject
     /// </summary>
     public int jumpsInAirMax = 2;
 
+    protected bool runningLeft, runningRight, jumping, stoppedJumping;
+
 
     // Start is called before the first frame update
     void Start()
@@ -140,54 +142,6 @@ public class NeonHeightsCharacterController : NeonHeightsPhysicsObject
         }
     }
 
-    public void ApplyVerticalCollisions()
-    {
-        if (bottomCollision != null)
-        {
-            transform.position = new Vector2(transform.position.x, Mathf.Max(transform.position.y + yOffset + (velocity.y * Time.deltaTime), bottomCollision.collisionPosition.y) - yOffset);
-            grounded = true;
-        }
-        else if (groundCollision != null)
-        {
-            transform.position = new Vector2(transform.position.x, Mathf.Max(transform.position.y + yOffset + (velocity.y * Time.deltaTime), groundCollision.collisionPosition.y) - yOffset);
-        }
-        else if (groundCollision == null && bottomCollision == null && velocity.y < 0)
-        {
-            ApplyVelocityY();
-        }
-
-        if (topCollision != null)
-        {
-            transform.position = new Vector2(transform.position.x, Mathf.Min(transform.position.y + height + yOffset + velocity.y * Time.deltaTime, topCollision.collisionPosition.y) - height - yOffset);
-            velocity.y = 0;
-        }
-        else if (topCollision == null && velocity.y > 0)
-        {
-            ApplyVelocityY();
-        }
-    }
-
-    public void ApplyHorizontalCollisions()
-    {
-        if (rightCollision != null)
-        {
-            transform.position = new Vector2(Mathf.Min(transform.position.x + width + xOffset + velocity.x * Time.deltaTime, rightCollision.collisionPosition.x) - width - xOffset, transform.position.y);
-        }
-        // else if (rightCollision == null && velocity.x > 0)
-        // {
-        //     ApplyVelocityX();
-        // }
-        
-        if (leftCollision != null)
-        {
-            transform.position = new Vector2(Mathf.Max(transform.position.x + xOffset + velocity.x * Time.deltaTime, leftCollision.collisionPosition.x) - xOffset, transform.position.y);
-        }
-        // else if (leftCollision == null && velocity.x < 0)
-        // {
-        //     ApplyVelocityX();
-        // }
-    }
-
     public void UpdateAugust()
     {
         DrawBoundingRect();
@@ -217,6 +171,7 @@ public class NeonHeightsCharacterController : NeonHeightsPhysicsObject
         {
             grounded = false;
         }
+
 
         if (prevGrounded && !grounded && prevGroundCollision != null)
         {
@@ -368,17 +323,22 @@ public class NeonHeightsCharacterController : NeonHeightsPhysicsObject
                     // velocity.x = groundCollision.segment.downPointingTangent.x * 50;
                     // ApplyVelocityToTransform();
                 }
-                else if (!grounded && rightCollision != null && rightCollision.segment.angleFromHorizontalDegrees <= groundAngleLimit)
+                else if (!grounded && rightCollision != null && rightCollision.segment.angleFromHorizontalDegrees <= groundAngleLimit && !rightCollision.segment.semiSolidPlatform)
                 {
                     ApplyHorizontalCollisions();
                     ApplyVerticalCollisions();
                     //Debug.Log("e");
                 }
-                else if (!grounded && rightCollision != null && rightCollision.segment.angleFromHorizontalDegrees > groundAngleLimit)
+                else if (!grounded && rightCollision != null && rightCollision.segment.angleFromHorizontalDegrees > groundAngleLimit && !rightCollision.segment.semiSolidPlatform)
                 {
                     // ApplyHorizontalCollisions();
                     grounded = false;
                     //Debug.Log("f");
+                }
+                else if (!grounded && rightCollision != null && rightCollision.segment.semiSolidPlatform)
+                {
+                    //Debug.Log("f-2");
+                    ApplyVelocityX();
                 }
                 else if (!grounded && rightCollision == null)
                 {
@@ -439,17 +399,22 @@ public class NeonHeightsCharacterController : NeonHeightsPhysicsObject
                     // velocity.x = groundCollision.segment.downPointingTangent.x * 50;
                     // ApplyVelocityToTransform();
                 }
-                else if (!grounded && leftCollision != null && leftCollision.segment.angleFromHorizontalDegrees <= groundAngleLimit)
+                else if (!grounded && leftCollision != null && leftCollision.segment.angleFromHorizontalDegrees <= groundAngleLimit && !leftCollision.segment.semiSolidPlatform)
                 {
                     //Debug.Log("E");
                     ApplyHorizontalCollisions();
                     ApplyVerticalCollisions();
                 }
-                else if (!grounded && leftCollision != null && leftCollision.segment.angleFromHorizontalDegrees > groundAngleLimit)
+                else if (!grounded && leftCollision != null && leftCollision.segment.angleFromHorizontalDegrees > groundAngleLimit && !leftCollision.segment.semiSolidPlatform)
                 {
                     //Debug.Log("F");
                     grounded = false;
                     //ApplyHorizontalCollisions();
+                }
+                else if (!grounded && leftCollision != null && leftCollision.segment.semiSolidPlatform)
+                {
+                    //Debug.Log("F-2");
+                    ApplyVelocityX();
                 }
                 else if (!grounded && leftCollision == null)
                 {
@@ -474,17 +439,17 @@ public class NeonHeightsCharacterController : NeonHeightsPhysicsObject
 
         if (grounded)
         {
-            if (Input.GetKey(KeyCode.A))
+            if (runningLeft)
             {
                 //velocity.x = Mathf.Max(-baseRunSpeed, velocity.x -= (baseRunSpeed * 8) * Time.deltaTime);
                 velocity.x = -1 * baseRunSpeed;
             }
-            if (Input.GetKey(KeyCode.D))
+            if (runningRight)
             {
                 velocity.x = baseRunSpeed;
                 //velocity.x = Mathf.Min(baseRunSpeed, velocity.x += (baseRunSpeed * 8) * Time.deltaTime);
             }
-            if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+            if (!runningLeft && !runningRight)
             {
                 velocity.x = 0;
                 // if (velocity.x > 0)
@@ -499,15 +464,15 @@ public class NeonHeightsCharacterController : NeonHeightsPhysicsObject
         }
         else
         {
-            if (Input.GetKey(KeyCode.A))
+            if (runningLeft)
             {
                 velocity.x = Mathf.Max(-baseRunSpeed, velocity.x -= (baseRunSpeed * 8) * Time.deltaTime);
             }
-            if (Input.GetKey(KeyCode.D))
+            if (runningRight)
             {
                 velocity.x = Mathf.Min(baseRunSpeed, velocity.x += (baseRunSpeed * 8) * Time.deltaTime);
             }
-            if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+            if (!runningLeft && !runningRight)
             {
                 if (velocity.x > 0)
                 {
@@ -535,7 +500,7 @@ public class NeonHeightsCharacterController : NeonHeightsPhysicsObject
 
 
         //jumping from the ground
-        if (Input.GetKeyDown(KeyCode.Space) && (grounded || (!grounded && timeInAir < roadRunnerTimeMax)) && topCollision == null)
+        if (jumping && (grounded || (!grounded && timeInAir < roadRunnerTimeMax)) && topCollision == null)
         {
             jumpHoldTimer = 0;
             grounded = false;
@@ -543,7 +508,7 @@ public class NeonHeightsCharacterController : NeonHeightsPhysicsObject
             timeInAir = roadRunnerTimeMax;
         }
         //"double" jumping in the air
-        else if (Input.GetKeyDown(KeyCode.Space) && !grounded && topCollision == null && jumpsInAir < jumpsInAirMax)
+        else if (jumping && !grounded && topCollision == null && jumpsInAir < jumpsInAirMax)
         {
             jumpHoldTimer = 0;
             grounded = false;
@@ -559,24 +524,24 @@ public class NeonHeightsCharacterController : NeonHeightsPhysicsObject
         }
 
         //limit how long the button can be held for extra hight
-        if (jumpHoldTimer >= jumpHoldTimerMax || Input.GetKeyUp(KeyCode.Space) || grounded)
+        if (jumpHoldTimer >= jumpHoldTimerMax || stoppedJumping || grounded)
         {
             holdingJump = false;
         }
 
         //reset the position of the player in the test map
-        if (Input.GetKey(KeyCode.R))
-        {
-            transform.position = new Vector2(-14.65f, 5.54f);
-            velocity = Vector2.zero;
-        }
+        // if (Input.GetKey(KeyCode.R))
+        // {
+        //     transform.position = new Vector2(-14.65f, 5.54f);
+        //     velocity = Vector2.zero;
+        // }
 
         UpdateCollisionRect();
     }
 
 
 
-    
+
 
     // Update is called once per frame
     void Update()

@@ -27,14 +27,14 @@ public class StaticCollisionMap : MonoBehaviour
         
     }
 
-    public void AddSegment(Vector2 a, Vector2 b)
+    public void AddSegment(Vector2 a, Vector2 b, bool semiSolidPlatform)
     {
         GameObject newSegment = Instantiate(staticCollisionSegmentPrefab, transform);
         StaticCollisionSegment segment = newSegment.GetComponent<StaticCollisionSegment>();
 
         segments.Add(segment);
 
-        segment.Init(a, b);
+        segment.Init(a, b, semiSolidPlatform);
 
         if(segment.normalNormalized.y > 0)
         {
