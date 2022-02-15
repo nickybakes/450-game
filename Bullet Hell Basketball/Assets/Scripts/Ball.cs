@@ -97,6 +97,9 @@ public class Ball : MonoBehaviour
                     Vector3[] pointsArray = PreviewParabola(transform.position, currentTarget.transform.position, ballHeight, previewArcSmoothness);
                     lineRenderer.enabled = true;
                     lineRenderer.SetPositions(pointsArray);
+
+                    //Change target color (add marker later)
+                    //currentTarget.GetComponent<Material>().SetColor("_UnlitColor", Color.red);
                 }
             }
             else if (currentTarget == rightBasket)
@@ -106,6 +109,9 @@ public class Ball : MonoBehaviour
                     Vector3[] pointsArray = PreviewParabola(transform.position, currentTarget.transform.position, ballHeight, previewArcSmoothness);
                     lineRenderer.enabled = true;
                     lineRenderer.SetPositions(pointsArray);
+
+                    //Change target color (add marker later)
+                    //currentTarget.GetComponent<Material>().SetColor("_UnlitColor", Color.red);
                 }
             }
         }
