@@ -34,6 +34,7 @@ public class Ball : MonoBehaviour
     private void Start()
     {
         gameManager = FindObjectOfType<GameManager>();
+        lineRenderer.positionCount = previewArcSmoothness;
     }
 
     // Update is called once per frame
