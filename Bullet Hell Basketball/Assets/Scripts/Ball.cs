@@ -78,6 +78,7 @@ public class Ball : MonoBehaviour
         else if (transform.parent != null && physics.simulatePhysics == false)
         {
             int playerNumber = transform.parent.GetComponent<BhbPlayerController>().playerNumber;
+            lineRenderer.enabled = false;
 
             if (playerNumber == 0)
             {
@@ -94,6 +95,7 @@ public class Ball : MonoBehaviour
                 if (transform.position.x < 0)
                 {
                     Vector3[] pointsArray = PreviewParabola(transform.position, currentTarget.transform.position, ballHeight, previewArcSmoothness);
+                    lineRenderer.enabled = true;
                     lineRenderer.SetPositions(pointsArray);
                 }
             }
@@ -102,6 +104,7 @@ public class Ball : MonoBehaviour
                 if (transform.position.x > 0)
                 {
                     Vector3[] pointsArray = PreviewParabola(transform.position, currentTarget.transform.position, ballHeight, previewArcSmoothness);
+                    lineRenderer.enabled = true;
                     lineRenderer.SetPositions(pointsArray);
                 }
             }
@@ -144,6 +147,7 @@ public class Ball : MonoBehaviour
         if (collision.collider.CompareTag("Target"))
         {
             gameManager.ResetPlayersAndBall();
+            lineRenderer.enabled = false;
         }
         else
         {
@@ -205,12 +209,6 @@ public class Ball : MonoBehaviour
     /// <returns></returns>
     private Vector3[] PreviewParabola(Vector3 start, Vector3 end, float height, int arraySize)
     {
-        if (arraySize < 2)
-        {
-            Debug.LogError("Error, PreviewParabola arraySize cannot be less than 2. Current value: " + arraySize);
-            return null;
-        }
-
         Vector3[] drawnParabola = new Vector3[arraySize];
 
         //t is a value from 0 to 1 for time, convert arraySize (equally spaced points) into decimal values between this.
