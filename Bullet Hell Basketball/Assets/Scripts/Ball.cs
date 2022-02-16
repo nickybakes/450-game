@@ -12,6 +12,8 @@ public class Ball : MonoBehaviour
     public float maxThrowDist = 10;
     [Range(2, 100)]
     public int previewArcSmoothness;
+    [Range(0.0f, 10.0f)]
+    public float spinAmt = 1.0f;
 
     private bool boolWillHit = true;
     private bool calculateOnce = true;
@@ -197,7 +199,7 @@ public class Ball : MonoBehaviour
         Vector3 result = start + t * travelDirection;
         result += ((-parabolicT * parabolicT + 1) * height) * up.normalized;
         return result;
-    }
+    }  
 
     /// <summary>
     /// Draws a preview of the parabola when a player has the ball and is inside the appropriate shot line.
@@ -206,7 +208,7 @@ public class Ball : MonoBehaviour
     /// <param name="end">Ending point of the parabola. (changes based on which basket is targeted)</param>
     /// <param name="height">Changes based on how long the player holds the action button down for.</param>
     /// <param name="arraySize">Changes how smooth the arc looks.</param>
-    /// <returns></returns>
+    /// <returns>Returns an array of Vector3s on the parabola.</returns>
     private Vector3[] PreviewParabola(Vector3 start, Vector3 end, float height, int arraySize)
     {
         Vector3[] drawnParabola = new Vector3[arraySize];
@@ -218,5 +220,17 @@ public class Ball : MonoBehaviour
         }
 
         return drawnParabola;
+    }
+
+    /// <summary>
+    /// Gives a random spin value based around the level of the ball, height, etc.
+    /// </summary>
+    /// <param name="spinAmt">Set amount to spin the ball (multiplies spin value)</param>
+    /// <param name="height">Changes based on how long the player holds the action button down for.</param>
+    /// <param name="ballLvl">The current level of the ball, changes ball speed, increases spin.</param>
+    /// <returns>Returns an array of Vector3s on the parabola.</returns>
+    private float RandomSpin(float spinAmt, float height, int ballLvl)
+    {
+        return Random.Range(0.0f, 10.0f);
     }
 }
