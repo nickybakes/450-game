@@ -9,6 +9,8 @@ public class BhbBallPhysics : NeonHeightsPhysicsObject
 
     public float currentSpeed;
 
+    public float speedDepletionAmount = .7f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -47,77 +49,58 @@ public class BhbBallPhysics : NeonHeightsPhysicsObject
             ApplyVerticalCollisions();
         }
 
+        CheckCollisionsRight();
+        CheckCollisionsLeft();
+
 
         if (!onFlatGround)
         {
             if (bottomCollision != null)
             {
-                this.velocity = Vector2.Reflect(this.velocity, bottomCollision.segment.normalNormalized) * .7f;
+                this.velocity = Vector2.Reflect(this.velocity, bottomCollision.segment.normalNormalized) * speedDepletionAmount;
                 grounded = false;
             }
-            // else if (topCollision != null)
-            // {
-            //     this.velocity = Vector2.Reflect(this.velocity, topCollision.segment.normalNormalized) * .7f;
-            // }
-            // else if (rightCollision != null)
-            // {
-            //     this.velocity = Vector2.Reflect(this.velocity, rightCollision.segment.normalNormalized) * .7f;
-            // }
-            // else if (leftCollision != null)
-            // {
-            //     this.velocity = Vector2.Reflect(this.velocity, leftCollision.segment.normalNormalized) * .7f;
-            // }
-            // if (velocity.x == 0)
-            // {
-            //     if (bottomCollision != null)
-            //     {
-            //         grounded = false;
-            //         this.velocity.x = bottomCollision.segment.normalNormalized.x * currentSpeed * .7f;
-            //     }
-            // }
-            // else if (velocity.x > 0)
-            // {
-            //     CheckCollisionsRight();
-            //     ApplyHorizontalCollisions();
-            //     if (rightCollision != null && !rightCollision.segment.semiSolidPlatform)
-            //     {
-            //         ApplyRightCollisionBounce();
-            //     }
-            //     else if (rightCollision != null && rightCollision.segment.semiSolidPlatform && IsOverSegment(rightCollision.segment))
-            //     {
-            //         ApplyRightCollisionBounce();
-            //     }
-            // }
-            // else if (velocity.x < 0)
-            // {
-            //     CheckCollisionsLeft();
-            //     ApplyHorizontalCollisions();
-            //     if (leftCollision != null && !leftCollision.segment.semiSolidPlatform)
-            //     {
-            //         ApplyLeftCollisionBounce();
-            //     }
-            //     else if (leftCollision != null && leftCollision.segment.semiSolidPlatform && IsOverSegment(leftCollision.segment))
-            //     {
-            //         ApplyLeftCollisionBounce();
-            //     }
-            // }
+            else if (topCollision != null)
+            {
+                this.velocity = Vector2.Reflect(this.velocity, topCollision.segment.normalNormalized) * speedDepletionAmount;
+            }
+            else if (rightCollision != null && !rightCollision.segment.semiSolidPlatform)
+            {
+                this.velocity = Vector2.Reflect(this.velocity, rightCollision.segment.normalNormalized) * speedDepletionAmount;
+                ApplyHorizontalCollisions();
+            }
+            //else if (rightCollision != null && rightCollision.segment.semiSolidPlatform && IsOverSegment(rightCollision.segment))
+            //{
+            //    Debug.Log("wwww");
+            //    this.velocity = Vector2.Reflect(this.velocity, rightCollision.segment.normalNormalized) * speedDepletionAmount;
+            //}
+            else if (leftCollision != null && !leftCollision.segment.semiSolidPlatform)
+            {
+                this.velocity = Vector2.Reflect(this.velocity, leftCollision.segment.normalNormalized) * speedDepletionAmount;
+                ApplyHorizontalCollisions();
+            }
+            //else if (leftCollision != null && leftCollision.segment.semiSolidPlatform && IsOverSegment(leftCollision.segment))
+            //{
+            //    Debug.Log("wwww");
+            //    this.velocity = Vector2.Reflect(this.velocity, leftCollision.segment.normalNormalized) * speedDepletionAmount;
+            //}
         }
         else if (onFlatGround && bottomCollision != null)
         {
-            this.velocity = Vector2.Reflect(this.velocity, Vector2.up) * .7f;
+            this.velocity = Vector2.Reflect(this.velocity, Vector2.up) * speedDepletionAmount;
+            grounded = false;
         }
 
-        // if (velocity.x > 0)
-        // {
-        //     velocity.x = Mathf.Max(0, velocity.x -= 2 * Time.deltaTime);
-        // }
-        // else if (velocity.x < 0)
-        // {
-        //     velocity.x = Mathf.Min(0, velocity.x += 2 * Time.deltaTime);
-        // }
+        if (velocity.x > 0)
+        {
+            velocity.x = Mathf.Max(0, velocity.x -= 2 * Time.deltaTime);
+        }
+        else if (velocity.x < 0)
+        {
+            velocity.x = Mathf.Min(0, velocity.x += 2 * Time.deltaTime);
+        }
 
         ApplyVelocityX();
-        ApplyHorizontalCollisions();
 
         UpdateCollisionRect();
     }
