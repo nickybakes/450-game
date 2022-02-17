@@ -15,6 +15,7 @@ public class Ball : MonoBehaviour
     [Range(0.0f, 10.0f)]
     public float spinAmt = 1.0f;
 
+    private bool isSpinning = false;
     private bool boolWillHit = true;
     private bool calculateOnce = true;
 
@@ -76,6 +77,8 @@ public class Ball : MonoBehaviour
             {
                 PhysicsArc();
             }
+
+            isSpinning = true;
         }
         else if (transform.parent != null && physics.simulatePhysics == false)
         {
@@ -117,6 +120,13 @@ public class Ball : MonoBehaviour
                 }
             }
         }
+
+        if (isSpinning)
+        {
+            //gives a set spin to the ball for now.
+            //transform.rotation = Quaternion.Euler(0,0,RandomSpin(spinAmt, ballHeight, 0));
+            transform.rotation = transform.rotation * Quaternion.Euler(0, 0, spinAmt);
+        }
     }
 
     public void ShootBall(int playerNumber)
@@ -151,6 +161,7 @@ public class Ball : MonoBehaviour
     /// <param name="collision">The thing hitting the ball.</param>
     private void OnCollisionEnter(Collision collision)
     {
+        isSpinning = false;
         //if the ball is touching the basket...
         if (collision.collider.CompareTag("Target"))
         {
@@ -237,6 +248,6 @@ public class Ball : MonoBehaviour
     /// <returns>Returns an array of Vector3s on the parabola.</returns>
     private float RandomSpin(float spinAmt, float height, int ballLvl)
     {
-        return Random.Range(0.0f, 10.0f);
+        return spinAmt * Random.Range(0.0f, 10.0f) /* * height * ballLvl */;
     }
 }
