@@ -43,7 +43,7 @@ public class BhbBallPhysics : NeonHeightsPhysicsObject
         //     this.velocity.y = 0;
         // }
 
-        if (Mathf.Abs(velocity.y) < 7 && groundCollision != null && !groundCollision.segment.semiSolidPlatform)
+        if (Mathf.Abs(velocity.y) < 7 && groundCollision != null && !groundCollision.segment.semiSolidPlatform && (groundCollision.segment.normalNormalized.x == 0 || onFlatGround) && !grounded)
         {
             velocity.y = 0;
             ApplyVerticalCollisions();
@@ -69,28 +69,26 @@ public class BhbBallPhysics : NeonHeightsPhysicsObject
                 this.velocity = Vector2.Reflect(this.velocity, rightCollision.segment.normalNormalized) * speedDepletionAmount;
                 ApplyHorizontalCollisions();
             }
-            //else if (rightCollision != null && rightCollision.segment.semiSolidPlatform && IsOverSegment(rightCollision.segment))
-            //{
-            //    Debug.Log("wwww");
-            //    this.velocity = Vector2.Reflect(this.velocity, rightCollision.segment.normalNormalized) * speedDepletionAmount;
-            //}
+            else if (velocity.y == 0 && rightCollision != null && rightCollision.segment.semiSolidPlatform && IsOverSegment(rightCollision.segment, 0))
+            {
+               this.velocity = Vector2.Reflect(this.velocity, rightCollision.segment.normalNormalized) * speedDepletionAmount;
+            }
             else if (leftCollision != null && !leftCollision.segment.semiSolidPlatform)
             {
                 this.velocity = Vector2.Reflect(this.velocity, leftCollision.segment.normalNormalized) * speedDepletionAmount;
                 ApplyHorizontalCollisions();
             }
-            //else if (leftCollision != null && leftCollision.segment.semiSolidPlatform && IsOverSegment(leftCollision.segment))
-            //{
-            //    Debug.Log("wwww");
-            //    this.velocity = Vector2.Reflect(this.velocity, leftCollision.segment.normalNormalized) * speedDepletionAmount;
-            //}
+            else if (velocity.y == 0 && leftCollision != null && leftCollision.segment.semiSolidPlatform && IsOverSegment(leftCollision.segment, 0))
+            {
+               this.velocity = Vector2.Reflect(this.velocity, leftCollision.segment.normalNormalized) * speedDepletionAmount;
+            }
         }
         else if (onFlatGround && bottomCollision != null)
         {
             this.velocity = Vector2.Reflect(this.velocity, Vector2.up) * speedDepletionAmount;
             grounded = false;
         }
-
+        
         if (velocity.x > 0)
         {
             velocity.x = Mathf.Max(0, velocity.x -= 2 * Time.deltaTime);

@@ -115,7 +115,7 @@ MonoBehaviour:
   trueSpeed: 0
   groundAngleLimit: 60
   baseRunSpeed: 40
-  baseJumpVelocity: 34
+  baseJumpVelocity: 50
   prevGrounded: 0
   ascendingSlope: 0
   descendingSlope: 0
@@ -133,7 +133,7 @@ MonoBehaviour:
   roadRunnerTimeMax: 0.13
   holdingJump: 0
   jumpHoldTimer: 0
-  jumpHoldTimerMax: 0.3
+  jumpHoldTimerMax: 0.13
   jumpsInAir: 0
   jumpsInAirMax: 2
   playerNumber: 0
