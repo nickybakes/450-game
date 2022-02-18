@@ -122,7 +122,7 @@ public class GameManager : MonoBehaviour
         // if (Paused)
         //     return;
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Backspace))
         {
             tempHud.SetActive(!tempHud.activeSelf);
         }
