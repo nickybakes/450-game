@@ -26,6 +26,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
     private GameObject ball;
     private Ball ballScript;
     private BhbBallPhysics ballPhysics;
+    private float timer;
 
     public Material player2Sprite;
 
@@ -80,10 +81,12 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
         if (GetControlDown(Control.Action))
         {
-            //If outside the range to pickup the ball, do nothing.
+            //If outside the range to pickup the ball, apply cooldown.
             //(Implement dive/tackle/steal in future.)
             if (Vector2.Distance(ball.transform.position, gameObject.transform.position) > pickupRadius)
             {
+                //apply action cooldown
+                //give visual feedback that it's on cooldown (grey out jerma)
                 return;
             }
 
@@ -99,12 +102,36 @@ public class BhbPlayerController : NeonHeightsCharacterController
                 //reverses the x-coord for second player.
                 if(playerNumber == 1)
                 {
-                    playerHandPos = new Vector3(playerHandPos.x * -1, playerHandPos.y, playerHandPos.z);
+                    ball.transform.position = (gameObject.transform.position + new Vector3(playerHandPos.x * -1, playerHandPos.y, playerHandPos.z));
                 }
-
+                else
+                {
+                    ball.transform.position = (gameObject.transform.position + playerHandPos);
+                }
                 ball.transform.parent = gameObject.transform;
+            }
+        }
+
+        //pickup on radius < 5.0f
+        if (Vector2.Distance(ball.transform.position, transform.position) < 5.0f && timer > 1.5f)
+        {
+            timer = 0;
+            ballPhysics.simulatePhysics = false;
+
+            //reverses the x-coord for second player.
+            if (playerNumber == 1)
+            {
+                ball.transform.position = (gameObject.transform.position + new Vector3(playerHandPos.x * -1, playerHandPos.y, playerHandPos.z));
+            }
+            else
+            {
                 ball.transform.position = (gameObject.transform.position + playerHandPos);
             }
+            ball.transform.parent = gameObject.transform;
+        }
+        if (timer < 2)
+        {
+            timer += Time.deltaTime;
         }
 
         stoppedJumping = GetControlUp(Control.Jump);

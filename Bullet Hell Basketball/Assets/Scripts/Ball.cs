@@ -12,7 +12,7 @@ public class Ball : MonoBehaviour
     public float maxThrowDist = 10;
     [Range(2, 100)]
     public int previewArcSmoothness;
-    [Range(0.0f, 10.0f)]
+    [Range(0.0f, 1.0f)]
     public float spinAmt = 1.0f;
 
     private bool isSpinning = false;
@@ -118,7 +118,7 @@ public class Ball : MonoBehaviour
         {
             //gives a set spin to the ball for now.
             //transform.rotation = Quaternion.Euler(0,0,RandomSpin(spinAmt, ballHeight, 0));
-            //transform.Rotate(0,0,spinAmt * physics.currentSpeed, Space.Self);
+            transform.Rotate(0,0,spinAmt * Mathf.Abs(physics.velocity.y), Space.Self);
         }
     }
 
@@ -155,6 +155,7 @@ public class Ball : MonoBehaviour
             gameManager.ResetPlayersAndBall();
             lineRenderer.enabled = false;
         }
+
     }
 
     /// Used for shots that are too far to make the shot.

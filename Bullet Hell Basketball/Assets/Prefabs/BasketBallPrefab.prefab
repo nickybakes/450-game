@@ -116,7 +116,7 @@ MonoBehaviour:
   ballHeight: 20
   maxThrowDist: 35
   previewArcSmoothness: 11
-  spinAmt: 2
+  spinAmt: 0.1
   physics: {fileID: 6230116665754677498}
   leftBasket: {fileID: 0}
   rightBasket: {fileID: 0}
