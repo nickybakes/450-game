@@ -16,26 +16,38 @@ public enum Control
 
 public class BhbPlayerController : NeonHeightsCharacterController
 {
-
     private KeyCode[] player1Controls = { KeyCode.W, KeyCode.S, KeyCode.A, KeyCode.D, KeyCode.Space, KeyCode.B, KeyCode.N, KeyCode.Escape };
     private KeyCode[] player2Controls = { KeyCode.P, KeyCode.Semicolon, KeyCode.L, KeyCode.Quote, KeyCode.RightControl, KeyCode.LeftArrow, KeyCode.DownArrow, KeyCode.Escape };
+
     public int playerNumber;
+    public float pickupRadius;
+    public Vector3 playerHandPos;
+
+    private GameObject ball;
+    private Ball ballScript;
+    private BhbBallPhysics ballPhysics;
+    private float timer;
 
     public Material player2Sprite;
 
     public void Init(int playerNumber){
         this.playerNumber = playerNumber;
 
-        if(playerNumber == 1){
+        if(playerNumber == 1)
+        {
             gameObject.GetComponent<MeshRenderer>().material = player2Sprite;
         }
     }
 
-
     // Start is called before the first frame update
     void Start()
     {
+        pickupRadius = 5;
+        playerHandPos = new Vector3(1.8f, 1.1f, 0.0f);
 
+        ball = GameObject.FindGameObjectWithTag("Ball");
+        ballScript = ball.GetComponent<Ball>();
+        ballPhysics = ball.GetComponent<BhbBallPhysics>();
     }
 
     // Update is called once per frame
@@ -69,13 +81,14 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
         if (GetControlDown(Control.Action))
         {
-            float pickupRadius = 5;
-            GameObject ball = GameObject.FindGameObjectWithTag("Ball");
-
+            //If outside the range to pickup the ball, apply cooldown.
+            //(Implement dive/tackle/steal in future.)
             if (Vector2.Distance(ball.transform.position, gameObject.transform.position) > pickupRadius)
+            {
+                //apply action cooldown
+                //give visual feedback that it's on cooldown (grey out jerma)
                 return;
-
-            Ball ballScript = ball.GetComponent<Ball>();
+            }
 
             //if holding the ball...
             if (ball.transform.parent)
@@ -84,16 +97,41 @@ public class BhbPlayerController : NeonHeightsCharacterController
             }
             else
             {
-                ball.GetComponent<BhbBallPhysics>().simulatePhysics = false;
-                Vector3 positionToHand = new Vector3(1.8f, 1.1f, 0.0f);
+                ballPhysics.simulatePhysics = false;
 
-                if(playerNumber == 1){
-                    positionToHand = new Vector3(-1.8f, 1.1f, 0.0f);
+                //reverses the x-coord for second player.
+                if(playerNumber == 1)
+                {
+                    ball.transform.position = (gameObject.transform.position + new Vector3(playerHandPos.x * -1, playerHandPos.y, playerHandPos.z));
                 }
-
+                else
+                {
+                    ball.transform.position = (gameObject.transform.position + playerHandPos);
+                }
                 ball.transform.parent = gameObject.transform;
-                ball.transform.position = (gameObject.transform.position + positionToHand);
             }
+        }
+
+        //pickup on radius < 5.0f
+        if (Vector2.Distance(ball.transform.position, transform.position) < 5.0f && timer > 1.5f)
+        {
+            timer = 0;
+            ballPhysics.simulatePhysics = false;
+
+            //reverses the x-coord for second player.
+            if (playerNumber == 1)
+            {
+                ball.transform.position = (gameObject.transform.position + new Vector3(playerHandPos.x * -1, playerHandPos.y, playerHandPos.z));
+            }
+            else
+            {
+                ball.transform.position = (gameObject.transform.position + playerHandPos);
+            }
+            ball.transform.parent = gameObject.transform;
+        }
+        if (timer < 2)
+        {
+            timer += Time.deltaTime;
         }
 
         stoppedJumping = GetControlUp(Control.Jump);
