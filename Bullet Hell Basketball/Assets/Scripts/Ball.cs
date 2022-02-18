@@ -20,7 +20,6 @@ public class Ball : MonoBehaviour
     private bool calculateOnce = true;
 
     private Vector3 startPoint;
-    private Vector3 prevPos;
     private float timer = 0.0f;
 
     public BhbBallPhysics physics;
@@ -45,14 +44,7 @@ public class Ball : MonoBehaviour
     {
         if (transform.parent == null && physics.simulatePhysics == false)
         {
-
-            if (currentTarget == null)
-            {
-                physics.simulatePhysics = true;
-                return;
-            }
-
-            //If the ball is too far away from the basket (maxThrowDist), uses old arc to MISS the basket.
+            //If the ball is too far away from the basket, boolWillHit = false.
             if (calculateOnce)
             {
                 //check whether the ball was thrown from the side with the target basket (will go in)
@@ -70,7 +62,7 @@ public class Ball : MonoBehaviour
 
             if (boolWillHit)
             {
-                timer += Time.deltaTime * speed; //completes the parabola trip in one second
+                timer += Time.deltaTime * speed; //completes the parabola trip in one second (* by speed)
                 transform.position = CalculateParabola(startPoint, currentTarget.transform.position, ballHeight, timer);
             }
             else
@@ -84,6 +76,7 @@ public class Ball : MonoBehaviour
         {
             int playerNumber = transform.parent.GetComponent<BhbPlayerController>().playerNumber;
             lineRenderer.enabled = false;
+            isSpinning = false;
 
             if (playerNumber == 0)
             {
@@ -125,7 +118,7 @@ public class Ball : MonoBehaviour
         {
             //gives a set spin to the ball for now.
             //transform.rotation = Quaternion.Euler(0,0,RandomSpin(spinAmt, ballHeight, 0));
-            transform.rotation = transform.rotation * Quaternion.Euler(0, 0, spinAmt);
+            //transform.Rotate(0,0,spinAmt * physics.currentSpeed, Space.Self);
         }
     }
 
@@ -146,13 +139,8 @@ public class Ball : MonoBehaviour
         timer = 0;
         //resets bool
         calculateOnce = true;
-        //resets previous position (used to calculate velocity).
-        prevPos = transform.parent.position;
         //unparents ball from player.
         transform.parent = null;
-
-        //turns off physics
-        physics.simulatePhysics = false;
     }
 
     /// <summary>
@@ -161,29 +149,11 @@ public class Ball : MonoBehaviour
     /// <param name="collision">The thing hitting the ball.</param>
     private void OnCollisionEnter(Collision collision)
     {
-        isSpinning = false;
         //if the ball is touching the basket...
         if (collision.collider.CompareTag("Target"))
         {
             gameManager.ResetPlayersAndBall();
             lineRenderer.enabled = false;
-        }
-        else
-        {
-            //deals with physics collisions.
-            //calculates current velocity at time of impact.
-            physics.velocity = (transform.position - prevPos) / Time.deltaTime;
-
-            //check everything.
-            if (physics.bottomCollision != null ||
-                physics.topCollision != null ||
-                //physics.groundCollision != null ||
-                physics.rightCollision != null ||
-                physics.leftCollision != null)
-            {
-                physics.simulatePhysics = true;
-                physics.SimulatePhysics();
-            }
         }
     }
 
@@ -237,17 +207,5 @@ public class Ball : MonoBehaviour
         }
 
         return drawnParabola;
-    }
-
-    /// <summary>
-    /// Gives a random spin value based around the level of the ball, height, etc.
-    /// </summary>
-    /// <param name="spinAmt">Set amount to spin the ball (multiplies spin value)</param>
-    /// <param name="height">Changes based on how long the player holds the action button down for.</param>
-    /// <param name="ballLvl">The current level of the ball, changes ball speed, increases spin.</param>
-    /// <returns>Returns an array of Vector3s on the parabola.</returns>
-    private float RandomSpin(float spinAmt, float height, int ballLvl)
-    {
-        return spinAmt * Random.Range(0.0f, 10.0f) /* * height * ballLvl */;
     }
 }
