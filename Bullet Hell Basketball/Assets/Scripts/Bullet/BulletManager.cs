@@ -43,7 +43,7 @@ public class BulletManager : MonoBehaviour
             for (int i = 0; i < 360; i += 90)
             {
                 GameObject newBullet = Instantiate(bullet);
-                newBullet.transform.position = gameObject.transform.position;
+                newBullet.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, 0.0f);
                 Bullet bulletScript = newBullet.GetComponent<Bullet>();
                 bulletScript.direction = new Vector2(Mathf.Cos(Mathf.Deg2Rad * (rotationAmountDegrees + i)), Mathf.Sin(Mathf.Deg2Rad * (rotationAmountDegrees + i)));
                 timer = maxTime;
