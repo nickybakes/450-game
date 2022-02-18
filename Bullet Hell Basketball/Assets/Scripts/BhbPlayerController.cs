@@ -18,6 +18,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
 {
     private KeyCode[] player1Controls = { KeyCode.W, KeyCode.S, KeyCode.A, KeyCode.D, KeyCode.Space, KeyCode.B, KeyCode.N, KeyCode.Escape };
     private KeyCode[] player2Controls = { KeyCode.P, KeyCode.Semicolon, KeyCode.L, KeyCode.Quote, KeyCode.RightControl, KeyCode.LeftArrow, KeyCode.DownArrow, KeyCode.Escape };
+    private string[] player1GamepadControls = { "","" , "", ""};
 
     public int playerNumber;
     public float pickupRadius;
@@ -141,6 +142,8 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
     bool GetControlHeld(Control action)
     {
+
+        //if(Input.GetButton())
         if (playerNumber == 0)
         {
             if (action == Control.Jump)
