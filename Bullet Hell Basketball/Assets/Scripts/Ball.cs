@@ -5,9 +5,10 @@ using UnityEngine;
 public class Ball : MonoBehaviour
 {
     [Range(0.1f, 10.0f)]
-    public float speed = 30;
-    [Range(0.0f, 100.0f)]
+    public float speed = 1;
+    [Range(0.0f, 1.0f)]
     public float ballHeight = 10;
+    private float heightMod = 0;
     [Range(0.0f, 100.0f)]
     public float maxThrowDist = 10;
     [Range(2, 100)]
@@ -58,12 +59,15 @@ public class Ball : MonoBehaviour
                     boolWillHit = transform.position.x > 0;
                 }
                 calculateOnce = false;
+
+                //so it's not calculated at runtime
+                heightMod = HeightModifier();
             }
 
             if (boolWillHit)
             {
                 timer += Time.deltaTime * speed; //completes the parabola trip in one second (* by speed)
-                transform.position = CalculateParabola(startPoint, currentTarget.transform.position, ballHeight, timer);
+                transform.position = CalculateParabola(startPoint, currentTarget.transform.position, ballHeight * heightMod, timer);
             }
             else
             {
@@ -92,7 +96,7 @@ public class Ball : MonoBehaviour
             {
                 if (transform.position.x < 0)
                 {
-                    Vector3[] pointsArray = PreviewParabola(transform.position, currentTarget.transform.position, ballHeight, previewArcSmoothness);
+                    Vector3[] pointsArray = PreviewParabola(transform.position, currentTarget.transform.position, ballHeight * HeightModifier(), previewArcSmoothness);
                     lineRenderer.enabled = true;
                     lineRenderer.SetPositions(pointsArray);
 
@@ -104,7 +108,7 @@ public class Ball : MonoBehaviour
             {
                 if (transform.position.x > 0)
                 {
-                    Vector3[] pointsArray = PreviewParabola(transform.position, currentTarget.transform.position, ballHeight, previewArcSmoothness);
+                    Vector3[] pointsArray = PreviewParabola(transform.position, currentTarget.transform.position, ballHeight * HeightModifier(), previewArcSmoothness);
                     lineRenderer.enabled = true;
                     lineRenderer.SetPositions(pointsArray);
 
@@ -112,6 +116,7 @@ public class Ball : MonoBehaviour
                     //currentTarget.GetComponent<Material>().SetColor("_UnlitColor", Color.red);
                 }
             }
+
         }
 
         if (isSpinning)
@@ -208,5 +213,30 @@ public class Ball : MonoBehaviour
         }
 
         return drawnParabola;
+    }
+
+    /// <summary>
+    /// Does some math to make the ball fly straighter when near the basket
+    /// </summary>
+    /// <returns>A value to modify the height variable on Update.</returns>
+    private float HeightModifier()
+    {
+        //right above or below basket, throw in straight line
+        if (Mathf.Abs(transform.position.x - currentTarget.transform.position.x) < 10)
+            return 0;
+        //ball height changes on distance to basket, becoming straight throw close. Capped height modifier.
+
+        //higher if player is lower, lower if player is higher
+        float playerHeightMod = (currentTarget.transform.position.y - transform.position.y) * 50;
+        float ballHeightMod = Mathf.Pow(Vector3.Distance(currentTarget.transform.position, transform.position), 2);
+        ballHeightMod += playerHeightMod;
+
+        //max height to arc
+        if (ballHeightMod > 400)
+            ballHeightMod = 400;
+        //comment out to get wacky upside down parabolas!!!
+        if (ballHeightMod < 0)
+            ballHeightMod = 0;
+        return ballHeightMod;
     }
 }
