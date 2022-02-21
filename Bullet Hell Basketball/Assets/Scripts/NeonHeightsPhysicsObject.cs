@@ -78,18 +78,18 @@ public class NeonHeightsPhysicsObject : MonoBehaviour
         transform.position = new Vector3(x, transform.position.y);
     }
     
-    public bool IsOverSegment(StaticCollisionSegment segment)
+    public bool IsOverSegment(StaticCollisionSegment segment, float overlapAmount = -.75f)
     {
         bool leftBottomCornerOver = false;
         bool rightBottomCornerOver = false;
         Vector2 bottomLeftCorner = new Vector2();
         Vector2 bottomRightCorner = new Vector2();
 
-        bottomLeftCorner = new Vector2(transform.position.x + xOffset + (velocity.x * Time.deltaTime), transform.position.y + yOffset + (velocity.y * Time.deltaTime));
-        bottomRightCorner = new Vector2(transform.position.x + xOffset + width + (velocity.x * Time.deltaTime), transform.position.y + yOffset + (velocity.y * Time.deltaTime));
+        bottomLeftCorner = new Vector2(transform.position.x + xOffset, transform.position.y + yOffset);
+        bottomRightCorner = new Vector2(transform.position.x + xOffset + width, transform.position.y + yOffset);
 
-        leftBottomCornerOver = bottomLeftCorner.y - segment.GetYFromX(bottomLeftCorner.x) >= -.75;
-        rightBottomCornerOver = bottomRightCorner.y - segment.GetYFromX(bottomRightCorner.x) >= -.75;
+        leftBottomCornerOver = bottomLeftCorner.y - segment.GetYFromX(bottomLeftCorner.x) >= overlapAmount;
+        rightBottomCornerOver = bottomRightCorner.y - segment.GetYFromX(bottomRightCorner.x) >= overlapAmount;
 
         return leftBottomCornerOver && rightBottomCornerOver;
     }

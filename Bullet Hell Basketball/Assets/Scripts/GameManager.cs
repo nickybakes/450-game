@@ -107,6 +107,7 @@ public class GameManager : MonoBehaviour
         rightBasket = Instantiate(basketPrefab);
         rightBasket.transform.position = new Vector2(-basketLocation.position.x, basketLocation.position.y);
         ballControlScript.rightBasket = rightBasket;
+        rightBasket.gameObject.transform.localScale = new Vector3(-1, 1, 1);
 
 
         BeginRound();
@@ -119,12 +120,37 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        if(player1Script.controllerNumber == -1){
+            for (int i = 1; i <= 8; i++)
+            {
+                if (Input.GetButton("J" + i + "A") && player2Script.controllerNumber != i)
+                    player1Script.controllerNumber = i;
+            }
+        }
+
+        if (player2Script.controllerNumber == -1)
+        {
+            for (int i = 1; i <= 8; i++)
+            {
+                if (Input.GetButton("J" + i + "A") && player1Script.controllerNumber != i)
+                    player2Script.controllerNumber = i;
+            }
+        }
+
         // if (Paused)
         //     return;
 
         if (Input.GetKeyDown(KeyCode.Backspace))
         {
-            tempHud.SetActive(!tempHud.activeSelf);
+            ToggleHowToPlay();
+        }
+
+        for (int i = 1; i <= 8; i++)
+        {
+            if (Input.GetButtonDown("J" + i + "Start")){
+                ToggleHowToPlay();
+                break;
+            }
         }
 
 
@@ -136,6 +162,10 @@ public class GameManager : MonoBehaviour
         //{
         // End the game
         //}
+    }
+
+    public void ToggleHowToPlay(){
+        tempHud.SetActive(!tempHud.activeSelf);
     }
 
     private void EndGame()

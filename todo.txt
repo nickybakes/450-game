@@ -1,0 +1,7 @@
+//controller support
+//basket sprites
+//basket rim functionality (ball only goes in from top)
+//stop own goaling
+//steal
+slap hit ball
+tier ball up in speed
