@@ -18,6 +18,8 @@ public class BulletManager : MonoBehaviour
     private Vector3 fixedPoint;
     private float currentAngle;
 
+    public int ownerNumber = 0; //Is this owned by player 1?
+
     // Start is called before the first frame update
     void Start()
     {
@@ -45,6 +47,7 @@ public class BulletManager : MonoBehaviour
                 GameObject newBullet = Instantiate(bullet);
                 newBullet.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, 0.0f);
                 Bullet bulletScript = newBullet.GetComponent<Bullet>();
+                bulletScript.ownerNumber = ownerNumber;
                 bulletScript.direction = new Vector2(Mathf.Cos(Mathf.Deg2Rad * (rotationAmountDegrees + i)), Mathf.Sin(Mathf.Deg2Rad * (rotationAmountDegrees + i)));
                 timer = maxTime;
             }

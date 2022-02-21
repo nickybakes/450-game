@@ -7,6 +7,7 @@ public class Bullet : MonoBehaviour
     public int speed; //Multiplies this by time.deltaTime to increase the speed
     public Vector2 direction;
     public float timer;
+    public int ownerNumber = 0;
     
     // Start is called before the first frame update
     void Start()
@@ -50,10 +51,15 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        BhbPlayerController playerScript = other.gameObject.GetComponent<BhbPlayerController>();
+        
         if (other.gameObject.tag == "Player")
         {
-            Debug.Log("Bullet hit!");
-            Destroy(this.gameObject);
+            if(ownerNumber != playerScript.playerNumber)
+            {
+                Debug.Log("Bullet hit!");
+                Destroy(this.gameObject);
+            }
         }
     }
 
