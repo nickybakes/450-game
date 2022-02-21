@@ -67,7 +67,10 @@ public class Ball : MonoBehaviour
             if (boolWillHit)
             {
                 timer += Time.deltaTime * speed; //completes the parabola trip in one second (* by speed)
-                transform.position = CalculateParabola(startPoint, currentTarget.transform.position, ballHeight * heightMod, timer);
+                Vector2 newPosition = CalculateParabola(startPoint, currentTarget.transform.position, ballHeight * heightMod, timer);
+                if (physics.simulatePhysics)
+                    return;
+                transform.position = newPosition;
             }
             else
             {
@@ -123,7 +126,7 @@ public class Ball : MonoBehaviour
         {
             //gives a set spin to the ball for now.
             //transform.rotation = Quaternion.Euler(0,0,RandomSpin(spinAmt, ballHeight, 0));
-            transform.Rotate(0,0,spinAmt * Mathf.Abs(physics.velocity.y), Space.Self);
+            transform.Rotate(0, 0, spinAmt * Mathf.Abs(physics.velocity.y), Space.Self);
         }
     }
 
@@ -157,10 +160,23 @@ public class Ball : MonoBehaviour
         //if the ball is touching the basket...
         if (collision.collider.CompareTag("Target"))
         {
-            gameManager.ResetPlayersAndBall();
-            lineRenderer.enabled = false;
-        }
+            //stop own goaling
+            if (transform.parent != null)
+            {
+                BhbPlayerController playerController = transform.parent.gameObject.GetComponent<BhbPlayerController>();
+                if (playerController.playerNumber == 0 && collision.collider.gameObject == gameManager.leftBasket)
+                    return;
+                else if (playerController.playerNumber == 1 && collision.collider.gameObject == gameManager.rightBasket)
+                    return;
+            }
 
+            //only lt the ball go in from top or from dunk
+            if ((physics.velocity.y < 0 && transform.parent == null) || transform.parent != null)
+            {
+                gameManager.ResetPlayersAndBall();
+                lineRenderer.enabled = false;
+            }
+        }
     }
 
     /// Used for shots that are too far to make the shot.
@@ -191,8 +207,35 @@ public class Ball : MonoBehaviour
         if (end.y > start.y) up = -up;
         Vector3 result = start + t * travelDirection;
         result += ((-parabolicT * parabolicT + 1) * height) * up.normalized;
+        physics.velocity = (result - gameObject.transform.position) * (1.0f / Time.deltaTime);
+
+        if (transform.parent == null && !physics.simulatePhysics)
+        {
+
+            physics.CheckCollisionsBottom();
+            physics.CheckCollisionsTop();
+            physics.CheckCollisionsRight();
+            physics.CheckCollisionsLeft();
+
+            if ((physics.bottomCollision != null && !physics.bottomCollision.segment.semiSolidPlatform) ||
+            (physics.topCollision != null && !physics.topCollision.segment.semiSolidPlatform) ||
+            (physics.rightCollision != null && !physics.rightCollision.segment.semiSolidPlatform) ||
+            (physics.leftCollision != null && !physics.leftCollision.segment.semiSolidPlatform))
+            {
+                // Debug.Log(result + ", " + gameObject.transform.position);
+                // Debug.Log(physics.velocity);
+
+                physics.simulatePhysics = true;
+                physics.UpdateCollisionRect();
+                physics.ApplyVerticalCollisions();
+                physics.ApplyHorizontalCollisions();
+                physics.velocity = new Vector2(-physics.velocity.x * .7f, physics.velocity.y);
+                physics.SimulatePhysics();
+            }
+        }
+
         return result;
-    }  
+    }
 
     /// <summary>
     /// Draws a preview of the parabola when a player has the ball and is inside the appropriate shot line.

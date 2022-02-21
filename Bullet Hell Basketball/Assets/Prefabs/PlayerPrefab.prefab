@@ -114,7 +114,7 @@ MonoBehaviour:
   trueSpeed: 0
   groundAngleLimit: 60
   baseRunSpeed: 40
-  baseJumpVelocity: 34
+  baseJumpVelocity: 50
   prevGrounded: 0
   ascendingSlope: 0
   descendingSlope: 0
@@ -132,10 +132,12 @@ MonoBehaviour:
   roadRunnerTimeMax: 0.13
   holdingJump: 0
   jumpHoldTimer: 0
-  jumpHoldTimerMax: 0.3
+  jumpHoldTimerMax: 0.13
   jumpsInAir: 0
   jumpsInAirMax: 2
+  controllerNumber: -1
   playerNumber: 0
   pickupRadius: 0
   playerHandPos: {x: 0, y: 0, z: 0}
+  autoCatchCooldownTimerMax: 0.67
   player2Sprite: {fileID: 2100000, guid: 354bff9f490c4cc47afa506070ddf72d, type: 2}
