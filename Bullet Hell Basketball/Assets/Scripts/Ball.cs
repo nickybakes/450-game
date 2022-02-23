@@ -103,8 +103,13 @@ public class Ball : MonoBehaviour
                     lineRenderer.enabled = true;
                     lineRenderer.SetPositions(pointsArray);
 
-                    //Change target color (add marker later)
-                    //currentTarget.GetComponent<Material>().SetColor("_UnlitColor", Color.red);
+                    //Add crosshair to basket.
+                    //this will be left basket
+                    currentTarget.transform.GetChild(0).gameObject.SetActive(true);
+                }
+                else
+                {
+                    currentTarget.transform.GetChild(0).gameObject.SetActive(false);
                 }
             }
             else if (currentTarget == rightBasket)
@@ -115,8 +120,12 @@ public class Ball : MonoBehaviour
                     lineRenderer.enabled = true;
                     lineRenderer.SetPositions(pointsArray);
 
-                    //Change target color (add marker later)
-                    //currentTarget.GetComponent<Material>().SetColor("_UnlitColor", Color.red);
+                    //Add crosshair to basket.
+                    currentTarget.transform.GetChild(0).gameObject.SetActive(true);
+                }
+                else
+                {
+                    currentTarget.transform.GetChild(0).gameObject.SetActive(false);
                 }
             }
 
