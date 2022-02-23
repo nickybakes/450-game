@@ -58,6 +58,8 @@ public class Bullet : MonoBehaviour
             if(ownerNumber != playerScript.playerNumber)
             {
                 Debug.Log("Bullet hit!");
+                //Insert method for when player is hit
+                playerScript.GetsHit();
                 Destroy(this.gameObject);
             }
         }

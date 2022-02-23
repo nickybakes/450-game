@@ -365,4 +365,10 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
         return false;
     }
+
+    public void GetsHit()
+    {
+        //this.transform.rotation = new Quaternion(0.0f,0.0f,90.0f, 0.0f);
+        transform.Rotate(new Vector3(0.0f, 90.0f, 0.0f));
+    }
 }
