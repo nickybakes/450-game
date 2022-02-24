@@ -187,5 +187,8 @@ public class GameManager : MonoBehaviour
 
         ballPhysicsScript.simulatePhysics = true;
         ballControlScript.currentTarget = null;
+
+        leftBasket.transform.GetChild(0).gameObject.SetActive(false);
+        rightBasket.transform.GetChild(0).gameObject.SetActive(false);
     }
 }

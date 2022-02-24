@@ -38,11 +38,18 @@ public class Ball : MonoBehaviour
     {
         gameManager = FindObjectOfType<GameManager>();
         lineRenderer.positionCount = previewArcSmoothness;
+
+        //set crosshair colors
+        leftBasket.transform.GetChild(0).GetComponent<SpriteRenderer>().color = new Color(0.0f, 0.0f, 255.0f);
+        rightBasket.transform.GetChild(0).GetComponent<SpriteRenderer>().color = new Color(255.0f, 255.0f, 0.0f);
     }
 
     // Update is called once per frame
     void Update()
     {
+        SetRightBasketCrosshair(false);
+        SetLeftBasketCrosshair(false);
+
         if (transform.parent == null && physics.simulatePhysics == false)
         {
             //If the ball is too far away from the basket, boolWillHit = false.
@@ -104,12 +111,11 @@ public class Ball : MonoBehaviour
                     lineRenderer.SetPositions(pointsArray);
 
                     //Add crosshair to basket.
-                    //this will be left basket
-                    currentTarget.transform.GetChild(0).gameObject.SetActive(true);
+                    SetLeftBasketCrosshair(true);
                 }
                 else
                 {
-                    currentTarget.transform.GetChild(0).gameObject.SetActive(false);
+                    SetLeftBasketCrosshair(false);
                 }
             }
             else if (currentTarget == rightBasket)
@@ -121,11 +127,11 @@ public class Ball : MonoBehaviour
                     lineRenderer.SetPositions(pointsArray);
 
                     //Add crosshair to basket.
-                    currentTarget.transform.GetChild(0).gameObject.SetActive(true);
+                    SetRightBasketCrosshair(true);
                 }
                 else
                 {
-                    currentTarget.transform.GetChild(0).gameObject.SetActive(false);
+                    SetRightBasketCrosshair(false);
                 }
             }
 
@@ -179,7 +185,7 @@ public class Ball : MonoBehaviour
                     return;
             }
 
-            //only lt the ball go in from top or from dunk
+            //only if the ball goes in from top or from dunk
             if ((physics.velocity.y < 0 && transform.parent == null) || transform.parent != null)
             {
                 gameManager.ResetPlayersAndBall();
@@ -290,5 +296,17 @@ public class Ball : MonoBehaviour
         if (ballHeightMod < 0)
             ballHeightMod = 0;
         return ballHeightMod;
+    }
+
+    /// <summary>
+    /// Helper methods for setting crosshairs.
+    /// </summary>
+    private void SetLeftBasketCrosshair(bool a)
+    {
+        leftBasket.transform.GetChild(0).gameObject.SetActive(a);
+    }
+    private void SetRightBasketCrosshair(bool a)
+    {
+        rightBasket.transform.GetChild(0).gameObject.SetActive(a);
     }
 }
