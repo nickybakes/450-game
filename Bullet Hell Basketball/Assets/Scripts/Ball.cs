@@ -39,9 +39,6 @@ public class Ball : MonoBehaviour
         gameManager = FindObjectOfType<GameManager>();
         lineRenderer.positionCount = previewArcSmoothness;
 
-        //set crosshair colors
-        leftBasket.transform.GetChild(0).GetComponent<SpriteRenderer>().color = new Color(0.0f, 0.0f, 255.0f);
-        rightBasket.transform.GetChild(0).GetComponent<SpriteRenderer>().color = new Color(255.0f, 255.0f, 0.0f);
     }
 
     // Update is called once per frame
