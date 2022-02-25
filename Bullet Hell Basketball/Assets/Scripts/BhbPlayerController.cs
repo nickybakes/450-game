@@ -118,16 +118,14 @@ public class BhbPlayerController : NeonHeightsCharacterController
         {
             string gamepadIdentifier = "J" + controllerNumber;
             //control sticks
-            float controlStickX = Input.GetAxis(gamepadIdentifier + gamepadControls[2]);
-            float controlStickY = Input.GetAxis(gamepadIdentifier + gamepadControls[0]);
+            float controlStickX = Input.GetAxisRaw(gamepadIdentifier + gamepadControls[2]);
+            float controlStickY = Input.GetAxisRaw(gamepadIdentifier + gamepadControls[0]);
             //dpads
-            float dPadX = Input.GetAxis(gamepadIdentifier + gamepadControls[3]);
-            float dPadY = Input.GetAxis(gamepadIdentifier + gamepadControls[1]);
+            float dPadX = Input.GetAxisRaw(gamepadIdentifier + gamepadControls[3]);
+            float dPadY = Input.GetAxisRaw(gamepadIdentifier + gamepadControls[1]);
             //in order to get the previous axis, we gotta take the max absolute value of either the dpad or control sticks
             prevControlAxis = new Vector2((Mathf.Abs(controlStickX) > Mathf.Abs(dPadX) ? controlStickX : dPadX), (Mathf.Abs(controlStickY) > Mathf.Abs(dPadY) ? controlStickY : dPadY));
-        }
-
-        Debug.Log(jumping);
+        }   
         UpdateAugust();
     }
 
@@ -265,26 +263,26 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
         if (action == Control.Up)
         {
-            return Input.GetAxis(gamepadIdentifier + gamepadControls[0]) > axisDeadZone || Input.GetAxis(gamepadIdentifier + gamepadControls[1]) > 0;
+            return Input.GetAxisRaw(gamepadIdentifier + gamepadControls[0]) > axisDeadZone || Input.GetAxisRaw(gamepadIdentifier + gamepadControls[1]) > 0;
         }
         else if (action == Control.Down)
         {
-            return Input.GetAxis(gamepadIdentifier + gamepadControls[0]) < -axisDeadZone || Input.GetAxis(gamepadIdentifier + gamepadControls[1]) < 0;
+            return Input.GetAxisRaw(gamepadIdentifier + gamepadControls[0]) < -axisDeadZone || Input.GetAxisRaw(gamepadIdentifier + gamepadControls[1]) < 0;
         }
 
         if (action == Control.Right)
         {
-            return Input.GetAxis(gamepadIdentifier + gamepadControls[2]) > axisDeadZone || Input.GetAxis(gamepadIdentifier + gamepadControls[3]) > 0;
+            return Input.GetAxisRaw(gamepadIdentifier + gamepadControls[2]) > axisDeadZone || Input.GetAxisRaw(gamepadIdentifier + gamepadControls[3]) > 0;
         }
         else if (action == Control.Left)
         {
-            return Input.GetAxis(gamepadIdentifier + gamepadControls[2]) < -axisDeadZone || Input.GetAxis(gamepadIdentifier + gamepadControls[3]) < 0;
+            return Input.GetAxisRaw(gamepadIdentifier + gamepadControls[2]) < -axisDeadZone || Input.GetAxisRaw(gamepadIdentifier + gamepadControls[3]) < 0;
         }
 
 
         if (action == Control.Jump || action == Control.Jump2)
         {
-            return Input.GetButton(gamepadIdentifier + gamepadControls[4]) || Input.GetButton(gamepadIdentifier + gamepadControls[5]) || GetGamepadControlHeld(Control.Up);
+            return Input.GetButton(gamepadIdentifier + gamepadControls[4]) || Input.GetButton(gamepadIdentifier + gamepadControls[5]);
         }
         else if (action == Control.Action)
         {
@@ -308,26 +306,26 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
         if (action == Control.Up && prevControlAxis.y <= axisDeadZone)
         {
-            return Input.GetAxis(gamepadIdentifier + gamepadControls[0]) > axisDeadZone || Input.GetAxis(gamepadIdentifier + gamepadControls[1]) > 0;
+            return Input.GetAxisRaw(gamepadIdentifier + gamepadControls[0]) > axisDeadZone || Input.GetAxisRaw(gamepadIdentifier + gamepadControls[1]) > 0;
         }
         else if (action == Control.Down && prevControlAxis.y >= -axisDeadZone)
         {
-            return Input.GetAxis(gamepadIdentifier + gamepadControls[0]) < -axisDeadZone || Input.GetAxis(gamepadIdentifier + gamepadControls[1]) < 0;
+            return Input.GetAxisRaw(gamepadIdentifier + gamepadControls[0]) < -axisDeadZone || Input.GetAxisRaw(gamepadIdentifier + gamepadControls[1]) < 0;
         }
 
         if (action == Control.Right && prevControlAxis.x <= axisDeadZone)
         {
-            return Input.GetAxis(gamepadIdentifier + gamepadControls[2]) > axisDeadZone || Input.GetAxis(gamepadIdentifier + gamepadControls[3]) > 0;
+            return Input.GetAxisRaw(gamepadIdentifier + gamepadControls[2]) > axisDeadZone || Input.GetAxisRaw(gamepadIdentifier + gamepadControls[3]) > 0;
         }
         else if (action == Control.Left && prevControlAxis.y >= -axisDeadZone)
         {
-            return Input.GetAxis(gamepadIdentifier + gamepadControls[2]) < -axisDeadZone || Input.GetAxis(gamepadIdentifier + gamepadControls[3]) < 0;
+            return Input.GetAxisRaw(gamepadIdentifier + gamepadControls[2]) < -axisDeadZone || Input.GetAxisRaw(gamepadIdentifier + gamepadControls[3]) < 0;
         }
 
 
         if (action == Control.Jump || action == Control.Jump2)
         {
-            return Input.GetButtonDown(gamepadIdentifier + gamepadControls[4]) || Input.GetButtonDown(gamepadIdentifier + gamepadControls[5]) || GetGamepadControlDown(Control.Up);
+            return Input.GetButtonDown(gamepadIdentifier + gamepadControls[4]) || Input.GetButtonDown(gamepadIdentifier + gamepadControls[5]);
         }
         else if (action == Control.Action)
         {
@@ -350,26 +348,26 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
         if (action == Control.Up && prevControlAxis.y > axisDeadZone)
         {
-            return Input.GetAxis(gamepadIdentifier + gamepadControls[0]) <= axisDeadZone || Input.GetAxis(gamepadIdentifier + gamepadControls[1]) < 0;
+            return Input.GetAxisRaw(gamepadIdentifier + gamepadControls[0]) <= axisDeadZone || Input.GetAxisRaw(gamepadIdentifier + gamepadControls[1]) < 0;
         }
         else if (action == Control.Down && prevControlAxis.y < -axisDeadZone)
         {
-            return Input.GetAxis(gamepadIdentifier + gamepadControls[0]) >= -axisDeadZone || Input.GetAxis(gamepadIdentifier + gamepadControls[1]) > 0;
+            return Input.GetAxisRaw(gamepadIdentifier + gamepadControls[0]) >= -axisDeadZone || Input.GetAxisRaw(gamepadIdentifier + gamepadControls[1]) > 0;
         }
 
         if (action == Control.Right && prevControlAxis.x > axisDeadZone)
         {
-            return Input.GetAxis(gamepadIdentifier + gamepadControls[2]) <= axisDeadZone || Input.GetAxis(gamepadIdentifier + gamepadControls[3]) < 0;
+            return Input.GetAxisRaw(gamepadIdentifier + gamepadControls[2]) <= axisDeadZone || Input.GetAxisRaw(gamepadIdentifier + gamepadControls[3]) < 0;
         }
         else if (action == Control.Left && prevControlAxis.y < -axisDeadZone)
         {
-            return Input.GetAxis(gamepadIdentifier + gamepadControls[2]) >= -axisDeadZone || Input.GetAxis(gamepadIdentifier + gamepadControls[3]) > 0;
+            return Input.GetAxisRaw(gamepadIdentifier + gamepadControls[2]) >= -axisDeadZone || Input.GetAxisRaw(gamepadIdentifier + gamepadControls[3]) > 0;
         }
 
 
         if (action == Control.Jump || action == Control.Jump2)
         {
-            return Input.GetButtonUp(gamepadIdentifier + gamepadControls[4]) || Input.GetButtonUp(gamepadIdentifier + gamepadControls[5]) || GetGamepadControlUp(Control.Up);
+            return Input.GetButtonUp(gamepadIdentifier + gamepadControls[4]) || Input.GetButtonUp(gamepadIdentifier + gamepadControls[5]);
         }
         else if (action == Control.Action)
         {
