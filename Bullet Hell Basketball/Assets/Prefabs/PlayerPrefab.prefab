@@ -134,7 +134,7 @@ MonoBehaviour:
   jumpHoldTimer: 0
   jumpHoldTimerMax: 0.13
   jumpsInAir: 0
-  jumpsInAirMax: 2
+  jumpsInAirMax: 1
   controllerNumber: -1
   playerNumber: 0
   pickupRadius: 0
