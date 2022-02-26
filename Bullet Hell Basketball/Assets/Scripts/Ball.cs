@@ -69,7 +69,10 @@ public class Ball : MonoBehaviour
 
             if (boolWillHit)
             {
-                timer += Time.deltaTime * speed; //completes the parabola trip in one second (* by speed)
+                //completes the parabola trip in one second (* by speed), changing speed based on height.
+                //currently, if straight, the ball will travel twice as fast (with a linear curve between max height throw and straight).
+                float speedMod = speed + ((400 - heightMod) / 400);
+                timer += Time.deltaTime * speedMod;
                 Vector2 newPosition = CalculateParabola(startPoint, currentTarget.transform.position, ballHeight * heightMod, timer);
                 if (physics.simulatePhysics)
                     return;
