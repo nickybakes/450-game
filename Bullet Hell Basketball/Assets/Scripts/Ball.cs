@@ -176,11 +176,11 @@ public class Ball : MonoBehaviour
         //if the ball is touching the basket...
         if (collision.collider.CompareTag("Target"))
         {
-            
+            BhbPlayerController playerController = transform.parent.gameObject.GetComponent<BhbPlayerController>();
             //stop own goaling
             if (transform.parent != null)
             {
-                BhbPlayerController playerController = transform.parent.gameObject.GetComponent<BhbPlayerController>();
+                
                 if (playerController.playerNumber == 0 && collision.collider.gameObject == gameManager.leftBasket)
                     return;
                 else if (playerController.playerNumber == 1 && collision.collider.gameObject == gameManager.rightBasket)
@@ -190,7 +190,6 @@ public class Ball : MonoBehaviour
             //only if the ball goes in from top or from dunk
             if ((physics.velocity.y < 0 && transform.parent == null) || transform.parent != null)
             {
-                BhbPlayerController playerController = transform.parent.gameObject.GetComponent<BhbPlayerController>();
                 if (playerController.playerNumber == 0 && collision.collider.gameObject == gameManager.rightBasket)
                     gameManager.player1Score++;
                 else if (playerController.playerNumber == 1 && collision.collider.gameObject == gameManager.leftBasket)
