@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector]
     public GameObject ball;
 
-
+    
     [HideInInspector]
     public GameObject leftBasket;
 
@@ -55,6 +55,11 @@ public class GameManager : MonoBehaviour
     public Ball ballControlScript;
 
     public GameObject tempHud;
+
+    public GameObject playerOneWins;
+    public GameObject playerTwoWins;
+
+    public bool paused;
 
 
     //Score Tracker
@@ -83,6 +88,8 @@ public class GameManager : MonoBehaviour
         //TO ADD: Initialization for both basket, bullet spawners
         player1Score = 0;
         player2Score = 0;
+
+        paused = true;
 
         player1SpawnPosition = new Vector2(playerSpawnLocation.position.x, playerSpawnLocation.position.y);
         player2SpawnPosition = new Vector2(-playerSpawnLocation.position.x, playerSpawnLocation.position.y);
@@ -119,12 +126,31 @@ public class GameManager : MonoBehaviour
 
     private void BeginRound()
     {
+        player1Score = 0;
+        player2Score = 0;
         ResetPlayersAndBall();
     }
 
     void Update()
     {
-        if(player1Script.controllerNumber == -1){
+        if (Input.GetKeyDown(KeyCode.Backspace))
+        {
+            ToggleHowToPlay();
+        }
+
+        for (int i = 1; i <= 8; i++)
+        {
+            if (Input.GetButtonDown("J" + i + "Start"))
+            {
+                ToggleHowToPlay();
+                break;
+            }
+        }
+
+        if (paused)
+            return;
+
+        if (player1Script.controllerNumber == -1){
             for (int i = 1; i <= 8; i++)
             {
                 if (Input.GetButton("J" + i + "A") && player2Script.controllerNumber != i)
@@ -141,21 +167,9 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        // if (Paused)
-        //     return;
+        
 
-        if (Input.GetKeyDown(KeyCode.Backspace))
-        {
-            ToggleHowToPlay();
-        }
-
-        for (int i = 1; i <= 8; i++)
-        {
-            if (Input.GetButtonDown("J" + i + "Start")){
-                ToggleHowToPlay();
-                break;
-            }
-        }
+        
 
 
         //TO ADD: This is where the Pause menu will appear.
@@ -170,14 +184,23 @@ public class GameManager : MonoBehaviour
 
     public void ToggleHowToPlay(){
         tempHud.SetActive(!tempHud.activeSelf);
+
+        if (paused)
+            paused = false;
+        else
+            paused = true;
     }
 
-    private void EndGame()
+    public void EndGame()
     {
-        //if (winConditionMet)
-        //TO ADD: A WAY TO END THIS NEVER ENDING RIDE
-        //else
-        //TO ADD: Player 2 win thingy
+        if (player1Score >= 10)
+            playerOneWins.SetActive(!playerOneWins.activeSelf);
+        if (player2Score >= 10)
+            playerTwoWins.SetActive(!playerTwoWins.activeSelf);
+
+        paused = true;
+        player1Score = 0;
+        player2Score = 0;
     }
 
     public void ResetPlayersAndBall()

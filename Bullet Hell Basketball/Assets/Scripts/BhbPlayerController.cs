@@ -30,6 +30,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
     private Ball ballScript;
     private BhbBallPhysics ballPhysics;
     private float autoCatchCooldownTimer;
+    private GameManager gameManager;
 
     public float autoCatchCooldownTimerMax = 1;
 
@@ -55,6 +56,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
         pickupRadius = 5;
         playerHandPos = new Vector3(1.8f, 1.1f, 0.0f);
 
+        gameManager = FindObjectOfType<GameManager>();
         ball = GameObject.FindGameObjectWithTag("Ball");
         ballScript = ball.GetComponent<Ball>();
         ballPhysics = ball.GetComponent<BhbBallPhysics>();
@@ -63,6 +65,8 @@ public class BhbPlayerController : NeonHeightsCharacterController
     // Update is called once per frame
     void Update()
     {
+        if (gameManager.paused)
+            return;
 
         if (GetControlHeld(Control.Left))
         {

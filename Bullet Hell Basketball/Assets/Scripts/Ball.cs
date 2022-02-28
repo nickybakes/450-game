@@ -38,14 +38,16 @@ public class Ball : MonoBehaviour
     {
         gameManager = FindObjectOfType<GameManager>();
         lineRenderer.positionCount = previewArcSmoothness;
-
     }
 
     // Update is called once per frame
     void Update()
     {
-        SetRightBasketCrosshair(false);
-        SetLeftBasketCrosshair(false);
+        if (gameManager.paused)
+            return;
+
+        SetBasketCrosshair(rightBasket,false);
+        SetBasketCrosshair(leftBasket, false);
 
         if (transform.parent == null && physics.simulatePhysics == false)
         {
@@ -70,7 +72,10 @@ public class Ball : MonoBehaviour
 
             if (boolWillHit)
             {
-                timer += Time.deltaTime * speed; //completes the parabola trip in one second (* by speed)
+                //completes the parabola trip in one second (* by speed), changing speed based on height.
+                //currently, if straight, the ball will travel twice as fast (with a linear curve between max height throw and straight).
+                float speedMod = speed + ((400 - heightMod) / 400);
+                timer += Time.deltaTime * speedMod;
                 Vector2 newPosition = CalculateParabola(startPoint, currentTarget.transform.position, ballHeight * heightMod, timer);
                 if (physics.simulatePhysics)
                     return;
@@ -108,11 +113,11 @@ public class Ball : MonoBehaviour
                     lineRenderer.SetPositions(pointsArray);
 
                     //Add crosshair to basket.
-                    SetLeftBasketCrosshair(true);
+                    SetBasketCrosshair(leftBasket, true);
                 }
                 else
                 {
-                    SetLeftBasketCrosshair(false);
+                    SetBasketCrosshair(leftBasket, false);
                 }
             }
             else if (currentTarget == rightBasket)
@@ -124,14 +129,13 @@ public class Ball : MonoBehaviour
                     lineRenderer.SetPositions(pointsArray);
 
                     //Add crosshair to basket.
-                    SetRightBasketCrosshair(true);
+                    SetBasketCrosshair(rightBasket, true);
                 }
                 else
                 {
-                    SetRightBasketCrosshair(false);
+                    SetBasketCrosshair(rightBasket, false);
                 }
             }
-
         }
 
         if (isSpinning)
@@ -172,7 +176,7 @@ public class Ball : MonoBehaviour
         //if the ball is touching the basket...
         if (collision.collider.CompareTag("Target"))
         {
-            //stop own goaling
+            //stop own goaling when dunking
             if (transform.parent != null)
             {
                 BhbPlayerController playerController = transform.parent.gameObject.GetComponent<BhbPlayerController>();
@@ -185,6 +189,14 @@ public class Ball : MonoBehaviour
             //only if the ball goes in from top or from dunk
             if ((physics.velocity.y < 0 && transform.parent == null) || transform.parent != null)
             {
+                if (collision.collider.gameObject == gameManager.rightBasket)
+                    gameManager.player1Score++;
+                else if (collision.collider.gameObject == gameManager.leftBasket)
+                    gameManager.player2Score++;
+
+                if (gameManager.player1Score >= 10 || gameManager.player2Score >= 10)
+                    gameManager.EndGame();
+
                 gameManager.ResetPlayersAndBall();
                 lineRenderer.enabled = false;
             }
@@ -223,7 +235,6 @@ public class Ball : MonoBehaviour
 
         if (transform.parent == null && !physics.simulatePhysics)
         {
-
             physics.CheckCollisionsBottom();
             physics.CheckCollisionsTop();
             physics.CheckCollisionsRight();
@@ -234,9 +245,6 @@ public class Ball : MonoBehaviour
             (physics.rightCollision != null && !physics.rightCollision.segment.semiSolidPlatform) ||
             (physics.leftCollision != null && !physics.leftCollision.segment.semiSolidPlatform))
             {
-                // Debug.Log(result + ", " + gameObject.transform.position);
-                // Debug.Log(physics.velocity);
-
                 physics.simulatePhysics = true;
                 physics.UpdateCollisionRect();
                 physics.ApplyVerticalCollisions();
@@ -245,7 +253,6 @@ public class Ball : MonoBehaviour
                 physics.SimulatePhysics();
             }
         }
-
         return result;
     }
 
@@ -286,24 +293,23 @@ public class Ball : MonoBehaviour
         float ballHeightMod = Mathf.Pow(Vector3.Distance(currentTarget.transform.position, transform.position), 2);
         ballHeightMod += playerHeightMod;
 
-        //max height to arc
+        //max/min height to arc
         if (ballHeightMod > 400)
             ballHeightMod = 400;
-        //comment out to get wacky upside down parabolas!!!
+
         if (ballHeightMod < 0)
             ballHeightMod = 0;
+
         return ballHeightMod;
     }
 
     /// <summary>
-    /// Helper methods for setting crosshairs.
+    /// Helper method for setting crosshairs.
     /// </summary>
-    private void SetLeftBasketCrosshair(bool a)
+    /// <param name="basket">Which basket to target.</param>
+    /// <param name="a">Bool if set active.</param>
+    private void SetBasketCrosshair(GameObject basket, bool a)
     {
-        leftBasket.transform.GetChild(0).gameObject.SetActive(a);
-    }
-    private void SetRightBasketCrosshair(bool a)
-    {
-        rightBasket.transform.GetChild(0).gameObject.SetActive(a);
+        basket.transform.GetChild(0).gameObject.SetActive(a);
     }
 }
