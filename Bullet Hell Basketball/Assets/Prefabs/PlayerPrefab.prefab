@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3082754990088966469}
   - component: {fileID: 3082754990088966470}
   - component: {fileID: 3082754990088966471}
+  - component: {fileID: 5897430431791840043}
   m_Layer: 0
   m_Name: PlayerPrefab
   m_TagString: Player
@@ -141,3 +142,16 @@ MonoBehaviour:
   playerHandPos: {x: 0, y: 0, z: 0}
   autoCatchCooldownTimerMax: 0.67
   player2Sprite: {fileID: 2100000, guid: 354bff9f490c4cc47afa506070ddf72d, type: 2}
+--- !u!65 &5897430431791840043
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3082754990088966472}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 10.000005, y: 0.000002384186, z: 10.000002}
+  m_Center: {x: 0, y: 0, z: 0}
