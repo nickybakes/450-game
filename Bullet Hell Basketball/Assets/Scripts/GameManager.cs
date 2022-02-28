@@ -59,6 +59,7 @@ public class GameManager : MonoBehaviour
     public GameObject playerOneWins;
     public GameObject playerTwoWins;
 
+    public bool gameOver;
     public bool paused;
 
 
@@ -90,6 +91,7 @@ public class GameManager : MonoBehaviour
         player2Score = 0;
 
         paused = true;
+        gameOver = false;
 
         player1SpawnPosition = new Vector2(playerSpawnLocation.position.x, playerSpawnLocation.position.y);
         player2SpawnPosition = new Vector2(-playerSpawnLocation.position.x, playerSpawnLocation.position.y);
@@ -135,7 +137,15 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Backspace))
         {
-            ToggleHowToPlay();
+            if (gameOver)
+            {
+                playerOneWins.SetActive(false);
+                playerTwoWins.SetActive(false);
+                gameOver = false;
+                paused = false;
+            }
+            else
+                ToggleHowToPlay();
         }
 
         for (int i = 1; i <= 8; i++)
@@ -199,6 +209,7 @@ public class GameManager : MonoBehaviour
             playerTwoWins.SetActive(!playerTwoWins.activeSelf);
 
         paused = true;
+        gameOver = true;
         player1Score = 0;
         player2Score = 0;
     }
