@@ -5,9 +5,10 @@ using UnityEngine;
 public class Ball : MonoBehaviour
 {
     [Range(0.1f, 10.0f)]
-    public float speed = 30;
-    [Range(0.0f, 100.0f)]
+    public float speed = 1;
+    [Range(0.0f, 1.0f)]
     public float ballHeight = 10;
+    private float heightMod = 0;
     [Range(0.0f, 100.0f)]
     public float maxThrowDist = 10;
     [Range(2, 100)]
@@ -37,11 +38,15 @@ public class Ball : MonoBehaviour
     {
         gameManager = FindObjectOfType<GameManager>();
         lineRenderer.positionCount = previewArcSmoothness;
+
     }
 
     // Update is called once per frame
     void Update()
     {
+        SetRightBasketCrosshair(false);
+        SetLeftBasketCrosshair(false);
+
         if (transform.parent == null && physics.simulatePhysics == false)
         {
             //If the ball is too far away from the basket, boolWillHit = false.
@@ -58,12 +63,15 @@ public class Ball : MonoBehaviour
                     boolWillHit = transform.position.x > 0;
                 }
                 calculateOnce = false;
+
+                //so it's not calculated at runtime
+                heightMod = HeightModifier();
             }
 
             if (boolWillHit)
             {
                 timer += Time.deltaTime * speed; //completes the parabola trip in one second (* by speed)
-                Vector2 newPosition = CalculateParabola(startPoint, currentTarget.transform.position, ballHeight, timer);
+                Vector2 newPosition = CalculateParabola(startPoint, currentTarget.transform.position, ballHeight * heightMod, timer);
                 if (physics.simulatePhysics)
                     return;
                 transform.position = newPosition;
@@ -95,26 +103,35 @@ public class Ball : MonoBehaviour
             {
                 if (transform.position.x < 0)
                 {
-                    Vector3[] pointsArray = PreviewParabola(transform.position, currentTarget.transform.position, ballHeight, previewArcSmoothness);
+                    Vector3[] pointsArray = PreviewParabola(transform.position, currentTarget.transform.position, ballHeight * HeightModifier(), previewArcSmoothness);
                     lineRenderer.enabled = true;
                     lineRenderer.SetPositions(pointsArray);
 
-                    //Change target color (add marker later)
-                    //currentTarget.GetComponent<Material>().SetColor("_UnlitColor", Color.red);
+                    //Add crosshair to basket.
+                    SetLeftBasketCrosshair(true);
+                }
+                else
+                {
+                    SetLeftBasketCrosshair(false);
                 }
             }
             else if (currentTarget == rightBasket)
             {
                 if (transform.position.x > 0)
                 {
-                    Vector3[] pointsArray = PreviewParabola(transform.position, currentTarget.transform.position, ballHeight, previewArcSmoothness);
+                    Vector3[] pointsArray = PreviewParabola(transform.position, currentTarget.transform.position, ballHeight * HeightModifier(), previewArcSmoothness);
                     lineRenderer.enabled = true;
                     lineRenderer.SetPositions(pointsArray);
 
-                    //Change target color (add marker later)
-                    //currentTarget.GetComponent<Material>().SetColor("_UnlitColor", Color.red);
+                    //Add crosshair to basket.
+                    SetRightBasketCrosshair(true);
+                }
+                else
+                {
+                    SetRightBasketCrosshair(false);
                 }
             }
+
         }
 
         if (isSpinning)
@@ -165,7 +182,7 @@ public class Ball : MonoBehaviour
                     return;
             }
 
-            //only lt the ball go in from top or from dunk
+            //only if the ball goes in from top or from dunk
             if ((physics.velocity.y < 0 && transform.parent == null) || transform.parent != null)
             {
                 gameManager.ResetPlayersAndBall();
@@ -251,5 +268,42 @@ public class Ball : MonoBehaviour
         }
 
         return drawnParabola;
+    }
+
+    /// <summary>
+    /// Does some math to make the ball fly straighter when near the basket
+    /// </summary>
+    /// <returns>A value to modify the height variable on Update.</returns>
+    private float HeightModifier()
+    {
+        //right above or below basket, throw in straight line
+        if (Mathf.Abs(transform.position.x - currentTarget.transform.position.x) < 10)
+            return 0;
+        //ball height changes on distance to basket, becoming straight throw close. Capped height modifier.
+
+        //higher if player is lower, lower if player is higher
+        float playerHeightMod = (currentTarget.transform.position.y - transform.position.y) * 50;
+        float ballHeightMod = Mathf.Pow(Vector3.Distance(currentTarget.transform.position, transform.position), 2);
+        ballHeightMod += playerHeightMod;
+
+        //max height to arc
+        if (ballHeightMod > 400)
+            ballHeightMod = 400;
+        //comment out to get wacky upside down parabolas!!!
+        if (ballHeightMod < 0)
+            ballHeightMod = 0;
+        return ballHeightMod;
+    }
+
+    /// <summary>
+    /// Helper methods for setting crosshairs.
+    /// </summary>
+    private void SetLeftBasketCrosshair(bool a)
+    {
+        leftBasket.transform.GetChild(0).gameObject.SetActive(a);
+    }
+    private void SetRightBasketCrosshair(bool a)
+    {
+        rightBasket.transform.GetChild(0).gameObject.SetActive(a);
     }
 }

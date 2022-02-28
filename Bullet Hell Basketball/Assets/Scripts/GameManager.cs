@@ -109,6 +109,10 @@ public class GameManager : MonoBehaviour
         ballControlScript.rightBasket = rightBasket;
         rightBasket.gameObject.transform.localScale = new Vector3(-1, 1, 1);
 
+        //set crosshair colors
+        leftBasket.transform.GetChild(0).GetComponent<SpriteRenderer>().color = new Color32(0, 146, 255, 255);
+        rightBasket.transform.GetChild(0).GetComponent<SpriteRenderer>().color = new Color32(255, 255, 0, 255);
+
 
         BeginRound();
     }
@@ -187,5 +191,8 @@ public class GameManager : MonoBehaviour
 
         ballPhysicsScript.simulatePhysics = true;
         ballControlScript.currentTarget = null;
+
+        leftBasket.transform.GetChild(0).gameObject.SetActive(false);
+        rightBasket.transform.GetChild(0).gameObject.SetActive(false);
     }
 }
