@@ -36,6 +36,10 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
     public Material player2Sprite;
 
+    private Vector2 prevControlAxis = Vector2.zero;
+
+    private const float axisDeadZone = .3f;
+
     public void Init(int playerNumber)
     {
         this.playerNumber = playerNumber;
@@ -114,6 +118,18 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
         stoppedJumping = GetControlUp(Control.Jump);
 
+        if (controllerNumber != -1)
+        {
+            string gamepadIdentifier = "J" + controllerNumber;
+            //control sticks
+            float controlStickX = Input.GetAxisRaw(gamepadIdentifier + gamepadControls[2]);
+            float controlStickY = Input.GetAxisRaw(gamepadIdentifier + gamepadControls[0]);
+            //dpads
+            float dPadX = Input.GetAxisRaw(gamepadIdentifier + gamepadControls[3]);
+            float dPadY = Input.GetAxisRaw(gamepadIdentifier + gamepadControls[1]);
+            //in order to get the previous axis, we gotta take the max absolute value of either the dpad or control sticks
+            prevControlAxis = new Vector2((Mathf.Abs(controlStickX) > Mathf.Abs(dPadX) ? controlStickX : dPadX), (Mathf.Abs(controlStickY) > Mathf.Abs(dPadY) ? controlStickY : dPadY));
+        }   
         UpdateAugust();
     }
 
@@ -147,7 +163,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
         {
             if (action == Control.Jump)
             {
-                return Input.GetKey(player1Controls[((int)Control.Jump)]) || Input.GetKey(player1Controls[((int)Control.Jump2)]);
+                return Input.GetKey(player1Controls[((int)Control.Jump)]) || Input.GetKey(player1Controls[((int)Control.Jump2)]) || Input.GetKey(player1Controls[((int)Control.Up)]);
             }
             else
             {
@@ -158,7 +174,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
         {
             if (action == Control.Jump)
             {
-                return Input.GetKey(player2Controls[((int)Control.Jump)]) || Input.GetKey(player2Controls[((int)Control.Jump2)]);
+                return Input.GetKey(player2Controls[((int)Control.Jump)]) || Input.GetKey(player2Controls[((int)Control.Jump2)]) || Input.GetKey(player2Controls[((int)Control.Up)]);
             }
             else
             {
@@ -179,7 +195,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
         {
             if (action == Control.Jump)
             {
-                return Input.GetKeyDown(player1Controls[((int)Control.Jump)]) || Input.GetKeyDown(player1Controls[((int)Control.Jump2)]);
+                return Input.GetKeyDown(player1Controls[((int)Control.Jump)]) || Input.GetKeyDown(player1Controls[((int)Control.Jump2)]) || Input.GetKeyDown(player1Controls[((int)Control.Up)]);
             }
             else
             {
@@ -190,7 +206,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
         {
             if (action == Control.Jump)
             {
-                return Input.GetKeyDown(player2Controls[((int)Control.Jump)]) || Input.GetKeyDown(player2Controls[((int)Control.Jump2)]);
+                return Input.GetKeyDown(player2Controls[((int)Control.Jump)]) || Input.GetKeyDown(player2Controls[((int)Control.Jump2)]) || Input.GetKeyDown(player2Controls[((int)Control.Up)]);
             }
             else
             {
@@ -211,7 +227,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
         {
             if (action == Control.Jump)
             {
-                return Input.GetKeyUp(player1Controls[((int)Control.Jump)]) || Input.GetKeyUp(player1Controls[((int)Control.Jump2)]);
+                return Input.GetKeyUp(player1Controls[((int)Control.Jump)]) || Input.GetKeyUp(player1Controls[((int)Control.Jump2)]) || Input.GetKeyUp(player1Controls[((int)Control.Up)]);
             }
             else
             {
@@ -222,7 +238,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
         {
             if (action == Control.Jump)
             {
-                return Input.GetKeyUp(player2Controls[((int)Control.Jump)]) || Input.GetKeyUp(player2Controls[((int)Control.Jump2)]);
+                return Input.GetKeyUp(player2Controls[((int)Control.Jump)]) || Input.GetKeyUp(player2Controls[((int)Control.Jump2)]) || Input.GetKeyUp(player2Controls[((int)Control.Up)]);
             }
             else
             {
@@ -251,20 +267,20 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
         if (action == Control.Up)
         {
-            return Input.GetAxis(gamepadIdentifier + gamepadControls[0]) > .3 || Input.GetAxis(gamepadIdentifier + gamepadControls[1]) > 0;
+            return Input.GetAxisRaw(gamepadIdentifier + gamepadControls[0]) > axisDeadZone || Input.GetAxisRaw(gamepadIdentifier + gamepadControls[1]) > 0;
         }
         else if (action == Control.Down)
         {
-            return Input.GetAxis(gamepadIdentifier + gamepadControls[0]) < -.3 || Input.GetAxis(gamepadIdentifier + gamepadControls[1]) < 0;
+            return Input.GetAxisRaw(gamepadIdentifier + gamepadControls[0]) < -axisDeadZone || Input.GetAxisRaw(gamepadIdentifier + gamepadControls[1]) < 0;
         }
 
         if (action == Control.Right)
         {
-            return Input.GetAxis(gamepadIdentifier + gamepadControls[2]) > .3 || Input.GetAxis(gamepadIdentifier + gamepadControls[3]) > 0;
+            return Input.GetAxisRaw(gamepadIdentifier + gamepadControls[2]) > axisDeadZone || Input.GetAxisRaw(gamepadIdentifier + gamepadControls[3]) > 0;
         }
         else if (action == Control.Left)
         {
-            return Input.GetAxis(gamepadIdentifier + gamepadControls[2]) < -.3 || Input.GetAxis(gamepadIdentifier + gamepadControls[3]) < 0;
+            return Input.GetAxisRaw(gamepadIdentifier + gamepadControls[2]) < -axisDeadZone || Input.GetAxisRaw(gamepadIdentifier + gamepadControls[3]) < 0;
         }
 
 
@@ -290,26 +306,25 @@ public class BhbPlayerController : NeonHeightsCharacterController
         if (controllerNumber == -1)
             return false;
 
-
         string gamepadIdentifier = "J" + controllerNumber;
 
-        // if (action == Control.Up)
-        // {
-        //     return Input.GetAxis(gamepadIdentifier + gamepadControls[0]) > .3 || Input.GetAxis(gamepadIdentifier + gamepadControls[1]) > 0;
-        // }
-        // else if (action == Control.Down)
-        // {
-        //     return Input.GetAxis(gamepadIdentifier + gamepadControls[0]) < -.3 || Input.GetAxis(gamepadIdentifier + gamepadControls[1]) < 0;
-        // }
+        if (action == Control.Up && prevControlAxis.y <= axisDeadZone)
+        {
+            return Input.GetAxisRaw(gamepadIdentifier + gamepadControls[0]) > axisDeadZone || Input.GetAxisRaw(gamepadIdentifier + gamepadControls[1]) > 0;
+        }
+        else if (action == Control.Down && prevControlAxis.y >= -axisDeadZone)
+        {
+            return Input.GetAxisRaw(gamepadIdentifier + gamepadControls[0]) < -axisDeadZone || Input.GetAxisRaw(gamepadIdentifier + gamepadControls[1]) < 0;
+        }
 
-        // if (action == Control.Right)
-        // {
-        //     return Input.GetAxis(gamepadIdentifier + gamepadControls[2]) > .3 || Input.GetAxis(gamepadIdentifier + gamepadControls[3]) > 0;
-        // }
-        // else if (action == Control.Left)
-        // {
-        //     return Input.GetAxis(gamepadIdentifier + gamepadControls[2]) < -.3 || Input.GetAxis(gamepadIdentifier + gamepadControls[3]) < 0;
-        // }
+        if (action == Control.Right && prevControlAxis.x <= axisDeadZone)
+        {
+            return Input.GetAxisRaw(gamepadIdentifier + gamepadControls[2]) > axisDeadZone || Input.GetAxisRaw(gamepadIdentifier + gamepadControls[3]) > 0;
+        }
+        else if (action == Control.Left && prevControlAxis.y >= -axisDeadZone)
+        {
+            return Input.GetAxisRaw(gamepadIdentifier + gamepadControls[2]) < -axisDeadZone || Input.GetAxisRaw(gamepadIdentifier + gamepadControls[3]) < 0;
+        }
 
 
         if (action == Control.Jump || action == Control.Jump2)
@@ -333,26 +348,25 @@ public class BhbPlayerController : NeonHeightsCharacterController
         if (controllerNumber == -1)
             return false;
 
-
         string gamepadIdentifier = "J" + controllerNumber;
 
-        // if (action == Control.Up)
-        // {
-        //     return Input.GetAxis(gamepadIdentifier + gamepadControls[0]) > .3 || Input.GetAxis(gamepadIdentifier + gamepadControls[1]) > 0;
-        // }
-        // else if (action == Control.Down)
-        // {
-        //     return Input.GetAxis(gamepadIdentifier + gamepadControls[0]) < -.3 || Input.GetAxis(gamepadIdentifier + gamepadControls[1]) < 0;
-        // }
+        if (action == Control.Up && prevControlAxis.y > axisDeadZone)
+        {
+            return Input.GetAxisRaw(gamepadIdentifier + gamepadControls[0]) <= axisDeadZone || Input.GetAxisRaw(gamepadIdentifier + gamepadControls[1]) < 0;
+        }
+        else if (action == Control.Down && prevControlAxis.y < -axisDeadZone)
+        {
+            return Input.GetAxisRaw(gamepadIdentifier + gamepadControls[0]) >= -axisDeadZone || Input.GetAxisRaw(gamepadIdentifier + gamepadControls[1]) > 0;
+        }
 
-        // if (action == Control.Right)
-        // {
-        //     return Input.GetAxis(gamepadIdentifier + gamepadControls[2]) > .3 || Input.GetAxis(gamepadIdentifier + gamepadControls[3]) > 0;
-        // }
-        // else if (action == Control.Left)
-        // {
-        //     return Input.GetAxis(gamepadIdentifier + gamepadControls[2]) < -.3 || Input.GetAxis(gamepadIdentifier + gamepadControls[3]) < 0;
-        // }
+        if (action == Control.Right && prevControlAxis.x > axisDeadZone)
+        {
+            return Input.GetAxisRaw(gamepadIdentifier + gamepadControls[2]) <= axisDeadZone || Input.GetAxisRaw(gamepadIdentifier + gamepadControls[3]) < 0;
+        }
+        else if (action == Control.Left && prevControlAxis.y < -axisDeadZone)
+        {
+            return Input.GetAxisRaw(gamepadIdentifier + gamepadControls[2]) >= -axisDeadZone || Input.GetAxisRaw(gamepadIdentifier + gamepadControls[3]) > 0;
+        }
 
 
         if (action == Control.Jump || action == Control.Jump2)
@@ -369,5 +383,12 @@ public class BhbPlayerController : NeonHeightsCharacterController
         }
 
         return false;
+    }
+
+    public void GetsHit()
+    {
+        //this.transform.rotation = new Quaternion(0.0f,0.0f,90.0f, 0.0f);
+        //transform.Rotate(new Vector3(0.0f, 90.0f, 0.0f));\
+        Debug.Log("Player " + playerNumber + " was hit.");
     }
 }
