@@ -46,7 +46,7 @@ public class Ball : MonoBehaviour
         if (gameManager.paused)
             return;
 
-        SetBasketCrosshair(rightBasket,false);
+        SetBasketCrosshair(rightBasket, false);
         SetBasketCrosshair(leftBasket, false);
 
         if (transform.parent == null && physics.simulatePhysics == false)
@@ -74,9 +74,9 @@ public class Ball : MonoBehaviour
             {
                 //completes the parabola trip in one second (* by speed), changing speed based on height.
                 //currently, if straight, the ball will travel twice as fast (with a linear curve between max height throw and straight).
-                float speedMod = speed + ((400 - heightMod) / 400);
+                float speedMod = speed + ((400 - heightMod) / 400) /*+ (Mathf.Abs(currentTarget.transform.position.x - transform.position.x)/currentTarget.transform.position.x)*/;
                 timer += Time.deltaTime * speedMod;
-                Vector2 newPosition = CalculateParabola(startPoint, currentTarget.transform.position, ballHeight * heightMod, timer);
+                Vector2 newPosition = CalculateParabola(startPoint, currentTarget.transform.GetChild(0).transform.position, ballHeight * heightMod, timer);
                 if (physics.simulatePhysics)
                     return;
                 transform.position = newPosition;
@@ -108,7 +108,7 @@ public class Ball : MonoBehaviour
             {
                 if (transform.position.x < 0)
                 {
-                    Vector3[] pointsArray = PreviewParabola(transform.position, currentTarget.transform.position, ballHeight * HeightModifier(), previewArcSmoothness);
+                    Vector3[] pointsArray = PreviewParabola(transform.position, currentTarget.transform.GetChild(0).transform.position, ballHeight * HeightModifier(), previewArcSmoothness);
                     lineRenderer.enabled = true;
                     lineRenderer.SetPositions(pointsArray);
 
@@ -124,7 +124,7 @@ public class Ball : MonoBehaviour
             {
                 if (transform.position.x > 0)
                 {
-                    Vector3[] pointsArray = PreviewParabola(transform.position, currentTarget.transform.position, ballHeight * HeightModifier(), previewArcSmoothness);
+                    Vector3[] pointsArray = PreviewParabola(transform.position, currentTarget.transform.GetChild(0).transform.position, ballHeight * HeightModifier(), previewArcSmoothness);
                     lineRenderer.enabled = true;
                     lineRenderer.SetPositions(pointsArray);
 
@@ -223,15 +223,14 @@ public class Ball : MonoBehaviour
     Vector3 CalculateParabola(Vector3 start, Vector3 end, float height, float t)
     {
         float parabolicT = t * 2 - 1;
-        //start and end are not level, gets more complicated
+        //If the player is very close to the basket and is under it, use different parabola to shoot.
+        //Shot goes up and over the basket, then falls in.
+        //if (Mathf.Abs(currentTarget.transform.position.x - transform.position.x) < 10)
+        //{
+        //start and end are roughly level, pretend they are - simpler solution with less steps
         Vector3 travelDirection = end - start;
-        Vector3 levelDirection = end - new Vector3(start.x, end.y, start.z);
-        Vector3 right = Vector3.Cross(travelDirection, levelDirection);
-        Vector3 up = Vector3.Cross(right, travelDirection);
-        if (end.y > start.y) up = -up;
         Vector3 result = start + t * travelDirection;
-        result += ((-parabolicT * parabolicT + 1) * height) * up.normalized;
-        physics.velocity = (result - gameObject.transform.position) * (1.0f / Time.deltaTime);
+        result.y += (-parabolicT * parabolicT + 1) * height;
 
         if (transform.parent == null && !physics.simulatePhysics)
         {
@@ -253,7 +252,26 @@ public class Ball : MonoBehaviour
                 physics.SimulatePhysics();
             }
         }
+
         return result;
+
+
+        //}
+        /*else
+        {
+        //start and end are not level, gets more complicated
+        Vector3 travelDirection = end - start;
+        Vector3 levelDirection = end - new Vector3(start.x, end.y, start.z);
+        Vector3 right = Vector3.Cross(travelDirection, levelDirection);
+        Vector3 up = Vector3.Cross(right, travelDirection);
+        if (end.y > start.y) up = -up;
+        Vector3 result = start + t * travelDirection;
+        result += ((-parabolicT * parabolicT + 1) * height) * up.normalized;
+        physics.velocity = (result - gameObject.transform.position) * (1.0f / Time.deltaTime);
+
+        
+        return result;
+        }*/
     }
 
     /// <summary>
@@ -284,8 +302,8 @@ public class Ball : MonoBehaviour
     private float HeightModifier()
     {
         //right above or below basket, throw in straight line
-        if (Mathf.Abs(transform.position.x - currentTarget.transform.position.x) < 10)
-            return 0;
+        //if (Mathf.Abs(transform.position.x - currentTarget.transform.position.x) < 10)
+        //return 0;
         //ball height changes on distance to basket, becoming straight throw close. Capped height modifier.
 
         //higher if player is lower, lower if player is higher
