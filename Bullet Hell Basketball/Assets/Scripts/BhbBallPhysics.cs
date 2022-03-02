@@ -11,10 +11,12 @@ public class BhbBallPhysics : NeonHeightsPhysicsObject
 
     public float speedDepletionAmount = .7f;
 
+    private GameManager gameManager;
+
     // Start is called before the first frame update
     void Start()
     {
-
+        gameManager = FindObjectOfType<GameManager>();
     }
 
     public void SimulatePhysics()
@@ -132,6 +134,9 @@ public class BhbBallPhysics : NeonHeightsPhysicsObject
     // Update is called once per frame
     void Update()
     {
+        if (gameManager.paused)
+            return;
+            
         if (simulatePhysics)
             SimulatePhysics();
     }
