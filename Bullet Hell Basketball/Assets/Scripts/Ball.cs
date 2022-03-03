@@ -173,7 +173,7 @@ public class Ball : MonoBehaviour
                 else if (playerController.playerNumber == 1 && collision.collider.gameObject == gameManager.rightBasket)
                     return;
             }
-
+            Debug.Log(physics.velocity.y);
             //only if the ball goes in from top or from dunk
             if ((physics.velocity.y < 0 && transform.parent == null) || transform.parent != null)
             {
@@ -216,6 +216,7 @@ public class Ball : MonoBehaviour
         Vector3 travelDirection = end - start;
         Vector3 result = start + t * travelDirection;
         result.y += (-parabolicT * parabolicT + 1) * height;
+        physics.velocity = (result - gameObject.transform.position) * (1.0f / Time.deltaTime);
 
         if (transform.parent == null && !physics.simulatePhysics)
         {
