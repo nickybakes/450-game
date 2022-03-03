@@ -103,38 +103,26 @@ public class Ball : MonoBehaviour
                 currentTarget = leftBasket;
             }
 
-            //the ball is currently being held, now checks if the ball is targeting a basket, if so, shows previewParabola.
-            if (currentTarget == leftBasket)
-            {
-                if (transform.position.x < 0)
-                {
-                    Vector3[] pointsArray = PreviewParabola(transform.position, currentTarget.transform.GetChild(0).transform.position, ballHeight * HeightModifier(), previewArcSmoothness);
-                    lineRenderer.enabled = true;
-                    lineRenderer.SetPositions(pointsArray);
+            SetBasketCrosshair(currentTarget, false);
 
-                    //Add crosshair to basket.
-                    SetBasketCrosshair(leftBasket, true);
-                }
-                else
-                {
-                    SetBasketCrosshair(leftBasket, false);
-                }
+            //the ball is currently being held, now checks if the ball is targeting a basket and in the right zone, if so, shows previewParabola.
+            //if aimed at left basket on left side, sets left crosshair.
+            //Keeping PreviewParabola() & SetPositions() in the ifs for efficiency.
+            if (currentTarget == leftBasket && transform.position.x < 0)
+            {
+                SetBasketCrosshair(leftBasket, true);
+
+                Vector3[] pointsArray = PreviewParabola(transform.position, currentTarget.transform.GetChild(0).transform.position, ballHeight * HeightModifier(), previewArcSmoothness);
+                lineRenderer.SetPositions(pointsArray);
+                lineRenderer.enabled = true;
             }
-            else if (currentTarget == rightBasket)
+            if (currentTarget == rightBasket && transform.position.x > 0)
             {
-                if (transform.position.x > 0)
-                {
-                    Vector3[] pointsArray = PreviewParabola(transform.position, currentTarget.transform.GetChild(0).transform.position, ballHeight * HeightModifier(), previewArcSmoothness);
-                    lineRenderer.enabled = true;
-                    lineRenderer.SetPositions(pointsArray);
+                SetBasketCrosshair(rightBasket, true);
 
-                    //Add crosshair to basket.
-                    SetBasketCrosshair(rightBasket, true);
-                }
-                else
-                {
-                    SetBasketCrosshair(rightBasket, false);
-                }
+                Vector3[] pointsArray = PreviewParabola(transform.position, currentTarget.transform.GetChild(0).transform.position, ballHeight * HeightModifier(), previewArcSmoothness);
+                lineRenderer.SetPositions(pointsArray);
+                lineRenderer.enabled = true;
             }
         }
 
@@ -223,10 +211,7 @@ public class Ball : MonoBehaviour
     Vector3 CalculateParabola(Vector3 start, Vector3 end, float height, float t)
     {
         float parabolicT = t * 2 - 1;
-        //If the player is very close to the basket and is under it, use different parabola to shoot.
-        //Shot goes up and over the basket, then falls in.
-        //if (Mathf.Abs(currentTarget.transform.position.x - transform.position.x) < 10)
-        //{
+
         //start and end are roughly level, pretend they are - simpler solution with less steps
         Vector3 travelDirection = end - start;
         Vector3 result = start + t * travelDirection;
@@ -255,10 +240,7 @@ public class Ball : MonoBehaviour
 
         return result;
 
-
-        //}
-        /*else
-        {
+        /*
         //start and end are not level, gets more complicated
         Vector3 travelDirection = end - start;
         Vector3 levelDirection = end - new Vector3(start.x, end.y, start.z);
@@ -268,10 +250,9 @@ public class Ball : MonoBehaviour
         Vector3 result = start + t * travelDirection;
         result += ((-parabolicT * parabolicT + 1) * height) * up.normalized;
         physics.velocity = (result - gameObject.transform.position) * (1.0f / Time.deltaTime);
-
         
         return result;
-        }*/
+        */
     }
 
     /// <summary>
