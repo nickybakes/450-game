@@ -34,6 +34,8 @@ public class Ball : MonoBehaviour
     private GameManager gameManager;
     public LineRenderer lineRenderer;
 
+    private float distMod;
+
     private void Start()
     {
         gameManager = FindObjectOfType<GameManager>();
@@ -68,13 +70,15 @@ public class Ball : MonoBehaviour
 
                 //so it's not calculated at runtime
                 heightMod = HeightModifier();
+
+                //Calculates a speed modifier based on the starting distance, closer = faster.
+                distMod = 1 / (Vector2.Distance(transform.position, currentTarget.transform.position) + 1);
             }
 
             if (boolWillHit)
             {
-                //completes the parabola trip in one second (* by speed), changing speed based on height.
-                //currently, if straight, the ball will travel twice as fast (with a linear curve between max height throw and straight).
-                float speedMod = speed + ((400 - heightMod) / 400) /*+ (Mathf.Abs(currentTarget.transform.position.x - transform.position.x)/currentTarget.transform.position.x)*/;
+                //completes the parabola trip in one second (* by speed), changing speed based on height and dist from basket.
+                float speedMod = speed + ((400 - heightMod) / 300) + distMod /*+ (2 / (Vector2.Distance(transform.position, currentTarget.transform.position) + 1))*/;
                 timer += Time.deltaTime * speedMod;
                 Vector2 newPosition = CalculateParabola(startPoint, currentTarget.transform.GetChild(0).transform.position, ballHeight * heightMod, timer);
                 if (physics.simulatePhysics)
@@ -173,7 +177,7 @@ public class Ball : MonoBehaviour
                 else if (playerController.playerNumber == 1 && collision.collider.gameObject == gameManager.rightBasket)
                     return;
             }
-            Debug.Log(physics.velocity.y);
+
             //only if the ball goes in from top or from dunk
             if ((physics.velocity.y < 0 && transform.parent == null) || transform.parent != null)
             {
@@ -283,10 +287,9 @@ public class Ball : MonoBehaviour
     /// <returns>A value to modify the height variable on Update.</returns>
     private float HeightModifier()
     {
-        //right above or below basket, throw in straight line
-        //if (Mathf.Abs(transform.position.x - currentTarget.transform.position.x) < 10)
-        //return 0;
-        //ball height changes on distance to basket, becoming straight throw close. Capped height modifier.
+        //ball height changes on distance to basket. Capped height modifier.
+        float heightCeiling = 400;
+        float heightFloor = 0;
 
         //higher if player is lower, lower if player is higher
         float playerHeightMod = (currentTarget.transform.position.y - transform.position.y) * 50;
@@ -294,11 +297,11 @@ public class Ball : MonoBehaviour
         ballHeightMod += playerHeightMod;
 
         //max/min height to arc
-        if (ballHeightMod > 400)
-            ballHeightMod = 400;
+        if (ballHeightMod > heightCeiling)
+            ballHeightMod = heightCeiling;
 
-        if (ballHeightMod < 0)
-            ballHeightMod = 0;
+        if (ballHeightMod < heightFloor)
+            ballHeightMod = heightFloor;
 
         return ballHeightMod;
     }

@@ -16,7 +16,8 @@ public class GameManager : MonoBehaviour
 
     public GameObject playerPrefab;
     public GameObject ballPrefab;
-    public GameObject basketPrefab;
+    public GameObject leftBasketPrefab;
+    public GameObject rightBasketPrefab;
 
     //Spawning
     public Transform playerSpawnLocation;
@@ -107,11 +108,11 @@ public class GameManager : MonoBehaviour
         ballControlScript = ball.GetComponent<Ball>();
         ballPhysicsScript = ball.GetComponent<BhbBallPhysics>();
 
-        leftBasket = Instantiate(basketPrefab);
+        leftBasket = Instantiate(leftBasketPrefab);
         leftBasket.transform.position = new Vector2(basketLocation.position.x, basketLocation.position.y);
         ballControlScript.leftBasket = leftBasket;
 
-        rightBasket = Instantiate(basketPrefab);
+        rightBasket = Instantiate(rightBasketPrefab);
         rightBasket.transform.position = new Vector2(-basketLocation.position.x, basketLocation.position.y);
         ballControlScript.rightBasket = rightBasket;
         rightBasket.gameObject.transform.localScale = new Vector3(-1, 1, 1);
