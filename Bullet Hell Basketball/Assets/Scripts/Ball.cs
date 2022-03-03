@@ -27,6 +27,8 @@ public class Ball : MonoBehaviour
     [HideInInspector]
     public GameObject rightBasket;
 
+    public AudioSource scoreSound;
+
     public GameObject currentTarget;
     private GameManager gameManager;
     public LineRenderer lineRenderer;
@@ -179,6 +181,8 @@ public class Ball : MonoBehaviour
             //only if the ball goes in from top or from dunk
             if ((physics.velocity.y < 0 && transform.parent == null) || transform.parent != null)
             {
+                scoreSound.enabled = true;
+                scoreSound.Play();
                 if (collision.collider.gameObject == gameManager.rightBasket)
                     gameManager.player1Score++;
                 else if (collision.collider.gameObject == gameManager.leftBasket)
