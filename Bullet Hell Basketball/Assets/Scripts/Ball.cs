@@ -8,9 +8,6 @@ public class Ball : MonoBehaviour
     public float speed = 1;
     [Range(0.0f, 1.0f)]
     public float ballHeight = 10;
-    private float heightMod = 0;
-    [Range(0.0f, 100.0f)]
-    public float maxThrowDist = 10;
     [Range(2, 100)]
     public int previewArcSmoothness;
     [Range(0.0f, 1.0f)]
@@ -35,6 +32,7 @@ public class Ball : MonoBehaviour
     public LineRenderer lineRenderer;
 
     private float distMod;
+    private float heightMod = 0;
 
     private void Start()
     {
@@ -72,13 +70,13 @@ public class Ball : MonoBehaviour
                 heightMod = HeightModifier();
 
                 //Calculates a speed modifier based on the starting distance, closer = faster.
-                distMod = 1 / (Vector2.Distance(transform.position, currentTarget.transform.position) + 1);
+                distMod = 2 / (Vector2.Distance(transform.position, currentTarget.transform.position) + 1);
             }
 
             if (boolWillHit)
             {
                 //completes the parabola trip in one second (* by speed), changing speed based on height and dist from basket.
-                float speedMod = speed + ((400 - heightMod) / 300) + distMod /*+ (2 / (Vector2.Distance(transform.position, currentTarget.transform.position) + 1))*/;
+                float speedMod = speed + ((300 - heightMod) / 200) + distMod /*+ (2 / (Vector2.Distance(transform.position, currentTarget.transform.position) + 1))*/;
                 timer += Time.deltaTime * speedMod;
                 Vector2 newPosition = CalculateParabola(startPoint, currentTarget.transform.GetChild(0).transform.position, ballHeight * heightMod, timer);
                 if (physics.simulatePhysics)
@@ -133,7 +131,6 @@ public class Ball : MonoBehaviour
         if (isSpinning)
         {
             //gives a set spin to the ball for now.
-            //transform.rotation = Quaternion.Euler(0,0,RandomSpin(spinAmt, ballHeight, 0));
             transform.Rotate(0, 0, spinAmt * Mathf.Abs(physics.velocity.y), Space.Self);
         }
     }
@@ -148,6 +145,7 @@ public class Ball : MonoBehaviour
         {
             currentTarget = leftBasket;
         }
+
         //shoots the ball
         startPoint = transform.position;
 
@@ -288,8 +286,8 @@ public class Ball : MonoBehaviour
     private float HeightModifier()
     {
         //ball height changes on distance to basket. Capped height modifier.
-        float heightCeiling = 400;
-        float heightFloor = 0;
+        float heightCeiling = 300;
+        float heightFloor = 30;
 
         //higher if player is lower, lower if player is higher
         float playerHeightMod = (currentTarget.transform.position.y - transform.position.y) * 50;
