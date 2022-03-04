@@ -55,7 +55,6 @@ public class Ball : MonoBehaviour
 
         if (transform.parent == null && physics.simulatePhysics == false)
         {
-            Debug.Log("a");
             //If the ball is too far away from the basket, boolWillHit = false.
             if (calculateOnce)
             {
@@ -90,7 +89,6 @@ public class Ball : MonoBehaviour
             }
             else
             {
-                Debug.Log("Physics Arc");
                 PhysicsArc();
             }
 
@@ -98,7 +96,6 @@ public class Ball : MonoBehaviour
         }
         else if (transform.parent != null && !physics.simulatePhysics)
         {
-            Debug.Log("b");
 
             int playerNumber = transform.parent.GetComponent<BhbPlayerController>().playerNumber;
             lineRenderer.enabled = false;
@@ -120,7 +117,6 @@ public class Ball : MonoBehaviour
             //Keeping PreviewParabola() & SetPositions() in the ifs for efficiency.
             if (currentTarget == leftBasket && transform.position.x < 0)
             {
-                Debug.Log("1");
                 SetBasketCrosshair(leftBasket, true);
 
                 Vector3[] pointsArray = PreviewParabola(transform.position, currentTarget.transform.GetChild(0).transform.position, ballHeight * HeightModifier(), previewArcSmoothness);
@@ -129,7 +125,6 @@ public class Ball : MonoBehaviour
             }
             if (currentTarget == rightBasket && transform.position.x > 0)
             {
-                Debug.Log("2");
 
                 SetBasketCrosshair(rightBasket, true);
 
@@ -144,12 +139,10 @@ public class Ball : MonoBehaviour
             //gives a set spin to the ball for now.
             //transform.Rotate(0, 0, spinAmt * Mathf.Abs(physics.velocity.y), Space.Self);
         }
-        Debug.Log("c");
     }
 
     public void ShootBall(int playerNumber)
     {
-        Debug.Log("shoot ball");
 
         if (playerNumber == 0)
         {
@@ -177,8 +170,6 @@ public class Ball : MonoBehaviour
     /// <param name="collision">The thing hitting the ball.</param>
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("collision");
-
         //if the ball is touching the basket...
         if (collision.collider.CompareTag("Target"))
         {
@@ -214,8 +205,6 @@ public class Ball : MonoBehaviour
     /// Used for shots that are too far to make the shot.
     private void PhysicsArc()
     {
-        Debug.Log("physics arc");
-
         physics.simulatePhysics = true;
         if (currentTarget == rightBasket)
         {
@@ -232,7 +221,6 @@ public class Ball : MonoBehaviour
     ///https://forum.unity.com/threads/generating-dynamic-parabola.211681/#post-1426169
     Vector3 CalculateParabola(Vector3 start, Vector3 end, float height, float t, bool preview)
     {
-        Debug.Log("calc parab");
 
         float parabolicT = t * 2 - 1;
 
@@ -243,8 +231,6 @@ public class Ball : MonoBehaviour
 
         if (!preview)
         {
-            Debug.Log("NOT PREVIEW");
-
             physics.velocity = (result - gameObject.transform.position) * (1.0f / Time.deltaTime);
 
             if (transform.parent == null && !physics.simulatePhysics)
@@ -296,8 +282,6 @@ public class Ball : MonoBehaviour
     /// <returns>Returns an array of Vector3s on the parabola.</returns>
     private Vector3[] PreviewParabola(Vector3 start, Vector3 end, float height, int arraySize)
     {
-        Debug.Log("preview parab");
-
         Vector3[] drawnParabola = new Vector3[arraySize];
 
         //t is a value from 0 to 1 for time, convert arraySize (equally spaced points) into decimal values between this.
@@ -315,8 +299,6 @@ public class Ball : MonoBehaviour
     /// <returns>A value to modify the height variable on Update.</returns>
     private float HeightModifier()
     {
-        Debug.Log("height");
-
         //ball height changes on distance to basket. Capped height modifier.
         float heightCeiling = 300;
         float heightFloor = 30;

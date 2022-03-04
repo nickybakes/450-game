@@ -41,15 +41,15 @@ public class BulletManager : MonoBehaviour
         meshRenderer = GetComponent<MeshRenderer>();
 
         //Changes material based on the spawner owner
-        if(ownerNumber == 0)
-        {
-            meshRenderer.material = player1Mat;
-        }
+        // if(ownerNumber == 0)
+        // {
+        //     meshRenderer.material = player1Mat;
+        // }
 
-        else
-        {
-            meshRenderer.material = player2Mat;
-        }
+        // else
+        // {
+        //     meshRenderer.material = player2Mat;
+        // }
     }
 
     private void FixedUpdate()

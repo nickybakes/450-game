@@ -136,13 +136,16 @@ public class GameManager : MonoBehaviour
         rightBasket.transform.GetChild(0).GetComponent<SpriteRenderer>().color = new Color32(255, 255, 0, 255);
 
 
-        BeginRound();
+        BeginMatch();
     }
 
-    private void BeginRound()
+    private void BeginMatch()
     {
         player1Score = 0;
         player2Score = 0;
+        playerOneWins.SetActive(false);
+        playerTwoWins.SetActive(false);
+        gameOver = false;
 
         ResetPlayersAndBall();
     }
@@ -153,14 +156,11 @@ public class GameManager : MonoBehaviour
         {
             if (gameOver)
             {
-                playerOneWins.SetActive(false);
-                playerTwoWins.SetActive(false);
-                gameOver = false;
+                BeginMatch();
                 paused = false;
             }
             else
                 ToggleHowToPlay();
-
 
             panelUI.SetActive(true);
         }
@@ -169,12 +169,18 @@ public class GameManager : MonoBehaviour
         {
             if (Input.GetButtonDown("J" + i + "Start"))
             {
-                ToggleHowToPlay();
+                if (gameOver)
+                {
+                    BeginMatch();
+                    paused = false;
+                }
+                else
+                    ToggleHowToPlay();
                 break;
             }
         }
 
-        if (paused)
+        if (paused || gameOver)
             return;
 
         if (player1Script.controllerNumber == -1)
@@ -214,15 +220,16 @@ public class GameManager : MonoBehaviour
     public void ToggleHowToPlay()
     {
         tempHud.SetActive(!tempHud.activeSelf);
-
-        if (paused)
-            paused = false;
-        else
-            paused = true;
+        paused = !paused;
     }
 
     public void EndGame()
     {
+        //player 1.
+        panelUI.transform.GetChild(0).GetComponent<Text>().text = player1Score.ToString();
+        //player 2.
+        panelUI.transform.GetChild(1).GetComponent<Text>().text = player2Score.ToString();
+
         if (player1Score >= 10)
             playerOneWins.SetActive(!playerOneWins.activeSelf);
         if (player2Score >= 10)

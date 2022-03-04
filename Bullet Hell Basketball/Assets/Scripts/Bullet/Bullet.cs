@@ -8,11 +8,11 @@ public class Bullet : MonoBehaviour
     public Vector2 direction;
     public float timer;
     public int ownerNumber = 0;
-    
+
     // Start is called before the first frame update
     void Start()
     {
-        if(speed <= 0)
+        if (speed <= 0)
         {
             speed = 1;
         }
@@ -33,8 +33,8 @@ public class Bullet : MonoBehaviour
     private void FixedUpdate()
     {
         timer -= Time.deltaTime;
-        
-        if(timer <= 0)
+
+        if (timer <= 0)
         {
             Destroy(this.gameObject);
         }
@@ -52,14 +52,21 @@ public class Bullet : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         BhbPlayerController playerScript = other.gameObject.GetComponent<BhbPlayerController>();
-        
+
         if (other.gameObject.tag == "Player")
         {
-            if(ownerNumber != playerScript.playerNumber)
+            if (ownerNumber != playerScript.playerNumber)
             {
-                Debug.Log("Bullet hit!");
+                // Debug.Log("Bullet hit!");
                 //Insert method for when player is hit
-                playerScript.GetsHit();
+                if (other.gameObject.transform.position.x < transform.position.x)
+                {
+                    playerScript.GetsHit(new Vector2(-40, 20));
+                }
+                else if (other.gameObject.transform.position.x >= transform.position.x)
+                {
+                    playerScript.GetsHit(new Vector2(40, 20));
+                }
                 Destroy(this.gameObject);
             }
         }

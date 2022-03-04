@@ -38,11 +38,70 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
     public float autoCatchCooldownTimerMax = 1;
 
+    public float swipeTimeMax = .23f;
+
+    private float swipeTimeCurrent = 0;
+
+    public float swipeCooldownTimeMax = .3f;
+
+    private float swipeCooldownTimeCurrent = 0;
+
+    public float stunTimeMax = .1f;
+
+    private float stunTimeCurrent = 0;
+
+    public float invinsibilityTimeMax = .15f;
+
+    private float invinsibilityTimeCurrent = 0;
+
     public Material player2Sprite;
+    public Material player2HurtSprite;
 
     private Vector2 prevControlAxis = Vector2.zero;
 
     private const float axisDeadZone = .3f;
+
+    public bool IsSwiping
+    {
+        get { return swipeTimeCurrent < swipeTimeMax; }
+        set
+        {
+            if (value)
+            {
+                swipeTimeCurrent = 0;
+                velocity = Vector2.zero;
+                transform.GetChild(0).gameObject.SetActive(true);
+            }
+            else
+            {
+                swipeCooldownTimeCurrent = 0;
+                swipeTimeCurrent = swipeTimeMax;
+                transform.GetChild(0).gameObject.SetActive(false);
+            }
+        }
+    }
+
+    public bool IsStunned
+    {
+        get { return stunTimeCurrent < stunTimeMax; }
+        set
+        {
+            if (value)
+            {
+                IsSwiping = false;
+                stunTimeCurrent = 0;
+                transform.GetChild(1).gameObject.SetActive(true);
+                gameObject.GetComponent<MeshRenderer>().enabled = false;
+            }
+            else
+            {
+                invinsibilityTimeCurrent = 0;
+                stunTimeCurrent = stunTimeMax;
+                transform.GetChild(1).gameObject.SetActive(false);
+                gameObject.GetComponent<MeshRenderer>().enabled = true;
+            }
+        }
+    }
 
     public void Init(int playerNumber)
     {
@@ -51,6 +110,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
         if (playerNumber == 1)
         {
             gameObject.GetComponent<MeshRenderer>().material = player2Sprite;
+            gameObject.transform.GetChild(1).GetComponent<MeshRenderer>().material = player2HurtSprite;
         }
     }
 
@@ -59,6 +119,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
     {
         pickupRadius = 5;
         playerHandPos = new Vector3(1.8f, 1.1f, 0.0f);
+        swipeTimeCurrent = swipeTimeMax;
 
         gameManager = FindObjectOfType<GameManager>();
         ball = GameObject.FindGameObjectWithTag("Ball");
@@ -99,7 +160,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
             }
         }
 
-        if (GetControlHeld(Control.Left))
+        if (GetControlHeld(Control.Left) && !IsStunned)
         {
             runningLeft = true;
         }
@@ -107,7 +168,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
         {
             runningLeft = false;
         }
-        if (GetControlHeld(Control.Right))
+        if (GetControlHeld(Control.Right) && !IsStunned)
         {
             runningRight = true;
         }
@@ -116,7 +177,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
             runningRight = false;
         }
 
-        if (GetControlDown(Control.Jump))
+        if (GetControlDown(Control.Jump) && !IsStunned)
         {
             jumping = true;
         }
@@ -125,7 +186,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
             jumping = false;
         }
 
-        if (GetControlDown(Control.Action))
+        if (GetControlDown(Control.Action) && !IsStunned)
         {
             //if holding the ball...
             if (ball.transform.parent == transform)
@@ -133,44 +194,40 @@ public class BhbPlayerController : NeonHeightsCharacterController
                 autoCatchCooldownTimer = 0;
                 ballScript.ShootBall(playerNumber);
             }
-            else
+            else if (!IsSwiping && swipeCooldownTimeCurrent >= swipeCooldownTimeMax && !IsStunned)
             {
+                IsSwiping = true;
+
                 if (playerNumber == 0)
                 {
-                    if (Vector2.Distance(transform.GetChild(0).transform.position, gameManager.player2.transform.position) < 4)
+                    if (Vector2.Distance(transform.GetChild(0).transform.position, gameManager.player2.transform.position) < 5.2)
                     {
-                        gameManager.player2Script.GetsHit();
+                        if (ball.transform.parent != null)
+                            GrabBall();
                         if (gameManager.player2.transform.position.x < transform.position.x)
                         {
-                            gameManager.player2Script.grounded = false;
-                            gameManager.player2Script.velocity = new Vector2(-50, 20);
+                            gameManager.player2Script.GetsHit(new Vector2(-50, 20));
                         }
                         else if (gameManager.player2.transform.position.x >= transform.position.x)
                         {
-                            gameManager.player2Script.grounded = false;
-                            gameManager.player2Script.velocity = new Vector2(50, 20);
+                            gameManager.player2Script.GetsHit(new Vector2(50, 20));
                         }
-                        if (ball.transform.parent != null)
-                            GrabBall();
                     }
                 }
                 else if (playerNumber == 1)
                 {
-                    if (Vector2.Distance(transform.GetChild(0).transform.position, gameManager.player1.transform.position) < 4)
+                    if (Vector2.Distance(transform.GetChild(0).transform.position, gameManager.player1.transform.position) < 5.2)
                     {
-                        gameManager.player1Script.GetsHit();
+                        if (ball.transform.parent != null)
+                            GrabBall();
                         if (gameManager.player1.transform.position.x < transform.position.x)
                         {
-                            gameManager.player1Script.grounded = false;
-                            gameManager.player1Script.velocity = new Vector2(-50, 20);
+                            gameManager.player1Script.GetsHit(new Vector2(-50, 20));
                         }
                         else if (gameManager.player1.transform.position.x >= transform.position.x)
                         {
-                            gameManager.player1Script.grounded = false;
-                            gameManager.player1Script.velocity = new Vector2(50, 20);
+                            gameManager.player1Script.GetsHit(new Vector2(50, 20));
                         }
-                        if (ball.transform.parent != null)
-                            GrabBall();
                     }
                 }
             }
@@ -179,7 +236,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
             //     GrabBall();
             // }
         }
-        else if (Vector2.Distance(ball.transform.position, transform.position) < 5.0f && autoCatchCooldownTimer > autoCatchCooldownTimerMax && ball.transform.parent == null)
+        else if (swipeCooldownTimeCurrent >= swipeCooldownTimeMax && !IsStunned && !IsSwiping && Vector2.Distance(ball.transform.position, transform.position) < 5.0f && autoCatchCooldownTimer > autoCatchCooldownTimerMax && ball.transform.parent == null)
         {
             GrabBall();
         }
@@ -202,7 +259,33 @@ public class BhbPlayerController : NeonHeightsCharacterController
             //in order to get the previous axis, we gotta take the max absolute value of either the dpad or control sticks
             prevControlAxis = new Vector2((Mathf.Abs(controlStickX) > Mathf.Abs(dPadX) ? controlStickX : dPadX), (Mathf.Abs(controlStickY) > Mathf.Abs(dPadY) ? controlStickY : dPadY));
         }
-        UpdateAugust();
+
+        if (invinsibilityTimeCurrent < invinsibilityTimeMax)
+        {
+            invinsibilityTimeCurrent += Time.deltaTime;
+        }
+
+        if (IsStunned)
+        {
+            stunTimeCurrent += Time.deltaTime;
+            if (stunTimeCurrent >= stunTimeMax)
+                IsStunned = false;
+        }
+
+        if (!IsSwiping)
+        {
+            if (swipeCooldownTimeCurrent < swipeCooldownTimeMax)
+            {
+                swipeCooldownTimeCurrent += Time.deltaTime;
+            }
+            UpdateAugust();
+        }
+        else if (IsSwiping)
+        {
+            swipeTimeCurrent += Time.deltaTime;
+            if (swipeTimeCurrent >= swipeTimeMax)
+                IsSwiping = false;
+        }
     }
 
     public void GrabBall()
@@ -233,6 +316,23 @@ public class BhbPlayerController : NeonHeightsCharacterController
         }
         ball.transform.parent = gameObject.transform;
 
+    }
+
+
+    public void GetsHit(Vector2 knockback)
+    {
+        if (!IsStunned && invinsibilityTimeCurrent >= invinsibilityTimeMax)
+        {
+            IsStunned = true;
+            grounded = false;
+            velocity = knockback;
+            if (ball.transform.parent == transform)
+            {
+                ball.transform.parent = null;
+                ballPhysics.simulatePhysics = true;
+                ballPhysics.velocity = new Vector2(0, 44);
+            }
+        }
     }
 
     bool GetControlHeld(Control action)
@@ -468,12 +568,5 @@ public class BhbPlayerController : NeonHeightsCharacterController
         }
 
         return false;
-    }
-
-    public void GetsHit()
-    {
-        //this.transform.rotation = new Quaternion(0.0f,0.0f,90.0f, 0.0f);
-        //transform.Rotate(new Vector3(0.0f, 90.0f, 0.0f));\
-        Debug.Log("Player " + playerNumber + " was hit.");
     }
 }

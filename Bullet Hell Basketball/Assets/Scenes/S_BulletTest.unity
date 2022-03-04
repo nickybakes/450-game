@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0.99999905, b: 0.99999905, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -272,7 +272,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 3082754990088966472, guid: 3842181215a18c848b8fb0c648936095, type: 3}
   ballPrefab: {fileID: 6230116665754677472, guid: 5f52d9843089b8a4faeca963ee966f5f, type: 3}
-  basketPrefab: {fileID: 3348590631432724730, guid: f4a474a58c7946541ae657582f017722, type: 3}
+  leftBasketPrefab: {fileID: 0}
+  rightBasketPrefab: {fileID: 0}
   playerSpawnLocation: {fileID: 1366659346}
   basketLocation: {fileID: 1774745519}
   ballSpawnHeight: {fileID: 434115448}
@@ -286,6 +287,13 @@ MonoBehaviour:
   ballPhysicsScript: {fileID: 0}
   ballControlScript: {fileID: 0}
   tempHud: {fileID: 1834264390}
+  panelUI: {fileID: 0}
+  playerOneWins: {fileID: 0}
+  playerTwoWins: {fileID: 0}
+  yellowShevrons: {fileID: 0}
+  blueShevrons: {fileID: 0}
+  gameOver: 0
+  paused: 0
   player1Score: 0
   player2Score: 0
   winConditionMet: 0
@@ -576,7 +584,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5370311947778578657, guid: f5dd710dd082b174b94806c38794438e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -26.96
+      value: -27.78
       objectReference: {fileID: 0}
     - target: {fileID: 5370311947778578657, guid: f5dd710dd082b174b94806c38794438e, type: 3}
       propertyPath: m_LocalPosition.y
@@ -584,7 +592,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5370311947778578657, guid: f5dd710dd082b174b94806c38794438e, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.44
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5370311947778578657, guid: f5dd710dd082b174b94806c38794438e, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1096,7 +1104,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5370311947778578657, guid: f5dd710dd082b174b94806c38794438e, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.15
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5370311947778578657, guid: f5dd710dd082b174b94806c38794438e, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1189,7 +1197,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collisionVertexPrefab: {fileID: 2382589878411412825, guid: de94585aa4ffe794c8cc1e98a3d925ff, type: 3}
   collisionSegmentPrefab: {fileID: 71431853401964895, guid: 2d19e55d322709d41b35224430022a18, type: 3}
-  editorUpdateFrame: 0
+  editorUpdateFrame: 1
   vertexColor: {r: 1, g: 0, b: 0, a: 1}
   segmentColor: {r: 1, g: 0, b: 0, a: 1}
   semiSolidPlatformColor: {r: 0, g: 0, b: 1, a: 1}
