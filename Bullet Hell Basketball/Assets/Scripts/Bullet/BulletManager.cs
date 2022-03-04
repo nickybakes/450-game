@@ -25,6 +25,8 @@ public class BulletManager : MonoBehaviour
     public Material player1Mat;
     public Material player2Mat;
 
+    public GameManager gameManager;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -40,6 +42,8 @@ public class BulletManager : MonoBehaviour
 
         meshRenderer = GetComponent<MeshRenderer>();
 
+        gameManager = FindObjectOfType<GameManager>();
+
         //Changes material based on the spawner owner
         // if(ownerNumber == 0)
         // {
@@ -52,8 +56,17 @@ public class BulletManager : MonoBehaviour
         // }
     }
 
+    public void Reset(){
+        timer = maxTime;
+        rotationAmountDegrees = 0;
+        currentAngle = 0;
+    }
+
     private void FixedUpdate()
     {
+        if (gameManager.paused)
+            return;
+
         timer -= Time.deltaTime;
 
         rotationAmountDegrees += Time.deltaTime * rotationSpeed;
@@ -64,11 +77,12 @@ public class BulletManager : MonoBehaviour
             {
                 GameObject newBullet = Instantiate(bullet);
                 newBullet.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, 0.0f);
-                
+
                 Bullet bulletScript = newBullet.GetComponent<Bullet>();
                 bulletScript.ownerNumber = ownerNumber;
+                bulletScript.gameManager = gameManager;
                 bulletScript.direction = new Vector2(Mathf.Cos(Mathf.Deg2Rad * (rotationAmountDegrees + i)), Mathf.Sin(Mathf.Deg2Rad * (rotationAmountDegrees + i)));
-                
+
                 MeshRenderer bulletMesh = newBullet.GetComponent<MeshRenderer>();
 
                 if (bulletScript.ownerNumber == 0)

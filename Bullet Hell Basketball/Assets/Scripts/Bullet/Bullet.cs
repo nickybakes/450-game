@@ -9,6 +9,8 @@ public class Bullet : MonoBehaviour
     public float timer;
     public int ownerNumber = 0;
 
+    public GameManager gameManager;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -27,11 +29,17 @@ public class Bullet : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (gameManager.paused)
+            return;
+
         transform.Translate(direction * Time.deltaTime * speed, Space.World);
     }
 
     private void FixedUpdate()
     {
+        if (gameManager.paused)
+            return;
+
         timer -= Time.deltaTime;
 
         if (timer <= 0)

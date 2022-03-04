@@ -147,6 +147,20 @@ public class GameManager : MonoBehaviour
         playerTwoWins.SetActive(false);
         gameOver = false;
 
+        Bullet[] bullets = FindObjectsOfType<Bullet>();
+
+        for (int i = 0; i < bullets.Length; i++)
+        {
+            Destroy(bullets[i].gameObject);
+        }
+
+        BulletManager[] bulletManagers = FindObjectsOfType<BulletManager>();
+
+        for (int i = 0; i < bulletManagers.Length; i++)
+        {
+            bulletManagers[i].Reset();
+        }
+
         ResetPlayersAndBall();
     }
 
