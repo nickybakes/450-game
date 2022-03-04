@@ -33,11 +33,38 @@ public class Ball : MonoBehaviour
     private GameManager gameManager;
     public LineRenderer lineRenderer;
 
+    //true if the the ball was shot via a swipe and not a normal throw
+    public bool isSwipeShot;
+
+    public float bulletTimeMax = .23f;
+    public float bulletTimeCurrent;
+
+    public bool IsBullet
+    {
+        get { return bulletTimeCurrent < bulletTimeMax; }
+        set
+        {
+            if (value)
+            {
+                bulletTimeCurrent = 0;
+            }
+            else
+            {
+                bulletTimeCurrent = bulletTimeMax;
+                transform.GetChild(2).gameObject.SetActive(false);
+                transform.GetChild(3).gameObject.SetActive(false);
+            }
+        }
+    }
+
+
+
     private float distMod;
     private float heightMod = 0;
 
     private void Start()
     {
+        IsBullet = false;
         gameManager = FindObjectOfType<GameManager>();
         lineRenderer.positionCount = previewArcSmoothness;
         scoreSound = GameObject.FindGameObjectWithTag("SFX").GetComponent<AudioSource>();
@@ -52,6 +79,13 @@ public class Ball : MonoBehaviour
         SetBasketCrosshair(rightBasket, false);
         SetBasketCrosshair(leftBasket, false);
 
+        if (IsBullet)
+        {
+            bulletTimeCurrent += Time.deltaTime;
+            if (bulletTimeCurrent >= bulletTimeMax)
+                IsBullet = false;
+        }
+
 
         if (transform.parent == null && physics.simulatePhysics == false)
         {
@@ -60,15 +94,24 @@ public class Ball : MonoBehaviour
             {
                 //check whether the ball was thrown from the side with the target basket (will go in)
                 //or not (will miss)
-                if (currentTarget == leftBasket)
+                if (isSwipeShot)
                 {
-                    boolWillHit = transform.position.x < 0;
+                    boolWillHit = true;
+                    calculateOnce = false;
                 }
-                else if (currentTarget == rightBasket)
+                else
                 {
-                    boolWillHit = transform.position.x > 0;
+                    if (currentTarget == leftBasket)
+                    {
+                        boolWillHit = transform.position.x < 0;
+                    }
+                    else if (currentTarget == rightBasket)
+                    {
+                        boolWillHit = transform.position.x > 0;
+                    }
+                    calculateOnce = false;
                 }
-                calculateOnce = false;
+
 
                 //so it's not calculated at runtime
                 heightMod = HeightModifier();
@@ -79,8 +122,13 @@ public class Ball : MonoBehaviour
 
             if (boolWillHit)
             {
+                float speedAddition = 0;
+                if (isSwipeShot)
+                {
+                    speedAddition = physics.velocity.magnitude / 2000;
+                }
                 //completes the parabola trip in one second (* by speed), changing speed based on height and dist from basket.
-                float speedMod = speed + ((300 - heightMod) / 200) + distMod /*+ (2 / (Vector2.Distance(transform.position, currentTarget.transform.position) + 1))*/;
+                float speedMod = speed + ((300 - heightMod) / 200) + distMod + speedAddition /*+ (2 / (Vector2.Distance(transform.position, currentTarget.transform.position) + 1))*/;
                 timer += Time.deltaTime * speedMod;
                 Vector2 newPosition = CalculateParabola(startPoint, currentTarget.transform.GetChild(0).transform.position, ballHeight * heightMod, timer, false);
                 if (physics.simulatePhysics)
@@ -137,21 +185,26 @@ public class Ball : MonoBehaviour
         if (isSpinning)
         {
             //gives a set spin to the ball for now.
-            //transform.Rotate(0, 0, spinAmt * Mathf.Abs(physics.velocity.y), Space.Self);
+            transform.Rotate(0, 0, spinAmt * Mathf.Abs(physics.velocity.y), Space.Self);
         }
     }
 
-    public void ShootBall(int playerNumber)
+    public void ShootBall(int playerNumber, bool swipeShot)
     {
+        IsBullet = true;
 
         if (playerNumber == 0)
         {
             currentTarget = rightBasket;
+            transform.GetChild(2).gameObject.SetActive(true);
         }
         else
         {
             currentTarget = leftBasket;
+            transform.GetChild(3).gameObject.SetActive(true);
         }
+
+        isSwipeShot = swipeShot;
 
         //shoots the ball
         startPoint = transform.position;

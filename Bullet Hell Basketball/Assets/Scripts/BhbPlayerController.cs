@@ -46,6 +46,10 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
     private float swipeCooldownTimeCurrent = 0;
 
+    public float flashTimeMax = .07f;
+
+    private float flashTimeCurrent = 0;
+
     public float stunTimeMax = .1f;
 
     private float stunTimeCurrent = 0;
@@ -56,6 +60,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
     public Material player2Sprite;
     public Material player2HurtSprite;
+    public Material player2FlashSprite;
 
     private Vector2 prevControlAxis = Vector2.zero;
 
@@ -88,9 +93,11 @@ public class BhbPlayerController : NeonHeightsCharacterController
         {
             if (value)
             {
+                flashTimeCurrent = 0;
                 IsSwiping = false;
                 stunTimeCurrent = 0;
-                transform.GetChild(1).gameObject.SetActive(true);
+                transform.GetChild(1).gameObject.SetActive(false);
+                transform.GetChild(2).gameObject.SetActive(true);
                 gameObject.GetComponent<MeshRenderer>().enabled = false;
             }
             else
@@ -111,6 +118,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
         {
             gameObject.GetComponent<MeshRenderer>().material = player2Sprite;
             gameObject.transform.GetChild(1).GetComponent<MeshRenderer>().material = player2HurtSprite;
+            gameObject.transform.GetChild(2).GetComponent<MeshRenderer>().material = player2FlashSprite;
         }
     }
 
@@ -120,6 +128,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
         pickupRadius = 5;
         playerHandPos = new Vector3(1.8f, 1.1f, 0.0f);
         swipeTimeCurrent = swipeTimeMax;
+        flashTimeCurrent = flashTimeMax;
 
         gameManager = FindObjectOfType<GameManager>();
         ball = GameObject.FindGameObjectWithTag("Ball");
@@ -192,7 +201,8 @@ public class BhbPlayerController : NeonHeightsCharacterController
             if (ball.transform.parent == transform)
             {
                 autoCatchCooldownTimer = 0;
-                ballScript.ShootBall(playerNumber);
+                IsSwiping = false;
+                ballScript.ShootBall(playerNumber, false);
             }
             else if (!IsSwiping && swipeCooldownTimeCurrent >= swipeCooldownTimeMax && !IsStunned)
             {
@@ -202,7 +212,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
                 {
                     if (Vector2.Distance(transform.GetChild(0).transform.position, gameManager.player2.transform.position) < 5.2)
                     {
-                        if (ball.transform.parent != null)
+                        if (ball.transform.parent != null && ball.transform.parent != transform)
                             GrabBall();
                         if (gameManager.player2.transform.position.x < transform.position.x)
                         {
@@ -216,9 +226,9 @@ public class BhbPlayerController : NeonHeightsCharacterController
                 }
                 else if (playerNumber == 1)
                 {
-                    if (Vector2.Distance(transform.GetChild(0).transform.position, gameManager.player1.transform.position) < 5.2)
+                    if (Vector2.Distance(transform.GetChild(0).transform.position, gameManager.player1.transform.position) < 6.5)
                     {
-                        if (ball.transform.parent != null)
+                        if (ball.transform.parent != null && ball.transform.parent != transform)
                             GrabBall();
                         if (gameManager.player1.transform.position.x < transform.position.x)
                         {
@@ -230,13 +240,38 @@ public class BhbPlayerController : NeonHeightsCharacterController
                         }
                     }
                 }
+
+            }
+            if (IsSwiping && swipeTimeCurrent <= .5)
+            {
+                if (ball.transform.parent == null)
+                {
+                    Vector2 midpoint = transform.position + (transform.GetChild(0).transform.position - transform.position) / 2.0f;
+                    if (Vector2.Distance(midpoint, (Vector2)ball.transform.position + (ballPhysics.velocity * Time.deltaTime)) < 6.5)
+                    {
+                        ball.transform.parent = transform;
+                        ballPhysics.simulatePhysics = false;
+                        ballScript.ShootBall(playerNumber, true);
+
+                        if (playerNumber == 1)
+                        {
+                            gameManager.yellowShevrons.SetActive(false);
+                            gameManager.blueShevrons.SetActive(true);
+                        }
+                        else
+                        {
+                            gameManager.yellowShevrons.SetActive(true);
+                            gameManager.blueShevrons.SetActive(false);
+                        }
+                    }
+                }
             }
             // else if (Vector2.Distance(ball.transform.position, transform.position) < 5.0f && autoCatchCooldownTimer > autoCatchCooldownTimerMax && ball.transform.parent != transform && ball.transform.parent != null)
             // {
             //     GrabBall();
             // }
         }
-        else if (swipeCooldownTimeCurrent >= swipeCooldownTimeMax && !IsStunned && !IsSwiping && Vector2.Distance(ball.transform.position, transform.position) < 5.0f && autoCatchCooldownTimer > autoCatchCooldownTimerMax && ball.transform.parent == null)
+        else if (!ballScript.IsBullet && swipeCooldownTimeCurrent >= swipeCooldownTimeMax && !IsStunned && !IsSwiping && Vector2.Distance(ball.transform.position, transform.position) < 5.0f && autoCatchCooldownTimer > autoCatchCooldownTimerMax && ball.transform.parent == null)
         {
             GrabBall();
         }
@@ -272,6 +307,16 @@ public class BhbPlayerController : NeonHeightsCharacterController
                 IsStunned = false;
         }
 
+        if (flashTimeCurrent < flashTimeMax)
+        {
+            flashTimeCurrent += Time.deltaTime;
+            if (flashTimeCurrent >= flashTimeMax)
+            {
+                transform.GetChild(1).gameObject.SetActive(true);
+                transform.GetChild(2).gameObject.SetActive(false);
+            }
+        }
+
         if (!IsSwiping)
         {
             if (swipeCooldownTimeCurrent < swipeCooldownTimeMax)
@@ -290,8 +335,12 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
     public void GrabBall()
     {
+
+
         autoCatchCooldownTimer = 0;
         ballPhysics.simulatePhysics = false;
+
+        ball.transform.SetPositionAndRotation(ball.transform.position, Quaternion.Euler(Vector3.zero));
 
         //reverses the x-coord for second player.
         if (playerNumber == 1)

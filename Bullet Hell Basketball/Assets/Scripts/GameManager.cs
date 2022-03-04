@@ -151,7 +151,10 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < bullets.Length; i++)
         {
-            Destroy(bullets[i].gameObject);
+            if (!bullets[i].GetComponent<Bullet>().dontUpdate)
+            {
+                Destroy(bullets[i].gameObject);
+            }
         }
 
         BulletManager[] bulletManagers = FindObjectsOfType<BulletManager>();

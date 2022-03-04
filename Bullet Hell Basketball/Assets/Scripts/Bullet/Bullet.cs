@@ -9,6 +9,9 @@ public class Bullet : MonoBehaviour
     public float timer;
     public int ownerNumber = 0;
 
+    //used for the ball turning into a bullet
+    public bool dontUpdate = false;
+
     public GameManager gameManager;
 
     // Start is called before the first frame update
@@ -29,6 +32,9 @@ public class Bullet : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (dontUpdate)
+            return;
+
         if (gameManager.paused)
             return;
 
@@ -37,6 +43,9 @@ public class Bullet : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (dontUpdate)
+            return;
+
         if (gameManager.paused)
             return;
 
@@ -75,7 +84,9 @@ public class Bullet : MonoBehaviour
                 {
                     playerScript.GetsHit(new Vector2(40, 20));
                 }
-                Destroy(this.gameObject);
+
+                if(!dontUpdate)
+                    Destroy(this.gameObject);
             }
         }
     }
