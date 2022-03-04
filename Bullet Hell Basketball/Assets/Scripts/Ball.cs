@@ -27,7 +27,7 @@ public class Ball : MonoBehaviour
     [HideInInspector]
     public GameObject rightBasket;
 
-    public AudioSource scoreSound;
+    private AudioSource scoreSound;
 
     public GameObject currentTarget;
     private GameManager gameManager;
@@ -40,6 +40,7 @@ public class Ball : MonoBehaviour
     {
         gameManager = FindObjectOfType<GameManager>();
         lineRenderer.positionCount = previewArcSmoothness;
+        scoreSound = GameObject.FindGameObjectWithTag("SFX").GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
