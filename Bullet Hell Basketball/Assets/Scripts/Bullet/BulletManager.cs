@@ -20,6 +20,11 @@ public class BulletManager : MonoBehaviour
 
     public int ownerNumber = 0; //Is this owned by player 1?
 
+    //Materials
+    private MeshRenderer meshRenderer;
+    public Material player1Mat;
+    public Material player2Mat;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -32,6 +37,19 @@ public class BulletManager : MonoBehaviour
         maxTime = timer;
 
         fixedPoint = transform.position;
+
+        meshRenderer = GetComponent<MeshRenderer>();
+
+        //Changes material based on the spawner owner
+        if(ownerNumber == 0)
+        {
+            meshRenderer.material = player1Mat;
+        }
+
+        else
+        {
+            meshRenderer.material = player2Mat;
+        }
     }
 
     private void FixedUpdate()
@@ -46,9 +64,24 @@ public class BulletManager : MonoBehaviour
             {
                 GameObject newBullet = Instantiate(bullet);
                 newBullet.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, 0.0f);
+                
                 Bullet bulletScript = newBullet.GetComponent<Bullet>();
                 bulletScript.ownerNumber = ownerNumber;
                 bulletScript.direction = new Vector2(Mathf.Cos(Mathf.Deg2Rad * (rotationAmountDegrees + i)), Mathf.Sin(Mathf.Deg2Rad * (rotationAmountDegrees + i)));
+                
+                MeshRenderer bulletMesh = newBullet.GetComponent<MeshRenderer>();
+
+                if (bulletScript.ownerNumber == 0)
+                {
+                    bulletMesh.material = player1Mat;
+                }
+
+                else
+                {
+                    bulletMesh.material = player2Mat;
+                }
+
+
                 timer = maxTime;
             }
 

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3348590631432724731}
   - component: {fileID: 3348590631432724735}
   m_Layer: 0
-  m_Name: TargetPrefab
+  m_Name: RightBasketPrefab
   m_TagString: Target
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 3348590631432724730}
   m_LocalRotation: {x: 0, y: -0.7071068, z: 0.7071068, w: 0}
   m_LocalPosition: {x: 29.82, y: 11.5, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: -1, y: 1, z: 1}
   m_Children:
   - {fileID: 959967204089914192}
   m_Father: {fileID: 0}

@@ -16,7 +16,8 @@ public class GameManager : MonoBehaviour
 
     public GameObject playerPrefab;
     public GameObject ballPrefab;
-    public GameObject basketPrefab;
+    public GameObject leftBasketPrefab;
+    public GameObject rightBasketPrefab;
 
     //Spawning
     public Transform playerSpawnLocation;
@@ -55,6 +56,7 @@ public class GameManager : MonoBehaviour
     public Ball ballControlScript;
 
     public GameObject tempHud;
+    public GameObject panelUI;
 
     public GameObject playerOneWins;
     public GameObject playerTwoWins;
@@ -66,6 +68,7 @@ public class GameManager : MonoBehaviour
     //Score Tracker
     public int player1Score = 0;
     public int player2Score = 0;
+
 
     [HideInInspector] public bool winConditionMet = false;
 
@@ -90,6 +93,13 @@ public class GameManager : MonoBehaviour
         player1Score = 0;
         player2Score = 0;
 
+
+        panelUI.SetActive(true);
+        //player 1.
+        panelUI.transform.GetChild(0).GetComponent<Text>().text = "0";
+        //player 2.
+        panelUI.transform.GetChild(1).GetComponent<Text>().text = "0";
+
         paused = true;
         gameOver = false;
 
@@ -109,11 +119,11 @@ public class GameManager : MonoBehaviour
         ballControlScript = ball.GetComponent<Ball>();
         ballPhysicsScript = ball.GetComponent<BhbBallPhysics>();
 
-        leftBasket = Instantiate(basketPrefab);
+        leftBasket = Instantiate(leftBasketPrefab);
         leftBasket.transform.position = new Vector2(basketLocation.position.x, basketLocation.position.y);
         ballControlScript.leftBasket = leftBasket;
 
-        rightBasket = Instantiate(basketPrefab);
+        rightBasket = Instantiate(rightBasketPrefab);
         rightBasket.transform.position = new Vector2(-basketLocation.position.x, basketLocation.position.y);
         ballControlScript.rightBasket = rightBasket;
         rightBasket.gameObject.transform.localScale = new Vector3(-1, 1, 1);
@@ -146,6 +156,9 @@ public class GameManager : MonoBehaviour
             }
             else
                 ToggleHowToPlay();
+
+
+            panelUI.SetActive(true);
         }
 
         for (int i = 1; i <= 8; i++)
@@ -177,10 +190,11 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        
 
-        
-
+        //player 1.
+        panelUI.transform.GetChild(0).GetComponent<Text>().text = player1Score.ToString();
+        //player 2.
+        panelUI.transform.GetChild(1).GetComponent<Text>().text = player2Score.ToString();
 
         //TO ADD: This is where the Pause menu will appear.
         //if (Input.GetKeyDown(KeyCode.Escape))
@@ -228,5 +242,7 @@ public class GameManager : MonoBehaviour
 
         leftBasket.transform.GetChild(0).gameObject.SetActive(false);
         rightBasket.transform.GetChild(0).gameObject.SetActive(false);
+
+        panelUI.SetActive(true);
     }
 }
