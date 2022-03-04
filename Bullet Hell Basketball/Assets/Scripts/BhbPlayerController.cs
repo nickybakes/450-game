@@ -32,6 +32,10 @@ public class BhbPlayerController : NeonHeightsCharacterController
     private float autoCatchCooldownTimer;
     private GameManager gameManager;
 
+
+
+    public GameObject swipeVisual;
+
     public float autoCatchCooldownTimerMax = 1;
 
     public Material player2Sprite;
@@ -68,6 +72,33 @@ public class BhbPlayerController : NeonHeightsCharacterController
         if (gameManager.paused)
             return;
 
+        if (ball.transform.parent != transform)
+        {
+            if (ball.transform.position.x < transform.position.x)
+            {
+                Quaternion q = Quaternion.Euler(90, 0, 0);
+                transform.SetPositionAndRotation(transform.position, q);
+            }
+            if (ball.transform.position.x >= transform.position.x)
+            {
+                Quaternion q = Quaternion.Euler(90, 0, -180);
+                transform.SetPositionAndRotation(transform.position, q);
+            }
+        }
+        else
+        {
+            if (playerNumber == 0)
+            {
+                Quaternion q = Quaternion.Euler(90, 0, -180);
+                transform.SetPositionAndRotation(transform.position, q);
+            }
+            else if (playerNumber == 1)
+            {
+                Quaternion q = Quaternion.Euler(90, 0, 0);
+                transform.SetPositionAndRotation(transform.position, q);
+            }
+        }
+
         if (GetControlHeld(Control.Left))
         {
             runningLeft = true;
@@ -102,10 +133,51 @@ public class BhbPlayerController : NeonHeightsCharacterController
                 autoCatchCooldownTimer = 0;
                 ballScript.ShootBall(playerNumber);
             }
-            else if (Vector2.Distance(ball.transform.position, transform.position) < 5.0f && autoCatchCooldownTimer > autoCatchCooldownTimerMax && ball.transform.parent != transform && ball.transform.parent != null)
+            else
             {
-                GrabBall();
+                if (playerNumber == 0)
+                {
+                    if (Vector2.Distance(transform.GetChild(0).transform.position, gameManager.player2.transform.position) < 4)
+                    {
+                        gameManager.player2Script.GetsHit();
+                        if (gameManager.player2.transform.position.x < transform.position.x)
+                        {
+                            gameManager.player2Script.grounded = false;
+                            gameManager.player2Script.velocity = new Vector2(-50, 20);
+                        }
+                        else if (gameManager.player2.transform.position.x >= transform.position.x)
+                        {
+                            gameManager.player2Script.grounded = false;
+                            gameManager.player2Script.velocity = new Vector2(50, 20);
+                        }
+                        if (ball.transform.parent != null)
+                            GrabBall();
+                    }
+                }
+                else if (playerNumber == 1)
+                {
+                    if (Vector2.Distance(transform.GetChild(0).transform.position, gameManager.player1.transform.position) < 4)
+                    {
+                        gameManager.player1Script.GetsHit();
+                        if (gameManager.player1.transform.position.x < transform.position.x)
+                        {
+                            gameManager.player1Script.grounded = false;
+                            gameManager.player1Script.velocity = new Vector2(-50, 20);
+                        }
+                        else if (gameManager.player1.transform.position.x >= transform.position.x)
+                        {
+                            gameManager.player1Script.grounded = false;
+                            gameManager.player1Script.velocity = new Vector2(50, 20);
+                        }
+                        if (ball.transform.parent != null)
+                            GrabBall();
+                    }
+                }
             }
+            // else if (Vector2.Distance(ball.transform.position, transform.position) < 5.0f && autoCatchCooldownTimer > autoCatchCooldownTimerMax && ball.transform.parent != transform && ball.transform.parent != null)
+            // {
+            //     GrabBall();
+            // }
         }
         else if (Vector2.Distance(ball.transform.position, transform.position) < 5.0f && autoCatchCooldownTimer > autoCatchCooldownTimerMax && ball.transform.parent == null)
         {
@@ -129,7 +201,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
             float dPadY = Input.GetAxisRaw(gamepadIdentifier + gamepadControls[1]);
             //in order to get the previous axis, we gotta take the max absolute value of either the dpad or control sticks
             prevControlAxis = new Vector2((Mathf.Abs(controlStickX) > Mathf.Abs(dPadX) ? controlStickX : dPadX), (Mathf.Abs(controlStickY) > Mathf.Abs(dPadY) ? controlStickY : dPadY));
-        }   
+        }
         UpdateAugust();
     }
 
@@ -141,13 +213,26 @@ public class BhbPlayerController : NeonHeightsCharacterController
         //reverses the x-coord for second player.
         if (playerNumber == 1)
         {
+            Quaternion q = Quaternion.Euler(90, 0, 0);
+            transform.SetPositionAndRotation(transform.position, q);
+
             ball.transform.position = (gameObject.transform.position + new Vector3(playerHandPos.x * -1, playerHandPos.y, playerHandPos.z));
+
+            gameManager.yellowShevrons.SetActive(false);
+            gameManager.blueShevrons.SetActive(true);
         }
         else
         {
+            Quaternion q = Quaternion.Euler(90, 0, -180);
+            transform.SetPositionAndRotation(transform.position, q);
+
             ball.transform.position = (gameObject.transform.position + playerHandPos);
+
+            gameManager.yellowShevrons.SetActive(true);
+            gameManager.blueShevrons.SetActive(false);
         }
         ball.transform.parent = gameObject.transform;
+
     }
 
     bool GetControlHeld(Control action)

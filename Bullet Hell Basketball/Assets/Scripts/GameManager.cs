@@ -37,7 +37,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector]
     public GameObject ball;
 
-    
+
     [HideInInspector]
     public GameObject leftBasket;
 
@@ -60,6 +60,9 @@ public class GameManager : MonoBehaviour
 
     public GameObject playerOneWins;
     public GameObject playerTwoWins;
+
+    public GameObject yellowShevrons;
+    public GameObject blueShevrons;
 
     public bool gameOver;
     public bool paused;
@@ -140,6 +143,7 @@ public class GameManager : MonoBehaviour
     {
         player1Score = 0;
         player2Score = 0;
+
         ResetPlayersAndBall();
     }
 
@@ -173,7 +177,8 @@ public class GameManager : MonoBehaviour
         if (paused)
             return;
 
-        if (player1Script.controllerNumber == -1){
+        if (player1Script.controllerNumber == -1)
+        {
             for (int i = 1; i <= 8; i++)
             {
                 if (Input.GetButton("J" + i + "A") && player2Script.controllerNumber != i)
@@ -206,7 +211,8 @@ public class GameManager : MonoBehaviour
         //}
     }
 
-    public void ToggleHowToPlay(){
+    public void ToggleHowToPlay()
+    {
         tempHud.SetActive(!tempHud.activeSelf);
 
         if (paused)
@@ -242,6 +248,9 @@ public class GameManager : MonoBehaviour
 
         leftBasket.transform.GetChild(0).gameObject.SetActive(false);
         rightBasket.transform.GetChild(0).gameObject.SetActive(false);
+
+        yellowShevrons.SetActive(false);
+        blueShevrons.SetActive(false);
 
         panelUI.SetActive(true);
     }

@@ -52,8 +52,10 @@ public class Ball : MonoBehaviour
         SetBasketCrosshair(rightBasket, false);
         SetBasketCrosshair(leftBasket, false);
 
+
         if (transform.parent == null && physics.simulatePhysics == false)
         {
+            Debug.Log("a");
             //If the ball is too far away from the basket, boolWillHit = false.
             if (calculateOnce)
             {
@@ -81,20 +83,23 @@ public class Ball : MonoBehaviour
                 //completes the parabola trip in one second (* by speed), changing speed based on height and dist from basket.
                 float speedMod = speed + ((300 - heightMod) / 200) + distMod /*+ (2 / (Vector2.Distance(transform.position, currentTarget.transform.position) + 1))*/;
                 timer += Time.deltaTime * speedMod;
-                Vector2 newPosition = CalculateParabola(startPoint, currentTarget.transform.GetChild(0).transform.position, ballHeight * heightMod, timer);
+                Vector2 newPosition = CalculateParabola(startPoint, currentTarget.transform.GetChild(0).transform.position, ballHeight * heightMod, timer, false);
                 if (physics.simulatePhysics)
                     return;
                 transform.position = newPosition;
             }
             else
             {
+                Debug.Log("Physics Arc");
                 PhysicsArc();
             }
 
             isSpinning = true;
         }
-        else if (transform.parent != null && physics.simulatePhysics == false)
+        else if (transform.parent != null && !physics.simulatePhysics)
         {
+            Debug.Log("b");
+
             int playerNumber = transform.parent.GetComponent<BhbPlayerController>().playerNumber;
             lineRenderer.enabled = false;
             isSpinning = false;
@@ -115,6 +120,7 @@ public class Ball : MonoBehaviour
             //Keeping PreviewParabola() & SetPositions() in the ifs for efficiency.
             if (currentTarget == leftBasket && transform.position.x < 0)
             {
+                Debug.Log("1");
                 SetBasketCrosshair(leftBasket, true);
 
                 Vector3[] pointsArray = PreviewParabola(transform.position, currentTarget.transform.GetChild(0).transform.position, ballHeight * HeightModifier(), previewArcSmoothness);
@@ -123,6 +129,8 @@ public class Ball : MonoBehaviour
             }
             if (currentTarget == rightBasket && transform.position.x > 0)
             {
+                Debug.Log("2");
+
                 SetBasketCrosshair(rightBasket, true);
 
                 Vector3[] pointsArray = PreviewParabola(transform.position, currentTarget.transform.GetChild(0).transform.position, ballHeight * HeightModifier(), previewArcSmoothness);
@@ -134,12 +142,15 @@ public class Ball : MonoBehaviour
         if (isSpinning)
         {
             //gives a set spin to the ball for now.
-            transform.Rotate(0, 0, spinAmt * Mathf.Abs(physics.velocity.y), Space.Self);
+            //transform.Rotate(0, 0, spinAmt * Mathf.Abs(physics.velocity.y), Space.Self);
         }
+        Debug.Log("c");
     }
 
     public void ShootBall(int playerNumber)
     {
+        Debug.Log("shoot ball");
+
         if (playerNumber == 0)
         {
             currentTarget = rightBasket;
@@ -166,6 +177,8 @@ public class Ball : MonoBehaviour
     /// <param name="collision">The thing hitting the ball.</param>
     private void OnCollisionEnter(Collision collision)
     {
+        Debug.Log("collision");
+
         //if the ball is touching the basket...
         if (collision.collider.CompareTag("Target"))
         {
@@ -201,6 +214,8 @@ public class Ball : MonoBehaviour
     /// Used for shots that are too far to make the shot.
     private void PhysicsArc()
     {
+        Debug.Log("physics arc");
+
         physics.simulatePhysics = true;
         if (currentTarget == rightBasket)
         {
@@ -215,34 +230,42 @@ public class Ball : MonoBehaviour
     ///Calculates a parabola at an angle based on the height difference between the player and target.
     ///Attained from this forum:
     ///https://forum.unity.com/threads/generating-dynamic-parabola.211681/#post-1426169
-    Vector3 CalculateParabola(Vector3 start, Vector3 end, float height, float t)
+    Vector3 CalculateParabola(Vector3 start, Vector3 end, float height, float t, bool preview)
     {
+        Debug.Log("calc parab");
+
         float parabolicT = t * 2 - 1;
 
         //start and end are roughly level, pretend they are - simpler solution with less steps
         Vector3 travelDirection = end - start;
         Vector3 result = start + t * travelDirection;
         result.y += (-parabolicT * parabolicT + 1) * height;
-        physics.velocity = (result - gameObject.transform.position) * (1.0f / Time.deltaTime);
 
-        if (transform.parent == null && !physics.simulatePhysics)
+        if (!preview)
         {
-            physics.CheckCollisionsBottom();
-            physics.CheckCollisionsTop();
-            physics.CheckCollisionsRight();
-            physics.CheckCollisionsLeft();
+            Debug.Log("NOT PREVIEW");
 
-            if ((physics.bottomCollision != null && !physics.bottomCollision.segment.semiSolidPlatform) ||
-            (physics.topCollision != null && !physics.topCollision.segment.semiSolidPlatform) ||
-            (physics.rightCollision != null && !physics.rightCollision.segment.semiSolidPlatform) ||
-            (physics.leftCollision != null && !physics.leftCollision.segment.semiSolidPlatform))
+            physics.velocity = (result - gameObject.transform.position) * (1.0f / Time.deltaTime);
+
+            if (transform.parent == null && !physics.simulatePhysics)
             {
-                physics.simulatePhysics = true;
-                physics.UpdateCollisionRect();
-                physics.ApplyVerticalCollisions();
-                physics.ApplyHorizontalCollisions();
-                physics.velocity = new Vector2(-physics.velocity.x * .7f, physics.velocity.y);
-                physics.SimulatePhysics();
+                physics.CheckCollisionsBottom();
+                physics.CheckCollisionsTop();
+                physics.CheckCollisionsRight();
+                physics.CheckCollisionsLeft();
+
+                if ((physics.bottomCollision != null && !physics.bottomCollision.segment.semiSolidPlatform) ||
+                (physics.topCollision != null && !physics.topCollision.segment.semiSolidPlatform) ||
+                (physics.rightCollision != null && !physics.rightCollision.segment.semiSolidPlatform) ||
+                (physics.leftCollision != null && !physics.leftCollision.segment.semiSolidPlatform))
+                {
+                    physics.simulatePhysics = true;
+                    physics.UpdateCollisionRect();
+                    physics.ApplyVerticalCollisions();
+                    physics.ApplyHorizontalCollisions();
+                    physics.velocity = new Vector2(-physics.velocity.x * .7f, physics.velocity.y);
+                    physics.SimulatePhysics();
+                }
             }
         }
 
@@ -273,12 +296,14 @@ public class Ball : MonoBehaviour
     /// <returns>Returns an array of Vector3s on the parabola.</returns>
     private Vector3[] PreviewParabola(Vector3 start, Vector3 end, float height, int arraySize)
     {
+        Debug.Log("preview parab");
+
         Vector3[] drawnParabola = new Vector3[arraySize];
 
         //t is a value from 0 to 1 for time, convert arraySize (equally spaced points) into decimal values between this.
         for (int i = 0; i < arraySize; i++)
         {
-            drawnParabola[i] = CalculateParabola(start, end, height, (float)i / (arraySize - 1));
+            drawnParabola[i] = CalculateParabola(start, end, height, (float)i / (arraySize - 1), true);
         }
 
         return drawnParabola;
@@ -290,6 +315,8 @@ public class Ball : MonoBehaviour
     /// <returns>A value to modify the height variable on Update.</returns>
     private float HeightModifier()
     {
+        Debug.Log("height");
+
         //ball height changes on distance to basket. Capped height modifier.
         float heightCeiling = 300;
         float heightFloor = 30;

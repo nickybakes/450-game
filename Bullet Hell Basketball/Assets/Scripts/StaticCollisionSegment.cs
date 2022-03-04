@@ -102,7 +102,7 @@ public class StaticCollisionSegment : MonoBehaviour
         }
         else
         {
-            lineRenderer.startColor = new Color(angleFromHorizontalDegrees / 180, angleFromHorizontalDegrees / 180, 0);
+            lineRenderer.startColor = new Color(0, 180, 0);
         }
         lineRenderer.endColor = lineRenderer.startColor;
     }

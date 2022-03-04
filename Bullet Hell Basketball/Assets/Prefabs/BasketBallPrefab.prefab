@@ -88,7 +88,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 6.96e-43, y: 3e-45, z: 0, w: 1.9811242e+29}
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
@@ -215,7 +215,6 @@ MonoBehaviour:
   physics: {fileID: 6230116665754677498}
   leftBasket: {fileID: 0}
   rightBasket: {fileID: 0}
-  scoreSound: {fileID: 5241066564412665817, guid: 481ab5cd6b9956e418604e703e214722, type: 3}
   currentTarget: {fileID: 0}
   lineRenderer: {fileID: 2396805206590203897}
 --- !u!54 &6230116665754677497
