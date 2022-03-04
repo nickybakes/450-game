@@ -113,3 +113,6 @@ MonoBehaviour:
   rotationSpeed: 10
   radius: 10
   angularSpeed: 1
+  ownerNumber: 0
+  player1Mat: {fileID: 2100000, guid: 4fdf38a4fdc079243a5f9ef9d1d76ab4, type: 2}
+  player2Mat: {fileID: 2100000, guid: 3407e409d81f1cd48987fe565ee9c014, type: 2}
