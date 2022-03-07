@@ -37,7 +37,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector]
     public GameObject ball;
 
-    
+
     [HideInInspector]
     public GameObject leftBasket;
 
@@ -56,9 +56,13 @@ public class GameManager : MonoBehaviour
     public Ball ballControlScript;
 
     public GameObject tempHud;
+    public GameObject panelUI;
 
     public GameObject playerOneWins;
     public GameObject playerTwoWins;
+
+    public GameObject yellowShevrons;
+    public GameObject blueShevrons;
 
     public bool gameOver;
     public bool paused;
@@ -67,6 +71,7 @@ public class GameManager : MonoBehaviour
     //Score Tracker
     public int player1Score = 0;
     public int player2Score = 0;
+
 
     [HideInInspector] public bool winConditionMet = false;
 
@@ -90,6 +95,13 @@ public class GameManager : MonoBehaviour
         //TO ADD: Initialization for both basket, bullet spawners
         player1Score = 0;
         player2Score = 0;
+
+
+        panelUI.SetActive(true);
+        //player 1.
+        panelUI.transform.GetChild(0).GetComponent<Text>().text = "0";
+        //player 2.
+        panelUI.transform.GetChild(1).GetComponent<Text>().text = "0";
 
         paused = true;
         gameOver = false;
@@ -124,13 +136,34 @@ public class GameManager : MonoBehaviour
         rightBasket.transform.GetChild(0).GetComponent<SpriteRenderer>().color = new Color32(255, 255, 0, 255);
 
 
-        BeginRound();
+        BeginMatch();
     }
 
-    private void BeginRound()
+    private void BeginMatch()
     {
         player1Score = 0;
         player2Score = 0;
+        playerOneWins.SetActive(false);
+        playerTwoWins.SetActive(false);
+        gameOver = false;
+
+        Bullet[] bullets = FindObjectsOfType<Bullet>();
+
+        for (int i = 0; i < bullets.Length; i++)
+        {
+            if (!bullets[i].GetComponent<Bullet>().dontUpdate)
+            {
+                Destroy(bullets[i].gameObject);
+            }
+        }
+
+        BulletManager[] bulletManagers = FindObjectsOfType<BulletManager>();
+
+        for (int i = 0; i < bulletManagers.Length; i++)
+        {
+            bulletManagers[i].Reset();
+        }
+
         ResetPlayersAndBall();
     }
 
@@ -140,28 +173,35 @@ public class GameManager : MonoBehaviour
         {
             if (gameOver)
             {
-                playerOneWins.SetActive(false);
-                playerTwoWins.SetActive(false);
-                gameOver = false;
+                BeginMatch();
                 paused = false;
             }
             else
                 ToggleHowToPlay();
+
+            panelUI.SetActive(true);
         }
 
         for (int i = 1; i <= 8; i++)
         {
             if (Input.GetButtonDown("J" + i + "Start"))
             {
-                ToggleHowToPlay();
+                if (gameOver)
+                {
+                    BeginMatch();
+                    paused = false;
+                }
+                else
+                    ToggleHowToPlay();
                 break;
             }
         }
 
-        if (paused)
+        if (paused || gameOver)
             return;
 
-        if (player1Script.controllerNumber == -1){
+        if (player1Script.controllerNumber == -1)
+        {
             for (int i = 1; i <= 8; i++)
             {
                 if (Input.GetButton("J" + i + "A") && player2Script.controllerNumber != i)
@@ -178,10 +218,11 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        
 
-        
-
+        //player 1.
+        panelUI.transform.GetChild(0).GetComponent<Text>().text = player1Score.ToString();
+        //player 2.
+        panelUI.transform.GetChild(1).GetComponent<Text>().text = player2Score.ToString();
 
         //TO ADD: This is where the Pause menu will appear.
         //if (Input.GetKeyDown(KeyCode.Escape))
@@ -193,17 +234,19 @@ public class GameManager : MonoBehaviour
         //}
     }
 
-    public void ToggleHowToPlay(){
+    public void ToggleHowToPlay()
+    {
         tempHud.SetActive(!tempHud.activeSelf);
-
-        if (paused)
-            paused = false;
-        else
-            paused = true;
+        paused = !paused;
     }
 
     public void EndGame()
     {
+        //player 1.
+        panelUI.transform.GetChild(0).GetComponent<Text>().text = player1Score.ToString();
+        //player 2.
+        panelUI.transform.GetChild(1).GetComponent<Text>().text = player2Score.ToString();
+
         if (player1Score >= 10)
             playerOneWins.SetActive(!playerOneWins.activeSelf);
         if (player2Score >= 10)
@@ -229,5 +272,10 @@ public class GameManager : MonoBehaviour
 
         leftBasket.transform.GetChild(0).gameObject.SetActive(false);
         rightBasket.transform.GetChild(0).gameObject.SetActive(false);
+
+        yellowShevrons.SetActive(false);
+        blueShevrons.SetActive(false);
+
+        panelUI.SetActive(true);
     }
 }

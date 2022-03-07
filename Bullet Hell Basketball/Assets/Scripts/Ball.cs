@@ -27,17 +27,47 @@ public class Ball : MonoBehaviour
     [HideInInspector]
     public GameObject rightBasket;
 
+    private AudioSource scoreSound;
+
     public GameObject currentTarget;
     private GameManager gameManager;
     public LineRenderer lineRenderer;
+
+    //true if the the ball was shot via a swipe and not a normal throw
+    public bool isSwipeShot;
+
+    public float bulletTimeMax = .23f;
+    public float bulletTimeCurrent;
+
+    public bool IsBullet
+    {
+        get { return bulletTimeCurrent < bulletTimeMax; }
+        set
+        {
+            if (value)
+            {
+                bulletTimeCurrent = 0;
+            }
+            else
+            {
+                bulletTimeCurrent = bulletTimeMax;
+                transform.GetChild(2).gameObject.SetActive(false);
+                transform.GetChild(3).gameObject.SetActive(false);
+            }
+        }
+    }
+
+
 
     private float distMod;
     private float heightMod = 0;
 
     private void Start()
     {
+        IsBullet = false;
         gameManager = FindObjectOfType<GameManager>();
         lineRenderer.positionCount = previewArcSmoothness;
+        scoreSound = GameObject.FindGameObjectWithTag("SFX").GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -49,6 +79,14 @@ public class Ball : MonoBehaviour
         SetBasketCrosshair(rightBasket, false);
         SetBasketCrosshair(leftBasket, false);
 
+        if (IsBullet)
+        {
+            bulletTimeCurrent += Time.deltaTime;
+            if (bulletTimeCurrent >= bulletTimeMax)
+                IsBullet = false;
+        }
+
+
         if (transform.parent == null && physics.simulatePhysics == false)
         {
             //If the ball is too far away from the basket, boolWillHit = false.
@@ -56,15 +94,24 @@ public class Ball : MonoBehaviour
             {
                 //check whether the ball was thrown from the side with the target basket (will go in)
                 //or not (will miss)
-                if (currentTarget == leftBasket)
+                if (isSwipeShot)
                 {
-                    boolWillHit = transform.position.x < 0;
+                    boolWillHit = true;
+                    calculateOnce = false;
                 }
-                else if (currentTarget == rightBasket)
+                else
                 {
-                    boolWillHit = transform.position.x > 0;
+                    if (currentTarget == leftBasket)
+                    {
+                        boolWillHit = transform.position.x < 0;
+                    }
+                    else if (currentTarget == rightBasket)
+                    {
+                        boolWillHit = transform.position.x > 0;
+                    }
+                    calculateOnce = false;
                 }
-                calculateOnce = false;
+
 
                 //so it's not calculated at runtime
                 heightMod = HeightModifier();
@@ -75,10 +122,15 @@ public class Ball : MonoBehaviour
 
             if (boolWillHit)
             {
+                float speedAddition = 0;
+                if (isSwipeShot)
+                {
+                    speedAddition = physics.velocity.magnitude / 2000;
+                }
                 //completes the parabola trip in one second (* by speed), changing speed based on height and dist from basket.
-                float speedMod = speed + ((300 - heightMod) / 200) + distMod /*+ (2 / (Vector2.Distance(transform.position, currentTarget.transform.position) + 1))*/;
+                float speedMod = speed + ((300 - heightMod) / 200) + distMod + speedAddition /*+ (2 / (Vector2.Distance(transform.position, currentTarget.transform.position) + 1))*/;
                 timer += Time.deltaTime * speedMod;
-                Vector2 newPosition = CalculateParabola(startPoint, currentTarget.transform.GetChild(0).transform.position, ballHeight * heightMod, timer);
+                Vector2 newPosition = CalculateParabola(startPoint, currentTarget.transform.GetChild(0).transform.position, ballHeight * heightMod, timer, false);
                 if (physics.simulatePhysics)
                     return;
                 transform.position = newPosition;
@@ -90,8 +142,9 @@ public class Ball : MonoBehaviour
 
             isSpinning = true;
         }
-        else if (transform.parent != null && physics.simulatePhysics == false)
+        else if (transform.parent != null && !physics.simulatePhysics)
         {
+
             int playerNumber = transform.parent.GetComponent<BhbPlayerController>().playerNumber;
             lineRenderer.enabled = false;
             isSpinning = false;
@@ -120,6 +173,7 @@ public class Ball : MonoBehaviour
             }
             if (currentTarget == rightBasket && transform.position.x > 0)
             {
+
                 SetBasketCrosshair(rightBasket, true);
 
                 Vector3[] pointsArray = PreviewParabola(transform.position, currentTarget.transform.GetChild(0).transform.position, ballHeight * HeightModifier(), previewArcSmoothness);
@@ -135,16 +189,22 @@ public class Ball : MonoBehaviour
         }
     }
 
-    public void ShootBall(int playerNumber)
+    public void ShootBall(int playerNumber, bool swipeShot)
     {
+        IsBullet = true;
+
         if (playerNumber == 0)
         {
             currentTarget = rightBasket;
+            transform.GetChild(2).gameObject.SetActive(true);
         }
         else
         {
             currentTarget = leftBasket;
+            transform.GetChild(3).gameObject.SetActive(true);
         }
+
+        isSwipeShot = swipeShot;
 
         //shoots the ball
         startPoint = transform.position;
@@ -179,6 +239,8 @@ public class Ball : MonoBehaviour
             //only if the ball goes in from top or from dunk
             if ((physics.velocity.y < 0 && transform.parent == null) || transform.parent != null)
             {
+                scoreSound.enabled = true;
+                scoreSound.Play();
                 if (collision.collider.gameObject == gameManager.rightBasket)
                     gameManager.player1Score++;
                 else if (collision.collider.gameObject == gameManager.leftBasket)
@@ -210,34 +272,39 @@ public class Ball : MonoBehaviour
     ///Calculates a parabola at an angle based on the height difference between the player and target.
     ///Attained from this forum:
     ///https://forum.unity.com/threads/generating-dynamic-parabola.211681/#post-1426169
-    Vector3 CalculateParabola(Vector3 start, Vector3 end, float height, float t)
+    Vector3 CalculateParabola(Vector3 start, Vector3 end, float height, float t, bool preview)
     {
+
         float parabolicT = t * 2 - 1;
 
         //start and end are roughly level, pretend they are - simpler solution with less steps
         Vector3 travelDirection = end - start;
         Vector3 result = start + t * travelDirection;
         result.y += (-parabolicT * parabolicT + 1) * height;
-        physics.velocity = (result - gameObject.transform.position) * (1.0f / Time.deltaTime);
 
-        if (transform.parent == null && !physics.simulatePhysics)
+        if (!preview)
         {
-            physics.CheckCollisionsBottom();
-            physics.CheckCollisionsTop();
-            physics.CheckCollisionsRight();
-            physics.CheckCollisionsLeft();
+            physics.velocity = (result - gameObject.transform.position) * (1.0f / Time.deltaTime);
 
-            if ((physics.bottomCollision != null && !physics.bottomCollision.segment.semiSolidPlatform) ||
-            (physics.topCollision != null && !physics.topCollision.segment.semiSolidPlatform) ||
-            (physics.rightCollision != null && !physics.rightCollision.segment.semiSolidPlatform) ||
-            (physics.leftCollision != null && !physics.leftCollision.segment.semiSolidPlatform))
+            if (transform.parent == null && !physics.simulatePhysics)
             {
-                physics.simulatePhysics = true;
-                physics.UpdateCollisionRect();
-                physics.ApplyVerticalCollisions();
-                physics.ApplyHorizontalCollisions();
-                physics.velocity = new Vector2(-physics.velocity.x * .7f, physics.velocity.y);
-                physics.SimulatePhysics();
+                physics.CheckCollisionsBottom();
+                physics.CheckCollisionsTop();
+                physics.CheckCollisionsRight();
+                physics.CheckCollisionsLeft();
+
+                if ((physics.bottomCollision != null && !physics.bottomCollision.segment.semiSolidPlatform) ||
+                (physics.topCollision != null && !physics.topCollision.segment.semiSolidPlatform) ||
+                (physics.rightCollision != null && !physics.rightCollision.segment.semiSolidPlatform) ||
+                (physics.leftCollision != null && !physics.leftCollision.segment.semiSolidPlatform))
+                {
+                    physics.simulatePhysics = true;
+                    physics.UpdateCollisionRect();
+                    physics.ApplyVerticalCollisions();
+                    physics.ApplyHorizontalCollisions();
+                    physics.velocity = new Vector2(-physics.velocity.x * .7f, physics.velocity.y);
+                    physics.SimulatePhysics();
+                }
             }
         }
 
@@ -273,7 +340,7 @@ public class Ball : MonoBehaviour
         //t is a value from 0 to 1 for time, convert arraySize (equally spaced points) into decimal values between this.
         for (int i = 0; i < arraySize; i++)
         {
-            drawnParabola[i] = CalculateParabola(start, end, height, (float)i / (arraySize - 1));
+            drawnParabola[i] = CalculateParabola(start, end, height, (float)i / (arraySize - 1), true);
         }
 
         return drawnParabola;
