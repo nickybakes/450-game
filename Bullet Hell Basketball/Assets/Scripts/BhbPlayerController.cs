@@ -374,6 +374,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
         {
             IsStunned = true;
             grounded = false;
+            ballScript.lineRenderer.enabled = false;
             velocity = knockback;
             if (ball.transform.parent == transform)
             {
