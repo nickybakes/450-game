@@ -33,7 +33,6 @@ public class BhbPlayerController : NeonHeightsCharacterController
     private GameManager gameManager;
 
 
-
     public GameObject swipeVisual;
 
     public float autoCatchCooldownTimerMax = 1;

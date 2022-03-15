@@ -56,3 +56,15 @@ MonoBehaviour:
     pitch: 1
     loop: 0
     source: {fileID: 0}
+  - name: Hit
+    clip: {fileID: 8300000, guid: a4617be963f25954fa927c1e3ffe6afb, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Buzzer
+    clip: {fileID: 8300000, guid: 789cbb3829141a545a0c38a1eb7771e2, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
