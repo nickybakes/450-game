@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     /// The instance of the GameManager (it's a singleton).
     /// </summary>
     public static GameManager Instance;
+    private AudioManager audioManager;
 
     //TO ADD: MENU
     //[SerializeField] private MainMenu menu;
@@ -96,6 +97,7 @@ public class GameManager : MonoBehaviour
         player1Score = 0;
         player2Score = 0;
 
+        audioManager = FindObjectOfType<AudioManager>();
 
         panelUI.SetActive(true);
         //player 1.
@@ -250,6 +252,8 @@ public class GameManager : MonoBehaviour
             playerOneWins.SetActive(!playerOneWins.activeSelf);
         if (player2Score >= 10)
             playerTwoWins.SetActive(!playerTwoWins.activeSelf);
+
+        audioManager.Play("Buzzer");
 
         paused = true;
         gameOver = true;

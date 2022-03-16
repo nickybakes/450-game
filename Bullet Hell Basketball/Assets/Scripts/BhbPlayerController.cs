@@ -31,6 +31,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
     private BhbBallPhysics ballPhysics;
     private float autoCatchCooldownTimer;
     private GameManager gameManager;
+    private AudioManager audioManager;
 
 
     public GameObject swipeVisual;
@@ -130,6 +131,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
         flashTimeCurrent = flashTimeMax;
 
         gameManager = FindObjectOfType<GameManager>();
+        audioManager = FindObjectOfType<AudioManager>();
         ball = GameObject.FindGameObjectWithTag("Ball");
         ballScript = ball.GetComponent<Ball>();
         ballPhysics = ball.GetComponent<BhbBallPhysics>();
@@ -381,6 +383,9 @@ public class BhbPlayerController : NeonHeightsCharacterController
                 ballPhysics.simulatePhysics = true;
                 ballPhysics.velocity = new Vector2(0, 44);
             }
+
+            //sound if any player gets hit. (including bullets & player swipes)
+            audioManager.PlayRandomPitch("Hit", 0.9f, 1.1f);
         }
     }
 
