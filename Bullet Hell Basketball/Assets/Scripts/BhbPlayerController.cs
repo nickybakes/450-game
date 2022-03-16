@@ -32,6 +32,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
     private float autoCatchCooldownTimer;
     private GameManager gameManager;
     private AudioManager audioManager;
+    private float soundTimer;
 
 
     public GameObject swipeVisual;
@@ -129,6 +130,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
         playerHandPos = new Vector3(1.8f, 1.1f, 0.0f);
         swipeTimeCurrent = swipeTimeMax;
         flashTimeCurrent = flashTimeMax;
+        soundTimer = 0;
 
         gameManager = FindObjectOfType<GameManager>();
         audioManager = FindObjectOfType<AudioManager>();
@@ -172,6 +174,13 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
         if (GetControlHeld(Control.Left) && !IsStunned)
         {
+            //If changed direction and timer is long enough, play audio.
+            if (!runningLeft && soundTimer > 1 && grounded)
+            {
+                soundTimer = 0;
+                Debug.Log("changed direction");
+            }
+            soundTimer += Time.deltaTime;
             runningLeft = true;
         }
         else
@@ -180,6 +189,14 @@ public class BhbPlayerController : NeonHeightsCharacterController
         }
         if (GetControlHeld(Control.Right) && !IsStunned)
         {
+            //If changed direction and timer is long enough, play audio.
+            if (!runningLeft && soundTimer > 1 && grounded)
+            {
+                soundTimer = 0;
+                Debug.Log("changed direction");
+            }
+            soundTimer += Time.deltaTime;
+
             runningRight = true;
         }
         else
