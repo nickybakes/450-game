@@ -178,7 +178,9 @@ public class BhbPlayerController : NeonHeightsCharacterController
             if (!runningLeft && soundTimer > 1 && grounded)
             {
                 soundTimer = 0;
-                Debug.Log("changed direction");
+                //random chance to play.
+                if (Random.Range(0.1f, 0.8f) > 0.5)
+                    audioManager.PlayRandomPitch("Squeak", 0.8f, 1.2f);
             }
             soundTimer += Time.deltaTime;
             runningLeft = true;
@@ -190,13 +192,14 @@ public class BhbPlayerController : NeonHeightsCharacterController
         if (GetControlHeld(Control.Right) && !IsStunned)
         {
             //If changed direction and timer is long enough, play audio.
-            if (!runningLeft && soundTimer > 1 && grounded)
+            if (!runningRight && soundTimer > 1 && grounded)
             {
                 soundTimer = 0;
-                Debug.Log("changed direction");
+                //random chance to play.
+                if (Random.Range(0.1f, 0.8f) > 0.5)
+                    audioManager.PlayRandomPitch("Squeak", 0.8f, 1.2f);
             }
             soundTimer += Time.deltaTime;
-
             runningRight = true;
         }
         else

@@ -68,3 +68,9 @@ MonoBehaviour:
     pitch: 1
     loop: 0
     source: {fileID: 0}
+  - name: Squeak
+    clip: {fileID: 8300000, guid: 66d6aeca39edf2b48a444603928f70d9, type: 3}
+    volume: 0.2
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
