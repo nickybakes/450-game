@@ -76,6 +76,21 @@ public class Ball : MonoBehaviour
         if (gameManager.paused)
             return;
 
+
+        if (transform.position.x > gameManager.horizontalEdge)
+        {
+            physics.simulatePhysics = true;
+            transform.position = new Vector3(gameManager.horizontalEdge - .5f, transform.position.y, transform.position.z);
+            physics.velocity.x = -Mathf.Abs(physics.velocity.x);
+        }
+
+        if (transform.position.x < -gameManager.horizontalEdge)
+        {
+            physics.simulatePhysics = true;
+            transform.position = new Vector3(-gameManager.horizontalEdge + .5f, transform.position.y, transform.position.z);
+            physics.velocity.x = Mathf.Abs(physics.velocity.x);
+        }
+
         SetBasketCrosshair(rightBasket, false);
         SetBasketCrosshair(leftBasket, false);
 

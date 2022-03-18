@@ -56,6 +56,8 @@ public class GameManager : MonoBehaviour
 
     public Ball ballControlScript;
 
+    public float horizontalEdge = 40;
+
     public GameObject tempHud;
     public GameObject panelUI;
 

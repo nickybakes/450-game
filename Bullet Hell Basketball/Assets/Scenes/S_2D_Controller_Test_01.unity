@@ -800,6 +800,7 @@ MonoBehaviour:
   player2Script: {fileID: 0}
   ballPhysicsScript: {fileID: 0}
   ballControlScript: {fileID: 0}
+  horizontalEdge: 35
   tempHud: {fileID: 29890431}
   panelUI: {fileID: 616705882}
   playerOneWins: {fileID: 1602340319}
