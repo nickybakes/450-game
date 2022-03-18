@@ -27,7 +27,7 @@ public class Ball : MonoBehaviour
     [HideInInspector]
     public GameObject rightBasket;
 
-    private AudioSource scoreSound;
+    private AudioManager audioManager;
 
     public GameObject currentTarget;
     private GameManager gameManager;
@@ -67,7 +67,7 @@ public class Ball : MonoBehaviour
         IsBullet = false;
         gameManager = FindObjectOfType<GameManager>();
         lineRenderer.positionCount = previewArcSmoothness;
-        scoreSound = GameObject.FindGameObjectWithTag("SFX").GetComponent<AudioSource>();
+        audioManager = FindObjectOfType<AudioManager>();
     }
 
     // Update is called once per frame
@@ -239,8 +239,7 @@ public class Ball : MonoBehaviour
             //only if the ball goes in from top or from dunk
             if ((physics.velocity.y < 0 && transform.parent == null) || transform.parent != null)
             {
-                scoreSound.enabled = true;
-                scoreSound.Play();
+                audioManager.PlayRandomPitch("Net", 0.8f, 1.2f);
                 if (collision.collider.gameObject == gameManager.rightBasket)
                     gameManager.player1Score++;
                 else if (collision.collider.gameObject == gameManager.leftBasket)

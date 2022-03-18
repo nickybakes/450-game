@@ -31,7 +31,8 @@ public class BhbPlayerController : NeonHeightsCharacterController
     private BhbBallPhysics ballPhysics;
     private float autoCatchCooldownTimer;
     private GameManager gameManager;
-
+    private AudioManager audioManager;
+    private float soundTimer;
 
 
     public GameObject swipeVisual;
@@ -129,8 +130,10 @@ public class BhbPlayerController : NeonHeightsCharacterController
         playerHandPos = new Vector3(1.8f, 1.1f, 0.0f);
         swipeTimeCurrent = swipeTimeMax;
         flashTimeCurrent = flashTimeMax;
+        soundTimer = 0;
 
         gameManager = FindObjectOfType<GameManager>();
+        audioManager = FindObjectOfType<AudioManager>();
         ball = GameObject.FindGameObjectWithTag("Ball");
         ballScript = ball.GetComponent<Ball>();
         ballPhysics = ball.GetComponent<BhbBallPhysics>();
@@ -171,6 +174,15 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
         if (GetControlHeld(Control.Left) && !IsStunned)
         {
+            //If changed direction and timer is long enough, play audio.
+            if (!runningLeft && soundTimer > 1 && grounded)
+            {
+                soundTimer = 0;
+                //random chance to play.
+                if (Random.Range(0.1f, 0.8f) > 0.5)
+                    audioManager.PlayRandomPitch("Squeak", 0.8f, 1.2f);
+            }
+            soundTimer += Time.deltaTime;
             runningLeft = true;
         }
         else
@@ -179,6 +191,15 @@ public class BhbPlayerController : NeonHeightsCharacterController
         }
         if (GetControlHeld(Control.Right) && !IsStunned)
         {
+            //If changed direction and timer is long enough, play audio.
+            if (!runningRight && soundTimer > 1 && grounded)
+            {
+                soundTimer = 0;
+                //random chance to play.
+                if (Random.Range(0.1f, 0.8f) > 0.5)
+                    audioManager.PlayRandomPitch("Squeak", 0.8f, 1.2f);
+            }
+            soundTimer += Time.deltaTime;
             runningRight = true;
         }
         else
@@ -382,6 +403,9 @@ public class BhbPlayerController : NeonHeightsCharacterController
                 ballPhysics.simulatePhysics = true;
                 ballPhysics.velocity = new Vector2(0, 44);
             }
+
+            //sound if any player gets hit. (including bullets & player swipes)
+            audioManager.PlayRandomPitch("Hit", 0.9f, 1.1f);
         }
     }
 
