@@ -46,13 +46,13 @@ MonoBehaviour:
   sounds:
   - name: Music
     clip: {fileID: 8300000, guid: dbc9ad23120cd9a4bb4ca808bc0107c9, type: 3}
-    volume: 0.3
+    volume: 0.1
     pitch: 1
     loop: 1
     source: {fileID: 0}
   - name: Net
     clip: {fileID: 8300000, guid: 6c3bc790180c3b94fb44e78e1f79ddff, type: 3}
-    volume: 1
+    volume: 0.5
     pitch: 1
     loop: 0
     source: {fileID: 0}
@@ -70,7 +70,7 @@ MonoBehaviour:
     source: {fileID: 0}
   - name: Squeak
     clip: {fileID: 8300000, guid: 66d6aeca39edf2b48a444603928f70d9, type: 3}
-    volume: 0.2
+    volume: 1
     pitch: 1
     loop: 0
     source: {fileID: 0}
