@@ -297,14 +297,7 @@ public class GameManager : MonoBehaviour
     private void ShowBallChevron(bool isAboveScreen)
     {
         if (isAboveScreen)
-        {
             indicatorShevron.transform.position = new Vector3(ball.transform.position.x, 33, 0);
-
-            //if (transform.position.x > 0)
-            //shevronIndicator.GetComponent<Shader>().SetColor(0, Color.yellow);
-            //else
-            //shevronIndicator.GetComponent<Shader>().SetColor(0, Color.blue);
-        }
 
         indicatorShevron.SetActive(isAboveScreen);
     }
