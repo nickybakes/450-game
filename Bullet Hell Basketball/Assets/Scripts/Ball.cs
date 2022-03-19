@@ -76,7 +76,6 @@ public class Ball : MonoBehaviour
         if (gameManager.paused)
             return;
 
-
         if (transform.position.x > gameManager.horizontalEdge)
         {
             physics.simulatePhysics = true;

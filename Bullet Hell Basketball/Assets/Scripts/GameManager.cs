@@ -66,6 +66,7 @@ public class GameManager : MonoBehaviour
 
     public GameObject yellowShevrons;
     public GameObject blueShevrons;
+    public GameObject indicatorShevron;
 
     public bool gameOver;
     public bool paused;
@@ -172,6 +173,12 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        //If the ball is above the screen height (will also happen when held).
+        if (ball.transform.position.y > 33)
+            ShowBallChevron(true);
+        else
+            ShowBallChevron(false);
+
         if (Input.GetKeyDown(KeyCode.Backspace))
         {
             if (gameOver)
@@ -282,5 +289,23 @@ public class GameManager : MonoBehaviour
         blueShevrons.SetActive(false);
 
         panelUI.SetActive(true);
+    }
+
+    /// <summary>
+    /// Helper method, shows ball chevron if above a certain height, changes its color based on x.
+    /// </summary>
+    private void ShowBallChevron(bool isAboveScreen)
+    {
+        if (isAboveScreen)
+        {
+            indicatorShevron.transform.position = new Vector3(ball.transform.position.x, 33, 0);
+
+            //if (transform.position.x > 0)
+            //shevronIndicator.GetComponent<Shader>().SetColor(0, Color.yellow);
+            //else
+            //shevronIndicator.GetComponent<Shader>().SetColor(0, Color.blue);
+        }
+
+        indicatorShevron.SetActive(isAboveScreen);
     }
 }
