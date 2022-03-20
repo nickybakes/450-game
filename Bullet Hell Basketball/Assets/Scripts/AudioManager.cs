@@ -23,9 +23,21 @@ public class AudioManager : MonoBehaviour
 
         foreach (Sound s in sounds)
         {
-            s.source = gameObject.AddComponent<AudioSource>();
-            s.source.clip = s.clip;
+            if (s.clips.Length == 1)
+            {
+                s.source = gameObject.AddComponent<AudioSource>();
+                s.source.clip = s.clips[0];
+            }
+            else
+            {
+                for (int i = 0; i < s.clips.Length; i++)
+                {
+                    s.source = gameObject.AddComponent<AudioSource>();
+                    s.source.clip = s.clips[i];
+                }
+            }
 
+            //All clips grouped together will have the same volume, pitch, loop status.
             s.source.volume = s.volume;
             s.source.pitch = s.pitch;
             s.source.loop = s.loop;
@@ -38,7 +50,7 @@ public class AudioManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Plays audioclip.
+    /// Plays audioclip. Chooses randomly from clips.
     /// </summary>
     /// <param name="name">Name of audioclip</param>
     public void Play(string name)
@@ -49,11 +61,13 @@ public class AudioManager : MonoBehaviour
             Debug.LogWarning("Sound: " + name + " not found!");
             return;
         }
+        //chooses from list before playing.
+        s.source.clip = s.clips[UnityEngine.Random.Range(0, s.clips.Length)];
         s.source.Play();
     }
 
     /// <summary>
-    /// Plays given audio between set floats for pitch, randomizing each time. (Useful for SFX)
+    /// Plays given audio between set floats for pitch, randomizing each time. (Useful for SFX) Chooses randomly from clips.
     /// </summary>
     /// <param name="name">Name of audioclip</param>
     /// <param name="pitch1">lower bound</param>
@@ -66,6 +80,8 @@ public class AudioManager : MonoBehaviour
             Debug.LogWarning("Sound: " + name + " not found!");
             return;
         }
+        //chooses from list before playing.
+        s.source.clip = s.clips[UnityEngine.Random.Range(0, s.clips.Length)];
         s.source.pitch = UnityEngine.Random.Range(pitch1, pitch2);
         s.source.Play();
     }
