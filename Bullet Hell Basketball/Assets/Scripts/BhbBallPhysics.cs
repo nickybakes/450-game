@@ -12,11 +12,13 @@ public class BhbBallPhysics : NeonHeightsPhysicsObject
     public float speedDepletionAmount = .7f;
 
     private GameManager gameManager;
+    private AudioManager audioManager;
 
     // Start is called before the first frame update
     void Start()
     {
         gameManager = FindObjectOfType<GameManager>();
+        audioManager = FindObjectOfType<AudioManager>();
     }
 
     public void SimulatePhysics()
@@ -89,6 +91,12 @@ public class BhbBallPhysics : NeonHeightsPhysicsObject
         {
             this.velocity = Vector2.Reflect(this.velocity, Vector2.up) * speedDepletionAmount;
             grounded = false;
+
+            //sounds on vertical collision
+            if (velocity.y > 5)
+            {
+                audioManager.Play("Bounce", velocity.y / 20);
+            }
         }
         
         if (velocity.x > 0)

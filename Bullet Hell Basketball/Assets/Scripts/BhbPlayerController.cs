@@ -180,7 +180,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
                 soundTimer = 0;
                 //random chance to play.
                 if (Random.Range(0.1f, 0.8f) > 0.5)
-                    audioManager.PlayRandomPitch("Squeak", 0.8f, 1.2f);
+                    audioManager.Play("Squeak", 0.8f, 1.2f);
             }
             soundTimer += Time.deltaTime;
             runningLeft = true;
@@ -197,7 +197,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
                 soundTimer = 0;
                 //random chance to play.
                 if (Random.Range(0.1f, 0.8f) > 0.5)
-                    audioManager.PlayRandomPitch("Squeak", 0.8f, 1.2f);
+                    audioManager.Play("Squeak", 0.8f, 1.2f);
             }
             soundTimer += Time.deltaTime;
             runningRight = true;
@@ -405,7 +405,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
             }
 
             //sound if any player gets hit. (including bullets & player swipes)
-            audioManager.PlayRandomPitch("Hit", 0.9f, 1.1f);
+            audioManager.Play("Hit", 0.9f, 1.1f);
         }
     }
 

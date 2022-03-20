@@ -49,8 +49,9 @@ public class AudioManager : MonoBehaviour
         Play("Music");
     }
 
+    #region Parameter variations for Play()
     /// <summary>
-    /// Plays audioclip. Chooses randomly from clips.
+    /// Plays audioclip. Chooses randomly from clips. Sets volume, pitch.
     /// </summary>
     /// <param name="name">Name of audioclip</param>
     public void Play(string name)
@@ -67,12 +68,28 @@ public class AudioManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Plays given audio between set floats for pitch, randomizing each time. (Useful for SFX) Chooses randomly from clips.
+    /// Plays audioclip. Chooses randomly from clips. Sets volume, pitch.
     /// </summary>
     /// <param name="name">Name of audioclip</param>
-    /// <param name="pitch1">lower bound</param>
-    /// <param name="pitch2">upper bound</param>
-    public void PlayRandomPitch(string name, float pitch1, float pitch2)
+    public void Play(string name, float volume)
+    {
+        Sound s = Array.Find(sounds, sound => sound.name == name);
+        if (s == null)
+        {
+            Debug.LogWarning("Sound: " + name + " not found!");
+            return;
+        }
+        //chooses from list before playing.
+        s.source.clip = s.clips[UnityEngine.Random.Range(0, s.clips.Length)];
+        s.source.volume = volume;
+        s.source.Play();
+    }
+
+    /// <summary>
+    /// Plays audioclip. Chooses randomly from clips. Sets volume, pitch.
+    /// </summary>
+    /// <param name="name">Name of audioclip</param>
+    public void Play(string name, float pitch1 = 1, float pitch2 = 1)
     {
         Sound s = Array.Find(sounds, sound => sound.name == name);
         if (s == null)
@@ -85,6 +102,26 @@ public class AudioManager : MonoBehaviour
         s.source.pitch = UnityEngine.Random.Range(pitch1, pitch2);
         s.source.Play();
     }
+
+    /// <summary>
+    /// Plays audioclip. Chooses randomly from clips. Sets volume, pitch.
+    /// </summary>
+    /// <param name="name">Name of audioclip</param>
+    public void Play(string name, float volume, float pitch1 = 1, float pitch2 = 1)
+    {
+        Sound s = Array.Find(sounds, sound => sound.name == name);
+        if (s == null)
+        {
+            Debug.LogWarning("Sound: " + name + " not found!");
+            return;
+        }
+        //chooses from list before playing.
+        s.source.clip = s.clips[UnityEngine.Random.Range(0, s.clips.Length)];
+        s.source.volume = volume;
+        s.source.pitch = UnityEngine.Random.Range(pitch1, pitch2);
+        s.source.Play();
+    }
+    #endregion
 
     /// <summary>
     /// Finds audioclip. (Useful for changing volume/pitch)

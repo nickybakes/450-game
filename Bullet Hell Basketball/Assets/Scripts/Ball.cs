@@ -253,7 +253,7 @@ public class Ball : MonoBehaviour
             //only if the ball goes in from top or from dunk
             if ((physics.velocity.y < 0 && transform.parent == null) || transform.parent != null)
             {
-                audioManager.PlayRandomPitch("Net", 0.8f, 1.2f);
+                audioManager.Play("Net", 0.8f, 1.2f);
                 if (collision.collider.gameObject == gameManager.rightBasket)
                     gameManager.player1Score++;
                 else if (collision.collider.gameObject == gameManager.leftBasket)

@@ -64,7 +64,7 @@ MonoBehaviour:
     source: {fileID: 0}
   - name: Hit
     clips:
-    - {fileID: 0}
+    - {fileID: 8300000, guid: f5cec3311b85ebd41ac4b7b96b7678d3, type: 3}
     volume: 0.5
     pitch: 1
     loop: 0
@@ -79,6 +79,13 @@ MonoBehaviour:
   - name: Squeak
     clips:
     - {fileID: 8300000, guid: 66d6aeca39edf2b48a444603928f70d9, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Bounce
+    clips:
+    - {fileID: 8300000, guid: 8ddf5839c6d55e44ca5a54f44120f8fd, type: 3}
     volume: 1
     pitch: 1
     loop: 0
