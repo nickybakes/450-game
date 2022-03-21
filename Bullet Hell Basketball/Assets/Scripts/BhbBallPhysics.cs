@@ -63,40 +63,41 @@ public class BhbBallPhysics : NeonHeightsPhysicsObject
             {
                 this.velocity = Vector2.Reflect(this.velocity, bottomCollision.segment.normalNormalized) * speedDepletionAmount;
                 grounded = false;
+                PlayBounce(false);
             }
             else if (topCollision != null)
             {
                 this.velocity = Vector2.Reflect(this.velocity, topCollision.segment.normalNormalized) * speedDepletionAmount;
+                PlayBounce(false);
             }
             else if (rightCollision != null && !rightCollision.segment.semiSolidPlatform)
             {
                 this.velocity = Vector2.Reflect(this.velocity, rightCollision.segment.normalNormalized) * speedDepletionAmount;
                 ApplyHorizontalCollisions();
+                PlayBounce(true);
             }
             else if (velocity.y == 0 && rightCollision != null && rightCollision.segment.semiSolidPlatform && IsOverSegment(rightCollision.segment, 0))
             {
-               this.velocity = Vector2.Reflect(this.velocity, rightCollision.segment.normalNormalized) * speedDepletionAmount;
+                this.velocity = Vector2.Reflect(this.velocity, rightCollision.segment.normalNormalized) * speedDepletionAmount;
+                PlayBounce(true);
             }
             else if (leftCollision != null && !leftCollision.segment.semiSolidPlatform)
             {
                 this.velocity = Vector2.Reflect(this.velocity, leftCollision.segment.normalNormalized) * speedDepletionAmount;
                 ApplyHorizontalCollisions();
+                PlayBounce(true);
             }
             else if (velocity.y == 0 && leftCollision != null && leftCollision.segment.semiSolidPlatform && IsOverSegment(leftCollision.segment, 0))
             {
                this.velocity = Vector2.Reflect(this.velocity, leftCollision.segment.normalNormalized) * speedDepletionAmount;
+                PlayBounce(true);
             }
         }
         else if (onFlatGround && bottomCollision != null)
         {
             this.velocity = Vector2.Reflect(this.velocity, Vector2.up) * speedDepletionAmount;
             grounded = false;
-
-            //sounds on vertical collision
-            if (velocity.y > 5)
-            {
-                audioManager.Play("Bounce", velocity.y / 20);
-            }
+            PlayBounce(false);
         }
         
         if (velocity.x > 0)
@@ -147,5 +148,29 @@ public class BhbBallPhysics : NeonHeightsPhysicsObject
             
         if (simulatePhysics)
             SimulatePhysics();
+    }
+
+    /// <summary>
+    /// Helper method to play audio.
+    /// </summary>
+    /// <param name="isHorizontal">Is the ball hitting a wall?</param>
+    private void PlayBounce(bool isCollidingWithWall)
+    {
+        if (isCollidingWithWall)
+        {
+            //use x velocity
+            if (Mathf.Abs(velocity.x) > 3)
+            {
+                audioManager.Play("Bounce", Mathf.Abs(velocity.x) / 20);
+            }
+        }
+        else
+        {
+            //use y velocity
+            if (Mathf.Abs(velocity.y) > 3)
+            {
+                audioManager.Play("Bounce", Mathf.Abs(velocity.y) / 20);
+            }
+        }
     }
 }
