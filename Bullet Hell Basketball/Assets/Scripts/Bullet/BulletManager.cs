@@ -2,6 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum Movement
+{
+    circle,
+    sideToSide,
+    arc,
+    upDown,
+    none
+}
+
 public class BulletManager : MonoBehaviour
 {
     public GameObject bullet;
@@ -26,6 +35,8 @@ public class BulletManager : MonoBehaviour
     public Material player2Mat;
 
     public GameManager gameManager;
+
+    public Movement movement;
 
     // Start is called before the first frame update
     void Start()
@@ -103,8 +114,28 @@ public class BulletManager : MonoBehaviour
 
         //Spawner rotation 
         //Source: https://forum.unity.com/threads/circular-movement.572797/
+        
+        //Changes how the spawner moves based on the enum set
+        switch (movement)
+        {
+            case Movement.circle:
+                moveAroundPoint();
+                break;
+        }
+        
+        
+    }
+
+    //Spawner movement helper methods
+    private void moveAroundPoint()
+    {
         currentAngle += angularSpeed * Time.deltaTime;
         Vector3 offset = new Vector3(Mathf.Sin(currentAngle), Mathf.Cos(currentAngle), fixedPoint.z) * radius;
         transform.position = fixedPoint + offset;
+    }
+
+    private void sideToSide()
+    {
+
     }
 }
