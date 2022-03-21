@@ -99,14 +99,14 @@ public class BhbPlayerController : NeonHeightsCharacterController
                 stunTimeCurrent = 0;
                 transform.GetChild(1).gameObject.SetActive(false);
                 transform.GetChild(2).gameObject.SetActive(true);
-                gameObject.GetComponent<MeshRenderer>().enabled = false;
+                // gameObject.GetComponent<MeshRenderer>().enabled = false;
             }
             else
             {
                 invinsibilityTimeCurrent = 0;
                 stunTimeCurrent = stunTimeMax;
                 transform.GetChild(1).gameObject.SetActive(false);
-                gameObject.GetComponent<MeshRenderer>().enabled = true;
+                // gameObject.GetComponent<MeshRenderer>().enabled = true;
             }
         }
     }
@@ -117,7 +117,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
         if (playerNumber == 1)
         {
-            gameObject.GetComponent<MeshRenderer>().material = player2Sprite;
+            // gameObject.GetComponent<MeshRenderer>().material = player2Sprite;
             gameObject.transform.GetChild(1).GetComponent<MeshRenderer>().material = player2HurtSprite;
             gameObject.transform.GetChild(2).GetComponent<MeshRenderer>().material = player2FlashSprite;
         }
@@ -149,12 +149,12 @@ public class BhbPlayerController : NeonHeightsCharacterController
         {
             if (ball.transform.position.x < transform.position.x)
             {
-                Quaternion q = Quaternion.Euler(90, 0, 0);
+                Quaternion q = Quaternion.Euler(0, -90, 0);
                 transform.SetPositionAndRotation(transform.position, q);
             }
             if (ball.transform.position.x >= transform.position.x)
             {
-                Quaternion q = Quaternion.Euler(90, 0, -180);
+                Quaternion q = Quaternion.Euler(0, 90, 0);
                 transform.SetPositionAndRotation(transform.position, q);
             }
         }
@@ -162,12 +162,12 @@ public class BhbPlayerController : NeonHeightsCharacterController
         {
             if (playerNumber == 0)
             {
-                Quaternion q = Quaternion.Euler(90, 0, -180);
+                Quaternion q = Quaternion.Euler(0, 90, 0);
                 transform.SetPositionAndRotation(transform.position, q);
             }
             else if (playerNumber == 1)
             {
-                Quaternion q = Quaternion.Euler(90, 0, 0);
+                Quaternion q = Quaternion.Euler(0, -90, 0);
                 transform.SetPositionAndRotation(transform.position, q);
             }
         }
@@ -366,7 +366,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
         //reverses the x-coord for second player.
         if (playerNumber == 1)
         {
-            Quaternion q = Quaternion.Euler(90, 0, 0);
+            Quaternion q = Quaternion.Euler(0, -90, 0);
             transform.SetPositionAndRotation(transform.position, q);
 
             ball.transform.position = (gameObject.transform.position + new Vector3(playerHandPos.x * -1, playerHandPos.y, playerHandPos.z));
@@ -376,7 +376,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
         }
         else
         {
-            Quaternion q = Quaternion.Euler(90, 0, -180);
+            Quaternion q = Quaternion.Euler(0, 90, 0);
             transform.SetPositionAndRotation(transform.position, q);
 
             ball.transform.position = (gameObject.transform.position + playerHandPos);

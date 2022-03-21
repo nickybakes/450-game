@@ -1273,6 +1273,10 @@ PrefabInstance:
       value: SM_Table_01 (1)
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 114a96b7e7d8719438e1b3c575313d78, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 114a96b7e7d8719438e1b3c575313d78, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 4294967295
       objectReference: {fileID: 0}
@@ -1422,6 +1426,10 @@ PrefabInstance:
     - target: {fileID: 5370311947778578661, guid: f5dd710dd082b174b94806c38794438e, type: 3}
       propertyPath: m_Name
       value: Bullet Launcher (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5370311947778578661, guid: f5dd710dd082b174b94806c38794438e, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f5dd710dd082b174b94806c38794438e, type: 3}
