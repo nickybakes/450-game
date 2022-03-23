@@ -36,7 +36,11 @@ public class BulletManager : MonoBehaviour
 
     public GameManager gameManager;
 
+    //Movement
     public Movement movement;
+    private Vector3 ogPosition;
+    public float distanceTravelled;
+    private Vector3 newPosition;
 
     // Start is called before the first frame update
     void Start()
@@ -65,6 +69,13 @@ public class BulletManager : MonoBehaviour
         // {
         //     meshRenderer.material = player2Mat;
         // }
+
+        ogPosition = transform.position;
+
+        if(distanceTravelled == 0)
+        {
+            distanceTravelled = 1;
+        }
     }
 
     public void Reset(){
@@ -140,6 +151,8 @@ public class BulletManager : MonoBehaviour
 
     private void sideToSide()
     {
-
+        newPosition = new Vector3(ogPosition.x + distanceTravelled, ogPosition.y, ogPosition.z);
+        
+        
     }
 }
