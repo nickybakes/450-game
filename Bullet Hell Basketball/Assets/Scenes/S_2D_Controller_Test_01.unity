@@ -2429,6 +2429,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Audio Manager
       objectReference: {fileID: 0}
+    - target: {fileID: 3906439084490162780, guid: 804eb708b3d7abd4cbd8bd243e4e984e, type: 3}
+      propertyPath: sounds.Array.data[5].clips.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3906439084490162780, guid: 804eb708b3d7abd4cbd8bd243e4e984e, type: 3}
+      propertyPath: sounds.Array.data[5].clips.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: ad29c1f293e8c6b4a829d37f20d16860, type: 3}
+    - target: {fileID: 3906439084490162780, guid: 804eb708b3d7abd4cbd8bd243e4e984e, type: 3}
+      propertyPath: sounds.Array.data[5].clips.Array.data[2]
+      value: 
+      objectReference: {fileID: 8300000, guid: 67450ba168f4fcd4da78e869fb8f2dab, type: 3}
     - target: {fileID: 8251514489022235984, guid: 804eb708b3d7abd4cbd8bd243e4e984e, type: 3}
       propertyPath: m_RootOrder
       value: 17
@@ -4146,7 +4158,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collisionVertexPrefab: {fileID: 2382589878411412825, guid: de94585aa4ffe794c8cc1e98a3d925ff, type: 3}
   collisionSegmentPrefab: {fileID: 71431853401964895, guid: 2d19e55d322709d41b35224430022a18, type: 3}
-  editorUpdateFrame: 0
+  editorUpdateFrame: 1
   vertexColor: {r: 1, g: 0, b: 0, a: 1}
   segmentColor: {r: 1, g: 0, b: 0, a: 1}
   semiSolidPlatformColor: {r: 0, g: 0, b: 1, a: 1}
