@@ -121,6 +121,10 @@ public class BulletManager : MonoBehaviour
             case Movement.circle:
                 moveAroundPoint();
                 break;
+
+            case Movement.sideToSide:
+                sideToSide();  
+                break;
         }
         
         
