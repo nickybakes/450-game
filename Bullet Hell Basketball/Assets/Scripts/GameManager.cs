@@ -77,10 +77,14 @@ public class GameManager : MonoBehaviour
     public bool gameOver;
     public bool paused;
 
+    public bool overTime;
+
 
     //Score Tracker
     public int player1Score = 0;
     public int player2Score = 0;
+
+    public int previousScorer = -1;
 
 
     [HideInInspector] public bool winConditionMet = false;
@@ -120,6 +124,7 @@ public class GameManager : MonoBehaviour
 
         paused = true;
         gameOver = false;
+        overTime = false;
 
         player1SpawnPosition = new Vector2(playerSpawnLocation.position.x, playerSpawnLocation.position.y);
         player2SpawnPosition = new Vector2(-playerSpawnLocation.position.x, playerSpawnLocation.position.y);
@@ -154,11 +159,18 @@ public class GameManager : MonoBehaviour
 
     private void BeginMatch()
     {
+        matchTimeCurrent = matchTimeMax;
+
         player1Score = 0;
         player2Score = 0;
+        panelUI.transform.GetChild(1).GetComponent<Text>().text = player2Score.ToString();
+        panelUI.transform.GetChild(0).GetComponent<Text>().text = player1Score.ToString();
+
         playerOneWins.SetActive(false);
         playerTwoWins.SetActive(false);
+        previousScorer = -1;
         gameOver = false;
+        overTime = false;
 
         Bullet[] bullets = FindObjectsOfType<Bullet>();
 
@@ -219,13 +231,29 @@ public class GameManager : MonoBehaviour
         if (paused || gameOver)
             return;
 
-        if (!ballControlScript.IsResetting)
+        if (!ballControlScript.IsResetting && !overTime)
         {
             matchTimeCurrent -= Time.deltaTime;
-            matchTimeText.text = TimeSpan.FromSeconds(Mathf.Max(matchTimeCurrent, 0)).ToString("mm\\:ss");
+            if (matchTimeCurrent <= 10)
+            {
+                matchTimeText.text = Mathf.Max(matchTimeCurrent, 0).ToString("0.000");
+            }
+            else
+            {
+                matchTimeText.text = TimeSpan.FromSeconds(Mathf.Max(matchTimeCurrent, 0)).ToString("mm\\:ss");
+
+            }
             if (matchTimeCurrent <= 0)
             {
-                EndGame();
+                if (player1Score == player2Score)
+                {
+                    overTime = true;
+                    matchTimeText.text = "Overtime";
+                }
+                else
+                {
+                    EndGame();
+                }
             }
         }
 
@@ -246,13 +274,6 @@ public class GameManager : MonoBehaviour
                     player2Script.controllerNumber = i;
             }
         }
-
-
-        //player 1.
-        panelUI.transform.GetChild(0).GetComponent<Text>().text = player1Score.ToString();
-        //player 2.
-        panelUI.transform.GetChild(1).GetComponent<Text>().text = player2Score.ToString();
-
         //TO ADD: This is where the Pause menu will appear.
         //if (Input.GetKeyDown(KeyCode.Escape))
         //menu.Pause();
@@ -276,15 +297,16 @@ public class GameManager : MonoBehaviour
         //player 2.
         panelUI.transform.GetChild(1).GetComponent<Text>().text = player2Score.ToString();
 
-        if (player1Score >= 10)
+        if (player1Score > player2Score)
             playerOneWins.SetActive(!playerOneWins.activeSelf);
-        if (player2Score >= 10)
+        else
             playerTwoWins.SetActive(!playerTwoWins.activeSelf);
 
         audioManager.Play("Buzzer");
 
         paused = true;
         gameOver = true;
+        overTime = false;
         player1Score = 0;
         player2Score = 0;
     }
@@ -293,7 +315,19 @@ public class GameManager : MonoBehaviour
     {
         player1.transform.position = player1SpawnPosition;
         player2.transform.position = player2SpawnPosition;
-        ball.transform.position = ballSpawnPosition;
+
+        if (previousScorer == -1)
+        {
+            ball.transform.position = ballSpawnPosition;
+        }
+        else if (previousScorer == 0)
+        {
+            ball.transform.position = new Vector2(player2SpawnPosition.x - 5, player2SpawnPosition.y + 10);
+        }
+        else if (previousScorer == 1)
+        {
+            ball.transform.position = new Vector2(player1SpawnPosition.x + 5, player1SpawnPosition.y + 10);
+        }
 
         ball.transform.parent = null;
         ballPhysicsScript.velocity = Vector2.zero;
