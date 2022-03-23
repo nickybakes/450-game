@@ -26,6 +26,8 @@ public class CollisionMap : MonoBehaviour
     [Header("")]
     public bool mirrorHorizontal = true;
 
+    public bool visibleInGame = true;
+
 
     public List<CollisionVertex> vertices
     {
@@ -71,10 +73,10 @@ public class CollisionMap : MonoBehaviour
         List<CollisionSegment> segs = segments;
         foreach(CollisionSegment segment in segs)
         {
-            newMap.AddSegment(segment.a.transform.position, segment.b.transform.position, segment.semiSolidPlatform);
+            newMap.AddSegment(segment.a.transform.position, segment.b.transform.position, segment.semiSolidPlatform, visibleInGame);
             if (mirrorHorizontal)
             {
-                newMap.AddSegment(new Vector2(-segment.b.transform.position.x, segment.b.transform.position.y), new Vector2(-segment.a.transform.position.x, segment.a.transform.position.y), segment.semiSolidPlatform);
+                newMap.AddSegment(new Vector2(-segment.b.transform.position.x, segment.b.transform.position.y), new Vector2(-segment.a.transform.position.x, segment.a.transform.position.y), segment.semiSolidPlatform, visibleInGame);
             }
         }
         newMap.Init();

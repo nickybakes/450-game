@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
 
 public class Ball : MonoBehaviour
 {
@@ -13,7 +15,6 @@ public class Ball : MonoBehaviour
     [Range(0.0f, 1.0f)]
     public float spinAmt = 1.0f;
 
-    private bool isSpinning = false;
     private bool boolWillHit = true;
     private bool calculateOnce = true;
 
@@ -39,6 +40,11 @@ public class Ball : MonoBehaviour
     public float bulletTimeMax = .23f;
     public float bulletTimeCurrent;
 
+    public float resetTimeMax = 2f;
+    public float resetTimeCurrent;
+
+    public bool threePointShot = false;
+
     public bool IsBullet
     {
         get { return bulletTimeCurrent < bulletTimeMax; }
@@ -57,7 +63,25 @@ public class Ball : MonoBehaviour
         }
     }
 
-
+    public bool IsResetting
+    {
+        get { return resetTimeCurrent < resetTimeMax; }
+        set
+        {
+            if (value)
+            {
+                transform.parent = null;
+                resetTimeCurrent = 0;
+            }
+            else
+            {
+                gameManager.panelUI.transform.GetChild(3).gameObject.SetActive(false);
+                gameManager.panelUI.transform.GetChild(4).gameObject.SetActive(false);
+                gameManager.ResetPlayersAndBall();
+                resetTimeCurrent = resetTimeMax;
+            }
+        }
+    }
 
     private float distMod;
     private float heightMod = 0;
@@ -68,6 +92,7 @@ public class Ball : MonoBehaviour
         gameManager = FindObjectOfType<GameManager>();
         lineRenderer.positionCount = previewArcSmoothness;
         audioManager = FindObjectOfType<AudioManager>();
+        IsResetting = false;
     }
 
     // Update is called once per frame
@@ -75,6 +100,20 @@ public class Ball : MonoBehaviour
     {
         if (gameManager.paused)
             return;
+
+        if (transform.position.x > gameManager.horizontalEdge)
+        {
+            physics.simulatePhysics = true;
+            transform.position = new Vector3(gameManager.horizontalEdge - .5f, transform.position.y, transform.position.z);
+            physics.velocity.x = -Mathf.Abs(physics.velocity.x);
+        }
+
+        if (transform.position.x < -gameManager.horizontalEdge)
+        {
+            physics.simulatePhysics = true;
+            transform.position = new Vector3(-gameManager.horizontalEdge + .5f, transform.position.y, transform.position.z);
+            physics.velocity.x = Mathf.Abs(physics.velocity.x);
+        }
 
         SetBasketCrosshair(rightBasket, false);
         SetBasketCrosshair(leftBasket, false);
@@ -84,6 +123,13 @@ public class Ball : MonoBehaviour
             bulletTimeCurrent += Time.deltaTime;
             if (bulletTimeCurrent >= bulletTimeMax)
                 IsBullet = false;
+        }
+
+        if (IsResetting)
+        {
+            resetTimeCurrent += Time.deltaTime;
+            if (resetTimeCurrent >= resetTimeMax)
+                IsResetting = false;
         }
 
 
@@ -98,15 +144,25 @@ public class Ball : MonoBehaviour
                 {
                     boolWillHit = true;
                     calculateOnce = false;
+                    if (currentTarget == leftBasket)
+                    {
+                        threePointShot = transform.position.x > 0;
+                    }
+                    else if (currentTarget == rightBasket)
+                    {
+                        threePointShot = transform.position.x < 0;
+                    }
                 }
                 else
                 {
                     if (currentTarget == leftBasket)
                     {
+                        threePointShot = transform.position.x > 0;
                         boolWillHit = transform.position.x < 0;
                     }
                     else if (currentTarget == rightBasket)
                     {
+                        threePointShot = transform.position.x < 0;
                         boolWillHit = transform.position.x > 0;
                     }
                     calculateOnce = false;
@@ -140,14 +196,12 @@ public class Ball : MonoBehaviour
                 PhysicsArc();
             }
 
-            isSpinning = true;
         }
         else if (transform.parent != null && !physics.simulatePhysics)
         {
 
             int playerNumber = transform.parent.GetComponent<BhbPlayerController>().playerNumber;
             lineRenderer.enabled = false;
-            isSpinning = false;
 
             if (playerNumber == 0)
             {
@@ -181,11 +235,9 @@ public class Ball : MonoBehaviour
                 lineRenderer.enabled = true;
             }
         }
-
-        if (isSpinning)
+        if (transform.parent == null)
         {
-            //gives a set spin to the ball for now.
-            transform.Rotate(0, 0, spinAmt * Mathf.Abs(physics.velocity.y), Space.Self);
+            transform.Rotate(0, 0, spinAmt * -physics.velocity.x, Space.Self);
         }
     }
 
@@ -221,8 +273,11 @@ public class Ball : MonoBehaviour
     /// Used for all ball collisions. Dunking, bouncing, players, bullets.
     /// </summary>
     /// <param name="collision">The thing hitting the ball.</param>
-    private void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (IsResetting)
+            return;
+
         //if the ball is touching the basket...
         if (collision.collider.CompareTag("Target"))
         {
@@ -239,17 +294,58 @@ public class Ball : MonoBehaviour
             //only if the ball goes in from top or from dunk
             if ((physics.velocity.y < 0 && transform.parent == null) || transform.parent != null)
             {
-                audioManager.PlayRandomPitch("Net", 0.8f, 1.2f);
+                audioManager.Play("Net", 0.8f, 1.2f);
                 if (collision.collider.gameObject == gameManager.rightBasket)
-                    gameManager.player1Score++;
+                {
+                    transform.position = new Vector3(gameManager.rightBasket.transform.GetChild(0).transform.position.x, transform.position.y, transform.position.z);
+
+                    if (threePointShot)
+                    {
+                        gameManager.player1Score += 3;
+                        gameManager.panelUI.transform.GetChild(3).GetComponent<Text>().text = "+3";
+                    }
+                    else
+                    {
+                        gameManager.player1Score += 2;
+                        gameManager.panelUI.transform.GetChild(3).GetComponent<Text>().text = "+2";
+                    }
+                    gameManager.previousScorer = 0;
+                    if (!gameManager.overTime)
+                        gameManager.panelUI.transform.GetChild(3).gameObject.SetActive(true);
+                    gameManager.panelUI.transform.GetChild(0).GetComponent<Text>().text = gameManager.player1Score.ToString();
+
+                }
                 else if (collision.collider.gameObject == gameManager.leftBasket)
-                    gameManager.player2Score++;
+                {
+                    transform.position = new Vector3(gameManager.leftBasket.transform.GetChild(0).transform.position.x, transform.position.y, transform.position.z);
 
-                if (gameManager.player1Score >= 10 || gameManager.player2Score >= 10)
-                    gameManager.EndGame();
+                    if (threePointShot)
+                    {
+                        gameManager.player2Score += 3;
+                        gameManager.panelUI.transform.GetChild(4).GetComponent<Text>().text = "+3";
+                    }
+                    else
+                    {
+                        gameManager.player2Score += 2;
+                        gameManager.panelUI.transform.GetChild(4).GetComponent<Text>().text = "+2";
+                    }
+                    gameManager.previousScorer = 1;
+                    if (!gameManager.overTime)
+                        gameManager.panelUI.transform.GetChild(4).gameObject.SetActive(true);
+                    gameManager.panelUI.transform.GetChild(1).GetComponent<Text>().text = gameManager.player2Score.ToString();
 
-                gameManager.ResetPlayersAndBall();
+                }
+
+                // if (gameManager.player1Score >= 10 || gameManager.player2Score >= 10)
+                //     gameManager.EndGame();
+
+                physics.simulatePhysics = true;
                 lineRenderer.enabled = false;
+
+                if (gameManager.overTime)
+                    gameManager.EndGame();
+                else
+                    IsResetting = true;
             }
         }
     }

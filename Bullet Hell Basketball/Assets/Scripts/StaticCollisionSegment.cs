@@ -33,22 +33,32 @@ public class StaticCollisionSegment : MonoBehaviour
 
     public Vector2 topVertex;
 
+    public bool visible;
+
     // Start is called before the first frame update
     void Awake()
     {
-        lineRenderer = gameObject.GetComponent<LineRenderer>();
-        lineRenderer.startWidth = .5f;
-        lineRenderer.endWidth = lineRenderer.startWidth;
-        lineRenderer.startColor = Color.red;
-        lineRenderer.endColor = Color.yellow;
-        lineRenderer.positionCount = 4;
+        if (visible)
+        {
+            lineRenderer = gameObject.GetComponent<LineRenderer>();
+            lineRenderer.startWidth = .5f;
+            lineRenderer.endWidth = lineRenderer.startWidth;
+            lineRenderer.startColor = Color.red;
+            lineRenderer.endColor = Color.yellow;
+            lineRenderer.positionCount = 4;
+        }
+        else{
+            lineRenderer = gameObject.GetComponent<LineRenderer>();
+            lineRenderer.enabled = false;
+        }
     }
 
-    public void Init(Vector2 a, Vector2 b, bool semiSolidPlatform)
+    public void Init(Vector2 a, Vector2 b, bool semiSolidPlatform, bool visible)
     {
         this.a = a;
         this.b = b;
         this.semiSolidPlatform = semiSolidPlatform;
+        this.visible = visible;
         if (b.y > a.y)
         {
             topVertex = b;
@@ -96,25 +106,30 @@ public class StaticCollisionSegment : MonoBehaviour
             yInt = a.y - (slope * a.x);
         }
 
-        if (this.semiSolidPlatform)
+        if (visible)
         {
-            lineRenderer.startColor = new Color((180 - angleFromHorizontalDegrees) / 180, 0, (180 - angleFromHorizontalDegrees) / 180);
+            if (this.semiSolidPlatform)
+            {
+                lineRenderer.startColor = new Color((180 - angleFromHorizontalDegrees) / 180, 0, (180 - angleFromHorizontalDegrees) / 180);
+            }
+            else
+            {
+                lineRenderer.startColor = new Color(180, 180, 180);
+            }
+            lineRenderer.endColor = lineRenderer.startColor;
         }
-        else
-        {
-            lineRenderer.startColor = new Color(180, 180, 180);
-        }
-        lineRenderer.endColor = lineRenderer.startColor;
     }
 
     // Update is called once per frame
     void Update()
     {
-        lineRenderer.SetPosition(0, a);
-        lineRenderer.SetPosition(1, b);
-        lineRenderer.SetPosition(2, midPoint);
-        lineRenderer.SetPosition(3, midPoint + 1.3f * normalNormalized);
-
+        if (visible)
+        {
+            lineRenderer.SetPosition(0, a);
+            lineRenderer.SetPosition(1, b);
+            lineRenderer.SetPosition(2, midPoint);
+            lineRenderer.SetPosition(3, midPoint + 1.3f * normalNormalized);
+        }
     }
 
     public float GetYFromX(float x)

@@ -99,14 +99,14 @@ public class BhbPlayerController : NeonHeightsCharacterController
                 stunTimeCurrent = 0;
                 transform.GetChild(1).gameObject.SetActive(false);
                 transform.GetChild(2).gameObject.SetActive(true);
-                gameObject.GetComponent<MeshRenderer>().enabled = false;
+                // gameObject.GetComponent<MeshRenderer>().enabled = false;
             }
             else
             {
                 invinsibilityTimeCurrent = 0;
                 stunTimeCurrent = stunTimeMax;
                 transform.GetChild(1).gameObject.SetActive(false);
-                gameObject.GetComponent<MeshRenderer>().enabled = true;
+                // gameObject.GetComponent<MeshRenderer>().enabled = true;
             }
         }
     }
@@ -117,7 +117,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
         if (playerNumber == 1)
         {
-            gameObject.GetComponent<MeshRenderer>().material = player2Sprite;
+            // gameObject.GetComponent<MeshRenderer>().material = player2Sprite;
             gameObject.transform.GetChild(1).GetComponent<MeshRenderer>().material = player2HurtSprite;
             gameObject.transform.GetChild(2).GetComponent<MeshRenderer>().material = player2FlashSprite;
         }
@@ -127,7 +127,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
     void Start()
     {
         pickupRadius = 5;
-        playerHandPos = new Vector3(1.8f, 1.1f, 0.0f);
+        playerHandPos = new Vector3(1.8f, 5.2f, 0.0f);
         swipeTimeCurrent = swipeTimeMax;
         flashTimeCurrent = flashTimeMax;
         soundTimer = 0;
@@ -149,12 +149,12 @@ public class BhbPlayerController : NeonHeightsCharacterController
         {
             if (ball.transform.position.x < transform.position.x)
             {
-                Quaternion q = Quaternion.Euler(90, 0, 0);
+                Quaternion q = Quaternion.Euler(0, 180, 0);
                 transform.SetPositionAndRotation(transform.position, q);
             }
             if (ball.transform.position.x >= transform.position.x)
             {
-                Quaternion q = Quaternion.Euler(90, 0, -180);
+                Quaternion q = Quaternion.Euler(0, 0, 0);
                 transform.SetPositionAndRotation(transform.position, q);
             }
         }
@@ -162,12 +162,12 @@ public class BhbPlayerController : NeonHeightsCharacterController
         {
             if (playerNumber == 0)
             {
-                Quaternion q = Quaternion.Euler(90, 0, -180);
+                Quaternion q = Quaternion.Euler(0, 0, 0);
                 transform.SetPositionAndRotation(transform.position, q);
             }
             else if (playerNumber == 1)
             {
-                Quaternion q = Quaternion.Euler(90, 0, 0);
+                Quaternion q = Quaternion.Euler(0, 180, 0);
                 transform.SetPositionAndRotation(transform.position, q);
             }
         }
@@ -180,7 +180,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
                 soundTimer = 0;
                 //random chance to play.
                 if (Random.Range(0.1f, 0.8f) > 0.5)
-                    audioManager.PlayRandomPitch("Squeak", 0.8f, 1.2f);
+                    audioManager.Play("Squeak", 0.8f, 1.2f);
             }
             soundTimer += Time.deltaTime;
             runningLeft = true;
@@ -197,7 +197,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
                 soundTimer = 0;
                 //random chance to play.
                 if (Random.Range(0.1f, 0.8f) > 0.5)
-                    audioManager.PlayRandomPitch("Squeak", 0.8f, 1.2f);
+                    audioManager.Play("Squeak", 0.8f, 1.2f);
             }
             soundTimer += Time.deltaTime;
             runningRight = true;
@@ -216,86 +216,91 @@ public class BhbPlayerController : NeonHeightsCharacterController
             jumping = false;
         }
 
-        if (GetControlDown(Control.Action) && !IsStunned)
+        if (!ballScript.IsResetting)
         {
-            //if holding the ball...
-            if (ball.transform.parent == transform)
+            if (GetControlDown(Control.Action) && !IsStunned)
             {
-                autoCatchCooldownTimer = 0;
-                IsSwiping = false;
-                ballScript.ShootBall(playerNumber, false);
-            }
-            else if (!IsSwiping && swipeCooldownTimeCurrent >= swipeCooldownTimeMax && !IsStunned)
-            {
-                IsSwiping = true;
-
-                if (playerNumber == 0)
+                //if holding the ball...
+                if (ball.transform.parent == transform)
                 {
-                    if (Vector2.Distance(transform.GetChild(0).transform.position, gameManager.player2.transform.position) < 5.2)
+                    autoCatchCooldownTimer = 0;
+                    IsSwiping = false;
+                    ballScript.ShootBall(playerNumber, false);
+                }
+                else if (!IsSwiping && swipeCooldownTimeCurrent >= swipeCooldownTimeMax && !IsStunned)
+                {
+                    IsSwiping = true;
+
+                    if (playerNumber == 0)
                     {
-                        if (ball.transform.parent != null && ball.transform.parent != transform)
-                            GrabBall();
-                        if (gameManager.player2.transform.position.x < transform.position.x)
+                        if (Vector2.Distance(transform.GetChild(0).transform.position, gameManager.player2.transform.position) < 5.2)
                         {
-                            gameManager.player2Script.GetsHit(new Vector2(-50, 20));
+                            if (ball.transform.parent != null && ball.transform.parent != transform)
+                                GrabBall();
+                            if (gameManager.player2.transform.position.x < transform.position.x)
+                            {
+                                gameManager.player2Script.GetsHit(new Vector2(-50, 20));
+                            }
+                            else if (gameManager.player2.transform.position.x >= transform.position.x)
+                            {
+                                gameManager.player2Script.GetsHit(new Vector2(50, 20));
+                            }
                         }
-                        else if (gameManager.player2.transform.position.x >= transform.position.x)
+                    }
+                    else if (playerNumber == 1)
+                    {
+                        if (Vector2.Distance(transform.GetChild(0).transform.position, gameManager.player1.transform.position) < 6.5)
                         {
-                            gameManager.player2Script.GetsHit(new Vector2(50, 20));
+                            if (ball.transform.parent != null && ball.transform.parent != transform)
+                                GrabBall();
+                            if (gameManager.player1.transform.position.x < transform.position.x)
+                            {
+                                gameManager.player1Script.GetsHit(new Vector2(-50, 20));
+                            }
+                            else if (gameManager.player1.transform.position.x >= transform.position.x)
+                            {
+                                gameManager.player1Script.GetsHit(new Vector2(50, 20));
+                            }
+                        }
+                    }
+
+                }
+                if (IsSwiping && swipeTimeCurrent <= .5)
+                {
+                    if (ball.transform.parent == null)
+                    {
+                        Vector2 midpoint = transform.position + (transform.GetChild(0).transform.position - transform.position) / 2.0f;
+                        if (Vector2.Distance(midpoint, (Vector2)ball.transform.position + (ballPhysics.velocity * Time.deltaTime)) < 6.5)
+                        {
+                            ball.transform.parent = transform;
+                            ballPhysics.simulatePhysics = false;
+                            ballScript.ShootBall(playerNumber, true);
+
+                            if (playerNumber == 1)
+                            {
+                                gameManager.yellowShevrons.SetActive(false);
+                                gameManager.blueShevrons.SetActive(true);
+                            }
+                            else
+                            {
+                                gameManager.yellowShevrons.SetActive(true);
+                                gameManager.blueShevrons.SetActive(false);
+                            }
                         }
                     }
                 }
-                else if (playerNumber == 1)
-                {
-                    if (Vector2.Distance(transform.GetChild(0).transform.position, gameManager.player1.transform.position) < 6.5)
-                    {
-                        if (ball.transform.parent != null && ball.transform.parent != transform)
-                            GrabBall();
-                        if (gameManager.player1.transform.position.x < transform.position.x)
-                        {
-                            gameManager.player1Script.GetsHit(new Vector2(-50, 20));
-                        }
-                        else if (gameManager.player1.transform.position.x >= transform.position.x)
-                        {
-                            gameManager.player1Script.GetsHit(new Vector2(50, 20));
-                        }
-                    }
-                }
-
+                // else if (Vector2.Distance(ball.transform.position, transform.position) < 5.0f && autoCatchCooldownTimer > autoCatchCooldownTimerMax && ball.transform.parent != transform && ball.transform.parent != null)
+                // {
+                //     GrabBall();
+                // }
             }
-            if (IsSwiping && swipeTimeCurrent <= .5)
+            else if (!ballScript.IsBullet && swipeCooldownTimeCurrent >= swipeCooldownTimeMax && !IsStunned && !IsSwiping && Vector2.Distance(ball.transform.position, transform.position) < 5.0f && autoCatchCooldownTimer > autoCatchCooldownTimerMax && ball.transform.parent == null)
             {
-                if (ball.transform.parent == null)
-                {
-                    Vector2 midpoint = transform.position + (transform.GetChild(0).transform.position - transform.position) / 2.0f;
-                    if (Vector2.Distance(midpoint, (Vector2)ball.transform.position + (ballPhysics.velocity * Time.deltaTime)) < 6.5)
-                    {
-                        ball.transform.parent = transform;
-                        ballPhysics.simulatePhysics = false;
-                        ballScript.ShootBall(playerNumber, true);
-
-                        if (playerNumber == 1)
-                        {
-                            gameManager.yellowShevrons.SetActive(false);
-                            gameManager.blueShevrons.SetActive(true);
-                        }
-                        else
-                        {
-                            gameManager.yellowShevrons.SetActive(true);
-                            gameManager.blueShevrons.SetActive(false);
-                        }
-                    }
-                }
+                GrabBall();
             }
-            // else if (Vector2.Distance(ball.transform.position, transform.position) < 5.0f && autoCatchCooldownTimer > autoCatchCooldownTimerMax && ball.transform.parent != transform && ball.transform.parent != null)
-            // {
-            //     GrabBall();
-            // }
         }
-        else if (!ballScript.IsBullet && swipeCooldownTimeCurrent >= swipeCooldownTimeMax && !IsStunned && !IsSwiping && Vector2.Distance(ball.transform.position, transform.position) < 5.0f && autoCatchCooldownTimer > autoCatchCooldownTimerMax && ball.transform.parent == null)
-        {
-            GrabBall();
-        }
+
+
         if (autoCatchCooldownTimer < autoCatchCooldownTimerMax + .5f)
         {
             autoCatchCooldownTimer += Time.deltaTime;
@@ -366,7 +371,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
         //reverses the x-coord for second player.
         if (playerNumber == 1)
         {
-            Quaternion q = Quaternion.Euler(90, 0, 0);
+            Quaternion q = Quaternion.Euler(0, 180, 0);
             transform.SetPositionAndRotation(transform.position, q);
 
             ball.transform.position = (gameObject.transform.position + new Vector3(playerHandPos.x * -1, playerHandPos.y, playerHandPos.z));
@@ -376,7 +381,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
         }
         else
         {
-            Quaternion q = Quaternion.Euler(90, 0, -180);
+            Quaternion q = Quaternion.Euler(0, 0, 0);
             transform.SetPositionAndRotation(transform.position, q);
 
             ball.transform.position = (gameObject.transform.position + playerHandPos);
@@ -405,7 +410,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
             }
 
             //sound if any player gets hit. (including bullets & player swipes)
-            audioManager.PlayRandomPitch("Hit", 0.9f, 1.1f);
+            audioManager.Play("Hit", 0.9f, 1.1f);
         }
     }
 
