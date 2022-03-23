@@ -162,7 +162,7 @@ public class Ball : MonoBehaviour
                 heightMod = HeightModifier();
 
                 //Calculates a speed modifier based on the starting distance, closer = faster.
-                distMod = 2 / (Vector2.Distance(transform.position, currentTarget.transform.position) + 1);
+                distMod = Mathf.Pow(5 / (Vector2.Distance(transform.position, currentTarget.transform.position) + 1), 2);
             }
 
             if (boolWillHit)
@@ -173,7 +173,7 @@ public class Ball : MonoBehaviour
                     speedAddition = physics.velocity.magnitude / 2000;
                 }
                 //completes the parabola trip in one second (* by speed), changing speed based on height and dist from basket.
-                float speedMod = speed + ((300 - heightMod) / 200) + distMod + speedAddition /*+ (2 / (Vector2.Distance(transform.position, currentTarget.transform.position) + 1))*/;
+                float speedMod = speed + ((300 - heightMod) / 300) + distMod + speedAddition;
                 timer += Time.deltaTime * speedMod;
                 Vector2 newPosition = CalculateParabola(startPoint, currentTarget.transform.GetChild(0).transform.position, ballHeight * heightMod, timer, false);
                 if (physics.simulatePhysics)
