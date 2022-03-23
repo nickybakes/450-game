@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -37,6 +38,11 @@ public class GameManager : MonoBehaviour
     public GameObject player2;
     [HideInInspector]
     public GameObject ball;
+
+    public float matchTimeMax = 180;
+    public float matchTimeCurrent;
+
+    public Text matchTimeText;
 
 
     [HideInInspector]
@@ -96,7 +102,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        //TO ADD: Initialization for both basket, bullet spawners
+        matchTimeCurrent = matchTimeMax;
         player1Score = 0;
         player2Score = 0;
 
@@ -107,6 +113,10 @@ public class GameManager : MonoBehaviour
         panelUI.transform.GetChild(0).GetComponent<Text>().text = "0";
         //player 2.
         panelUI.transform.GetChild(1).GetComponent<Text>().text = "0";
+
+        matchTimeText = panelUI.transform.GetChild(2).GetComponent<Text>();
+        matchTimeText.text = TimeSpan.FromSeconds(Mathf.Max(matchTimeCurrent, 0)).ToString("mm\\:ss");
+
 
         paused = true;
         gameOver = false;
@@ -208,6 +218,16 @@ public class GameManager : MonoBehaviour
 
         if (paused || gameOver)
             return;
+
+        if (!ballControlScript.IsResetting)
+        {
+            matchTimeCurrent -= Time.deltaTime;
+            matchTimeText.text = TimeSpan.FromSeconds(Mathf.Max(matchTimeCurrent, 0)).ToString("mm\\:ss");
+            if (matchTimeCurrent <= 0)
+            {
+                EndGame();
+            }
+        }
 
         if (player1Script.controllerNumber == -1)
         {

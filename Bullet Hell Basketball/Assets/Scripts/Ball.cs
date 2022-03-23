@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
 
 public class Ball : MonoBehaviour
 {
@@ -39,6 +41,9 @@ public class Ball : MonoBehaviour
     public float bulletTimeMax = .23f;
     public float bulletTimeCurrent;
 
+    public float resetTimeMax = 2f;
+    public float resetTimeCurrent;
+
     public bool IsBullet
     {
         get { return bulletTimeCurrent < bulletTimeMax; }
@@ -57,7 +62,25 @@ public class Ball : MonoBehaviour
         }
     }
 
-
+    public bool IsResetting
+    {
+        get { return resetTimeCurrent < resetTimeMax; }
+        set
+        {
+            if (value)
+            {
+                transform.parent = null;
+                resetTimeCurrent = 0;
+            }
+            else
+            {
+                gameManager.panelUI.transform.GetChild(3).gameObject.SetActive(false);
+                gameManager.panelUI.transform.GetChild(4).gameObject.SetActive(false);
+                gameManager.ResetPlayersAndBall();
+                resetTimeCurrent = resetTimeMax;
+            }
+        }
+    }
 
     private float distMod;
     private float heightMod = 0;
@@ -68,6 +91,7 @@ public class Ball : MonoBehaviour
         gameManager = FindObjectOfType<GameManager>();
         lineRenderer.positionCount = previewArcSmoothness;
         audioManager = FindObjectOfType<AudioManager>();
+        IsResetting = false;
     }
 
     // Update is called once per frame
@@ -98,6 +122,13 @@ public class Ball : MonoBehaviour
             bulletTimeCurrent += Time.deltaTime;
             if (bulletTimeCurrent >= bulletTimeMax)
                 IsBullet = false;
+        }
+
+        if (IsResetting)
+        {
+            resetTimeCurrent += Time.deltaTime;
+            if (resetTimeCurrent >= resetTimeMax)
+                IsResetting = false;
         }
 
 
@@ -237,6 +268,9 @@ public class Ball : MonoBehaviour
     /// <param name="collision">The thing hitting the ball.</param>
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (IsResetting)
+            return;
+
         //if the ball is touching the basket...
         if (collision.collider.CompareTag("Target"))
         {
@@ -255,14 +289,44 @@ public class Ball : MonoBehaviour
             {
                 audioManager.Play("Net", 0.8f, 1.2f);
                 if (collision.collider.gameObject == gameManager.rightBasket)
-                    gameManager.player1Score++;
+                {
+                    transform.position = new Vector3(gameManager.rightBasket.transform.GetChild(0).transform.position.x, transform.position.y, transform.position.z);
+
+                    if (boolWillHit)
+                    {
+                        gameManager.player1Score += 2;
+                        gameManager.panelUI.transform.GetChild(3).GetComponent<Text>().text = "+2";
+                    }
+                    else
+                    {
+                        gameManager.player1Score += 3;
+                        gameManager.panelUI.transform.GetChild(3).GetComponent<Text>().text = "+3";
+                    }
+                    gameManager.panelUI.transform.GetChild(3).gameObject.SetActive(true);
+                }
                 else if (collision.collider.gameObject == gameManager.leftBasket)
-                    gameManager.player2Score++;
+                {
+                    transform.position = new Vector3(gameManager.leftBasket.transform.GetChild(0).transform.position.x, transform.position.y, transform.position.z);
 
-                if (gameManager.player1Score >= 10 || gameManager.player2Score >= 10)
-                    gameManager.EndGame();
+                    if (boolWillHit)
+                    {
+                        gameManager.player2Score += 2;
+                        gameManager.panelUI.transform.GetChild(4).GetComponent<Text>().text = "+2";
+                    }
+                    else
+                    {
+                        gameManager.player2Score += 3;
+                        gameManager.panelUI.transform.GetChild(4).GetComponent<Text>().text = "+3";
+                    }
+                    gameManager.panelUI.transform.GetChild(4).gameObject.SetActive(true);
+                }
 
-                gameManager.ResetPlayersAndBall();
+                // if (gameManager.player1Score >= 10 || gameManager.player2Score >= 10)
+                //     gameManager.EndGame();
+
+                IsResetting = true;
+
+                physics.simulatePhysics = true;
                 lineRenderer.enabled = false;
             }
         }

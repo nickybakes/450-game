@@ -216,86 +216,91 @@ public class BhbPlayerController : NeonHeightsCharacterController
             jumping = false;
         }
 
-        if (GetControlDown(Control.Action) && !IsStunned)
+        if (!ballScript.IsResetting)
         {
-            //if holding the ball...
-            if (ball.transform.parent == transform)
+            if (GetControlDown(Control.Action) && !IsStunned)
             {
-                autoCatchCooldownTimer = 0;
-                IsSwiping = false;
-                ballScript.ShootBall(playerNumber, false);
-            }
-            else if (!IsSwiping && swipeCooldownTimeCurrent >= swipeCooldownTimeMax && !IsStunned)
-            {
-                IsSwiping = true;
-
-                if (playerNumber == 0)
+                //if holding the ball...
+                if (ball.transform.parent == transform)
                 {
-                    if (Vector2.Distance(transform.GetChild(0).transform.position, gameManager.player2.transform.position) < 5.2)
+                    autoCatchCooldownTimer = 0;
+                    IsSwiping = false;
+                    ballScript.ShootBall(playerNumber, false);
+                }
+                else if (!IsSwiping && swipeCooldownTimeCurrent >= swipeCooldownTimeMax && !IsStunned)
+                {
+                    IsSwiping = true;
+
+                    if (playerNumber == 0)
                     {
-                        if (ball.transform.parent != null && ball.transform.parent != transform)
-                            GrabBall();
-                        if (gameManager.player2.transform.position.x < transform.position.x)
+                        if (Vector2.Distance(transform.GetChild(0).transform.position, gameManager.player2.transform.position) < 5.2)
                         {
-                            gameManager.player2Script.GetsHit(new Vector2(-50, 20));
+                            if (ball.transform.parent != null && ball.transform.parent != transform)
+                                GrabBall();
+                            if (gameManager.player2.transform.position.x < transform.position.x)
+                            {
+                                gameManager.player2Script.GetsHit(new Vector2(-50, 20));
+                            }
+                            else if (gameManager.player2.transform.position.x >= transform.position.x)
+                            {
+                                gameManager.player2Script.GetsHit(new Vector2(50, 20));
+                            }
                         }
-                        else if (gameManager.player2.transform.position.x >= transform.position.x)
+                    }
+                    else if (playerNumber == 1)
+                    {
+                        if (Vector2.Distance(transform.GetChild(0).transform.position, gameManager.player1.transform.position) < 6.5)
                         {
-                            gameManager.player2Script.GetsHit(new Vector2(50, 20));
+                            if (ball.transform.parent != null && ball.transform.parent != transform)
+                                GrabBall();
+                            if (gameManager.player1.transform.position.x < transform.position.x)
+                            {
+                                gameManager.player1Script.GetsHit(new Vector2(-50, 20));
+                            }
+                            else if (gameManager.player1.transform.position.x >= transform.position.x)
+                            {
+                                gameManager.player1Script.GetsHit(new Vector2(50, 20));
+                            }
+                        }
+                    }
+
+                }
+                if (IsSwiping && swipeTimeCurrent <= .5)
+                {
+                    if (ball.transform.parent == null)
+                    {
+                        Vector2 midpoint = transform.position + (transform.GetChild(0).transform.position - transform.position) / 2.0f;
+                        if (Vector2.Distance(midpoint, (Vector2)ball.transform.position + (ballPhysics.velocity * Time.deltaTime)) < 6.5)
+                        {
+                            ball.transform.parent = transform;
+                            ballPhysics.simulatePhysics = false;
+                            ballScript.ShootBall(playerNumber, true);
+
+                            if (playerNumber == 1)
+                            {
+                                gameManager.yellowShevrons.SetActive(false);
+                                gameManager.blueShevrons.SetActive(true);
+                            }
+                            else
+                            {
+                                gameManager.yellowShevrons.SetActive(true);
+                                gameManager.blueShevrons.SetActive(false);
+                            }
                         }
                     }
                 }
-                else if (playerNumber == 1)
-                {
-                    if (Vector2.Distance(transform.GetChild(0).transform.position, gameManager.player1.transform.position) < 6.5)
-                    {
-                        if (ball.transform.parent != null && ball.transform.parent != transform)
-                            GrabBall();
-                        if (gameManager.player1.transform.position.x < transform.position.x)
-                        {
-                            gameManager.player1Script.GetsHit(new Vector2(-50, 20));
-                        }
-                        else if (gameManager.player1.transform.position.x >= transform.position.x)
-                        {
-                            gameManager.player1Script.GetsHit(new Vector2(50, 20));
-                        }
-                    }
-                }
-
+                // else if (Vector2.Distance(ball.transform.position, transform.position) < 5.0f && autoCatchCooldownTimer > autoCatchCooldownTimerMax && ball.transform.parent != transform && ball.transform.parent != null)
+                // {
+                //     GrabBall();
+                // }
             }
-            if (IsSwiping && swipeTimeCurrent <= .5)
+            else if (!ballScript.IsBullet && swipeCooldownTimeCurrent >= swipeCooldownTimeMax && !IsStunned && !IsSwiping && Vector2.Distance(ball.transform.position, transform.position) < 5.0f && autoCatchCooldownTimer > autoCatchCooldownTimerMax && ball.transform.parent == null)
             {
-                if (ball.transform.parent == null)
-                {
-                    Vector2 midpoint = transform.position + (transform.GetChild(0).transform.position - transform.position) / 2.0f;
-                    if (Vector2.Distance(midpoint, (Vector2)ball.transform.position + (ballPhysics.velocity * Time.deltaTime)) < 6.5)
-                    {
-                        ball.transform.parent = transform;
-                        ballPhysics.simulatePhysics = false;
-                        ballScript.ShootBall(playerNumber, true);
-
-                        if (playerNumber == 1)
-                        {
-                            gameManager.yellowShevrons.SetActive(false);
-                            gameManager.blueShevrons.SetActive(true);
-                        }
-                        else
-                        {
-                            gameManager.yellowShevrons.SetActive(true);
-                            gameManager.blueShevrons.SetActive(false);
-                        }
-                    }
-                }
+                GrabBall();
             }
-            // else if (Vector2.Distance(ball.transform.position, transform.position) < 5.0f && autoCatchCooldownTimer > autoCatchCooldownTimerMax && ball.transform.parent != transform && ball.transform.parent != null)
-            // {
-            //     GrabBall();
-            // }
         }
-        else if (!ballScript.IsBullet && swipeCooldownTimeCurrent >= swipeCooldownTimeMax && !IsStunned && !IsSwiping && Vector2.Distance(ball.transform.position, transform.position) < 5.0f && autoCatchCooldownTimer > autoCatchCooldownTimerMax && ball.transform.parent == null)
-        {
-            GrabBall();
-        }
+
+
         if (autoCatchCooldownTimer < autoCatchCooldownTimerMax + .5f)
         {
             autoCatchCooldownTimer += Time.deltaTime;
