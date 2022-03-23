@@ -135,11 +135,10 @@ public class GameManager : MonoBehaviour
         leftBasket.transform.GetChild(0).GetComponent<SpriteRenderer>().color = new Color32(0, 146, 255, 255);
         rightBasket.transform.GetChild(0).GetComponent<SpriteRenderer>().color = new Color32(255, 255, 0, 255);
 
-
-        BeginRound();
+        menu.Show();
     }
 
-    private void BeginRound()
+    public void BeginRound()
     {
         player1Score = 0;
         player2Score = 0;

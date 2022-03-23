@@ -17,6 +17,8 @@ public class MainMenu : MonoBehaviour
 
     [SerializeField] private bool startInPlayMode = false;
 
+    public GameManager gm;
+
     private void Start()
     {
         buttons = new Button[]
@@ -35,7 +37,7 @@ public class MainMenu : MonoBehaviour
             foreach (Button b in buttons)
                 b.interactable = false;
             
-            GameManager.Instance.Paused = false;
+            gm.Paused = false;
         }
     }
 
@@ -62,7 +64,7 @@ public class MainMenu : MonoBehaviour
             b.interactable = true;
         }
 
-        GameManager.Instance.Paused = true;
+        gm.Paused = true;
     }
 
     public void Appeared()
@@ -80,7 +82,8 @@ public class MainMenu : MonoBehaviour
             b.interactable = false;
         }
 
-        GameManager.Instance.Paused = false;
+        gm.Paused = false;
+        gm.BeginRound();
     }
 
     public void ButtonOptions()
