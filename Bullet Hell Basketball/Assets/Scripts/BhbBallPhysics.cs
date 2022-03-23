@@ -57,6 +57,7 @@ public class BhbBallPhysics : NeonHeightsPhysicsObject
         CheckCollisionsLeft();
 
 
+
         if (!onFlatGround)
         {
             if (bottomCollision != null)
@@ -100,6 +101,10 @@ public class BhbBallPhysics : NeonHeightsPhysicsObject
             PlayBounce(false);
         }
         
+        if(!onFlatGround && enableGravity && groundCollision != null && groundCollision.segment.downPointingTangent.y != 0){
+            velocity += gravity * groundCollision.segment.downPointingTangent * Time.deltaTime;
+        }
+
         if (velocity.x > 0)
         {
             velocity.x = Mathf.Max(0, velocity.x -= 2 * Time.deltaTime);

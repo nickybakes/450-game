@@ -15,7 +15,6 @@ public class Ball : MonoBehaviour
     [Range(0.0f, 1.0f)]
     public float spinAmt = 1.0f;
 
-    private bool isSpinning = false;
     private bool boolWillHit = true;
     private bool calculateOnce = true;
 
@@ -43,6 +42,8 @@ public class Ball : MonoBehaviour
 
     public float resetTimeMax = 2f;
     public float resetTimeCurrent;
+
+    public bool threePointShot = false;
 
     public bool IsBullet
     {
@@ -143,15 +144,25 @@ public class Ball : MonoBehaviour
                 {
                     boolWillHit = true;
                     calculateOnce = false;
+                    if (currentTarget == leftBasket)
+                    {
+                        threePointShot = transform.position.x > 0;
+                    }
+                    else if (currentTarget == rightBasket)
+                    {
+                        threePointShot = transform.position.x < 0;
+                    }
                 }
                 else
                 {
                     if (currentTarget == leftBasket)
                     {
+                        threePointShot = transform.position.x > 0;
                         boolWillHit = transform.position.x < 0;
                     }
                     else if (currentTarget == rightBasket)
                     {
+                        threePointShot = transform.position.x < 0;
                         boolWillHit = transform.position.x > 0;
                     }
                     calculateOnce = false;
@@ -185,14 +196,12 @@ public class Ball : MonoBehaviour
                 PhysicsArc();
             }
 
-            isSpinning = true;
         }
         else if (transform.parent != null && !physics.simulatePhysics)
         {
 
             int playerNumber = transform.parent.GetComponent<BhbPlayerController>().playerNumber;
             lineRenderer.enabled = false;
-            isSpinning = false;
 
             if (playerNumber == 0)
             {
@@ -226,11 +235,9 @@ public class Ball : MonoBehaviour
                 lineRenderer.enabled = true;
             }
         }
-
-        if (isSpinning)
+        if (transform.parent == null)
         {
-            //gives a set spin to the ball for now.
-            transform.Rotate(0, 0, spinAmt * Mathf.Abs(physics.velocity.y), Space.Self);
+            transform.Rotate(0, 0, spinAmt * -physics.velocity.x, Space.Self);
         }
     }
 
@@ -292,42 +299,53 @@ public class Ball : MonoBehaviour
                 {
                     transform.position = new Vector3(gameManager.rightBasket.transform.GetChild(0).transform.position.x, transform.position.y, transform.position.z);
 
-                    if (boolWillHit)
-                    {
-                        gameManager.player1Score += 2;
-                        gameManager.panelUI.transform.GetChild(3).GetComponent<Text>().text = "+2";
-                    }
-                    else
+                    if (threePointShot)
                     {
                         gameManager.player1Score += 3;
                         gameManager.panelUI.transform.GetChild(3).GetComponent<Text>().text = "+3";
                     }
-                    gameManager.panelUI.transform.GetChild(3).gameObject.SetActive(true);
+                    else
+                    {
+                        gameManager.player1Score += 2;
+                        gameManager.panelUI.transform.GetChild(3).GetComponent<Text>().text = "+2";
+                    }
+                    gameManager.previousScorer = 0;
+                    if (!gameManager.overTime)
+                        gameManager.panelUI.transform.GetChild(3).gameObject.SetActive(true);
+                    gameManager.panelUI.transform.GetChild(0).GetComponent<Text>().text = gameManager.player1Score.ToString();
+
                 }
                 else if (collision.collider.gameObject == gameManager.leftBasket)
                 {
                     transform.position = new Vector3(gameManager.leftBasket.transform.GetChild(0).transform.position.x, transform.position.y, transform.position.z);
 
-                    if (boolWillHit)
-                    {
-                        gameManager.player2Score += 2;
-                        gameManager.panelUI.transform.GetChild(4).GetComponent<Text>().text = "+2";
-                    }
-                    else
+                    if (threePointShot)
                     {
                         gameManager.player2Score += 3;
                         gameManager.panelUI.transform.GetChild(4).GetComponent<Text>().text = "+3";
                     }
-                    gameManager.panelUI.transform.GetChild(4).gameObject.SetActive(true);
+                    else
+                    {
+                        gameManager.player2Score += 2;
+                        gameManager.panelUI.transform.GetChild(4).GetComponent<Text>().text = "+2";
+                    }
+                    gameManager.previousScorer = 1;
+                    if (!gameManager.overTime)
+                        gameManager.panelUI.transform.GetChild(4).gameObject.SetActive(true);
+                    gameManager.panelUI.transform.GetChild(1).GetComponent<Text>().text = gameManager.player2Score.ToString();
+
                 }
 
                 // if (gameManager.player1Score >= 10 || gameManager.player2Score >= 10)
                 //     gameManager.EndGame();
 
-                IsResetting = true;
-
                 physics.simulatePhysics = true;
                 lineRenderer.enabled = false;
+
+                if (gameManager.overTime)
+                    gameManager.EndGame();
+                else
+                    IsResetting = true;
             }
         }
     }
