@@ -235,7 +235,7 @@ public class Ball : MonoBehaviour
     /// Used for all ball collisions. Dunking, bouncing, players, bullets.
     /// </summary>
     /// <param name="collision">The thing hitting the ball.</param>
-    private void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
         //if the ball is touching the basket...
         if (collision.collider.CompareTag("Target"))

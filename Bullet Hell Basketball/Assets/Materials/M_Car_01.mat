@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: M_Car_Metal_01
+  m_Name: M_Car_01
   m_Shader: {fileID: -6465566751694194690, guid: 89f5a5aeef4cc8d4cb7a51b0d6883df6, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -45,7 +45,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Texture2D_c1d6ad3cd08f4307b8a89c16de3fd92a:
-        m_Texture: {fileID: 2800000, guid: 47d91bbf6d6a3084b817fd27e130d9c7, type: 3}
+        m_Texture: {fileID: 2800000, guid: c73c0ee9303cfdf41a6a21c38a1588ca, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Texture2D_d7ba029a529842ae992ca191e668b8a0:
@@ -109,7 +109,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - Vector1_b6042e8d7bc34effa1f3a5070f7faa61: 0.239
+    - Vector1_b6042e8d7bc34effa1f3a5070f7faa61: 0.22
     - Vector1_e9c8e3d5917849a3b95a6f5fd7ddba92: 0
     - Vector1_fa4f0fdd416e499b965515f636f02fa8: 1
     - _AlphaClip: 0
@@ -139,7 +139,7 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - Color_d455355dbed04d919ec9d444c1857280: {r: 0.6320754, g: 0.6320754, b: 0.6320754, a: 0}
+    - Color_d455355dbed04d919ec9d444c1857280: {r: 0.54499996, g: 0, b: 0.007, a: 0}
     - Vector2_ae34cb358ea048da8f13ee05b3346761: {r: 0, g: 0, b: 0, a: 0}
     - Vector2_e5021ef69191450798f95027c863329c: {r: 1, g: 1, b: 0, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
