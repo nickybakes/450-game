@@ -1025,8 +1025,12 @@ MonoBehaviour:
   indicatorShevron: {fileID: 193353531}
   gameOver: 0
   paused: 0
+  overTime: 0
   player1Score: 0
   player2Score: 0
+  previousScorer: -1
+  player1IsBot: 1
+  player2IsBot: 1
   winConditionMet: 0
 --- !u!4 &413587147
 Transform:
