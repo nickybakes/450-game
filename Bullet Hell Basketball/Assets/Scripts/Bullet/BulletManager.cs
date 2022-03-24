@@ -41,6 +41,8 @@ public class BulletManager : MonoBehaviour
     private Vector3 ogPosition;
     public float distanceTravelled;
     private Vector3 newPosition;
+    public bool startsRight;
+    private bool isRight;
 
     // Start is called before the first frame update
     void Start()
@@ -75,6 +77,16 @@ public class BulletManager : MonoBehaviour
         if(distanceTravelled == 0)
         {
             distanceTravelled = 1;
+        }
+
+        if (startsRight)
+        {
+            isRight = true;
+        }
+
+        else
+        {
+            isRight = false;
         }
     }
 
@@ -151,8 +163,12 @@ public class BulletManager : MonoBehaviour
 
     private void sideToSide()
     {
+        if((startsRight || isRight) && distanceTravelled > -1)
+        {
+            distanceTravelled *= -1;
+        }
+        
+        
         newPosition = new Vector3(ogPosition.x + distanceTravelled, ogPosition.y, ogPosition.z);
-        
-        
     }
 }
