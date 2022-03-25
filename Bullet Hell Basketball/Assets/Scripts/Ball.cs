@@ -284,6 +284,7 @@ public class Ball : MonoBehaviour
             //stop own goaling when dunking
             if (transform.parent != null)
             {
+                threePointShot = false;
                 BhbPlayerController playerController = transform.parent.gameObject.GetComponent<BhbPlayerController>();
                 if (playerController.playerNumber == 0 && collision.collider.gameObject == gameManager.leftBasket)
                     return;
