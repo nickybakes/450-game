@@ -303,11 +303,13 @@ public class Ball : MonoBehaviour
                     {
                         gameManager.player1Score += 3;
                         gameManager.panelUI.transform.GetChild(3).GetComponent<Text>().text = "+3";
+                        audioManager.Play("3points");
                     }
                     else
                     {
                         gameManager.player1Score += 2;
                         gameManager.panelUI.transform.GetChild(3).GetComponent<Text>().text = "+2";
+                        audioManager.Play("2points");
                     }
                     gameManager.previousScorer = 0;
                     if (!gameManager.overTime)
@@ -323,11 +325,13 @@ public class Ball : MonoBehaviour
                     {
                         gameManager.player2Score += 3;
                         gameManager.panelUI.transform.GetChild(4).GetComponent<Text>().text = "+3";
+                        audioManager.Play("3points");
                     }
                     else
                     {
                         gameManager.player2Score += 2;
                         gameManager.panelUI.transform.GetChild(4).GetComponent<Text>().text = "+2";
+                        audioManager.Play("2points");
                     }
                     gameManager.previousScorer = 1;
                     if (!gameManager.overTime)

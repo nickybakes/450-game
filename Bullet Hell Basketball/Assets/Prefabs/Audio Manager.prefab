@@ -92,3 +92,17 @@ MonoBehaviour:
     pitch: 1
     loop: 0
     source: {fileID: 0}
+  - name: 2points
+    clips:
+    - {fileID: 8300000, guid: 5ee27d2ca19445f4ebe99d808ebef783, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: 3points
+    clips:
+    - {fileID: 8300000, guid: b5280b3ae298f5f4587d46ae7b6e71e6, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
