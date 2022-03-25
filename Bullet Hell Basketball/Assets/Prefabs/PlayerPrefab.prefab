@@ -176,7 +176,7 @@ MonoBehaviour:
   playerHandPos: {x: 0, y: 0, z: 0}
   swipeVisual: {fileID: 5608001533528977418}
   autoCatchCooldownTimerMax: 0.67
-  swipeTimeMax: 0.23
+  swipeTimeMax: 0.14
   swipeCooldownTimeMax: 0.35
   flashTimeMax: 0.1
   stunTimeMax: 0.2
@@ -184,6 +184,7 @@ MonoBehaviour:
   player2Sprite: {fileID: 2100000, guid: 354bff9f490c4cc47afa506070ddf72d, type: 2}
   player2HurtSprite: {fileID: 2100000, guid: 523dfe34169f2854e8cb7dcb7eb90e7a, type: 2}
   player2FlashSprite: {fileID: 2100000, guid: b9be3606e1ed79d44b3b1da7479b9db5, type: 2}
+  isBot: 0
 --- !u!61 &1963545057765774826
 BoxCollider2D:
   m_ObjectHideFlags: 0

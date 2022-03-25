@@ -1029,6 +1029,8 @@ MonoBehaviour:
   player1Score: 0
   player2Score: 0
   previousScorer: -1
+  player1IsBot: 0
+  player2IsBot: 0
   winConditionMet: 0
 --- !u!4 &413587147
 Transform:
@@ -2189,14 +2191,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 5370311947778578656, guid: f5dd710dd082b174b94806c38794438e, type: 3}
-      propertyPath: movement
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5370311947778578656, guid: f5dd710dd082b174b94806c38794438e, type: 3}
-      propertyPath: distanceTravelled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5370311947778578657, guid: f5dd710dd082b174b94806c38794438e, type: 3}
       propertyPath: m_RootOrder
       value: 16
@@ -2660,6 +2654,14 @@ PrefabInstance:
     - target: {fileID: 1686346002426911647, guid: 804eb708b3d7abd4cbd8bd243e4e984e, type: 3}
       propertyPath: m_Name
       value: Audio Manager
+      objectReference: {fileID: 0}
+    - target: {fileID: 3906439084490162780, guid: 804eb708b3d7abd4cbd8bd243e4e984e, type: 3}
+      propertyPath: sounds.Array.data[6].volume
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3906439084490162780, guid: 804eb708b3d7abd4cbd8bd243e4e984e, type: 3}
+      propertyPath: sounds.Array.data[7].volume
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 8251514489022235984, guid: 804eb708b3d7abd4cbd8bd243e4e984e, type: 3}
       propertyPath: m_RootOrder

@@ -101,8 +101,8 @@ public class BhbBallPhysics : NeonHeightsPhysicsObject
             PlayBounce(false);
         }
         
-        if(!onFlatGround && enableGravity && groundCollision != null && groundCollision.segment.downPointingTangent.y != 0){
-            velocity += gravity * groundCollision.segment.downPointingTangent * Time.deltaTime;
+        if(!onFlatGround && enableGravity && groundCollision != null && groundCollision.segment.downPointingTangent.y != 0 && Mathf.Abs(velocity.y) < 13){
+            velocity += (-gravity.y / 2 * Time.deltaTime) * groundCollision.segment.downPointingTangent;
         }
 
         if (velocity.x > 0)

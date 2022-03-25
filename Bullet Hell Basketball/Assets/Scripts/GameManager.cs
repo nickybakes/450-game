@@ -86,6 +86,9 @@ public class GameManager : MonoBehaviour
 
     public int previousScorer = -1;
 
+    public bool player1IsBot;
+    public bool player2IsBot;
+
 
     [HideInInspector] public bool winConditionMet = false;
 
@@ -133,10 +136,12 @@ public class GameManager : MonoBehaviour
         player1 = Instantiate(playerPrefab);
         player1Script = player1.GetComponent<BhbPlayerController>();
         player1Script.Init(0);
+        player1Script.isBot = player1IsBot;
 
         player2 = Instantiate(playerPrefab);
         player2Script = player2.GetComponent<BhbPlayerController>();
         player2Script.Init(1);
+        player2Script.isBot = player2IsBot;
 
         ball = Instantiate(ballPrefab);
         ballControlScript = ball.GetComponent<Ball>();
@@ -313,6 +318,12 @@ public class GameManager : MonoBehaviour
 
     public void ResetPlayersAndBall()
     {
+        if (player1Script.isBot)
+            player1Script.BotRandomizeBehavior();
+
+        if (player2Script.isBot)
+            player2Script.BotRandomizeBehavior();
+
         player1.transform.position = player1SpawnPosition;
         player2.transform.position = player2SpawnPosition;
 

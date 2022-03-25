@@ -67,6 +67,12 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
     private const float axisDeadZone = .3f;
 
+    public bool isBot;
+
+    public float botShootRange;
+
+    public bool botAlwaysDoubleJump;
+
     public bool IsSwiping
     {
         get { return swipeTimeCurrent < swipeTimeMax; }
@@ -359,9 +365,21 @@ public class BhbPlayerController : NeonHeightsCharacterController
         }
     }
 
+    public void BotRandomizeBehavior()
+    {
+        botShootRange = Random.Range(10, 40);
+        if (Random.Range(0, 10) > 8)
+            botAlwaysDoubleJump = true;
+        else
+            botAlwaysDoubleJump = false;
+    }
+
     public void GrabBall()
     {
-
+        if (isBot)
+        {
+            BotRandomizeBehavior();
+        }
 
         autoCatchCooldownTimer = 0;
         ballPhysics.simulatePhysics = false;
@@ -416,6 +434,86 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
     bool GetControlHeld(Control action)
     {
+        if (isBot)
+        {
+            if (ballScript.IsResetting)
+                return false;
+            if (action == Control.Left)
+            {
+                if (ball.transform.parent != transform)
+                {
+                    if (ball.transform.position.x > -14 && ball.transform.position.x < 14 && ball.transform.position.y < 6.5f)
+                    {
+                        if (transform.position.x > -16 && transform.position.x < 14 && transform.position.y > 8)
+                        {
+                            if (playerNumber == 0)
+                                return true;
+                            else
+                                return false;
+                        }
+                    }
+
+                    if (Mathf.Abs(ball.transform.position.x - transform.position.x) < 1)
+                        return false;
+
+                    if (ball.transform.position.x < transform.position.x)
+                        return true;
+                    else
+                        return false;
+                }
+                else
+                {
+                    if (playerNumber == 0 && transform.position.x > gameManager.rightBasket.transform.position.x - botShootRange)
+                    {
+                        return true;
+                    }
+                    else if (playerNumber == 1 && transform.position.x > gameManager.leftBasket.transform.position.x + botShootRange)
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+            }
+            if (action == Control.Right)
+            {
+                if (ball.transform.position.x > -14 && ball.transform.position.x < 14 && ball.transform.position.y < 6.5f)
+                {
+                    if (transform.position.x > -16 && transform.position.x < 14 && transform.position.y > 8)
+                    {
+                        if (playerNumber == 1)
+                            return true;
+                        else
+                            return false;
+                    }
+                }
+
+                if (Mathf.Abs(ball.transform.position.x - transform.position.x) < 1)
+                    return false;
+
+                if (ball.transform.parent != transform)
+                {
+                    if (ball.transform.position.x > transform.position.x)
+                        return true;
+                    else
+                        return false;
+                }
+                else
+                {
+                    if (playerNumber == 0 && transform.position.x < gameManager.rightBasket.transform.position.x - botShootRange)
+                    {
+                        return true;
+                    }
+                    else if (playerNumber == 1 && transform.position.x < gameManager.leftBasket.transform.position.x + botShootRange)
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+            }
+
+            return false;
+        }
+
 
         if (GetGamepadControlHeld(action))
         {
@@ -450,6 +548,113 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
     bool GetControlDown(Control action)
     {
+        if (isBot)
+        {
+            if (ballScript.IsResetting)
+                return false;
+
+            if (action == Control.Jump)
+            {
+
+                if (botAlwaysDoubleJump)
+                {
+                    if (grounded || velocity.y <= 0)
+                        return true;
+
+                    return false;
+                }
+                else
+                {
+                    if ((grounded || velocity.y <= 0) && ball.transform.position.y - transform.position.y > Mathf.Abs(ball.transform.position.x - transform.position.x) * 1.5f && ball.transform.parent != transform)
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+            }
+
+            if (action == Control.Action)
+            {
+                if (ball.transform.parent != null && ball.transform.parent != transform)
+                {
+                    if (playerNumber == 0 && Vector2.Distance(transform.GetChild(0).transform.position, gameManager.player2.transform.position) < 3.4f + Mathf.PerlinNoise(transform.position.x, transform.position.y) * 2.0f)
+                    {
+                        if (Mathf.PerlinNoise(transform.position.y, transform.position.x) > .3)
+                            return true;
+                    }
+                    else if (playerNumber == 1 && Vector2.Distance(transform.GetChild(0).transform.position, gameManager.player1.transform.position) < 3.4f + Mathf.PerlinNoise(transform.position.x, transform.position.y) * 2.0f)
+                    {
+                        if (Mathf.PerlinNoise(transform.position.y, transform.position.x) > .3)
+                            return true;
+                    }
+                    return false;
+                }
+                else if (ball.transform.parent == transform)
+                {
+                    if (botShootRange < 10)
+                    {
+                        if (playerNumber == 0 && Mathf.Abs(transform.position.x - gameManager.rightBasket.transform.position.x) <= botShootRange && Mathf.Abs(prevPosition.x - gameManager.rightBasket.transform.position.x) > botShootRange)
+                        {
+                            if (Random.Range(0, 2) == 0)
+                            {
+                                return true;
+                            }
+                            BotRandomizeBehavior();
+                            return false;
+                        }
+                        else if (playerNumber == 1 && Mathf.Abs(transform.position.x - gameManager.leftBasket.transform.position.x) <= botShootRange && Mathf.Abs(prevPosition.x - gameManager.leftBasket.transform.position.x) > botShootRange)
+                        {
+                            if (Random.Range(0, 2) == 0)
+                            {
+                                return true;
+                            }
+                            BotRandomizeBehavior();
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        if (playerNumber == 0 && Mathf.Abs(transform.position.x - gameManager.rightBasket.transform.position.x) <= botShootRange)
+                        {
+                            if (Mathf.PerlinNoise(transform.position.x, transform.position.y) > .4)
+                            {
+                                return true;
+                            }
+                            BotRandomizeBehavior();
+                            return false;
+                        }
+                        else if (playerNumber == 1 && Mathf.Abs(transform.position.x - gameManager.leftBasket.transform.position.x) <= botShootRange)
+                        {
+                            if (Mathf.PerlinNoise(transform.position.x, transform.position.y) > .4)
+                            {
+                                return true;
+                            }
+                            BotRandomizeBehavior();
+                            return false;
+                        }
+                        // if (transform.position.x)
+                    }
+                }
+                else if (ball.transform.parent == null)
+                {
+                    Vector2 midpoint = transform.position + (transform.GetChild(0).transform.position - transform.position) / 2.0f;
+                    if (Vector2.Distance(midpoint, (Vector2)ball.transform.position + (ballPhysics.velocity * Time.deltaTime)) < 3)
+                    {
+                        if (Mathf.PerlinNoise(-transform.position.y * Random.Range(-4, 4), -transform.position.x * Random.Range(-4, 4)) > .8)
+                        {
+                            return true;
+                        }
+                        return false;
+                    }
+                }
+
+                return false;
+            }
+            return false;
+
+        }
+
+
         if (GetGamepadControlDown(action))
         {
             return true;
@@ -482,6 +687,22 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
     bool GetControlUp(Control action)
     {
+        if (isBot)
+        {
+
+            if (action == Control.Jump)
+            {
+                if (ball.transform.position.y - transform.position.y < Mathf.Abs(ball.transform.position.x - transform.position.x) * 1.5f)
+                {
+                    return true;
+                }
+                return false;
+            }
+            return false;
+
+        }
+
+
         if (GetGamepadControlUp(action))
         {
             return true;
