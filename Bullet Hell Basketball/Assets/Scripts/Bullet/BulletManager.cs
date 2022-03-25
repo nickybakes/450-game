@@ -42,7 +42,8 @@ public class BulletManager : MonoBehaviour
     public float distanceTravelled;
     private Vector3 newPosition;
     public bool startsRight;
-    private bool isRight;
+    public bool isRight;
+    private bool reachedOppositeSide = false;
 
     // Start is called before the first frame update
     void Start()
@@ -168,7 +169,51 @@ public class BulletManager : MonoBehaviour
             distanceTravelled *= -1;
         }
         
-        
         newPosition = new Vector3(ogPosition.x + distanceTravelled, ogPosition.y, ogPosition.z);
+
+        if((isRight && !startsRight) || (!isRight && startsRight))
+        {
+            transform.position = Vector3.MoveTowards(transform.position, ogPosition, 0.1f);
+        }
+
+        else
+        {
+            transform.position = Vector3.MoveTowards(transform.position, newPosition, 0.1f);
+        }
+
+        //Changes direction
+        if(transform.position == newPosition)
+        {
+            reachedOppositeSide = true;
+            isRight = reverseBool(isRight);
+        }
+
+        if(transform.position == ogPosition && reachedOppositeSide)
+        {
+            reachedOppositeSide = false;
+            isRight = reverseBool(isRight);
+            distanceTravelled *= -1;
+        }
+
+        
+    }
+
+    /// <summary>
+    /// Sets the bool to the opposite value 
+    /// </summary>
+    /// <param name="value">The boolean to be changed</param>
+    private bool reverseBool(bool value)
+    {
+        if (value)
+        {
+            value = false;
+        }
+
+        else
+        {
+            value = true;
+        }
+
+        return value;
     }
 }

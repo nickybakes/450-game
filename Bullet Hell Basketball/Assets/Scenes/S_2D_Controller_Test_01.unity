@@ -1025,8 +1025,10 @@ MonoBehaviour:
   indicatorShevron: {fileID: 193353531}
   gameOver: 0
   paused: 0
+  overTime: 0
   player1Score: 0
   player2Score: 0
+  previousScorer: -1
   winConditionMet: 0
 --- !u!4 &413587147
 Transform:
@@ -2187,6 +2189,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5370311947778578656, guid: f5dd710dd082b174b94806c38794438e, type: 3}
+      propertyPath: movement
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5370311947778578656, guid: f5dd710dd082b174b94806c38794438e, type: 3}
+      propertyPath: distanceTravelled
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 5370311947778578657, guid: f5dd710dd082b174b94806c38794438e, type: 3}
       propertyPath: m_RootOrder
       value: 16
