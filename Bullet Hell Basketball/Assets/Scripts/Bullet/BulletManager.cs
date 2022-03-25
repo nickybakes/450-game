@@ -147,7 +147,11 @@ public class BulletManager : MonoBehaviour
                 break;
 
             case Movement.sideToSide:
-                sideToSide();  
+                sideToSide(true);  
+                break;
+
+            case Movement.upDown:
+                sideToSide(false);
                 break;
         }
         
@@ -162,16 +166,17 @@ public class BulletManager : MonoBehaviour
         transform.position = fixedPoint + offset;
     }
 
-    private void sideToSide()
+    private void sideToSide(bool goingX)
     {
         if((startsRight || isRight) && distanceTravelled > -1)
         {
             distanceTravelled *= -1;
         }
         
-        newPosition = new Vector3(ogPosition.x + distanceTravelled, ogPosition.y, ogPosition.z);
+        if (goingX) newPosition = new Vector3(ogPosition.x + distanceTravelled, ogPosition.y, ogPosition.z);
+        else newPosition = new Vector3(ogPosition.x, ogPosition.y + distanceTravelled, ogPosition.z);
 
-        if((isRight && !startsRight) || (!isRight && startsRight))
+        if ((isRight && !startsRight) || (!isRight && startsRight))
         {
             transform.position = Vector3.MoveTowards(transform.position, ogPosition, 0.1f);
         }
