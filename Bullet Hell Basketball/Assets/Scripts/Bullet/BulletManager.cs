@@ -75,7 +75,7 @@ public class BulletManager : MonoBehaviour
 
         ogPosition = transform.position;
 
-        if(distanceTravelled == 0)
+        if (distanceTravelled == 0)
         {
             distanceTravelled = 1;
         }
@@ -91,7 +91,8 @@ public class BulletManager : MonoBehaviour
         }
     }
 
-    public void Reset(){
+    public void Reset()
+    {
         timer = maxTime;
         rotationAmountDegrees = 0;
         currentAngle = 0;
@@ -131,14 +132,24 @@ public class BulletManager : MonoBehaviour
                 }
 
 
-                timer = maxTime;
+                
+            }
+            /*
+            IF(PLAYER1){
+                timer = Mathf.max(maxTime - Math.max((player2Score - player1Score)/40 , 0), .5);  
+
             }
 
+            */
+
+            timer = maxTime;
         }
+
+        //IncreaseBulletSpawn();
 
         //Spawner rotation 
         //Source: https://forum.unity.com/threads/circular-movement.572797/
-        
+
         //Changes how the spawner moves based on the enum set
         switch (movement)
         {
@@ -147,15 +158,15 @@ public class BulletManager : MonoBehaviour
                 break;
 
             case Movement.sideToSide:
-                sideToSide(true);  
+                sideToSide(true);
                 break;
 
             case Movement.upDown:
                 sideToSide(false);
                 break;
         }
-        
-        
+
+
     }
 
     //Spawner movement helper methods
@@ -164,15 +175,16 @@ public class BulletManager : MonoBehaviour
         currentAngle += angularSpeed * Time.deltaTime;
         Vector3 offset = new Vector3(Mathf.Sin(currentAngle), Mathf.Cos(currentAngle), fixedPoint.z) * radius;
         transform.position = fixedPoint + offset;
+        //Debug.Log(ownerNumber + ": " +currentAngle);
     }
 
     private void sideToSide(bool goingX)
     {
-        if((startsRight || isRight) && distanceTravelled > -1)
+        if ((startsRight || isRight) && distanceTravelled > -1)
         {
             distanceTravelled *= -1;
         }
-        
+
         if (goingX) newPosition = new Vector3(ogPosition.x + distanceTravelled, ogPosition.y, ogPosition.z);
         else newPosition = new Vector3(ogPosition.x, ogPosition.y + distanceTravelled, ogPosition.z);
 
@@ -187,20 +199,20 @@ public class BulletManager : MonoBehaviour
         }
 
         //Changes direction
-        if(transform.position == newPosition)
+        if (transform.position == newPosition)
         {
             reachedOppositeSide = true;
             isRight = reverseBool(isRight);
         }
 
-        if(transform.position == ogPosition && reachedOppositeSide)
+        if (transform.position == ogPosition && reachedOppositeSide)
         {
             reachedOppositeSide = false;
             isRight = reverseBool(isRight);
             distanceTravelled *= -1;
         }
 
-        
+
     }
 
     /// <summary>
@@ -220,5 +232,34 @@ public class BulletManager : MonoBehaviour
         }
 
         return value;
+    }
+
+    //Decreases the time between bullet spawning
+    public void IncreaseBulletSpawn()
+    {
+
+        float ownerScore;
+        float otherScore;
+
+        if (ownerNumber == 0)
+        {
+            ownerScore = gameManager.player1Score;
+            otherScore = gameManager.player2Score;
+        }
+
+        else
+        {
+            ownerScore = gameManager.player2Score;
+            otherScore = gameManager.player1Score;
+        }
+
+
+        if (Mathf.Abs(ownerScore - otherScore) >= 15)
+        {
+
+
+            maxTime = maxTime / 3;
+            timer = maxTime;
+        }
     }
 }
