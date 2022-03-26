@@ -298,51 +298,12 @@ public class Ball : MonoBehaviour
                 audioManager.Play("Net", 0.8f, 1.2f);
                 if (collision.collider.gameObject == gameManager.rightBasket)
                 {
-                    transform.position = new Vector3(gameManager.rightBasket.transform.GetChild(0).transform.position.x, transform.position.y, transform.position.z);
-
-                    if (threePointShot)
-                    {
-                        gameManager.player1Score += 3;
-                        gameManager.panelUI.transform.GetChild(3).GetComponent<Text>().text = "+3";
-                        audioManager.Play("3points");
-                    }
-                    else
-                    {
-                        gameManager.player1Score += 2;
-                        gameManager.panelUI.transform.GetChild(3).GetComponent<Text>().text = "+2";
-                        audioManager.Play("2points");
-                    }
-                    gameManager.previousScorer = 0;
-                    if (!gameManager.overTime)
-                        gameManager.panelUI.transform.GetChild(3).gameObject.SetActive(true);
-                    gameManager.panelUI.transform.GetChild(0).GetComponent<Text>().text = gameManager.player1Score.ToString();
-
+                    ScoreRightBasket();
                 }
                 else if (collision.collider.gameObject == gameManager.leftBasket)
                 {
-                    transform.position = new Vector3(gameManager.leftBasket.transform.GetChild(0).transform.position.x, transform.position.y, transform.position.z);
-
-                    if (threePointShot)
-                    {
-                        gameManager.player2Score += 3;
-                        gameManager.panelUI.transform.GetChild(4).GetComponent<Text>().text = "+3";
-                        audioManager.Play("3points");
-                    }
-                    else
-                    {
-                        gameManager.player2Score += 2;
-                        gameManager.panelUI.transform.GetChild(4).GetComponent<Text>().text = "+2";
-                        audioManager.Play("2points");
-                    }
-                    gameManager.previousScorer = 1;
-                    if (!gameManager.overTime)
-                        gameManager.panelUI.transform.GetChild(4).gameObject.SetActive(true);
-                    gameManager.panelUI.transform.GetChild(1).GetComponent<Text>().text = gameManager.player2Score.ToString();
-
+                    ScoreLeftBasket();
                 }
-
-                // if (gameManager.player1Score >= 10 || gameManager.player2Score >= 10)
-                //     gameManager.EndGame();
 
                 physics.simulatePhysics = true;
                 lineRenderer.enabled = false;
@@ -479,5 +440,66 @@ public class Ball : MonoBehaviour
     private void SetBasketCrosshair(GameObject basket, bool a)
     {
         basket.transform.GetChild(0).gameObject.SetActive(a);
+    }
+
+    /// <summary>
+    /// Helper method for when the shot has made it to the Right basket.
+    /// </summary>
+    private void ScoreRightBasket()
+    {
+        //changes position of ball so it goes 'through' the basket.
+        transform.position = new Vector3(gameManager.rightBasket.transform.GetChild(0).transform.position.x, transform.position.y, transform.position.z);
+
+        if (threePointShot)
+        {
+            gameManager.player1Score += 3;
+            gameManager.panelUI.transform.GetChild(3).GetComponent<Text>().text = "+3";
+            audioManager.Play("3points");
+        }
+        else
+        {
+            gameManager.player1Score += 2;
+            gameManager.panelUI.transform.GetChild(3).GetComponent<Text>().text = "+2";
+
+            if (transform.parent == null)
+                audioManager.Play("2points");
+            else
+                audioManager.Play("Dunk");
+        }
+        gameManager.previousScorer = 0;
+        if (!gameManager.overTime)
+            gameManager.panelUI.transform.GetChild(3).gameObject.SetActive(true);
+        gameManager.panelUI.transform.GetChild(0).GetComponent<Text>().text = gameManager.player1Score.ToString();
+    }
+
+    /// <summary>
+    /// Helper method for when the shot has made it to the Left basket.
+    /// </summary>
+    private void ScoreLeftBasket()
+    {
+        //changes position of ball so it goes 'through' the basket.
+        transform.position = new Vector3(gameManager.leftBasket.transform.GetChild(0).transform.position.x, transform.position.y, transform.position.z);
+
+        if (threePointShot)
+        {
+            gameManager.player2Score += 3;
+            gameManager.panelUI.transform.GetChild(4).GetComponent<Text>().text = "+3";
+            audioManager.Play("3points");
+        }
+        else
+        {
+            gameManager.player2Score += 2;
+            gameManager.panelUI.transform.GetChild(4).GetComponent<Text>().text = "+2";
+
+            if (transform.parent == null)
+                audioManager.Play("2points");
+            else
+                audioManager.Play("Dunk");
+        }
+        gameManager.previousScorer = 1;
+        if (!gameManager.overTime)
+            gameManager.panelUI.transform.GetChild(4).gameObject.SetActive(true);
+        gameManager.panelUI.transform.GetChild(1).GetComponent<Text>().text = gameManager.player2Score.ToString();
+
     }
 }
