@@ -185,6 +185,8 @@ public class Ball : MonoBehaviour
                 {
                     //extra swipeshot speed based on how fast the ball was moving + how close to the basket you are.
                     speedAddition = (physics.velocity.magnitude / 2000) + (distMod * 2);
+                    if (speedAddition > 0.5f)
+                        speedAddition = 0.5f;
                 }
                 //completes the parabola trip in one second (* by speed), changing speed based on height and dist from basket.
                 float speedMod = speed + ((300 - heightMod) / 200) + distMod + speedAddition /*+ (2 / (Vector2.Distance(transform.position, currentTarget.transform.position) + 1))*/;
