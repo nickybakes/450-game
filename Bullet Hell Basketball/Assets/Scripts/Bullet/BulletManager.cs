@@ -134,15 +134,20 @@ public class BulletManager : MonoBehaviour
 
                 
             }
-            /*
-            IF(PLAYER1){
-                timer = Mathf.max(maxTime - Math.max((player2Score - player1Score)/40 , 0), .5);  
-
+            
+            if(ownerNumber == 0){
+                timer = Mathf.Max(maxTime - Mathf.Max((gameManager.player2Score - gameManager.player1Score)/20 , 0), 0.5f);  
+                
             }
 
-            */
+            else
+            {
+                timer = Mathf.Max(maxTime - Mathf.Max((gameManager.player1Score - gameManager.player2Score)/20, 0), 0.5f);
+            }
 
-            timer = maxTime;
+            
+
+            //timer = maxTime;
         }
 
         //IncreaseBulletSpawn();
@@ -235,7 +240,7 @@ public class BulletManager : MonoBehaviour
     }
 
     //Decreases the time between bullet spawning
-    public void IncreaseBulletSpawn()
+    /*public void IncreaseBulletSpawn()
     {
 
         float ownerScore;
@@ -261,5 +266,5 @@ public class BulletManager : MonoBehaviour
             maxTime = maxTime / 3;
             timer = maxTime;
         }
-    }
+    }*/
 }
