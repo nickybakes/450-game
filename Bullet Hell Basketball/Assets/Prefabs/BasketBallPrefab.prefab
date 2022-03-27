@@ -254,6 +254,9 @@ MonoBehaviour:
   isSwipeShot: 0
   bulletTimeMax: 0.23
   bulletTimeCurrent: 0
+  resetTimeMax: 2
+  resetTimeCurrent: 0
+  threePointShot: 0
 --- !u!114 &6230116665754677498
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -950,7 +953,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     randomizeRotationDirection: 0
-    maxNumParticles: 1000
+    maxNumParticles: 300
     size3D: 0
     rotation3D: 0
     gravityModifier:
@@ -1014,7 +1017,7 @@ ParticleSystem:
     length: 5
     boxThickness: {x: 0, y: 0, z: 0}
     radiusThickness: 1
-    donutRadius: 0.2
+    donutRadius: 1
     m_Position: {x: 0, y: 0, z: 0}
     m_Rotation: {x: 0, y: 0, z: 0}
     m_Scale: {x: 1, y: 1, z: 1}
@@ -1096,7 +1099,7 @@ ParticleSystem:
     sphericalDirectionAmount: 0
     randomPositionAmount: 0
     radius:
-      value: 0.5
+      value: 1
       mode: 0
       spread: 0
       speed:
@@ -1325,14 +1328,14 @@ ParticleSystem:
     curve:
       serializedVersion: 2
       minMaxState: 1
-      scalar: 1
+      scalar: 3
       minScalar: 1
       maxCurve:
         serializedVersion: 2
         m_Curve:
         - serializedVersion: 3
           time: 0
-          value: 0.51351166
+          value: 1
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -1341,7 +1344,7 @@ ParticleSystem:
           outWeight: 0.33333334
         - serializedVersion: 3
           time: 1
-          value: 0.06756756
+          value: 0.2837846
           inSlope: -0.9030751
           outSlope: -0.9030751
           tangentMode: 0
@@ -1655,7 +1658,7 @@ ParticleSystem:
         serializedVersion: 2
         key0: {r: 1, g: 0.95686275, b: 0.9098039, a: 1}
         key1: {r: 1, g: 0.57254905, b: 0.16862746, a: 1}
-        key2: {r: 1, g: 0.09019608, b: 0.09019608, a: 0}
+        key2: {r: 0.9811321, g: 0.3038478, b: 0.1064436, a: 0}
         key3: {r: 0, g: 0, b: 0, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}
         key5: {r: 0, g: 0, b: 0, a: 0}
@@ -3960,7 +3963,7 @@ ParticleSystem:
         m_NumAlphaKeys: 2
     range: {x: 0, y: 1}
   CollisionModule:
-    enabled: 1
+    enabled: 0
     serializedVersion: 4
     type: 1
     collisionMode: 1
