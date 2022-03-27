@@ -175,9 +175,7 @@ public class Ball : MonoBehaviour
                 if (currentDist > 30)
                     distMod = 0;
                 else
-                    distMod = Mathf.Pow(5 / (currentDist + 0.1f), 1.1f);
-
-                Debug.Log(distMod);
+                    distMod = Mathf.Pow(5 / (currentDist + 0.01f), 1.1f);
             }
 
             if (boolWillHit)
@@ -340,7 +338,6 @@ public class Ball : MonoBehaviour
     ///https://forum.unity.com/threads/generating-dynamic-parabola.211681/#post-1426169
     Vector3 CalculateParabola(Vector3 start, Vector3 end, float height, float t, bool preview)
     {
-
         float parabolicT = t * 2 - 1;
 
         //start and end are roughly level, pretend they are - simpler solution with less steps
