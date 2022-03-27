@@ -138,8 +138,7 @@ public class Ball : MonoBehaviour
             //If the ball is too far away from the basket, boolWillHit = false.
             if (calculateOnce)
             {
-                //check whether the ball was thrown from the side with the target basket (will go in)
-                //or not (will miss)
+                //check whether the ball was thrown from the side with the target basket
                 if (isSwipeShot)
                 {
                     boolWillHit = true;
@@ -168,12 +167,15 @@ public class Ball : MonoBehaviour
                     calculateOnce = false;
                 }
 
-
                 //so it's not calculated at runtime
                 heightMod = HeightModifier();
 
-                //Calculates a speed modifier based on the starting distance, closer = faster.
-                distMod = 2 / (Vector2.Distance(transform.position, currentTarget.transform.position) + 1);
+                //Calculates a speed modifier based on the starting distance, closer = faster. 0 if outside 3 point line.
+                float currentDist = Vector2.Distance(transform.position, currentTarget.transform.position);
+                if (currentDist > 30)
+                    distMod = 0;
+                else
+                    distMod = Mathf.Pow(5 / (currentDist + 0.01f), 1.1f);
             }
 
             if (boolWillHit)
@@ -181,7 +183,10 @@ public class Ball : MonoBehaviour
                 float speedAddition = 0;
                 if (isSwipeShot)
                 {
-                    speedAddition = physics.velocity.magnitude / 2000;
+                    //extra swipeshot speed based on how fast the ball was moving + how close to the basket you are.
+                    speedAddition = (physics.velocity.magnitude / 2000) + (distMod * 2);
+                    if (speedAddition > 0.5f)
+                        speedAddition = 0.5f;
                 }
                 //completes the parabola trip in one second (* by speed), changing speed based on height and dist from basket.
                 float speedMod = speed + ((300 - heightMod) / 200) + distMod + speedAddition /*+ (2 / (Vector2.Distance(transform.position, currentTarget.transform.position) + 1))*/;
@@ -298,51 +303,12 @@ public class Ball : MonoBehaviour
                 audioManager.Play("Net", 0.8f, 1.2f);
                 if (collision.collider.gameObject == gameManager.rightBasket)
                 {
-                    transform.position = new Vector3(gameManager.rightBasket.transform.GetChild(0).transform.position.x, transform.position.y, transform.position.z);
-
-                    if (threePointShot)
-                    {
-                        gameManager.player1Score += 3;
-                        gameManager.panelUI.transform.GetChild(3).GetComponent<Text>().text = "+3";
-                        audioManager.Play("3points");
-                    }
-                    else
-                    {
-                        gameManager.player1Score += 2;
-                        gameManager.panelUI.transform.GetChild(3).GetComponent<Text>().text = "+2";
-                        audioManager.Play("2points");
-                    }
-                    gameManager.previousScorer = 0;
-                    if (!gameManager.overTime)
-                        gameManager.panelUI.transform.GetChild(3).gameObject.SetActive(true);
-                    gameManager.panelUI.transform.GetChild(0).GetComponent<Text>().text = gameManager.player1Score.ToString();
-
+                    ScoreRightBasket();
                 }
                 else if (collision.collider.gameObject == gameManager.leftBasket)
                 {
-                    transform.position = new Vector3(gameManager.leftBasket.transform.GetChild(0).transform.position.x, transform.position.y, transform.position.z);
-
-                    if (threePointShot)
-                    {
-                        gameManager.player2Score += 3;
-                        gameManager.panelUI.transform.GetChild(4).GetComponent<Text>().text = "+3";
-                        audioManager.Play("3points");
-                    }
-                    else
-                    {
-                        gameManager.player2Score += 2;
-                        gameManager.panelUI.transform.GetChild(4).GetComponent<Text>().text = "+2";
-                        audioManager.Play("2points");
-                    }
-                    gameManager.previousScorer = 1;
-                    if (!gameManager.overTime)
-                        gameManager.panelUI.transform.GetChild(4).gameObject.SetActive(true);
-                    gameManager.panelUI.transform.GetChild(1).GetComponent<Text>().text = gameManager.player2Score.ToString();
-
+                    ScoreLeftBasket();
                 }
-
-                // if (gameManager.player1Score >= 10 || gameManager.player2Score >= 10)
-                //     gameManager.EndGame();
 
                 physics.simulatePhysics = true;
                 lineRenderer.enabled = false;
@@ -374,7 +340,6 @@ public class Ball : MonoBehaviour
     ///https://forum.unity.com/threads/generating-dynamic-parabola.211681/#post-1426169
     Vector3 CalculateParabola(Vector3 start, Vector3 end, float height, float t, bool preview)
     {
-
         float parabolicT = t * 2 - 1;
 
         //start and end are roughly level, pretend they are - simpler solution with less steps
@@ -479,5 +444,66 @@ public class Ball : MonoBehaviour
     private void SetBasketCrosshair(GameObject basket, bool a)
     {
         basket.transform.GetChild(0).gameObject.SetActive(a);
+    }
+
+    /// <summary>
+    /// Helper method for when the shot has made it to the Right basket.
+    /// </summary>
+    private void ScoreRightBasket()
+    {
+        //changes position of ball so it goes 'through' the basket.
+        transform.position = new Vector3(gameManager.rightBasket.transform.GetChild(0).transform.position.x, transform.position.y, transform.position.z);
+
+        if (threePointShot)
+        {
+            gameManager.player1Score += 3;
+            gameManager.panelUI.transform.GetChild(3).GetComponent<Text>().text = "+3";
+            audioManager.Play("3points");
+        }
+        else
+        {
+            gameManager.player1Score += 2;
+            gameManager.panelUI.transform.GetChild(3).GetComponent<Text>().text = "+2";
+
+            if (transform.parent == null)
+                audioManager.Play("2points");
+            else
+                audioManager.Play("Dunk");
+        }
+        gameManager.previousScorer = 0;
+        if (!gameManager.overTime)
+            gameManager.panelUI.transform.GetChild(3).gameObject.SetActive(true);
+        gameManager.panelUI.transform.GetChild(0).GetComponent<Text>().text = gameManager.player1Score.ToString();
+    }
+
+    /// <summary>
+    /// Helper method for when the shot has made it to the Left basket.
+    /// </summary>
+    private void ScoreLeftBasket()
+    {
+        //changes position of ball so it goes 'through' the basket.
+        transform.position = new Vector3(gameManager.leftBasket.transform.GetChild(0).transform.position.x, transform.position.y, transform.position.z);
+
+        if (threePointShot)
+        {
+            gameManager.player2Score += 3;
+            gameManager.panelUI.transform.GetChild(4).GetComponent<Text>().text = "+3";
+            audioManager.Play("3points");
+        }
+        else
+        {
+            gameManager.player2Score += 2;
+            gameManager.panelUI.transform.GetChild(4).GetComponent<Text>().text = "+2";
+
+            if (transform.parent == null)
+                audioManager.Play("2points");
+            else
+                audioManager.Play("Dunk");
+        }
+        gameManager.previousScorer = 1;
+        if (!gameManager.overTime)
+            gameManager.panelUI.transform.GetChild(4).gameObject.SetActive(true);
+        gameManager.panelUI.transform.GetChild(1).GetComponent<Text>().text = gameManager.player2Score.ToString();
+
     }
 }
