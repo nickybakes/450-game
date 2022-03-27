@@ -138,8 +138,7 @@ public class Ball : MonoBehaviour
             //If the ball is too far away from the basket, boolWillHit = false.
             if (calculateOnce)
             {
-                //check whether the ball was thrown from the side with the target basket (will go in)
-                //or not (will miss)
+                //check whether the ball was thrown from the side with the target basket
                 if (isSwipeShot)
                 {
                     boolWillHit = true;
@@ -168,12 +167,17 @@ public class Ball : MonoBehaviour
                     calculateOnce = false;
                 }
 
-
                 //so it's not calculated at runtime
                 heightMod = HeightModifier();
 
-                //Calculates a speed modifier based on the starting distance, closer = faster.
-                distMod = 2 / (Vector2.Distance(transform.position, currentTarget.transform.position) + 1);
+                //Calculates a speed modifier based on the starting distance, closer = faster. 0 if outside 3 point line.
+                float currentDist = Vector2.Distance(transform.position, currentTarget.transform.position);
+                if (currentDist > 30)
+                    distMod = 0;
+                else
+                    distMod = Mathf.Pow(5 / (currentDist + 0.1f), 1.1f);
+
+                Debug.Log(distMod);
             }
 
             if (boolWillHit)
@@ -181,7 +185,8 @@ public class Ball : MonoBehaviour
                 float speedAddition = 0;
                 if (isSwipeShot)
                 {
-                    speedAddition = physics.velocity.magnitude / 2000;
+                    //extra swipeshot speed based on how fast the ball was moving + how close to the basket you are.
+                    speedAddition = (physics.velocity.magnitude / 2000) + (distMod * 2);
                 }
                 //completes the parabola trip in one second (* by speed), changing speed based on height and dist from basket.
                 float speedMod = speed + ((300 - heightMod) / 200) + distMod + speedAddition /*+ (2 / (Vector2.Distance(transform.position, currentTarget.transform.position) + 1))*/;
