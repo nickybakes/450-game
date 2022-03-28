@@ -97,10 +97,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
         {
             if (value)
             {
-                if (grounded)
-                    SetAnimationState(AnimationState.Swipe_Grounded);
-                else
-                    SetAnimationState(AnimationState.Swipe_Grounded);
+                SetAnimationState(AnimationState.Swipe_Grounded);
 
                 swipeTimeCurrent = 0;
                 velocity = Vector2.zero;
@@ -122,6 +119,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
         {
             if (value)
             {
+                SetAnimationState(AnimationState.Damage);
                 flashTimeCurrent = 0;
                 IsSwiping = false;
                 stunTimeCurrent = 0;
@@ -252,7 +250,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
             SetAnimationState(AnimationState.Idle_No_Ball);
         }
 
-        if (GetControlDown(Control.Jump) && !IsStunned && !jumping)
+        if (GetControlDown(Control.Jump) && !IsStunned && !jumping && jumpsInAir < jumpsInAirMax)
         {
             jumping = true;
             SetAnimationStateAlways(AnimationState.Jump_No_Ball);
@@ -482,7 +480,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
     public void SetAnimationState(AnimationState state)
     {
-        if (IsSwiping && state != AnimationState.Damage)
+        if (IsSwiping && state != AnimationState.Damage || IsStunned)
             return;
 
         if (currentAnimationState == state)
