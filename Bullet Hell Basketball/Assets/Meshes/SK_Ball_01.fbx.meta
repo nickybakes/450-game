@@ -1,68 +1,11 @@
 fileFormatVersion: 2
-guid: 8fc1207e94675414bacf20a1aa6db335
+guid: 49a10ab03b574eb4fb1a0421880474df
 ModelImporter:
   serializedVersion: 20200
   internalIDToNameTable:
   - first:
-      74: 9163418711118148850
-    second: rig|Idle_No_Ball
-  - first:
-      74: 2152424802132299672
-    second: rig|Jump_No_Ball
-  - first:
-      74: 4594348408985554391
-    second: rig|Run_Forward_No_Ball
-  - first:
-      74: -5438549769019385838
-    second: rig|Shoot_Grounded
-  - first:
-      74: -8415029238415575496
-    second: rig|Swipe_Grounded
-  - first:
-      74: 7670626495941870245
-    second: rig|Swipe_In_Air
-  - first:
-      74: -2590323435608468154
-    second: rig|A_Pose
-  - first:
-      74: -4372886471276954061
-    second: rig|Damage
-  - first:
-      74: 5092162613699396736
-    second: rig|Fall_No_Ball
-  - first:
-      74: 1480712753399859448
-    second: rig|Stand_Hands_On_Hips
-  - first:
-      74: 5507936136068432168
-    second: Run_Forward_No_Ball.001
-  - first:
-      74: 3651350446308603674
-    second: Damage
-  - first:
-      74: 5545553704304481094
-    second: Jump_No_Ball.002
-  - first:
-      74: -4653611154685139441
-    second: Run_Backward_No_Ball
-  - first:
-      74: -7759319779520541498
-    second: Jump_No_Ball.001
-  - first:
-      74: -1576831832291657278
-    second: rig|Damage_Old
-  - first:
-      74: -1624256084525216940
-    second: rig|Run_Backward_No_Ball
-  - first:
-      74: -4074758856590600813
-    second: rig|Run_Backward_No_Ball.001
-  - first:
-      74: -3927998782375174318
-    second: rig|Run_Backward_No_Ball.002
-  - first:
-      74: 7749444445244751222
-    second: rig|Idle_With_Ball
+      74: -8945691123924629249
+    second: Armature|Idle
   externalObjects: {}
   materials:
     materialImportMode: 2

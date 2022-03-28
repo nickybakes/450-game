@@ -101,14 +101,17 @@ public class Ball : MonoBehaviour
         if (gameManager.paused)
             return;
 
-        if (transform.position.x > gameManager.horizontalEdge)
+        if (transform.parent == null)
+            transform.localScale = Vector3.one;
+
+        if (transform.position.x > gameManager.horizontalEdge && transform.parent == null)
         {
             physics.simulatePhysics = true;
             transform.position = new Vector3(gameManager.horizontalEdge - .5f, transform.position.y, transform.position.z);
             physics.velocity.x = -Mathf.Abs(physics.velocity.x);
         }
 
-        if (transform.position.x < -gameManager.horizontalEdge)
+        if (transform.position.x < -gameManager.horizontalEdge && transform.parent == null)
         {
             physics.simulatePhysics = true;
             transform.position = new Vector3(-gameManager.horizontalEdge + .5f, transform.position.y, transform.position.z);

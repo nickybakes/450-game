@@ -17,12 +17,17 @@ public enum Control
 public enum AnimationState
 {
     Run_Forward_No_Ball,
+    Run_Forward_With_Ball,
     Run_Backward_No_Ball,
+    Run_Backward_With_Ball,
     Idle_No_Ball,
+    Idle_With_Ball,
+    Fall_No_Ball,
+    Fall_With_Ball,
+    Jump_No_Ball,
+    Jump_With_Ball,
     Swipe_Grounded,
     Damage,
-    Fall_No_Ball,
-    Jump_No_Ball
 
 }
 
@@ -47,6 +52,8 @@ public class BhbPlayerController : NeonHeightsCharacterController
     private float soundTimer;
 
     public Animator animator;
+    public Animator ballAnimator;
+    public GameObject ballHolder;
 
     public AnimationState currentAnimationState;
 
@@ -191,16 +198,25 @@ public class BhbPlayerController : NeonHeightsCharacterController
             if (playerNumber == 0)
             {
                 Quaternion q = Quaternion.Euler(0, 0, 0);
+                Quaternion q2 = Quaternion.Euler(-90, 90, 0);
                 transform.SetPositionAndRotation(transform.position, q);
+                ballAnimator.transform.rotation = q2;
                 facingRight = true;
             }
             else if (playerNumber == 1)
             {
                 Quaternion q = Quaternion.Euler(0, 180, 0);
+                Quaternion q2 = Quaternion.Euler(-90, -90, 0);
                 transform.SetPositionAndRotation(transform.position, q);
+                ballAnimator.transform.rotation = q2;
                 facingRight = false;
             }
+
+            ball.transform.position = ballHolder.transform.position;
+            ball.transform.localScale = ballHolder.transform.localScale;
         }
+
+
 
         if (GetControlHeld(Control.Left) && !IsStunned)
         {
@@ -434,10 +450,12 @@ public class BhbPlayerController : NeonHeightsCharacterController
         if (playerNumber == 1)
         {
             Quaternion q = Quaternion.Euler(0, 180, 0);
+            Quaternion q2 = Quaternion.Euler(-90, 90, 0);
             transform.SetPositionAndRotation(transform.position, q);
+            ballAnimator.transform.rotation = q2;
             facingRight = false;
 
-            ball.transform.position = (gameObject.transform.position + new Vector3(playerHandPos.x * -1, playerHandPos.y, playerHandPos.z));
+            // ball.transform.position = (gameObject.transform.position + new Vector3(playerHandPos.x * -1, playerHandPos.y, playerHandPos.z));
 
             gameManager.yellowShevrons.SetActive(false);
             gameManager.blueShevrons.SetActive(true);
@@ -445,10 +463,12 @@ public class BhbPlayerController : NeonHeightsCharacterController
         else
         {
             Quaternion q = Quaternion.Euler(0, 0, 0);
+            Quaternion q2 = Quaternion.Euler(-90, -90, 0);
             transform.SetPositionAndRotation(transform.position, q);
+            ballAnimator.transform.rotation = q2;
             facingRight = true;
 
-            ball.transform.position = (gameObject.transform.position + playerHandPos);
+            // ball.transform.position = (gameObject.transform.position + playerHandPos);
 
             gameManager.yellowShevrons.SetActive(true);
             gameManager.blueShevrons.SetActive(false);
@@ -480,6 +500,11 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
     public void SetAnimationState(AnimationState state)
     {
+        if (ball.transform.parent == transform && state.ToString().Contains("No_Ball"))
+        {
+            state++;
+        }
+
         if (IsSwiping && state != AnimationState.Damage || IsStunned)
             return;
 
@@ -491,6 +516,19 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
     public void SetAnimationStateAlways(AnimationState state)
     {
+        if (ball.transform.parent == transform)
+        {
+            if (state == AnimationState.Jump_No_Ball)
+                state = AnimationState.Jump_With_Ball;
+
+            if (state == AnimationState.Damage){
+                ball.transform.localScale = Vector3.one;
+                return;
+            }
+
+            ballAnimator.SetTrigger(state.ToString());
+        }
+
         currentAnimationState = state;
 
         animator.SetTrigger(state.ToString());
