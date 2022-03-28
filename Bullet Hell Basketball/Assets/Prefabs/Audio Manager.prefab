@@ -88,21 +88,21 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 8ddf5839c6d55e44ca5a54f44120f8fd, type: 3}
     - {fileID: 8300000, guid: ad29c1f293e8c6b4a829d37f20d16860, type: 3}
     - {fileID: 8300000, guid: 67450ba168f4fcd4da78e869fb8f2dab, type: 3}
-    volume: 1
+    volume: 0.1
     pitch: 1
     loop: 0
     source: {fileID: 0}
   - name: 2points
     clips:
     - {fileID: 8300000, guid: 5ee27d2ca19445f4ebe99d808ebef783, type: 3}
-    volume: 0.5
+    volume: 0.3
     pitch: 1
     loop: 0
     source: {fileID: 0}
   - name: 3points
     clips:
     - {fileID: 8300000, guid: b5280b3ae298f5f4587d46ae7b6e71e6, type: 3}
-    volume: 0.5
+    volume: 0.3
     pitch: 1
     loop: 0
     source: {fileID: 0}
