@@ -63,6 +63,12 @@ ModelImporter:
   - first:
       74: 7749444445244751222
     second: rig|Idle_With_Ball
+  - first:
+      74: -5264578910358216921
+    second: rig|Fall_With_Ball
+  - first:
+      74: -4284455631332217904
+    second: rig|Jump_With_Ball
   externalObjects: {}
   materials:
     materialImportMode: 2

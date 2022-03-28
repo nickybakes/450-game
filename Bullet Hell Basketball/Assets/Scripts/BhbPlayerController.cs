@@ -57,6 +57,11 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
     public AnimationState currentAnimationState;
 
+    public float dribbleSoundTimerCurrent = 0;
+    public float dribbleSoundTimerMax = .24f;
+
+
+
     public bool facingRight = true;
 
     public GameObject swipeVisual;
@@ -264,6 +269,17 @@ public class BhbPlayerController : NeonHeightsCharacterController
         else if (grounded)
         {
             SetAnimationState(AnimationState.Idle_No_Ball);
+
+            if (currentAnimationState == AnimationState.Idle_With_Ball)
+            {
+                dribbleSoundTimerCurrent += Time.deltaTime;
+                if (dribbleSoundTimerCurrent >= dribbleSoundTimerMax)
+                {
+                    dribbleSoundTimerCurrent = 0;
+                    DribbleSound();
+                }
+            }
+
         }
 
         if (GetControlDown(Control.Jump) && !IsStunned && !jumping && jumpsInAir < jumpsInAirMax)
@@ -521,7 +537,8 @@ public class BhbPlayerController : NeonHeightsCharacterController
             if (state == AnimationState.Jump_No_Ball)
                 state = AnimationState.Jump_With_Ball;
 
-            if (state == AnimationState.Damage){
+            if (state == AnimationState.Damage)
+            {
                 ball.transform.localScale = Vector3.one;
                 return;
             }
@@ -529,9 +546,20 @@ public class BhbPlayerController : NeonHeightsCharacterController
             ballAnimator.SetTrigger(state.ToString());
         }
 
+        if (state == AnimationState.Idle_With_Ball)
+        {
+            dribbleSoundTimerMax = .96f;
+            dribbleSoundTimerCurrent = 0;
+        }
+
         currentAnimationState = state;
 
         animator.SetTrigger(state.ToString());
+    }
+
+    public void DribbleSound()
+    {
+        audioManager.Play("Bounce", .5f);
     }
 
     bool GetControlHeld(Control action)
