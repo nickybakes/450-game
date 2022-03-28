@@ -45,6 +45,9 @@ public class BulletManager : MonoBehaviour
     public bool isRight;
     private bool reachedOppositeSide = false;
 
+    //Add some sort of level up system, and different directions bullets shoot
+    //Make more variables so arc movement ca  work
+
     // Start is called before the first frame update
     void Start()
     {
@@ -220,6 +223,8 @@ public class BulletManager : MonoBehaviour
 
     }
 
+    
+
     /// <summary>
     /// Sets the bool to the opposite value 
     /// </summary>
@@ -237,34 +242,12 @@ public class BulletManager : MonoBehaviour
         }
 
         return value;
+    } 
+
+    //When someone scores, this is called
+    public void RoundReset(){
+        transform.position = fixedPoint;
+        timer = maxTime;
+        //Somehow delete bullets?
     }
-
-    //Decreases the time between bullet spawning
-    /*public void IncreaseBulletSpawn()
-    {
-
-        float ownerScore;
-        float otherScore;
-
-        if (ownerNumber == 0)
-        {
-            ownerScore = gameManager.player1Score;
-            otherScore = gameManager.player2Score;
-        }
-
-        else
-        {
-            ownerScore = gameManager.player2Score;
-            otherScore = gameManager.player1Score;
-        }
-
-
-        if (Mathf.Abs(ownerScore - otherScore) >= 15)
-        {
-
-
-            maxTime = maxTime / 3;
-            timer = maxTime;
-        }
-    }*/
 }
