@@ -101,14 +101,20 @@ public class Ball : MonoBehaviour
         if (gameManager.paused)
             return;
 
-        if (transform.position.x > gameManager.horizontalEdge)
+        if (transform.parent == null)
+            transform.localScale = Vector3.one;
+            
+        if (physics.simulatePhysics)
+            isSwipeShot = false;
+
+        if (transform.position.x > gameManager.horizontalEdge && transform.parent == null)
         {
             physics.simulatePhysics = true;
             transform.position = new Vector3(gameManager.horizontalEdge - .5f, transform.position.y, transform.position.z);
             physics.velocity.x = -Mathf.Abs(physics.velocity.x);
         }
 
-        if (transform.position.x < -gameManager.horizontalEdge)
+        if (transform.position.x < -gameManager.horizontalEdge && transform.parent == null)
         {
             physics.simulatePhysics = true;
             transform.position = new Vector3(-gameManager.horizontalEdge + .5f, transform.position.y, transform.position.z);
@@ -195,6 +201,21 @@ public class Ball : MonoBehaviour
                 if (physics.simulatePhysics)
                     return;
                 transform.position = newPosition;
+
+                //This is like a failsafe for if physics doesnt find the collision of the ball going into the basket on a fast
+                //swipe shot
+                //thought from testing, it seems this works before collision detection even can
+                if (physics.velocity.y < 0 && transform.position.y < currentTarget.transform.position.y && Vector2.Distance(transform.position, currentTarget.transform.position) < 3)
+                {
+                    if (IsResetting)
+                        return;
+                    if (currentTarget == leftBasket)
+                        ScoreLeftBasket();
+                    else if (currentTarget == rightBasket)
+                        ScoreRightBasket();
+
+                    AfterScore();
+                }
             }
             else
             {
@@ -242,7 +263,7 @@ public class Ball : MonoBehaviour
         }
         if (transform.parent == null)
         {
-            transform.Rotate(0, 0, spinAmt * -physics.velocity.x, Space.Self);
+            transform.Rotate(0, 0, spinAmt * -physics.velocity.x, Space.World);
         }
     }
 
@@ -310,13 +331,7 @@ public class Ball : MonoBehaviour
                     ScoreLeftBasket();
                 }
 
-                physics.simulatePhysics = true;
-                lineRenderer.enabled = false;
-
-                if (gameManager.overTime)
-                    gameManager.EndGame();
-                else
-                    IsResetting = true;
+                AfterScore();
             }
         }
     }
@@ -401,6 +416,9 @@ public class Ball : MonoBehaviour
     private Vector3[] PreviewParabola(Vector3 start, Vector3 end, float height, int arraySize)
     {
         Vector3[] drawnParabola = new Vector3[arraySize];
+
+        //keeps preview line on z=0.
+        start.z = 0;
 
         //t is a value from 0 to 1 for time, convert arraySize (equally spaced points) into decimal values between this.
         for (int i = 0; i < arraySize; i++)
@@ -505,5 +523,17 @@ public class Ball : MonoBehaviour
             gameManager.panelUI.transform.GetChild(4).gameObject.SetActive(true);
         gameManager.panelUI.transform.GetChild(1).GetComponent<Text>().text = gameManager.player2Score.ToString();
 
+    }
+
+    private void AfterScore()
+    {
+
+        physics.simulatePhysics = true;
+        lineRenderer.enabled = false;
+
+        if (gameManager.overTime)
+            gameManager.EndGame();
+        else
+            IsResetting = true;
     }
 }
