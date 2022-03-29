@@ -703,7 +703,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
                     }
                     if (ball.transform.position.x > -14 && ball.transform.position.x < 14 && ball.transform.position.y < 6.5f)
                     {
-                        if (transform.position.x > -16 && transform.position.x < 14 && transform.position.y > 8)
+                        if (transform.position.x > -18 && transform.position.x < 18 && transform.position.y > 8)
                         {
                             if (playerNumber == 0)
                                 return true;
@@ -745,7 +745,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
                 }
                 if (ball.transform.position.x > -14 && ball.transform.position.x < 14 && ball.transform.position.y < 6.5f)
                 {
-                    if (transform.position.x > -16 && transform.position.x < 14 && transform.position.y > 8)
+                    if (transform.position.x > -18 && transform.position.x < 18 && transform.position.y > 8)
                     {
                         if (playerNumber == 1)
                             return true;

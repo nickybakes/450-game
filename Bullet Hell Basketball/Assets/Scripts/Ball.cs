@@ -263,7 +263,7 @@ public class Ball : MonoBehaviour
         }
         if (transform.parent == null)
         {
-            transform.Rotate(0, 0, spinAmt * -physics.velocity.x, Space.Self);
+            transform.Rotate(0, 0, spinAmt * -physics.velocity.x, Space.World);
         }
     }
 
