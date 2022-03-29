@@ -310,4 +310,17 @@ public class BulletManager : MonoBehaviour
         timer = maxTime;
         //Somehow delete bullets?
     }
+
+    /// <summary>
+    /// Called when the level increases
+    /// </summary>
+    public void LevelUp()
+    {
+        maxTime = maxTime / 2;
+
+        if(maxTime < 0.375f)
+        {
+            maxTime = 0.375f;
+        }
+    }
 }
