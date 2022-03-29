@@ -29,7 +29,8 @@ public enum AnimationState
     Swipe_Grounded,
     Damage,
     Shoot_Grounded,
-    Shoot_Air
+    Shoot_Air,
+    Swipe_Shot_Grounded
 
 }
 
@@ -80,6 +81,10 @@ public class BhbPlayerController : NeonHeightsCharacterController
     public float shootTimeMax = .24f;
 
     private float shootTimeCurrent = 0;
+
+    public float swipeShotTimeMax = .4f;
+
+    private float swipeShotTimeCurrent = 0;
 
     public float swipeCooldownTimeMax = .3f;
 
@@ -156,6 +161,27 @@ public class BhbPlayerController : NeonHeightsCharacterController
         }
     }
 
+    public bool IsSwipeShooting
+    {
+        get { return swipeShotTimeCurrent < swipeShotTimeMax; }
+        set
+        {
+            if (value)
+            {
+                IsSwiping = false;
+                GrabBall();
+                SetAnimationState(AnimationState.Swipe_Shot_Grounded);
+                swipeShotTimeCurrent = 0;
+                velocity = Vector2.zero;
+            }
+            else
+            {
+                swipeShotTimeCurrent = swipeShotTimeMax;
+                autoCatchCooldownTimer = 0;
+            }
+        }
+    }
+
     public bool IsStunned
     {
         get { return stunTimeCurrent < stunTimeMax; }
@@ -167,6 +193,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
                 flashTimeCurrent = 0;
                 IsSwiping = false;
                 IsShooting = false;
+                IsSwipeShooting = false;
                 stunTimeCurrent = 0;
                 // transform.GetChild(2).gameObject.SetActive(false);
                 // transform.GetChild(3).gameObject.SetActive(true);
@@ -199,6 +226,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
     {
         pickupRadius = 5;
         playerHandPos = new Vector3(1.8f, 5.2f, 0.0f);
+        swipeShotTimeCurrent = swipeShotTimeMax;
         shootTimeCurrent = shootTimeMax;
         swipeTimeCurrent = swipeTimeMax;
         flashTimeCurrent = flashTimeMax;
@@ -347,7 +375,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
         if (!ballScript.IsResetting)
         {
-            if (GetControlDown(Control.Action) && !IsStunned && !IsShooting)
+            if (GetControlDown(Control.Action) && !IsStunned && !IsShooting && !IsSwipeShooting)
             {
                 //if holding the ball...
                 if (ball.transform.parent == transform)
@@ -403,20 +431,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
                         Vector2 midpoint = transform.position + (transform.GetChild(0).transform.position - transform.position) / 2.0f;
                         if (Vector2.Distance(midpoint, (Vector2)ball.transform.position + (ballPhysics.velocity * Time.deltaTime)) < 6.5)
                         {
-                            ball.transform.parent = transform;
-                            ballPhysics.simulatePhysics = false;
-                            ballScript.ShootBall(playerNumber, true);
-
-                            if (playerNumber == 1)
-                            {
-                                gameManager.yellowShevrons.SetActive(false);
-                                gameManager.blueShevrons.SetActive(true);
-                            }
-                            else
-                            {
-                                gameManager.yellowShevrons.SetActive(true);
-                                gameManager.blueShevrons.SetActive(false);
-                            }
+                            IsSwipeShooting = true;
                         }
                     }
                 }
@@ -496,6 +511,25 @@ public class BhbPlayerController : NeonHeightsCharacterController
                 else
                 {
                     velocity = new Vector2(40, 20);
+                }
+            }
+        }
+        else if (IsSwipeShooting)
+        {
+            swipeShotTimeCurrent += Time.deltaTime;
+            if (swipeShotTimeCurrent >= swipeShotTimeMax)
+            {
+                IsSwipeShooting = false;
+                ballScript.ShootBall(playerNumber, true);
+                grounded = false;
+                stunTimeCurrent = stunTimeMax * .2f;
+                if (playerNumber == 0)
+                {
+                    velocity = new Vector2(-60, 20);
+                }
+                else
+                {
+                    velocity = new Vector2(60, 20);
                 }
             }
         }
@@ -591,7 +625,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
             state++;
         }
 
-        if ((IsSwiping || IsShooting) && state != AnimationState.Damage || IsStunned)
+        if ((IsSwiping || IsShooting || IsSwipeShooting) && state != AnimationState.Damage || IsStunned)
             return;
 
         if (currentAnimationState == state)
@@ -659,6 +693,14 @@ public class BhbPlayerController : NeonHeightsCharacterController
             {
                 if (ball.transform.parent != transform)
                 {
+                    if (playerNumber == 0 && ball.transform.parent != null && gameManager.player2Script.IsSwipeShooting && Mathf.Abs(transform.position.x - ball.transform.position.x) > 10)
+                    {
+                        return true;
+                    }
+                    if (playerNumber == 0 && ballScript.isSwipeShot == true && Mathf.Abs(transform.position.x - ball.transform.position.x) > 10)
+                    {
+                        return true;
+                    }
                     if (ball.transform.position.x > -14 && ball.transform.position.x < 14 && ball.transform.position.y < 6.5f)
                     {
                         if (transform.position.x > -16 && transform.position.x < 14 && transform.position.y > 8)
@@ -693,6 +735,14 @@ public class BhbPlayerController : NeonHeightsCharacterController
             }
             if (action == Control.Right)
             {
+                if (playerNumber == 1 && ball.transform.parent != null && gameManager.player1Script.IsSwipeShooting && Mathf.Abs(transform.position.x - ball.transform.position.x) > 10)
+                {
+                    return true;
+                }
+                if (playerNumber == 1 && ballScript.isSwipeShot == true && Mathf.Abs(transform.position.x - ball.transform.position.x) > 10)
+                {
+                    return true;
+                }
                 if (ball.transform.position.x > -14 && ball.transform.position.x < 14 && ball.transform.position.y < 6.5f)
                 {
                     if (transform.position.x > -16 && transform.position.x < 14 && transform.position.y > 8)
@@ -782,11 +832,22 @@ public class BhbPlayerController : NeonHeightsCharacterController
                 }
                 else
                 {
-                    if ((grounded || velocity.y <= 0) && ball.transform.position.y - transform.position.y > Mathf.Abs(ball.transform.position.x - transform.position.x) * 1.5f && ball.transform.parent != transform)
+                    if (ballScript.isSwipeShot == true)
                     {
-                        return true;
+                        if ((grounded || velocity.y <= 0) && ball.transform.position.y - transform.position.y > Mathf.Abs(ball.transform.position.x - transform.position.x) * .8f && ball.transform.parent != transform)
+                        {
+                            return true;
+                        }
+                        return false;
                     }
-                    return false;
+                    else
+                    {
+                        if ((grounded || velocity.y <= 0) && ball.transform.position.y - transform.position.y > Mathf.Abs(ball.transform.position.x - transform.position.x) * 1.5f && ball.transform.parent != transform)
+                        {
+                            return true;
+                        }
+                        return false;
+                    }
                 }
             }
 
@@ -909,11 +970,23 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
             if (action == Control.Jump)
             {
-                if (ball.transform.position.y - transform.position.y < Mathf.Abs(ball.transform.position.x - transform.position.x) * 1.5f)
+                if (ballScript.isSwipeShot)
                 {
-                    return true;
+                    if (ball.transform.position.y - transform.position.y < Mathf.Abs(ball.transform.position.x - transform.position.x) * .7f)
+                    {
+                        return true;
+                    }
+                    return false;
                 }
-                return false;
+                else
+                {
+                    if (ball.transform.position.y - transform.position.y < Mathf.Abs(ball.transform.position.x - transform.position.x) * 1.5f)
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+
             }
             return false;
 

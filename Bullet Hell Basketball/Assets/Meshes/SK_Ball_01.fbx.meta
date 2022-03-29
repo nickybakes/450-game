@@ -24,6 +24,9 @@ ModelImporter:
   - first:
       74: 6796734881017609550
     second: Armature|Shoot_Air
+  - first:
+      74: 6961911461570681172
+    second: Armature|Swipe_Shot_Grounded.001
   externalObjects: {}
   materials:
     materialImportMode: 2

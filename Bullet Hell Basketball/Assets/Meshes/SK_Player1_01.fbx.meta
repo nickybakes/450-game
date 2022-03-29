@@ -81,6 +81,9 @@ ModelImporter:
   - first:
       74: 1512171635884328679
     second: rig|Shoot_Air.001
+  - first:
+      74: 7190693413171469915
+    second: rig|Swipe_Shot_Grounded
   externalObjects: {}
   materials:
     materialImportMode: 2
