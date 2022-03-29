@@ -28,6 +28,8 @@ public enum AnimationState
     Jump_With_Ball,
     Swipe_Grounded,
     Damage,
+    Shoot_Grounded,
+    Shoot_Air
 
 }
 
@@ -68,9 +70,16 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
     public float autoCatchCooldownTimerMax = 1;
 
+    public float throwCoolDownTimerCurrent = 0;
+    public float throwCoolDownTimerMax = .2f;
+
     public float swipeTimeMax = .23f;
 
     private float swipeTimeCurrent = 0;
+
+    public float shootTimeMax = .24f;
+
+    private float shootTimeCurrent = 0;
 
     public float swipeCooldownTimeMax = .3f;
 
@@ -124,6 +133,29 @@ public class BhbPlayerController : NeonHeightsCharacterController
         }
     }
 
+    public bool IsShooting
+    {
+        get { return shootTimeCurrent < shootTimeMax; }
+        set
+        {
+            if (value)
+            {
+                if (grounded)
+                    SetAnimationState(AnimationState.Shoot_Grounded);
+                else
+                    SetAnimationState(AnimationState.Shoot_Air);
+
+                shootTimeCurrent = 0;
+                velocity = Vector2.zero;
+            }
+            else
+            {
+                shootTimeCurrent = shootTimeMax;
+                autoCatchCooldownTimer = 0;
+            }
+        }
+    }
+
     public bool IsStunned
     {
         get { return stunTimeCurrent < stunTimeMax; }
@@ -134,6 +166,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
                 SetAnimationState(AnimationState.Damage);
                 flashTimeCurrent = 0;
                 IsSwiping = false;
+                IsShooting = false;
                 stunTimeCurrent = 0;
                 // transform.GetChild(2).gameObject.SetActive(false);
                 // transform.GetChild(3).gameObject.SetActive(true);
@@ -166,6 +199,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
     {
         pickupRadius = 5;
         playerHandPos = new Vector3(1.8f, 5.2f, 0.0f);
+        shootTimeCurrent = shootTimeMax;
         swipeTimeCurrent = swipeTimeMax;
         flashTimeCurrent = flashTimeMax;
         soundTimer = 0;
@@ -219,6 +253,10 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
             ball.transform.position = ballHolder.transform.position;
             ball.transform.localScale = ballHolder.transform.localScale;
+            ball.transform.rotation = ballHolder.transform.rotation;
+
+            if (throwCoolDownTimerCurrent <= throwCoolDownTimerMax)
+                throwCoolDownTimerCurrent += Time.deltaTime;
         }
 
 
@@ -270,16 +308,26 @@ public class BhbPlayerController : NeonHeightsCharacterController
         {
             SetAnimationState(AnimationState.Idle_No_Ball);
 
-            if (currentAnimationState == AnimationState.Idle_With_Ball)
-            {
-                dribbleSoundTimerCurrent += Time.deltaTime;
-                if (dribbleSoundTimerCurrent >= dribbleSoundTimerMax)
-                {
-                    dribbleSoundTimerCurrent = 0;
-                    DribbleSound();
-                }
-            }
+        }
 
+        if (currentAnimationState == AnimationState.Idle_With_Ball)
+        {
+            dribbleSoundTimerCurrent += Time.deltaTime;
+            if (dribbleSoundTimerCurrent >= dribbleSoundTimerMax)
+            {
+                dribbleSoundTimerCurrent = 0;
+                DribbleSound();
+            }
+        }
+
+        if (currentAnimationState == AnimationState.Run_Forward_With_Ball || currentAnimationState == AnimationState.Run_Backward_With_Ball)
+        {
+            dribbleSoundTimerCurrent += Time.deltaTime;
+            if (dribbleSoundTimerCurrent >= dribbleSoundTimerMax)
+            {
+                dribbleSoundTimerCurrent = 0;
+                DribbleSound(.8f);
+            }
         }
 
         if (GetControlDown(Control.Jump) && !IsStunned && !jumping && jumpsInAir < jumpsInAirMax)
@@ -299,14 +347,16 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
         if (!ballScript.IsResetting)
         {
-            if (GetControlDown(Control.Action) && !IsStunned)
+            if (GetControlDown(Control.Action) && !IsStunned && !IsShooting)
             {
                 //if holding the ball...
                 if (ball.transform.parent == transform)
                 {
-                    autoCatchCooldownTimer = 0;
-                    IsSwiping = false;
-                    ballScript.ShootBall(playerNumber, false);
+                    if (throwCoolDownTimerCurrent > throwCoolDownTimerMax)
+                    {
+                        IsSwiping = false;
+                        IsShooting = true;
+                    }
                 }
                 else if (!IsSwiping && swipeCooldownTimeCurrent >= swipeCooldownTimeMax && !IsStunned)
                 {
@@ -424,19 +474,38 @@ public class BhbPlayerController : NeonHeightsCharacterController
             }
         }
 
-        if (!IsSwiping)
+        if (IsSwiping)
+        {
+            swipeTimeCurrent += Time.deltaTime;
+            if (swipeTimeCurrent >= swipeTimeMax)
+                IsSwiping = false;
+        }
+        else if (IsShooting)
+        {
+            shootTimeCurrent += Time.deltaTime;
+            if (shootTimeCurrent >= shootTimeMax)
+            {
+                IsShooting = false;
+                ballScript.ShootBall(playerNumber, false);
+                grounded = false;
+                stunTimeCurrent = stunTimeMax * .2f;
+                if (playerNumber == 0)
+                {
+                    velocity = new Vector2(-40, 20);
+                }
+                else
+                {
+                    velocity = new Vector2(40, 20);
+                }
+            }
+        }
+        else
         {
             if (swipeCooldownTimeCurrent < swipeCooldownTimeMax)
             {
                 swipeCooldownTimeCurrent += Time.deltaTime;
             }
             UpdateAugust();
-        }
-        else if (IsSwiping)
-        {
-            swipeTimeCurrent += Time.deltaTime;
-            if (swipeTimeCurrent >= swipeTimeMax)
-                IsSwiping = false;
         }
     }
 
@@ -456,6 +525,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
             BotRandomizeBehavior();
         }
 
+        throwCoolDownTimerCurrent = 0;
         autoCatchCooldownTimer = 0;
         ballPhysics.simulatePhysics = false;
 
@@ -521,7 +591,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
             state++;
         }
 
-        if (IsSwiping && state != AnimationState.Damage || IsStunned)
+        if ((IsSwiping || IsShooting) && state != AnimationState.Damage || IsStunned)
             return;
 
         if (currentAnimationState == state)
@@ -552,6 +622,18 @@ public class BhbPlayerController : NeonHeightsCharacterController
             dribbleSoundTimerCurrent = 0;
         }
 
+        if (state == AnimationState.Run_Forward_With_Ball)
+        {
+            dribbleSoundTimerMax = .48f;
+            dribbleSoundTimerCurrent = .36f;
+        }
+
+        if (state == AnimationState.Run_Backward_With_Ball)
+        {
+            dribbleSoundTimerMax = .48f;
+            dribbleSoundTimerCurrent = .2f;
+        }
+
         currentAnimationState = state;
 
         animator.SetTrigger(state.ToString());
@@ -560,6 +642,11 @@ public class BhbPlayerController : NeonHeightsCharacterController
     public void DribbleSound()
     {
         audioManager.Play("Bounce", .5f);
+    }
+
+    public void DribbleSound(float volume)
+    {
+        audioManager.Play("Bounce", volume);
     }
 
     bool GetControlHeld(Control action)

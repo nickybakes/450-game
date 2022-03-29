@@ -122,7 +122,7 @@ public class GameManager : MonoBehaviour
         panelUI.transform.GetChild(1).GetComponent<Text>().text = "0";
 
         matchTimeText = panelUI.transform.GetChild(2).GetComponent<Text>();
-        matchTimeText.text = TimeSpan.FromSeconds(Mathf.Max(matchTimeCurrent, 0)).ToString("mm\\:ss");
+        matchTimeText.text = TimeSpan.FromSeconds(Mathf.Max(matchTimeCurrent, 0)).ToString("m\\:ss");
 
 
         paused = true;
@@ -245,7 +245,7 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                matchTimeText.text = TimeSpan.FromSeconds(Mathf.Max(matchTimeCurrent, 0)).ToString("mm\\:ss");
+                matchTimeText.text = TimeSpan.FromSeconds(Mathf.Max(matchTimeCurrent, 0)).ToString("m\\:ss");
 
             }
             if (matchTimeCurrent <= 0)

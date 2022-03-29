@@ -69,6 +69,18 @@ ModelImporter:
   - first:
       74: -4284455631332217904
     second: rig|Jump_With_Ball
+  - first:
+      74: 2029689360114572507
+    second: rig|Run_Forward_With_Ball
+  - first:
+      74: 6941108783136169231
+    second: rig|Run_Backward_With_Ball
+  - first:
+      74: 780153874625837643
+    second: rig|Shoot_Grounded.001
+  - first:
+      74: 1512171635884328679
+    second: rig|Shoot_Air.001
   externalObjects: {}
   materials:
     materialImportMode: 2

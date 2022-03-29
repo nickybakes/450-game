@@ -12,6 +12,18 @@ ModelImporter:
   - first:
       74: 1079665108409675491
     second: Armature|Jump
+  - first:
+      74: 2737863825371374704
+    second: Armature|Run_Forwards
+  - first:
+      74: 7479363773414906017
+    second: Armature|Run_Backwards
+  - first:
+      74: -467271610428763438
+    second: Armature|Shoot_Grounded
+  - first:
+      74: 6796734881017609550
+    second: Armature|Shoot_Air
   externalObjects: {}
   materials:
     materialImportMode: 2
