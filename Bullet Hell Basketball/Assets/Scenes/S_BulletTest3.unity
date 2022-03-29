@@ -1025,8 +1025,12 @@ MonoBehaviour:
   indicatorShevron: {fileID: 193353531}
   gameOver: 0
   paused: 0
+  overTime: 0
   player1Score: 0
   player2Score: 0
+  previousScorer: -1
+  player1IsBot: 0
+  player2IsBot: 0
   winConditionMet: 0
 --- !u!4 &413587147
 Transform:
@@ -1525,7 +1529,15 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 5370311947778578656, guid: f5dd710dd082b174b94806c38794438e, type: 3}
+      propertyPath: movement
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5370311947778578656, guid: f5dd710dd082b174b94806c38794438e, type: 3}
       propertyPath: ownerNumber
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5370311947778578656, guid: f5dd710dd082b174b94806c38794438e, type: 3}
+      propertyPath: startsRight
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5370311947778578656, guid: f5dd710dd082b174b94806c38794438e, type: 3}
@@ -2187,6 +2199,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5370311947778578656, guid: f5dd710dd082b174b94806c38794438e, type: 3}
+      propertyPath: movement
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5370311947778578657, guid: f5dd710dd082b174b94806c38794438e, type: 3}
       propertyPath: m_RootOrder
       value: 16
@@ -4463,7 +4479,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collisionVertexPrefab: {fileID: 2382589878411412825, guid: de94585aa4ffe794c8cc1e98a3d925ff, type: 3}
   collisionSegmentPrefab: {fileID: 71431853401964895, guid: 2d19e55d322709d41b35224430022a18, type: 3}
-  editorUpdateFrame: 1
+  editorUpdateFrame: 0
   vertexColor: {r: 1, g: 0, b: 0, a: 1}
   segmentColor: {r: 1, g: 0, b: 0, a: 1}
   semiSolidPlatformColor: {r: 0, g: 0, b: 1, a: 1}

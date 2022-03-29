@@ -42,11 +42,12 @@ public class BulletManager : MonoBehaviour
     public float distanceTravelled;
     private Vector3 newPosition;
     public bool startsRight;
-    public bool isRight;
+    private bool isRight;
     private bool reachedOppositeSide = false;
 
     //Add some sort of level up system, and different directions bullets shoot
-    //Make more variables so arc movement ca  work
+    //Make more variables so arc movement can work
+    private bool otherSide = false;
 
     // Start is called before the first frame update
     void Start()
@@ -172,6 +173,10 @@ public class BulletManager : MonoBehaviour
             case Movement.upDown:
                 sideToSide(false);
                 break;
+
+            case Movement.arc:
+                ArcMovement();
+                break;
         }
 
 
@@ -223,6 +228,59 @@ public class BulletManager : MonoBehaviour
 
     }
 
+    private void ArcMovement()
+    {
+        if (rotationSpeed > 0)
+        {
+            if (currentAngle < 3 && !otherSide)
+            {
+                moveAroundPoint();
+            }
+
+            if (currentAngle >= 3)
+            {
+                otherSide = true;
+            }
+
+            if (otherSide)
+            {
+                currentAngle -= angularSpeed * Time.deltaTime;
+                Vector3 offset = new Vector3(Mathf.Sin(currentAngle), Mathf.Cos(currentAngle), fixedPoint.z) * radius;
+                transform.position = fixedPoint + offset;
+            }
+
+            if (currentAngle <= 0 && otherSide)
+            {
+                otherSide = false;
+            }
+        }
+
+        else
+        {
+            if (currentAngle > - 3 && !otherSide)
+            {
+                moveAroundPoint();
+            }
+
+            if (currentAngle <= -3)
+            {
+                otherSide = true;
+            }
+
+            if (otherSide)
+            {
+                currentAngle -= angularSpeed * Time.deltaTime;
+                Vector3 offset = new Vector3(Mathf.Sin(currentAngle), Mathf.Cos(currentAngle), fixedPoint.z) * radius;
+                transform.position = fixedPoint + offset;
+            }
+
+            if (currentAngle >= 0 && otherSide)
+            {
+                otherSide = false;
+            }
+        }
+    }
+
     
 
     /// <summary>
@@ -244,7 +302,9 @@ public class BulletManager : MonoBehaviour
         return value;
     } 
 
-    //When someone scores, this is called
+    /// <summary>
+    /// Resets the launchers when the ball is scored
+    /// </summary>
     public void RoundReset(){
         transform.position = fixedPoint;
         timer = maxTime;
