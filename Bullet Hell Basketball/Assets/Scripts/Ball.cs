@@ -104,7 +104,7 @@ public class Ball : MonoBehaviour
         if (transform.parent == null)
             transform.localScale = Vector3.one;
             
-        if (physics.simulatePhysics)
+        if (physics.simulatePhysics || transform.parent != null)
             isSwipeShot = false;
 
         if (transform.position.x > gameManager.horizontalEdge && transform.parent == null)
