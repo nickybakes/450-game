@@ -417,6 +417,9 @@ public class Ball : MonoBehaviour
     {
         Vector3[] drawnParabola = new Vector3[arraySize];
 
+        //keeps preview line on z=0.
+        start.z = 0;
+
         //t is a value from 0 to 1 for time, convert arraySize (equally spaced points) into decimal values between this.
         for (int i = 0; i < arraySize; i++)
         {
