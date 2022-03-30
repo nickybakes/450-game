@@ -179,10 +179,16 @@ MonoBehaviour:
   ballAnimator: {fileID: 4171130650560404255}
   ballHolder: {fileID: 7283189372690240402}
   currentAnimationState: 0
+  dribbleSoundTimerCurrent: 0
+  dribbleSoundTimerMax: 0.24
   facingRight: 1
   swipeVisual: {fileID: 5608001533528977418}
   autoCatchCooldownTimerMax: 0.67
+  throwCoolDownTimerCurrent: 0
+  throwCoolDownTimerMax: 0.2
   swipeTimeMax: 0.25
+  shootTimeMax: 0.24
+  swipeShotTimeMax: 0.4
   swipeCooldownTimeMax: 0.35
   flashTimeMax: 0.1
   stunTimeMax: 0.2
@@ -545,7 +551,7 @@ PrefabInstance:
     - target: {fileID: -1607111363038289950, guid: 8fc1207e94675414bacf20a1aa6db335, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 4dba7a1e4c47c6840aa26ed8ec25541f, type: 2}
+      objectReference: {fileID: 2100000, guid: 8447f2848d1f3644aae8351617c3f31d, type: 2}
     - target: {fileID: 919132149155446097, guid: 8fc1207e94675414bacf20a1aa6db335, type: 3}
       propertyPath: m_Name
       value: SK_Player1_01

@@ -602,6 +602,9 @@ public class BhbPlayerController : NeonHeightsCharacterController
         }
         ball.transform.parent = gameObject.transform;
 
+
+        if(currentAnimationState == AnimationState.Jump_No_Ball)
+            ballAnimator.SetTrigger(AnimationState.Fall_With_Ball.ToString());
     }
 
 

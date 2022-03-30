@@ -53,7 +53,6 @@ MonoBehaviour:
     source: {fileID: 0}
   - name: Net
     clips:
-    - {fileID: 8300000, guid: 6c3bc790180c3b94fb44e78e1f79ddff, type: 3}
     - {fileID: 8300000, guid: 22b550f5b32ff764d9d278841e9e59e6, type: 3}
     - {fileID: 8300000, guid: e559300e7a6e39341b8c65b3768c47a1, type: 3}
     - {fileID: 8300000, guid: 641304a3d3502e24b911a12cafecd035, type: 3}
