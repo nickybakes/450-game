@@ -100,6 +100,9 @@ public class BulletManager : MonoBehaviour
         timer = maxTime;
         rotationAmountDegrees = 0;
         currentAngle = 0;
+
+        //Add new patterns
+        transform.position = fixedPoint;
     }
 
     private void FixedUpdate()
