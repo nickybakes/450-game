@@ -123,7 +123,7 @@ MonoBehaviour:
     clips:
     - {fileID: 8300000, guid: a0e465694e23dd14da72618fc3100a10, type: 3}
     - {fileID: 8300000, guid: 8d686f6ed9e81314891f18a0747739f3, type: 3}
-    volume: 0.1
+    volume: 0.2
     pitch: 1
     loop: 0
     source: {fileID: 0}

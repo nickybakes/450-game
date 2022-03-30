@@ -290,7 +290,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
         //If you just landed, plays landing sound.
         if (!prevGrounded && grounded)
         {
-            audioManager.Play("JumpEnd", 0.9f, 1.1f);
+            audioManager.Play("JumpEnd", 0.8f, 1.0f);
         }
 
         if (GetControlHeld(Control.Left) && !IsStunned)

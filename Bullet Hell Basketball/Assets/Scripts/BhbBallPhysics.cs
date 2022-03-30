@@ -164,7 +164,7 @@ public class BhbBallPhysics : NeonHeightsPhysicsObject
         if (isCollidingWithWall)
         {
             //use x velocity
-            if (Mathf.Abs(velocity.x) > 3)
+            if (Mathf.Abs(velocity.x) > 5)
             {
                 audioManager.Play("Bounce", Mathf.Abs(velocity.x) / 20);
             }
@@ -172,7 +172,7 @@ public class BhbBallPhysics : NeonHeightsPhysicsObject
         else
         {
             //use y velocity
-            if (Mathf.Abs(velocity.y) > 3)
+            if (Mathf.Abs(velocity.y) > 5)
             {
                 audioManager.Play("Bounce", Mathf.Abs(velocity.y) / 20);
             }
