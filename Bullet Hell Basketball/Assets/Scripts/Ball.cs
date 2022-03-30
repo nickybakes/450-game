@@ -29,7 +29,7 @@ public class Ball : MonoBehaviour
     public GameObject rightBasket;
 
     private AudioManager audioManager;
-    private bool midairIsPlaying = false;
+    private Sound midAir;
 
     public GameObject currentTarget;
     private GameManager gameManager;
@@ -94,6 +94,11 @@ public class Ball : MonoBehaviour
         lineRenderer.positionCount = previewArcSmoothness;
         audioManager = FindObjectOfType<AudioManager>();
         IsResetting = false;
+
+        //preset midair sounds.
+        midAir = audioManager.Find("Midair");
+        midAir.source.volume = 0;
+        audioManager.Play("Midair");
     }
 
     // Update is called once per frame
@@ -553,16 +558,15 @@ public class Ball : MonoBehaviour
     /// </summary>
     private void PlayMidairSound()
     {
-        //turns on midair sound if velocity is above threshhold
-        if (physics.velocity.magnitude > 20 && !midairIsPlaying)
-        {
-            audioManager.Play("Midair");
-            midairIsPlaying = true;
-        }
+        //changes volume based on ball's velocity.
+        float midairVolume;
+
+        //if it's being held, volume = 0.
+        if (transform.parent != null)
+            midairVolume = 0;
         else
-        {
-            audioManager.Stop("Midair");
-            midairIsPlaying = false;
-        }
+            midairVolume = Mathf.Pow(physics.velocity.magnitude / 100, 2);
+
+        midAir.source.volume = midairVolume;
     }
 }
