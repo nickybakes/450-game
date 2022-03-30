@@ -565,7 +565,7 @@ public class Ball : MonoBehaviour
         if (transform.parent != null)
             midairVolume = 0;
         else
-            midairVolume = Mathf.Pow(physics.velocity.magnitude / 100, 2);
+            midairVolume = Mathf.Pow(physics.velocity.magnitude / 50, 3);
 
         midAir.source.volume = midairVolume;
     }

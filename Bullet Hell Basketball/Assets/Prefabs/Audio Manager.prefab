@@ -47,7 +47,7 @@ MonoBehaviour:
   - name: Music
     clips:
     - {fileID: 8300000, guid: dbc9ad23120cd9a4bb4ca808bc0107c9, type: 3}
-    volume: 0
+    volume: 0.05
     pitch: 1
     loop: 1
     source: {fileID: 0}
@@ -116,7 +116,7 @@ MonoBehaviour:
   - name: SwipeShot
     clips:
     - {fileID: 8300000, guid: 76c69d84f283122448aefda1b0af96f3, type: 3}
-    volume: 0.5
+    volume: 0.3
     pitch: 1
     loop: 0
     source: {fileID: 0}
