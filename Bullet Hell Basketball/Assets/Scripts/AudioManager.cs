@@ -124,6 +124,22 @@ public class AudioManager : MonoBehaviour
     #endregion
 
     /// <summary>
+    /// Stops audioclip.
+    /// </summary>
+    /// <param name="name">Name of audioclip</param>
+    public void Stop(string name)
+    {
+        Sound s = Array.Find(sounds, sound => sound.name == name);
+        if (s == null)
+        {
+            Debug.LogWarning("Sound: " + name + " not found!");
+            return;
+        }
+
+        s.source.Stop();
+    }
+
+    /// <summary>
     /// Finds audioclip. (Useful for changing volume/pitch)
     /// </summary>
     /// <param name="name">Name of audioclip</param>

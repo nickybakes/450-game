@@ -287,7 +287,11 @@ public class BhbPlayerController : NeonHeightsCharacterController
                 throwCoolDownTimerCurrent += Time.deltaTime;
         }
 
-
+        //If you just landed, plays landing sound.
+        if (!prevGrounded && grounded)
+        {
+            audioManager.Play("JumpEnd", 0.9f, 1.1f);
+        }
 
         if (GetControlHeld(Control.Left) && !IsStunned)
         {
@@ -360,6 +364,9 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
         if (GetControlDown(Control.Jump) && !IsStunned && !jumping && jumpsInAir < jumpsInAirMax)
         {
+            //Plays jump start sound.
+            audioManager.Play("Jump");
+
             jumping = true;
             SetAnimationStateAlways(AnimationState.Jump_No_Ball);
         }

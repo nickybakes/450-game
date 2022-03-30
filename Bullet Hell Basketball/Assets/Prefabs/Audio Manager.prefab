@@ -47,7 +47,7 @@ MonoBehaviour:
   - name: Music
     clips:
     - {fileID: 8300000, guid: dbc9ad23120cd9a4bb4ca808bc0107c9, type: 3}
-    volume: 0.1
+    volume: 0
     pitch: 1
     loop: 1
     source: {fileID: 0}
@@ -58,7 +58,7 @@ MonoBehaviour:
     - {fileID: 8300000, guid: e559300e7a6e39341b8c65b3768c47a1, type: 3}
     - {fileID: 8300000, guid: 641304a3d3502e24b911a12cafecd035, type: 3}
     - {fileID: 8300000, guid: 99fd35ef50427ce49b3fb10c0a157cc1, type: 3}
-    volume: 0.5
+    volume: 0.8
     pitch: 1
     loop: 0
     source: {fileID: 0}
@@ -103,6 +103,43 @@ MonoBehaviour:
     clips:
     - {fileID: 8300000, guid: b5280b3ae298f5f4587d46ae7b6e71e6, type: 3}
     volume: 0.3
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Dunk
+    clips:
+    - {fileID: 8300000, guid: 9ca89235855b46c46a68ecab85336353, type: 3}
+    volume: 0.3
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: SwipeShot
+    clips:
+    - {fileID: 8300000, guid: 76c69d84f283122448aefda1b0af96f3, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Jump
+    clips:
+    - {fileID: 8300000, guid: a0e465694e23dd14da72618fc3100a10, type: 3}
+    - {fileID: 8300000, guid: 8d686f6ed9e81314891f18a0747739f3, type: 3}
+    volume: 0.1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: JumpEnd
+    clips:
+    - {fileID: 8300000, guid: c2c31db9102c08f41ad670951fbc811c, type: 3}
+    - {fileID: 8300000, guid: 5c7d9d3dddf0d144f826e557f187b3cb, type: 3}
+    volume: 0.2
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Midair
+    clips:
+    - {fileID: 8300000, guid: c7fb5b22e2db42a499577fae3f0ac365, type: 3}
+    volume: 1
     pitch: 1
     loop: 0
     source: {fileID: 0}

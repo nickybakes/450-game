@@ -29,6 +29,7 @@ public class Ball : MonoBehaviour
     public GameObject rightBasket;
 
     private AudioManager audioManager;
+    private bool midairIsPlaying = false;
 
     public GameObject currentTarget;
     private GameManager gameManager;
@@ -138,15 +139,20 @@ public class Ball : MonoBehaviour
                 IsResetting = false;
         }
 
+        PlayMidairSound();
 
         if (transform.parent == null && physics.simulatePhysics == false)
         {
+
             //If the ball is too far away from the basket, boolWillHit = false.
             if (calculateOnce)
             {
                 //check whether the ball was thrown from the side with the target basket
                 if (isSwipeShot)
                 {
+                    //plays swipe shot audio.
+                    audioManager.Play("SwipeShot", 0.9f, 1.1f);
+
                     boolWillHit = true;
                     calculateOnce = false;
                     if (currentTarget == leftBasket)
@@ -172,7 +178,7 @@ public class Ball : MonoBehaviour
                     }
                     calculateOnce = false;
                 }
-
+                
                 //so it's not calculated at runtime
                 heightMod = HeightModifier();
 
@@ -321,7 +327,6 @@ public class Ball : MonoBehaviour
             //only if the ball goes in from top or from dunk
             if ((physics.velocity.y < 0 && transform.parent == null) || transform.parent != null)
             {
-                audioManager.Play("Net", 0.8f, 1.2f);
                 if (collision.collider.gameObject == gameManager.rightBasket)
                 {
                     ScoreRightBasket();
@@ -469,6 +474,9 @@ public class Ball : MonoBehaviour
     /// </summary>
     private void ScoreRightBasket()
     {
+        //Plays net sound.
+        audioManager.Play("Net", 0.8f, 1.2f);
+
         //changes position of ball so it goes 'through' the basket.
         transform.position = new Vector3(gameManager.rightBasket.transform.GetChild(0).transform.position.x, transform.position.y, transform.position.z);
 
@@ -499,6 +507,9 @@ public class Ball : MonoBehaviour
     /// </summary>
     private void ScoreLeftBasket()
     {
+        //Plays net sound.
+        audioManager.Play("Net", 0.8f, 1.2f);
+
         //changes position of ball so it goes 'through' the basket.
         transform.position = new Vector3(gameManager.leftBasket.transform.GetChild(0).transform.position.x, transform.position.y, transform.position.z);
 
@@ -535,5 +546,23 @@ public class Ball : MonoBehaviour
             gameManager.EndGame();
         else
             IsResetting = true;
+    }
+
+    /// <summary>
+    /// Plays midair sounds when ball is above certain velocity magnitude
+    /// </summary>
+    private void PlayMidairSound()
+    {
+        //turns on midair sound if velocity is above threshhold
+        if (physics.velocity.magnitude > 20 && !midairIsPlaying)
+        {
+            audioManager.Play("Midair");
+            midairIsPlaying = true;
+        }
+        else
+        {
+            audioManager.Stop("Midair");
+            midairIsPlaying = false;
+        }
     }
 }
