@@ -242,11 +242,16 @@ public class GameManager : MonoBehaviour
             if (matchTimeCurrent <= 10)
             {
                 matchTimeText.text = Mathf.Max(matchTimeCurrent, 0).ToString("0.000");
+
+                //changes text color to pulsing red, increases font size.
+                float changingColor = Mathf.Cos(matchTimeCurrent % 2);
+
+                matchTimeText.color = new Color(255, changingColor, changingColor);
+                matchTimeText.fontSize = 100;
             }
             else
             {
                 matchTimeText.text = TimeSpan.FromSeconds(Mathf.Max(matchTimeCurrent, 0)).ToString("m\\:ss");
-
             }
             if (matchTimeCurrent <= 0)
             {
@@ -353,6 +358,8 @@ public class GameManager : MonoBehaviour
         blueShevrons.SetActive(false);
 
         panelUI.SetActive(true);
+        matchTimeText.fontSize = 75;
+        matchTimeText.color = new Color(255, 255, 255);
     }
 
     /// <summary>
