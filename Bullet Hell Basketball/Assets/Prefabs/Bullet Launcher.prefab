@@ -104,6 +104,6 @@ MonoBehaviour:
   player2Mat: {fileID: 2100000, guid: 3407e409d81f1cd48987fe565ee9c014, type: 2}
   gameManager: {fileID: 0}
   movement: 0
-  distanceTravelled: 20
+  bulletPattern: 0
+  distanceTravelled: 35
   startsRight: 0
-  isRight: 0

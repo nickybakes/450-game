@@ -131,6 +131,15 @@ public class BulletManager : MonoBehaviour
                 case BulletPatterns.omni:
                     OmniPattern();
                     break;
+
+                case BulletPatterns.front:
+
+                    if (ownerNumber == 0)
+                        OneDirectionPatter(0);
+
+                    else OneDirectionPatter(180);
+                    
+                    break;
             }
             
             if(ownerNumber == 0){
@@ -312,6 +321,13 @@ public class BulletManager : MonoBehaviour
         }
     }
 
+    private void OneDirectionPatter(float angle)
+    {
+        GameObject newBullet = BulletSetup();
+        Bullet bulletScript = newBullet.GetComponent<Bullet>();
+        bulletScript.direction = new Vector2(Mathf.Cos(Mathf.Deg2Rad * (angle)), Mathf.Sin(Mathf.Deg2Rad * (angle)));
+    }
+
     
 
     /// <summary>
@@ -332,26 +348,4 @@ public class BulletManager : MonoBehaviour
 
         return value;
     } 
-
-    /// <summary>
-    /// Resets the launchers when the ball is scored
-    /// </summary>
-    public void RoundReset(){
-        transform.position = fixedPoint;
-        timer = maxTime;
-        //Somehow delete bullets?
-    }
-
-    /// <summary>
-    /// Called when the level increases
-    /// </summary>
-    public void LevelUp()
-    {
-        maxTime = maxTime / 2;
-
-        if(maxTime < 0.375f)
-        {
-            maxTime = 0.375f;
-        }
-    }
 }

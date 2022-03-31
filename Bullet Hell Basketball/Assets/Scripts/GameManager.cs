@@ -373,8 +373,6 @@ public class GameManager : MonoBehaviour
 
         audioManager.Play("Buzzer");
 
-        
-
         paused = true;
         gameOver = true;
         overTime = false;
