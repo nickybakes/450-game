@@ -410,6 +410,7 @@ public class GameManager : MonoBehaviour
             ball.transform.position = new Vector2(player1SpawnPosition.x + 5, player1SpawnPosition.y + 10);
         }
 
+        ballControlScript.lineRenderer.enabled = false;
         ball.transform.parent = null;
         ballPhysicsScript.velocity = Vector2.zero;
 
