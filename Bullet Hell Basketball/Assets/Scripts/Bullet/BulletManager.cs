@@ -123,6 +123,14 @@ public class BulletManager : MonoBehaviour
 
         if (timer <= 0)
         {
+            //Changes the bullet pattern
+            switch (bulletPattern)
+            {
+                case BulletPatterns.omni:
+                    break;
+
+            }
+
             for (int i = 0; i < 360; i += 90)
             {
                 GameObject newBullet = Instantiate(bullet);
@@ -188,16 +196,6 @@ public class BulletManager : MonoBehaviour
                 ArcMovement();
                 break;
         }
-
-        //Changes the bullet pattern
-        switch (bulletPattern)
-        {
-            case: BulletPatterns.omni:
-                  break;
-
-             
-        }
-
     }
 
     //Spawner movement helper methods
