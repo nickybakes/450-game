@@ -57,6 +57,8 @@ public class BulletManager : MonoBehaviour
     //Make more variables so arc movement can work
     private bool otherSide = false;
 
+    public bool destroyOnReload; //This is for any extra spawners that need to be deleted when the game is reset
+
     // Start is called before the first frame update
     void Start()
     {
@@ -75,15 +77,15 @@ public class BulletManager : MonoBehaviour
         gameManager = FindObjectOfType<GameManager>();
 
         //Changes material based on the spawner owner
-        // if(ownerNumber == 0)
-        // {
-        //     meshRenderer.material = player1Mat;
-        // }
+         if(ownerNumber == 0)
+         {
+             meshRenderer.material = player1Mat;
+         }
 
-        // else
-        // {
-        //     meshRenderer.material = player2Mat;
-        // }
+         else
+         {
+             meshRenderer.material = player2Mat;
+         }
 
         ogPosition = transform.position;
 
@@ -108,6 +110,7 @@ public class BulletManager : MonoBehaviour
         timer = maxTime;
         rotationAmountDegrees = 0;
         currentAngle = 0;
+        bulletPattern = BulletPatterns.front;
 
         //Add new patterns
         transform.position = fixedPoint;
