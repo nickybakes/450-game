@@ -11,6 +11,12 @@ public enum Movement
     none
 }
 
+public enum BulletPatterns
+{
+    omni,
+    front
+}
+
 public class BulletManager : MonoBehaviour
 {
     public GameObject bullet;
@@ -38,6 +44,7 @@ public class BulletManager : MonoBehaviour
 
     //Movement
     public Movement movement;
+    public BulletPatterns bulletPattern;
     private Vector3 ogPosition;
     public float distanceTravelled;
     private Vector3 newPosition;
@@ -182,6 +189,14 @@ public class BulletManager : MonoBehaviour
                 break;
         }
 
+        //Changes the bullet pattern
+        switch (bulletPattern)
+        {
+            case: BulletPatterns.omni:
+                  break;
+
+             
+        }
 
     }
 
@@ -237,7 +252,9 @@ public class BulletManager : MonoBehaviour
         {
             if (currentAngle < 3 && !otherSide)
             {
-                moveAroundPoint();
+                currentAngle += angularSpeed * Time.deltaTime;
+                Vector3 offset = new Vector3(Mathf.Sin(currentAngle), Mathf.Cos(currentAngle), fixedPoint.z) * radius;
+                transform.position = fixedPoint + offset;
             }
 
             if (currentAngle >= 3)
@@ -282,6 +299,12 @@ public class BulletManager : MonoBehaviour
                 otherSide = false;
             }
         }
+    }
+
+    //Bullet patters
+    private void OmniPattern()
+    {
+
     }
 
     
