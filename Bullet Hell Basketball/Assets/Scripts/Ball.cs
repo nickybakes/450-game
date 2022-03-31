@@ -155,7 +155,7 @@ public class Ball : MonoBehaviour
                 //check whether the ball was thrown from the side with the target basket
                 if (isSwipeShot)
                 {
-                    //plays swipe shot audio.
+                    //Plays swipe shot audio.
                     audioManager.Play("SwipeShot", 0.9f, 1.1f);
 
                     boolWillHit = true;
@@ -171,6 +171,10 @@ public class Ball : MonoBehaviour
                 }
                 else
                 {
+                    //Plays shot audio.
+                    audioManager.Play("Shot", 0.9f, 1.1f);
+                    Debug.Log("regular shot");
+
                     if (currentTarget == leftBasket)
                     {
                         threePointShot = transform.position.x > 0;

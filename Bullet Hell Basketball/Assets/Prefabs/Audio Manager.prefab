@@ -112,6 +112,14 @@ MonoBehaviour:
     pitch: 1
     loop: 0
     source: {fileID: 0}
+  - name: Shot
+    clips:
+    - {fileID: 8300000, guid: 1e5d71bc49fb5e84bbe17b2236db4e34, type: 3}
+    - {fileID: 8300000, guid: 73ad1ea597ee12f4497ba484c9c1eede, type: 3}
+    volume: 0.2
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
   - name: SwipeShot
     clips:
     - {fileID: 8300000, guid: 76c69d84f283122448aefda1b0af96f3, type: 3}
@@ -137,8 +145,8 @@ MonoBehaviour:
     source: {fileID: 0}
   - name: Midair
     clips:
-    - {fileID: 8300000, guid: c7fb5b22e2db42a499577fae3f0ac365, type: 3}
+    - {fileID: 8300000, guid: c686c49712e14984f8ced03da3a44bd6, type: 3}
     volume: 1
     pitch: 1
-    loop: 0
+    loop: 1
     source: {fileID: 0}
