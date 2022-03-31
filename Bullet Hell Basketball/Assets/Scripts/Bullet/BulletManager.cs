@@ -11,6 +11,12 @@ public enum Movement
     none
 }
 
+public enum BulletPatterns
+{
+    omni,
+    front
+}
+
 public class BulletManager : MonoBehaviour
 {
     public GameObject bullet;
@@ -38,6 +44,7 @@ public class BulletManager : MonoBehaviour
 
     //Movement
     public Movement movement;
+    public BulletPatterns bulletPattern;
     private Vector3 ogPosition;
     public float distanceTravelled;
     private Vector3 newPosition;
@@ -116,30 +123,14 @@ public class BulletManager : MonoBehaviour
 
         if (timer <= 0)
         {
-            for (int i = 0; i < 360; i += 90)
+
+
+            //Changes the bullet pattern
+            switch (bulletPattern)
             {
-                GameObject newBullet = Instantiate(bullet);
-                newBullet.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, 0.0f);
-
-                Bullet bulletScript = newBullet.GetComponent<Bullet>();
-                bulletScript.ownerNumber = ownerNumber;
-                bulletScript.gameManager = gameManager;
-                bulletScript.direction = new Vector2(Mathf.Cos(Mathf.Deg2Rad * (rotationAmountDegrees + i)), Mathf.Sin(Mathf.Deg2Rad * (rotationAmountDegrees + i)));
-
-                MeshRenderer bulletMesh = newBullet.GetComponent<MeshRenderer>();
-
-                if (bulletScript.ownerNumber == 0)
-                {
-                    bulletMesh.material = player1Mat;
-                }
-
-                else
-                {
-                    bulletMesh.material = player2Mat;
-                }
-
-
-                
+                case BulletPatterns.omni:
+                    OmniPattern();
+                    break;
             }
             
             if(ownerNumber == 0){
@@ -181,8 +172,6 @@ public class BulletManager : MonoBehaviour
                 ArcMovement();
                 break;
         }
-
-
     }
 
     //Spawner movement helper methods
@@ -237,7 +226,9 @@ public class BulletManager : MonoBehaviour
         {
             if (currentAngle < 3 && !otherSide)
             {
-                moveAroundPoint();
+                currentAngle += angularSpeed * Time.deltaTime;
+                Vector3 offset = new Vector3(Mathf.Sin(currentAngle), Mathf.Cos(currentAngle), fixedPoint.z) * radius;
+                transform.position = fixedPoint + offset;
             }
 
             if (currentAngle >= 3)
@@ -281,6 +272,43 @@ public class BulletManager : MonoBehaviour
             {
                 otherSide = false;
             }
+        }
+    }
+
+    
+    //Method of all the shared methods that set up bullets
+    private GameObject BulletSetup()
+    {
+        GameObject newBullet = Instantiate(bullet);
+        newBullet.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, 0.0f);
+        Bullet bulletScript = newBullet.GetComponent<Bullet>();
+        bulletScript.ownerNumber = ownerNumber;
+        bulletScript.gameManager = gameManager;
+        MeshRenderer bulletMesh = newBullet.GetComponent<MeshRenderer>();
+
+        if (bulletScript.ownerNumber == 0)
+        {
+            bulletMesh.material = player1Mat;
+        }
+
+        else
+        {
+            bulletMesh.material = player2Mat;
+        }
+
+        return newBullet;
+    }
+    
+    
+    
+    //Bullet patters
+    private void OmniPattern()
+    {
+        for (int i = 0; i < 360; i += 90)
+        {
+            GameObject newBullet = BulletSetup();
+            Bullet bulletScript = newBullet.GetComponent<Bullet>();
+            bulletScript.direction = new Vector2(Mathf.Cos(Mathf.Deg2Rad * (rotationAmountDegrees + i)), Mathf.Sin(Mathf.Deg2Rad * (rotationAmountDegrees + i)));
         }
     }
 

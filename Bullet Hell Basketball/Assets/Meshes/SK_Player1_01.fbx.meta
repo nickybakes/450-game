@@ -84,7 +84,12 @@ ModelImporter:
   - first:
       74: 7190693413171469915
     second: rig|Swipe_Shot_Grounded
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: yellow
+    second: {fileID: 2100000, guid: 8447f2848d1f3644aae8351617c3f31d, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

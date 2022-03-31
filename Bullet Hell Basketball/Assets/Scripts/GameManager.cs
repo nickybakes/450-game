@@ -1,9 +1,6 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
-using System.Collections;
-using System.Collections.Generic;
-using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -67,6 +64,15 @@ public class GameManager : MonoBehaviour
     public GameObject tempHud;
     public GameObject panelUI;
 
+    private BulletManager[] bulletManagers;
+    public int bulletLevel;
+    private bool increaseLevelOnce;
+    private Text bulletLevelUI;
+    private Text bulletIncreaseUI;
+    private float bulletTimerUI;
+
+    public int bulletLevelUpInterval;
+
     public GameObject playerOneWins;
     public GameObject playerTwoWins;
 
@@ -112,6 +118,16 @@ public class GameManager : MonoBehaviour
         matchTimeCurrent = matchTimeMax;
         player1Score = 0;
         player2Score = 0;
+        bulletLevel = 1;
+        bulletTimerUI = 0;
+        increaseLevelOnce = true;
+
+        //lowest interval is 5 seconds.
+        if (bulletLevelUpInterval <= 4)
+            bulletLevelUpInterval = 30;
+
+        bulletLevelUI = panelUI.transform.GetChild(6).GetComponent<Text>();
+        bulletIncreaseUI = panelUI.transform.GetChild(5).GetComponent<Text>();
 
         audioManager = FindObjectOfType<AudioManager>();
 
@@ -120,6 +136,9 @@ public class GameManager : MonoBehaviour
         panelUI.transform.GetChild(0).GetComponent<Text>().text = "0";
         //player 2.
         panelUI.transform.GetChild(1).GetComponent<Text>().text = "0";
+
+        //bullet level
+        bulletLevelUI.text = "Bullets Level: " + bulletLevel;
 
         matchTimeText = panelUI.transform.GetChild(2).GetComponent<Text>();
         matchTimeText.text = TimeSpan.FromSeconds(Mathf.Max(matchTimeCurrent, 0)).ToString("m\\:ss");
@@ -171,6 +190,9 @@ public class GameManager : MonoBehaviour
         panelUI.transform.GetChild(1).GetComponent<Text>().text = player2Score.ToString();
         panelUI.transform.GetChild(0).GetComponent<Text>().text = player1Score.ToString();
 
+        //sets bullet level back to 1.
+        bulletLevelUI.text = "Bullets Level: " + bulletLevel;
+
         playerOneWins.SetActive(false);
         playerTwoWins.SetActive(false);
         previousScorer = -1;
@@ -187,7 +209,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        BulletManager[] bulletManagers = FindObjectsOfType<BulletManager>();
+        bulletManagers = FindObjectsOfType<BulletManager>();
 
         for (int i = 0; i < bulletManagers.Length; i++)
         {
@@ -242,11 +264,16 @@ public class GameManager : MonoBehaviour
             if (matchTimeCurrent <= 10)
             {
                 matchTimeText.text = Mathf.Max(matchTimeCurrent, 0).ToString("0.000");
+
+                //changes text color to pulsing red, increases font size.
+                float changingColor = Mathf.Cos(matchTimeCurrent % 2);
+
+                matchTimeText.color = new Color(255, changingColor, changingColor);
+                matchTimeText.fontSize = 100;
             }
             else
             {
                 matchTimeText.text = TimeSpan.FromSeconds(Mathf.Max(matchTimeCurrent, 0)).ToString("m\\:ss");
-
             }
             if (matchTimeCurrent <= 0)
             {
@@ -287,6 +314,43 @@ public class GameManager : MonoBehaviour
         //{
         // End the game
         //}
+
+
+        //Shows bullets increased UI element on regular interval.
+        ShowBulletIncreaseUI();
+    }
+
+    /// <summary>
+    /// Used in update every [30]seconds to show "Bullets++" to the screen.
+    /// Will most likely be changed to only work after some amt of time + on a basket.
+    /// </summary>
+    private void ShowBulletIncreaseUI()
+    {
+        //If timer is at 30 second interval, show bullet increased UI element for [3] seconds.
+        if ((int)matchTimeCurrent % bulletLevelUpInterval == 0 && matchTimeCurrent > 5)
+        {
+            if (increaseLevelOnce)
+            {
+                bulletLevel++;
+                increaseLevelOnce = false;
+            }
+            bulletIncreaseUI.gameObject.SetActive(true);
+            bulletLevelUI.text = "Bullets Level: " + bulletLevel;
+
+            bulletTimerUI += Time.deltaTime;
+        }
+        else if (matchTimeCurrent <= 0 || bulletTimerUI >= 3)
+        {
+            bulletIncreaseUI.gameObject.SetActive(false);
+            increaseLevelOnce = true;
+            bulletTimerUI = 0;
+        }
+
+        //starts timer
+        if (!increaseLevelOnce)
+        {
+            bulletTimerUI += Time.deltaTime;
+        }
     }
 
     public void ToggleHowToPlay()
@@ -316,6 +380,7 @@ public class GameManager : MonoBehaviour
         overTime = false;
         player1Score = 0;
         player2Score = 0;
+        bulletLevel = 1;
     }
 
     public void ResetPlayersAndBall()
@@ -328,6 +393,9 @@ public class GameManager : MonoBehaviour
 
         player1.transform.position = player1SpawnPosition;
         player2.transform.position = player2SpawnPosition;
+
+        player1Script.velocity = Vector2.zero;
+        player2Script.velocity = Vector2.zero;
 
         if (previousScorer == -1)
         {
@@ -342,6 +410,7 @@ public class GameManager : MonoBehaviour
             ball.transform.position = new Vector2(player1SpawnPosition.x + 5, player1SpawnPosition.y + 10);
         }
 
+        ballControlScript.lineRenderer.enabled = false;
         ball.transform.parent = null;
         ballPhysicsScript.velocity = Vector2.zero;
 
@@ -355,6 +424,12 @@ public class GameManager : MonoBehaviour
         blueShevrons.SetActive(false);
 
         panelUI.SetActive(true);
+        matchTimeText.fontSize = 75;
+        matchTimeText.color = new Color(255, 255, 255);
+
+        bulletLevel = 1;
+        bulletTimerUI = 0;
+        bulletIncreaseUI.gameObject.SetActive(false);
     }
 
     /// <summary>

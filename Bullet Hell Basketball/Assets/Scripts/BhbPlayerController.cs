@@ -37,14 +37,13 @@ public enum AnimationState
 public class BhbPlayerController : NeonHeightsCharacterController
 {
     private KeyCode[] player1Controls = { KeyCode.W, KeyCode.S, KeyCode.A, KeyCode.D, KeyCode.Space, KeyCode.B, KeyCode.N, KeyCode.Escape };
-    private KeyCode[] player2Controls = { KeyCode.P, KeyCode.Semicolon, KeyCode.L, KeyCode.Quote, KeyCode.RightControl, KeyCode.LeftArrow, KeyCode.DownArrow, KeyCode.Escape };
+    private KeyCode[] player2Controls = { KeyCode.P, KeyCode.Semicolon, KeyCode.L, KeyCode.Quote, KeyCode.LeftArrow, KeyCode.LeftArrow, KeyCode.DownArrow, KeyCode.Escape };
     private string[] gamepadControls = { "Vertical", "DVertical", "Horizontal", "DHorizontal", "A", "B", "X", "Y", "Start" };
 
 
     public int controllerNumber = -1;
     public int playerNumber;
     public float pickupRadius;
-    public Vector3 playerHandPos;
 
     private GameObject ball;
     private Ball ballScript;
@@ -102,9 +101,9 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
     private float invinsibilityTimeCurrent = 0;
 
-    public Material player2Sprite;
-    public Material player2HurtSprite;
-    public Material player2FlashSprite;
+    public GameObject player1Mesh;
+    public GameObject player2Mesh;
+    public Animator player2Animator;
 
     private Vector2 prevControlAxis = Vector2.zero;
 
@@ -124,6 +123,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
             if (value)
             {
                 SetAnimationState(AnimationState.Swipe_Grounded);
+                audioManager.Play("SwipeShot", 0.1f, 1.3f, 1.5f);
 
                 swipeTimeCurrent = 0;
                 velocity = Vector2.zero;
@@ -213,11 +213,15 @@ public class BhbPlayerController : NeonHeightsCharacterController
     {
         this.playerNumber = playerNumber;
 
-        if (playerNumber == 1)
+        if (playerNumber == 0)
         {
-            // gameObject.GetComponent<MeshRenderer>().material = player2Sprite;
-            // gameObject.transform.GetChild(2).GetComponent<MeshRenderer>().material = player2HurtSprite;
-            // gameObject.transform.GetChild(3).GetComponent<MeshRenderer>().material = player2FlashSprite;
+            Destroy(player2Mesh);
+        }
+        else if (playerNumber == 1)
+        {
+            Destroy(player1Mesh);
+            animator = player2Animator;
+            player2Mesh.SetActive(true);
         }
     }
 
@@ -225,7 +229,6 @@ public class BhbPlayerController : NeonHeightsCharacterController
     void Start()
     {
         pickupRadius = 5;
-        playerHandPos = new Vector3(1.8f, 5.2f, 0.0f);
         swipeShotTimeCurrent = swipeShotTimeMax;
         shootTimeCurrent = shootTimeMax;
         swipeTimeCurrent = swipeTimeMax;
@@ -287,7 +290,11 @@ public class BhbPlayerController : NeonHeightsCharacterController
                 throwCoolDownTimerCurrent += Time.deltaTime;
         }
 
-
+        //If you just landed, plays landing sound.
+        if (!prevGrounded && grounded)
+        {
+            audioManager.Play("JumpEnd", 0.8f, 1.0f);
+        }
 
         if (GetControlHeld(Control.Left) && !IsStunned)
         {
@@ -360,6 +367,9 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
         if (GetControlDown(Control.Jump) && !IsStunned && !jumping && jumpsInAir < jumpsInAirMax)
         {
+            //Plays jump start sound.
+            audioManager.Play("Jump");
+
             jumping = true;
             SetAnimationStateAlways(AnimationState.Jump_No_Ball);
         }
@@ -595,6 +605,9 @@ public class BhbPlayerController : NeonHeightsCharacterController
         }
         ball.transform.parent = gameObject.transform;
 
+
+        if (currentAnimationState == AnimationState.Jump_No_Ball)
+            ballAnimator.SetTrigger(AnimationState.Fall_With_Ball.ToString());
     }
 
 
