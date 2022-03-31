@@ -333,6 +333,10 @@ public class GameManager : MonoBehaviour
             {
                 bulletLevel++;
                 increaseLevelOnce = false;
+                for (int i = 0; i < bulletManagers.Length; i++)
+                {
+                    bulletManagers[i].LevelUp();
+                }
             }
             bulletIncreaseUI.gameObject.SetActive(true);
             bulletLevelUI.text = "Bullets Level: " + bulletLevel;

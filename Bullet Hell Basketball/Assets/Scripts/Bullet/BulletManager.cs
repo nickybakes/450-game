@@ -14,7 +14,8 @@ public enum Movement
 public enum BulletPatterns
 {
     omni,
-    front
+    front,
+    down
 }
 
 public class BulletManager : MonoBehaviour
@@ -135,10 +136,14 @@ public class BulletManager : MonoBehaviour
                 case BulletPatterns.front:
 
                     if (ownerNumber == 0)
-                        OneDirectionPatter(0);
+                        OneDirectionPattern(0);
 
-                    else OneDirectionPatter(180);
+                    else OneDirectionPattern(180);
                     
+                    break;
+
+                case BulletPatterns.down:
+                    OneDirectionPattern(270);
                     break;
             }
             
@@ -321,7 +326,7 @@ public class BulletManager : MonoBehaviour
         }
     }
 
-    private void OneDirectionPatter(float angle)
+    private void OneDirectionPattern(float angle)
     {
         GameObject newBullet = BulletSetup();
         Bullet bulletScript = newBullet.GetComponent<Bullet>();
@@ -347,5 +352,14 @@ public class BulletManager : MonoBehaviour
         }
 
         return value;
-    } 
+    }
+    
+    public void LevelUp()
+    {
+        //In the last 30 seconds, random bullshit go
+        if(gameManager.bulletLevel == 4)
+        {
+            bulletPattern = BulletPatterns.omni;
+        }
+    }
 }
