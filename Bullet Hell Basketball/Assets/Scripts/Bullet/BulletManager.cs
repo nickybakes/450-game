@@ -77,15 +77,15 @@ public class BulletManager : MonoBehaviour
         gameManager = FindObjectOfType<GameManager>();
 
         //Changes material based on the spawner owner
-         if(ownerNumber == 0)
-         {
-             meshRenderer.material = player1Mat;
-         }
+        // if(ownerNumber == 0)
+         //{
+        //     meshRenderer.material = player1Mat;
+         //}
 
-         else
-         {
-             meshRenderer.material = player2Mat;
-         }
+         //else
+         //{
+         //    meshRenderer.material = player2Mat;
+         //}
 
         ogPosition = transform.position;
 
@@ -359,10 +359,27 @@ public class BulletManager : MonoBehaviour
     
     public void LevelUp()
     {
+
+        maxTime = maxTime / 10;
+        
+        
         //In the last 30 seconds, random bullshit go
         if(gameManager.bulletLevel == 4)
         {
             bulletPattern = BulletPatterns.omni;
         }
+    }
+
+    /// <summary>
+    /// Spawns another bullet spawner
+    /// </summary>
+    private void SpawnAnother()
+    {
+        GameObject newBulletManger = Instantiate(this.gameObject);
+        BulletManager newScript = newBulletManger.GetComponent<BulletManager>();
+        newScript.destroyOnReload = true;
+        newScript.bulletPattern = BulletPatterns.down;
+
+        //Its location will be determined by whether its controlled by player1 or 2
     }
 }
