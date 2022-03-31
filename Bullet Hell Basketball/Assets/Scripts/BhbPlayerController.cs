@@ -37,7 +37,7 @@ public enum AnimationState
 public class BhbPlayerController : NeonHeightsCharacterController
 {
     private KeyCode[] player1Controls = { KeyCode.W, KeyCode.S, KeyCode.A, KeyCode.D, KeyCode.Space, KeyCode.B, KeyCode.N, KeyCode.Escape };
-    private KeyCode[] player2Controls = { KeyCode.P, KeyCode.Semicolon, KeyCode.L, KeyCode.Quote, KeyCode.RightControl, KeyCode.LeftArrow, KeyCode.DownArrow, KeyCode.Escape };
+    private KeyCode[] player2Controls = { KeyCode.P, KeyCode.Semicolon, KeyCode.L, KeyCode.Quote, KeyCode.LeftArrow, KeyCode.LeftArrow, KeyCode.DownArrow, KeyCode.Escape };
     private string[] gamepadControls = { "Vertical", "DVertical", "Horizontal", "DHorizontal", "A", "B", "X", "Y", "Start" };
 
 
