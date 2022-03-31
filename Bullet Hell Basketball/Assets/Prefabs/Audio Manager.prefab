@@ -1,0 +1,152 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1686346002426911647
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8251514489022235984}
+  - component: {fileID: 3906439084490162780}
+  m_Layer: 0
+  m_Name: Audio Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8251514489022235984
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1686346002426911647}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3906439084490162780
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1686346002426911647}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c1cee82067c6c3498cdba57a0528679, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: Music
+    clips:
+    - {fileID: 8300000, guid: dbc9ad23120cd9a4bb4ca808bc0107c9, type: 3}
+    volume: 0.05
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
+  - name: Net
+    clips:
+    - {fileID: 8300000, guid: 22b550f5b32ff764d9d278841e9e59e6, type: 3}
+    - {fileID: 8300000, guid: e559300e7a6e39341b8c65b3768c47a1, type: 3}
+    - {fileID: 8300000, guid: 641304a3d3502e24b911a12cafecd035, type: 3}
+    - {fileID: 8300000, guid: 99fd35ef50427ce49b3fb10c0a157cc1, type: 3}
+    volume: 0.8
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Hit
+    clips:
+    - {fileID: 8300000, guid: f5cec3311b85ebd41ac4b7b96b7678d3, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Buzzer
+    clips:
+    - {fileID: 8300000, guid: 789cbb3829141a545a0c38a1eb7771e2, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Squeak
+    clips:
+    - {fileID: 8300000, guid: 66d6aeca39edf2b48a444603928f70d9, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Bounce
+    clips:
+    - {fileID: 8300000, guid: 8ddf5839c6d55e44ca5a54f44120f8fd, type: 3}
+    - {fileID: 8300000, guid: ad29c1f293e8c6b4a829d37f20d16860, type: 3}
+    - {fileID: 8300000, guid: 67450ba168f4fcd4da78e869fb8f2dab, type: 3}
+    volume: 0.1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: 2points
+    clips:
+    - {fileID: 8300000, guid: 5ee27d2ca19445f4ebe99d808ebef783, type: 3}
+    volume: 0.3
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: 3points
+    clips:
+    - {fileID: 8300000, guid: b5280b3ae298f5f4587d46ae7b6e71e6, type: 3}
+    volume: 0.3
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Dunk
+    clips:
+    - {fileID: 8300000, guid: 9ca89235855b46c46a68ecab85336353, type: 3}
+    volume: 0.3
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Shot
+    clips:
+    - {fileID: 8300000, guid: 1e5d71bc49fb5e84bbe17b2236db4e34, type: 3}
+    - {fileID: 8300000, guid: 73ad1ea597ee12f4497ba484c9c1eede, type: 3}
+    volume: 0.2
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: SwipeShot
+    clips:
+    - {fileID: 8300000, guid: 76c69d84f283122448aefda1b0af96f3, type: 3}
+    volume: 0.3
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Jump
+    clips:
+    - {fileID: 8300000, guid: a0e465694e23dd14da72618fc3100a10, type: 3}
+    - {fileID: 8300000, guid: 8d686f6ed9e81314891f18a0747739f3, type: 3}
+    volume: 0.2
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: JumpEnd
+    clips:
+    - {fileID: 8300000, guid: c2c31db9102c08f41ad670951fbc811c, type: 3}
+    - {fileID: 8300000, guid: 5c7d9d3dddf0d144f826e557f187b3cb, type: 3}
+    volume: 0.2
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Midair
+    clips:
+    - {fileID: 8300000, guid: c686c49712e14984f8ced03da3a44bd6, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}

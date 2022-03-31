@@ -102,11 +102,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97c23e3b12dc18c42a140437e53d3951, type: 3}
   m_Name: Tonemapping
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   m_AdvancedMode: 0
   mode:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 2
+--- !u!114 &-74370732852865867
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5485954d14dfb9a4c8ead8edb0ded5b1, type: 3}
+  m_Name: LiftGammaGain
+  m_EditorClassIdentifier: 
+  active: 1
+  m_AdvancedMode: 0
+  lift:
+    m_OverrideState: 1
+    m_Value: {x: 1, y: 0.9353239, z: 0.9455237, w: 0}
+  gamma:
+    m_OverrideState: 1
+    m_Value: {x: 0.968102, y: 0.9362039, z: 1, w: 0}
+  gain:
+    m_OverrideState: 1
+    m_Value: {x: 1, y: 0.95951116, z: 0.9751662, w: 0}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -124,6 +147,7 @@ MonoBehaviour:
   - {fileID: 8721837325341736509}
   - {fileID: -2565199033885847839}
   - {fileID: -6516806448277726667}
+  - {fileID: -74370732852865867}
 --- !u!114 &8721837325341736509
 MonoBehaviour:
   m_ObjectHideFlags: 3
