@@ -123,6 +123,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
             if (value)
             {
                 SetAnimationState(AnimationState.Swipe_Grounded);
+                audioManager.Play("SwipeShot", 0.1f, 1.3f, 1.5f);
 
                 swipeTimeCurrent = 0;
                 velocity = Vector2.zero;

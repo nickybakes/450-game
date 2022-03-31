@@ -156,7 +156,7 @@ public class Ball : MonoBehaviour
                 if (isSwipeShot)
                 {
                     //Plays swipe shot audio.
-                    audioManager.Play("SwipeShot", 0.9f, 1.1f);
+                    audioManager.Play("SwipeShot", 0.3f, 0.9f, 1.1f);
 
                     boolWillHit = true;
                     calculateOnce = false;
