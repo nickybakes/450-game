@@ -394,6 +394,9 @@ public class GameManager : MonoBehaviour
         player1.transform.position = player1SpawnPosition;
         player2.transform.position = player2SpawnPosition;
 
+        player1Script.velocity = Vector2.zero;
+        player2Script.velocity = Vector2.zero;
+
         if (previousScorer == -1)
         {
             ball.transform.position = ballSpawnPosition;

@@ -44,7 +44,6 @@ public class BhbPlayerController : NeonHeightsCharacterController
     public int controllerNumber = -1;
     public int playerNumber;
     public float pickupRadius;
-    public Vector3 playerHandPos;
 
     private GameObject ball;
     private Ball ballScript;
@@ -102,9 +101,9 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
     private float invinsibilityTimeCurrent = 0;
 
-    public Material player2Sprite;
-    public Material player2HurtSprite;
-    public Material player2FlashSprite;
+    public GameObject player1Mesh;
+    public GameObject player2Mesh;
+    public Animator player2Animator;
 
     private Vector2 prevControlAxis = Vector2.zero;
 
@@ -213,11 +212,15 @@ public class BhbPlayerController : NeonHeightsCharacterController
     {
         this.playerNumber = playerNumber;
 
-        if (playerNumber == 1)
+        if (playerNumber == 0)
         {
-            // gameObject.GetComponent<MeshRenderer>().material = player2Sprite;
-            // gameObject.transform.GetChild(2).GetComponent<MeshRenderer>().material = player2HurtSprite;
-            // gameObject.transform.GetChild(3).GetComponent<MeshRenderer>().material = player2FlashSprite;
+            Destroy(player2Mesh);
+        }
+        else if (playerNumber == 1)
+        {
+            Destroy(player1Mesh);
+            animator = player2Animator;
+            player2Mesh.SetActive(true);
         }
     }
 
@@ -225,7 +228,6 @@ public class BhbPlayerController : NeonHeightsCharacterController
     void Start()
     {
         pickupRadius = 5;
-        playerHandPos = new Vector3(1.8f, 5.2f, 0.0f);
         swipeShotTimeCurrent = swipeShotTimeMax;
         shootTimeCurrent = shootTimeMax;
         swipeTimeCurrent = swipeTimeMax;
@@ -603,7 +605,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
         ball.transform.parent = gameObject.transform;
 
 
-        if(currentAnimationState == AnimationState.Jump_No_Ball)
+        if (currentAnimationState == AnimationState.Jump_No_Ball)
             ballAnimator.SetTrigger(AnimationState.Fall_With_Ball.ToString());
     }
 

@@ -173,7 +173,6 @@ public class Ball : MonoBehaviour
                 {
                     //Plays shot audio.
                     audioManager.Play("Shot", 0.9f, 1.1f);
-                    Debug.Log("regular shot");
 
                     if (currentTarget == leftBasket)
                     {
