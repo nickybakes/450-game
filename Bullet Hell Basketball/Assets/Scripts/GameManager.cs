@@ -62,6 +62,7 @@ public class GameManager : MonoBehaviour
     public float horizontalEdge = 40;
 
     public GameObject tempHud;
+    public GameObject tutorialSelectionScreen;
     public GameObject panelUI;
 
     private BulletManager[] bulletManagers;
@@ -94,6 +95,29 @@ public class GameManager : MonoBehaviour
 
     public bool player1IsBot;
     public bool player2IsBot;
+
+    public bool isTutorial;
+
+    public bool IsTutorial
+    {
+        get { return isTutorial; }
+        set
+        {
+            isTutorial = value;
+            if (value)
+            {
+                matchTimeText.text = "Tutorial";
+                panelUI.transform.GetChild(1).gameObject.SetActive(false);
+                panelUI.transform.GetChild(0).gameObject.SetActive(false);
+                paused = false;
+
+            }
+            else
+            {
+
+            }
+        }
+    }
 
 
     [HideInInspector] public bool winConditionMet = false;
@@ -178,6 +202,9 @@ public class GameManager : MonoBehaviour
         leftBasket.transform.GetChild(0).GetComponent<SpriteRenderer>().color = new Color32(0, 146, 255, 255);
         rightBasket.transform.GetChild(0).GetComponent<SpriteRenderer>().color = new Color32(255, 255, 0, 255);
 
+
+        if (isTutorial)
+            IsTutorial = true;
         BeginMatch();
     }
 
@@ -226,6 +253,12 @@ public class GameManager : MonoBehaviour
             ShowBallChevron(true);
         else
             ShowBallChevron(false);
+
+        if (isTutorial)
+        {
+            TutorialUpdate();
+            return;
+        }
 
         if (Input.GetKeyDown(KeyCode.Backspace))
         {
@@ -355,8 +388,16 @@ public class GameManager : MonoBehaviour
 
     public void ToggleHowToPlay()
     {
-        tempHud.SetActive(!tempHud.activeSelf);
-        paused = !paused;
+        if (IsTutorial)
+        {
+            tempHud.SetActive(!tempHud.activeSelf);
+            paused = !paused;
+        }
+        else
+        {
+            tempHud.SetActive(!tempHud.activeSelf);
+            paused = !paused;
+        }
     }
 
     public void EndGame()
@@ -373,7 +414,7 @@ public class GameManager : MonoBehaviour
 
         audioManager.Play("Buzzer");
 
-        
+
 
         paused = true;
         gameOver = true;
@@ -441,4 +482,21 @@ public class GameManager : MonoBehaviour
 
         indicatorShevron.SetActive(isAboveScreen);
     }
+
+    void TutorialUpdate()
+    {
+        if (Input.GetKeyDown(KeyCode.Backspace))
+        {
+            //increment the tutorial progress
+        }
+
+        for (int i = 1; i <= 8; i++)
+        {
+            if (Input.GetButtonDown("J" + i + "Start"))
+            {
+                //increment the tutorial progress
+            }
+        }
+    }
+
 }

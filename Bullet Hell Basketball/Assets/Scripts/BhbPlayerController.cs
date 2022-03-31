@@ -43,6 +43,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
     public int controllerNumber = -1;
     public int playerNumber;
+    public int playerControlNumber;
     public float pickupRadius;
 
     private GameObject ball;
@@ -211,6 +212,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
     public void Init(int playerNumber)
     {
         this.playerNumber = playerNumber;
+        this.playerControlNumber = playerNumber;
 
         if (playerNumber == 0)
         {
@@ -800,7 +802,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
         }
 
         //if(Input.GetButton())
-        if (playerNumber == 0)
+        if (playerControlNumber == 0)
         {
             if (action == Control.Jump)
             {
@@ -811,7 +813,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
                 return Input.GetKey(player1Controls[((int)action)]);
             }
         }
-        else if (playerNumber == 1)
+        else if (playerControlNumber == 1)
         {
             if (action == Control.Jump)
             {
@@ -950,7 +952,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
             return true;
         }
 
-        if (playerNumber == 0)
+        if (playerControlNumber == 0)
         {
             if (action == Control.Jump)
             {
@@ -961,7 +963,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
                 return Input.GetKeyDown(player1Controls[((int)action)]);
             }
         }
-        else if (playerNumber == 1)
+        else if (playerControlNumber == 1)
         {
             if (action == Control.Jump)
             {
@@ -1010,7 +1012,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
             return true;
         }
 
-        if (playerNumber == 0)
+        if (playerControlNumber == 0)
         {
             if (action == Control.Jump)
             {
@@ -1021,7 +1023,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
                 return Input.GetKeyUp(player1Controls[((int)action)]);
             }
         }
-        else if (playerNumber == 1)
+        else if (playerControlNumber == 1)
         {
             if (action == Control.Jump)
             {
