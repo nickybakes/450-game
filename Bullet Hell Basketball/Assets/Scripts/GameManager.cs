@@ -70,7 +70,6 @@ public class GameManager : MonoBehaviour
     public int player2Score = 0;
 
     //UI
-    public MainMenu menu;
 
 
     [HideInInspector] public bool winConditionMet = false;
@@ -134,8 +133,6 @@ public class GameManager : MonoBehaviour
         //set crosshair colors
         leftBasket.transform.GetChild(0).GetComponent<SpriteRenderer>().color = new Color32(0, 146, 255, 255);
         rightBasket.transform.GetChild(0).GetComponent<SpriteRenderer>().color = new Color32(255, 255, 0, 255);
-
-        menu.Show();
     }
 
     public void BeginRound()
