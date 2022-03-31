@@ -65,7 +65,7 @@ public class GameManager : MonoBehaviour
     public GameObject panelUI;
 
     private BulletManager[] bulletManagers;
-    private int bulletLevel;
+    public int bulletLevel;
     private bool increaseLevelOnce;
     private Text bulletLevelUI;
     private Text bulletIncreaseUI;
