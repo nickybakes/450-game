@@ -32,7 +32,7 @@ public class Ball : MonoBehaviour
     private Sound midAir;
 
     public GameObject currentTarget;
-    private GameManager gameManager;
+    public GameManager gameManager;
     public LineRenderer lineRenderer;
 
     //true if the the ball was shot via a swipe and not a normal throw
@@ -156,7 +156,7 @@ public class Ball : MonoBehaviour
                 if (isSwipeShot)
                 {
                     //Plays swipe shot audio.
-                    audioManager.Play("SwipeShot", 0.9f, 1.1f);
+                    audioManager.Play("SwipeShot", 0.3f, 0.9f, 1.1f);
 
                     boolWillHit = true;
                     calculateOnce = false;

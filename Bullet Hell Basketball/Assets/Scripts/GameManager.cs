@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public static GameManager Instance;
     private AudioManager audioManager;
+    private Sound music;
+    private Sound pauseMusic;
 
     //TO ADD: MENU
     //[SerializeField] private MainMenu menu;
@@ -62,7 +64,6 @@ public class GameManager : MonoBehaviour
     public float horizontalEdge = 40;
 
     public GameObject tempHud;
-    public GameObject tutorialSelectionScreen;
     public GameObject panelUI;
 
     private BulletManager[] bulletManagers;
@@ -73,6 +74,7 @@ public class GameManager : MonoBehaviour
     private float bulletTimerUI;
 
     public int bulletLevelUpInterval;
+    public float bulletLevelUpCurrentTime;
 
     public GameObject playerOneWins;
     public GameObject playerTwoWins;
@@ -95,29 +97,6 @@ public class GameManager : MonoBehaviour
 
     public bool player1IsBot;
     public bool player2IsBot;
-
-    public bool isTutorial;
-
-    public bool IsTutorial
-    {
-        get { return isTutorial; }
-        set
-        {
-            isTutorial = value;
-            if (value)
-            {
-                matchTimeText.text = "Tutorial";
-                panelUI.transform.GetChild(1).gameObject.SetActive(false);
-                panelUI.transform.GetChild(0).gameObject.SetActive(false);
-                paused = false;
-
-            }
-            else
-            {
-
-            }
-        }
-    }
 
 
     [HideInInspector] public bool winConditionMet = false;
@@ -154,6 +133,8 @@ public class GameManager : MonoBehaviour
         bulletIncreaseUI = panelUI.transform.GetChild(5).GetComponent<Text>();
 
         audioManager = FindObjectOfType<AudioManager>();
+        music = audioManager.Find("Music");
+        pauseMusic = audioManager.Find("MusicPause");
 
         panelUI.SetActive(true);
         //player 1.
@@ -189,6 +170,7 @@ public class GameManager : MonoBehaviour
         ball = Instantiate(ballPrefab);
         ballControlScript = ball.GetComponent<Ball>();
         ballPhysicsScript = ball.GetComponent<BhbBallPhysics>();
+        ballControlScript.gameManager = this;
 
         leftBasket = Instantiate(leftBasketPrefab);
         leftBasket.transform.position = new Vector2(basketLocation.position.x, basketLocation.position.y);
@@ -199,12 +181,9 @@ public class GameManager : MonoBehaviour
         ballControlScript.rightBasket = rightBasket;
 
         //set crosshair colors
-        leftBasket.transform.GetChild(0).GetComponent<SpriteRenderer>().color = new Color32(0, 146, 255, 255);
-        rightBasket.transform.GetChild(0).GetComponent<SpriteRenderer>().color = new Color32(255, 255, 0, 255);
+        //leftBasket.transform.GetChild(0).GetComponent<SpriteRenderer>().color = new Color32(0, 146, 255, 255);
+        //rightBasket.transform.GetChild(0).GetComponent<SpriteRenderer>().color = new Color32(255, 255, 0, 255);
 
-
-        if (isTutorial)
-            IsTutorial = true;
         BeginMatch();
     }
 
@@ -243,7 +222,10 @@ public class GameManager : MonoBehaviour
             bulletManagers[i].Reset();
         }
 
-        ResetPlayersAndBall();
+        bulletLevelUpCurrentTime = 0;
+        bulletLevel = 1;
+
+        ballControlScript.IsResetting = false;
     }
 
     void Update()
@@ -253,12 +235,6 @@ public class GameManager : MonoBehaviour
             ShowBallChevron(true);
         else
             ShowBallChevron(false);
-
-        if (isTutorial)
-        {
-            TutorialUpdate();
-            return;
-        }
 
         if (Input.GetKeyDown(KeyCode.Backspace))
         {
@@ -294,6 +270,7 @@ public class GameManager : MonoBehaviour
         if (!ballControlScript.IsResetting && !overTime)
         {
             matchTimeCurrent -= Time.deltaTime;
+            bulletLevelUpCurrentTime += Time.deltaTime;
             if (matchTimeCurrent <= 10)
             {
                 matchTimeText.text = Mathf.Max(matchTimeCurrent, 0).ToString("0.000");
@@ -360,13 +337,18 @@ public class GameManager : MonoBehaviour
     private void ShowBulletIncreaseUI()
     {
         //If timer is at 30 second interval, show bullet increased UI element for [3] seconds.
-        if ((int)matchTimeCurrent % bulletLevelUpInterval == 0 && matchTimeCurrent > 5)
+        if (bulletLevelUpCurrentTime >= bulletLevelUpInterval && matchTimeCurrent > 5)
         {
             if (increaseLevelOnce)
             {
                 bulletLevel++;
                 increaseLevelOnce = false;
+                for (int i = 0; i < bulletManagers.Length; i++)
+                {
+                    bulletManagers[i].LevelUp();
+                }
             }
+            bulletLevelUpCurrentTime = 0;
             bulletIncreaseUI.gameObject.SetActive(true);
             bulletLevelUI.text = "Bullets Level: " + bulletLevel;
 
@@ -388,15 +370,19 @@ public class GameManager : MonoBehaviour
 
     public void ToggleHowToPlay()
     {
-        if (IsTutorial)
+        tempHud.SetActive(!tempHud.activeSelf);
+        paused = !paused;
+
+        //toggles audio.
+        if (paused)
         {
-            tempHud.SetActive(!tempHud.activeSelf);
-            paused = !paused;
+            pauseMusic.source.volume = .1f;
+            music.source.volume = 0;
         }
         else
         {
-            tempHud.SetActive(!tempHud.activeSelf);
-            paused = !paused;
+            pauseMusic.source.volume = 0;
+            music.source.volume = 0.1f;
         }
     }
 
@@ -413,8 +399,6 @@ public class GameManager : MonoBehaviour
             playerTwoWins.SetActive(!playerTwoWins.activeSelf);
 
         audioManager.Play("Buzzer");
-
-
 
         paused = true;
         gameOver = true;
@@ -451,6 +435,7 @@ public class GameManager : MonoBehaviour
             ball.transform.position = new Vector2(player1SpawnPosition.x + 5, player1SpawnPosition.y + 10);
         }
 
+        ballControlScript.lineRenderer.enabled = false;
         ball.transform.parent = null;
         ballPhysicsScript.velocity = Vector2.zero;
 
@@ -482,21 +467,4 @@ public class GameManager : MonoBehaviour
 
         indicatorShevron.SetActive(isAboveScreen);
     }
-
-    void TutorialUpdate()
-    {
-        if (Input.GetKeyDown(KeyCode.Backspace))
-        {
-            //increment the tutorial progress
-        }
-
-        for (int i = 1; i <= 8; i++)
-        {
-            if (Input.GetButtonDown("J" + i + "Start"))
-            {
-                //increment the tutorial progress
-            }
-        }
-    }
-
 }
