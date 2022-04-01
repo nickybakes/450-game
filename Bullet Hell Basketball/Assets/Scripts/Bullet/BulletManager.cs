@@ -54,6 +54,8 @@ public class BulletManager : MonoBehaviour
     private bool reachedOppositeSide = false;
 
     private int numBullets; //How many bullets will be spawned
+    public float minAngle = 0;
+    public float maxAngle = 45;
 
     //Add some sort of level up system, and different directions bullets shoot
     //Make more variables so arc movement can work
@@ -249,14 +251,15 @@ public class BulletManager : MonoBehaviour
         {
             Debug.Log("Player 1 Angle: " + currentAngle);
             
-            if (currentAngle < 3 && !otherSide)
+            if (currentAngle < maxAngle * Mathf.Deg2Rad && !otherSide)
             {
                 currentAngle -= angularSpeed * Time.deltaTime;
                 Vector3 offset = new Vector3(Mathf.Sin(currentAngle), Mathf.Cos(currentAngle), fixedPoint.z) * radius;
                 transform.position = fixedPoint + offset;
             }
 
-            if (currentAngle >= 3)
+            //Turns it around
+            if (currentAngle >= maxAngle * Mathf.Deg2Rad)
             {
                 otherSide = true;
             }
@@ -268,7 +271,7 @@ public class BulletManager : MonoBehaviour
                 transform.position = fixedPoint + offset;
             }
 
-            if (currentAngle <= 0 && otherSide)
+            if (currentAngle <= minAngle * Mathf.Deg2Rad && otherSide)
             {
                 otherSide = false;
             }
@@ -278,14 +281,14 @@ public class BulletManager : MonoBehaviour
         {
             Debug.Log("Player 2 Angle: " + currentAngle);
 
-            if (currentAngle > - 3 && !otherSide)
+            if (currentAngle > - maxAngle * Mathf.Deg2Rad && !otherSide)
             {
                 currentAngle -= angularSpeed * Time.deltaTime;
                 Vector3 offset = new Vector3(Mathf.Sin(currentAngle), Mathf.Cos(currentAngle), fixedPoint.z) * radius;
                 transform.position = fixedPoint + offset;
             }
 
-            if (currentAngle <= -3)
+            if (currentAngle <= - maxAngle * Mathf.Deg2Rad)
             {
                 otherSide = true;
             }
@@ -297,7 +300,7 @@ public class BulletManager : MonoBehaviour
                 transform.position = fixedPoint + offset;
             }
 
-            if (currentAngle >= 0 && otherSide)
+            if (currentAngle >= minAngle * Mathf.Deg2Rad && otherSide)
             {
                 otherSide = false;
             }
