@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -187,7 +188,8 @@ public class GameManager : MonoBehaviour
         if (isTutorial)
         {
             tutorialManager.gameManager = this;
-            ToggleHowToPlay();
+            Destroy(tempHud);
+            paused = false;
             matchTimeText.text = "";
             bulletLevelUI.text = "";
 
@@ -294,6 +296,13 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            if (paused && Input.GetKeyDown(KeyCode.T))
+            {
+                Destroy(FindObjectOfType<AudioManager>().gameObject);
+                SceneManager.LoadScene(1);
+                return;
+            }
+
             if (Input.GetKeyDown(KeyCode.Backspace))
             {
                 if (gameOver)
