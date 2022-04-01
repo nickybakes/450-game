@@ -360,7 +360,7 @@ public class BulletManager : MonoBehaviour
     public void LevelUp()
     {
 
-        maxTime = maxTime / 10;
+        maxTime -= 0.5f;
         
         
         //In the last 30 seconds, random bullshit go
