@@ -170,6 +170,7 @@ public class GameManager : MonoBehaviour
         ball = Instantiate(ballPrefab);
         ballControlScript = ball.GetComponent<Ball>();
         ballPhysicsScript = ball.GetComponent<BhbBallPhysics>();
+        ballControlScript.gameManager = this;
 
         leftBasket = Instantiate(leftBasketPrefab);
         leftBasket.transform.position = new Vector2(basketLocation.position.x, basketLocation.position.y);

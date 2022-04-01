@@ -32,7 +32,7 @@ public class Ball : MonoBehaviour
     private Sound midAir;
 
     public GameObject currentTarget;
-    private GameManager gameManager;
+    public GameManager gameManager;
     public LineRenderer lineRenderer;
 
     //true if the the ball was shot via a swipe and not a normal throw
