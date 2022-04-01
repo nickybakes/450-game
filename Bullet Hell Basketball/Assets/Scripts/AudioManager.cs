@@ -46,7 +46,12 @@ public class AudioManager : MonoBehaviour
 
     private void Start()
     {
+        //Music plays on startup.
         Play("Music");
+
+        //silent pause music in background until pause UI appears.
+        Find("MusicPause").source.volume = 0;
+        Play("MusicPause");
     }
 
     #region Parameter variations for Play()
