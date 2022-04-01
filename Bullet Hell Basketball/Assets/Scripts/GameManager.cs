@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     private AudioManager audioManager;
     private Sound music;
     private Sound pauseMusic;
+    private Sound midair;
 
     //TO ADD: MENU
     //[SerializeField] private MainMenu menu;
@@ -143,6 +144,7 @@ public class GameManager : MonoBehaviour
         audioManager = FindObjectOfType<AudioManager>();
         music = audioManager.Find("Music");
         pauseMusic = audioManager.Find("MusicPause");
+        midair = audioManager.Find("Midair");
 
         panelUI.SetActive(true);
         //player 1.
@@ -461,6 +463,8 @@ public class GameManager : MonoBehaviour
         {
             pauseMusic.source.volume = .1f;
             music.source.volume = 0;
+
+            midair.source.volume = 0;
         }
         else
         {
@@ -482,6 +486,7 @@ public class GameManager : MonoBehaviour
             playerTwoWins.SetActive(!playerTwoWins.activeSelf);
 
         audioManager.Play("Buzzer");
+        midair.source.volume = 0;
 
         paused = true;
         gameOver = true;
