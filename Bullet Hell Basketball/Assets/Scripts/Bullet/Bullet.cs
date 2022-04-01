@@ -27,16 +27,39 @@ public class Bullet : MonoBehaviour
         {
             timer = 10.0f;
         }
+
+        if (dontUpdate)
+            gameManager = FindObjectOfType<GameManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (dontUpdate && gameManager.ballControlScript.IsBullet)
+        {
+            if (transform.parent != null)
+            {
+                transform.localRotation = Quaternion.Inverse(transform.parent.rotation);
+            }
+            transform.rotation = Quaternion.Euler(0, 0, getAngle(Vector2.zero, gameManager.ballPhysicsScript.velocity));
+        }
+        else
+        {
+            transform.rotation = Quaternion.Euler(0, 0, getAngle(Vector2.zero, direction));
+        }
+
         if (dontUpdate)
             return;
 
         if (gameManager.paused)
             return;
+
+        if (transform.parent != null)
+        {
+            transform.localRotation = Quaternion.Inverse(transform.parent.rotation);
+        }
+
+
 
         transform.Translate(direction * Time.deltaTime * speed, Space.World);
     }
@@ -85,10 +108,15 @@ public class Bullet : MonoBehaviour
                     playerScript.GetsHit(new Vector2(40, 20));
                 }
 
-                if(!dontUpdate)
+                if (!dontUpdate)
                     Destroy(this.gameObject);
             }
         }
+    }
+
+    public float getAngle(Vector2 me, Vector2 target)
+    {
+        return Mathf.Atan2(target.y - me.y, target.x - me.x) * (180 / Mathf.PI);
     }
 
     /*private void OnCollisionEnter2D(Collision2D collision)

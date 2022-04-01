@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5370311947778578658}
   - component: {fileID: 5370311947778578659}
   - component: {fileID: 5370311947778578656}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Bullet Launcher
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -100,10 +100,10 @@ MonoBehaviour:
   radius: 10
   angularSpeed: 1
   ownerNumber: 0
-  player1Mat: {fileID: 2100000, guid: 4fdf38a4fdc079243a5f9ef9d1d76ab4, type: 2}
-  player2Mat: {fileID: 2100000, guid: 3407e409d81f1cd48987fe565ee9c014, type: 2}
+  player1Mat: {fileID: 2100000, guid: 7cde71b3d7938dc4c9a422c8cb605d23, type: 2}
+  player2Mat: {fileID: 2100000, guid: 92873352d5998c64193f75fbe99a85ae, type: 2}
   gameManager: {fileID: 0}
   movement: 0
   bulletPattern: 0
-  distanceTravelled: 35
+  distanceTravelled: 20
   startsRight: 0

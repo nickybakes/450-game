@@ -301,7 +301,7 @@ public class BulletManager : MonoBehaviour
         Bullet bulletScript = newBullet.GetComponent<Bullet>();
         bulletScript.ownerNumber = ownerNumber;
         bulletScript.gameManager = gameManager;
-        MeshRenderer bulletMesh = newBullet.GetComponent<MeshRenderer>();
+        MeshRenderer bulletMesh = newBullet.GetComponentInChildren<MeshRenderer>();
 
         if (bulletScript.ownerNumber == 0)
         {

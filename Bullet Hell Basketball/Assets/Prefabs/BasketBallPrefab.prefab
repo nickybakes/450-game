@@ -4910,7 +4910,7 @@ GameObject:
   - component: {fileID: 6973162962063313666}
   - component: {fileID: 1767997931319926588}
   m_Layer: 0
-  m_Name: Sphere
+  m_Name: Ball Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4957,7 +4957,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: cc99bf97ef470bc49a1c1e59fc970568, type: 2}
+  - {fileID: 2100000, guid: ed50e0c7de819774c98f3ff4fb08c246, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -10337,6 +10337,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 3407e409d81f1cd48987fe565ee9c014, type: 2}
+    - target: {fileID: 7335185817801315202, guid: 0d018b114476535428b7651de079dd4d, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 92873352d5998c64193f75fbe99a85ae, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0d018b114476535428b7651de079dd4d, type: 3}
 --- !u!4 &7449746931552744644 stripped
