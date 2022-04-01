@@ -116,6 +116,8 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
     public bool botAlwaysDoubleJump;
 
+    public bool isDummy;
+
     public bool IsSwiping
     {
         get { return swipeTimeCurrent < swipeTimeMax; }
@@ -700,6 +702,9 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
     bool GetControlHeld(Control action)
     {
+        if (isDummy)
+            return false;
+
         if (isBot)
         {
             if (ballScript.IsResetting)
@@ -830,6 +835,9 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
     bool GetControlDown(Control action)
     {
+        if (isDummy)
+            return false;
+
         if (isBot)
         {
             if (ballScript.IsResetting)
@@ -980,6 +988,9 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
     bool GetControlUp(Control action)
     {
+        if (isDummy)
+            return false;
+
         if (isBot)
         {
 

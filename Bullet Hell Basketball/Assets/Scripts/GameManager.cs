@@ -98,6 +98,10 @@ public class GameManager : MonoBehaviour
     public bool player1IsBot;
     public bool player2IsBot;
 
+    public bool isTutorial;
+
+    public TutorialManager tutorialManager;
+
 
     [HideInInspector] public bool winConditionMet = false;
 
@@ -180,6 +184,28 @@ public class GameManager : MonoBehaviour
         rightBasket.transform.position = new Vector2(-basketLocation.position.x, basketLocation.position.y);
         ballControlScript.rightBasket = rightBasket;
 
+        if (isTutorial)
+        {
+            tutorialManager.gameManager = this;
+            ToggleHowToPlay();
+            matchTimeText.text = "";
+            bulletLevelUI.text = "";
+
+            panelUI.transform.GetChild(0).gameObject.SetActive(false);
+            panelUI.transform.GetChild(1).gameObject.SetActive(false);
+
+            bulletManagers = FindObjectsOfType<BulletManager>();
+
+            for (int i = 0; i < bulletManagers.Length; i++)
+            {
+                bulletManagers[i].gameObject.SetActive(false);
+            }
+        }
+        else
+        {
+            Destroy(tutorialManager);
+        }
+
         //set crosshair colors
         //leftBasket.transform.GetChild(0).GetComponent<SpriteRenderer>().color = new Color32(0, 146, 255, 255);
         //rightBasket.transform.GetChild(0).GetComponent<SpriteRenderer>().color = new Color32(255, 255, 0, 255);
@@ -198,6 +224,11 @@ public class GameManager : MonoBehaviour
 
         //sets bullet level back to 1.
         bulletLevelUI.text = "Bullets Level: " + bulletLevel;
+
+        if (isTutorial)
+        {
+            bulletLevelUI.text = "";
+        }
 
         playerOneWins.SetActive(false);
         playerTwoWins.SetActive(false);
@@ -236,22 +267,34 @@ public class GameManager : MonoBehaviour
         else
             ShowBallChevron(false);
 
-        if (Input.GetKeyDown(KeyCode.Backspace))
+        if (isTutorial)
         {
-            if (gameOver)
+            if (Input.GetKeyDown(KeyCode.Backspace))
             {
-                BeginMatch();
-                paused = false;
+                tutorialManager.DisplayNextMessage();
             }
-            else
-                ToggleHowToPlay();
 
-            panelUI.SetActive(true);
+            for (int i = 1; i <= 8; i++)
+            {
+                if (Input.GetButtonDown("J" + i + "Start"))
+                {
+                    tutorialManager.DisplayNextMessage();
+                    break;
+                }
+            }
+
+            if (player1Script.controllerNumber == -1)
+            {
+                for (int i = 1; i <= 8; i++)
+                {
+                    if ((Input.GetButton("J" + i + "A") || Input.GetButton("J" + i + "B") || Input.GetButton("J" + i + "X") || Input.GetButton("J" + i + "Y") || Input.GetButton("J" + i + "Start") || Mathf.Abs(Input.GetAxis("J" + i + "Horizontal")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "Vertical")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "DHorizontal")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "DVertical")) > .5f) && player2Script.controllerNumber != i)
+                        player1Script.controllerNumber = i;
+                }
+            }
         }
-
-        for (int i = 1; i <= 8; i++)
+        else
         {
-            if (Input.GetButtonDown("J" + i + "Start"))
+            if (Input.GetKeyDown(KeyCode.Backspace))
             {
                 if (gameOver)
                 {
@@ -260,74 +303,80 @@ public class GameManager : MonoBehaviour
                 }
                 else
                     ToggleHowToPlay();
-                break;
+
+                panelUI.SetActive(true);
             }
-        }
 
-        if (paused || gameOver)
-            return;
-
-        if (!ballControlScript.IsResetting && !overTime)
-        {
-            matchTimeCurrent -= Time.deltaTime;
-            bulletLevelUpCurrentTime += Time.deltaTime;
-            if (matchTimeCurrent <= 10)
+            for (int i = 1; i <= 8; i++)
             {
-                matchTimeText.text = Mathf.Max(matchTimeCurrent, 0).ToString("0.000");
-
-                //changes text color to pulsing red, increases font size.
-                float changingColor = Mathf.Cos(matchTimeCurrent % 2);
-
-                matchTimeText.color = new Color(255, changingColor, changingColor);
-                matchTimeText.fontSize = 100;
-            }
-            else
-            {
-                matchTimeText.text = TimeSpan.FromSeconds(Mathf.Max(matchTimeCurrent, 0)).ToString("m\\:ss");
-            }
-            if (matchTimeCurrent <= 0)
-            {
-                if (player1Score == player2Score)
+                if (Input.GetButtonDown("J" + i + "Start"))
                 {
-                    overTime = true;
-                    matchTimeText.text = "Overtime";
+                    if (gameOver)
+                    {
+                        BeginMatch();
+                        paused = false;
+                    }
+                    else
+                        ToggleHowToPlay();
+                    break;
+                }
+            }
+
+            if (paused || gameOver)
+                return;
+
+            if (!ballControlScript.IsResetting && !overTime)
+            {
+                matchTimeCurrent -= Time.deltaTime;
+                bulletLevelUpCurrentTime += Time.deltaTime;
+                if (matchTimeCurrent <= 10)
+                {
+                    matchTimeText.text = Mathf.Max(matchTimeCurrent, 0).ToString("0.000");
+
+                    //changes text color to pulsing red, increases font size.
+                    float changingColor = Mathf.Cos(matchTimeCurrent % 2);
+
+                    matchTimeText.color = new Color(255, changingColor, changingColor);
+                    matchTimeText.fontSize = 100;
                 }
                 else
                 {
-                    EndGame();
+                    matchTimeText.text = TimeSpan.FromSeconds(Mathf.Max(matchTimeCurrent, 0)).ToString("m\\:ss");
+                }
+                if (matchTimeCurrent <= 0)
+                {
+                    if (player1Score == player2Score)
+                    {
+                        overTime = true;
+                        matchTimeText.text = "Overtime";
+                    }
+                    else
+                    {
+                        EndGame();
+                    }
                 }
             }
+
+            //Shows bullets increased UI element on regular interval.
+            ShowBulletIncreaseUI();
         }
 
         if (player1Script.controllerNumber == -1)
         {
             for (int i = 1; i <= 8; i++)
             {
-                if (Input.GetButton("J" + i + "A") && player2Script.controllerNumber != i)
+                if ((Input.GetButton("J" + i + "A") || Input.GetButton("J" + i + "B") || Input.GetButton("J" + i + "X") || Input.GetButton("J" + i + "Y") || Input.GetButton("J" + i + "Start") || Mathf.Abs(Input.GetAxis("J" + i + "Horizontal")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "Vertical")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "DHorizontal")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "DVertical")) > .5f) && player2Script.controllerNumber != i)
                     player1Script.controllerNumber = i;
             }
         }
-
-        if (player2Script.controllerNumber == -1)
+        else if (player2Script.controllerNumber == -1)
         {
             for (int i = 1; i <= 8; i++)
             {
-                if (Input.GetButton("J" + i + "A") && player1Script.controllerNumber != i)
+                if ((Input.GetButton("J" + i + "A") || Input.GetButton("J" + i + "B") || Input.GetButton("J" + i + "X") || Input.GetButton("J" + i + "Y") || Input.GetButton("J" + i + "Start") || Mathf.Abs(Input.GetAxis("J" + i + "Horizontal")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "Vertical")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "DHorizontal")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "DVertical")) > .5f) && player1Script.controllerNumber != i)
                     player2Script.controllerNumber = i;
             }
         }
-        //TO ADD: This is where the Pause menu will appear.
-        //if (Input.GetKeyDown(KeyCode.Escape))
-        //menu.Pause();
-
-        //if(player1 or 2 reaches the score limit)
-        //{
-        // End the game
-        //}
-
-
-        //Shows bullets increased UI element on regular interval.
-        ShowBulletIncreaseUI();
     }
 
     /// <summary>
