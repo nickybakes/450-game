@@ -53,6 +53,8 @@ public class BulletManager : MonoBehaviour
     private bool isRight;
     private bool reachedOppositeSide = false;
 
+    private int numBullets; //How many bullets will be spawned
+
     //Add some sort of level up system, and different directions bullets shoot
     //Make more variables so arc movement can work
     private bool otherSide = false;
@@ -75,6 +77,8 @@ public class BulletManager : MonoBehaviour
         meshRenderer = GetComponent<MeshRenderer>();
 
         gameManager = FindObjectOfType<GameManager>();
+
+        numBullets = 1;
 
         //Changes material based on the spawner owner
         // if(ownerNumber == 0)
@@ -111,6 +115,7 @@ public class BulletManager : MonoBehaviour
         rotationAmountDegrees = 0;
         currentAngle = 0;
         bulletPattern = BulletPatterns.front;
+        numBullets = 1;
 
         //Add new patterns
         transform.position = fixedPoint;
@@ -139,14 +144,14 @@ public class BulletManager : MonoBehaviour
                 case BulletPatterns.front:
 
                     if (ownerNumber == 0)
-                        OneDirectionPattern(0);
+                        OneDirectionPattern();
 
-                    else OneDirectionPattern(180);
+                    else OneDirectionPattern();
                     
                     break;
 
                 case BulletPatterns.down:
-                    OneDirectionPattern(270);
+                    OneDirectionPattern();
                     break;
             }
             
@@ -336,11 +341,14 @@ public class BulletManager : MonoBehaviour
         }
     }
 
-    private void OneDirectionPattern(float angle)
+    private void OneDirectionPattern()
     {
-        GameObject newBullet = BulletSetup();
-        Bullet bulletScript = newBullet.GetComponent<Bullet>();
-        bulletScript.direction = new Vector2(Mathf.Cos(Mathf.Deg2Rad * (angle)), Mathf.Sin(Mathf.Deg2Rad * (angle)));
+        for (int i = 0; i < numBullets; i++)
+        {
+            GameObject newBullet = BulletSetup();
+            Bullet bulletScript = newBullet.GetComponent<Bullet>();
+            bulletScript.direction = Vector3.Normalize(fixedPoint - transform.position);
+        }
     }
 
     
@@ -368,7 +376,7 @@ public class BulletManager : MonoBehaviour
     {
 
         maxTime -= 0.5f;
-        
+        numBullets++;
         
         //In the last 30 seconds, random bullshit go
         /*if(gameManager.bulletLevel == 4)
@@ -388,5 +396,8 @@ public class BulletManager : MonoBehaviour
         newScript.bulletPattern = BulletPatterns.down;
 
         //Its location will be determined by whether its controlled by player1 or 2
+
+
+        //Add some more randomness later
     }
 }

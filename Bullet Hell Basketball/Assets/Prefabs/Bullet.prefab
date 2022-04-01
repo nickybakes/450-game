@@ -57,7 +57,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 10
   direction: {x: 0, y: 0}
-  timer: 3
+  timer: 4
   ownerNumber: 0
   dontUpdate: 0
   gameManager: {fileID: 0}

@@ -95,9 +95,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bullet: {fileID: 2649196223168556797, guid: 0d018b114476535428b7651de079dd4d, type: 3}
-  timer: 3
-  rotationSpeed: 10
-  radius: 10
+  timer: 4
+  rotationSpeed: 5
+  radius: 20
   angularSpeed: 1
   ownerNumber: 0
   player1Mat: {fileID: 2100000, guid: 7cde71b3d7938dc4c9a422c8cb605d23, type: 2}
@@ -107,3 +107,4 @@ MonoBehaviour:
   bulletPattern: 0
   distanceTravelled: 20
   startsRight: 0
+  destroyOnReload: 0
