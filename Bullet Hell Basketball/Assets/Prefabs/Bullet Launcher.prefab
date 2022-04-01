@@ -99,6 +99,7 @@ MonoBehaviour:
   rotationSpeed: 5
   radius: 32.3
   angularSpeed: 0.5
+  bulletSeperationAngle: 20
   ownerNumber: 0
   player1Mat: {fileID: 2100000, guid: 7cde71b3d7938dc4c9a422c8cb605d23, type: 2}
   player2Mat: {fileID: 2100000, guid: 92873352d5998c64193f75fbe99a85ae, type: 2}

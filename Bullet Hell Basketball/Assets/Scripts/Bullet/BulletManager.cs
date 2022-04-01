@@ -34,6 +34,9 @@ public class BulletManager : MonoBehaviour
     private Vector3 fixedPoint;
     private float currentAngle;
 
+    public float bulletSeperationAngle = 5f;
+
+
     public int ownerNumber = 0; //Is this owned by player 1?
 
     //Materials
@@ -249,7 +252,7 @@ public class BulletManager : MonoBehaviour
         
         if (rotationSpeed < 0)
         {
-            Debug.Log("Player 1 Angle: " + currentAngle);
+            //Debug.Log("Player 1 Angle: " + currentAngle);
             
             if (currentAngle < maxAngle * Mathf.Deg2Rad && !otherSide)
             {
@@ -279,7 +282,7 @@ public class BulletManager : MonoBehaviour
 
         else
         {
-            Debug.Log("Player 2 Angle: " + currentAngle);
+            //Debug.Log("Player 2 Angle: " + currentAngle);
 
             if (currentAngle > - maxAngle * Mathf.Deg2Rad && !otherSide)
             {
@@ -346,11 +349,19 @@ public class BulletManager : MonoBehaviour
 
     private void OneDirectionPattern()
     {
+        float bulletAngle = getAngle(transform.position, fixedPoint);
+        //Debug.Log(bulletAngle);
+        bulletAngle += Random.Range(-10, 10);
+        float startingAngle = bulletAngle - ((numBullets / 2f) - .5f) * bulletSeperationAngle;
+
         for (int i = 0; i < numBullets; i++)
         {
             GameObject newBullet = BulletSetup();
             Bullet bulletScript = newBullet.GetComponent<Bullet>();
-            bulletScript.direction = Vector3.Normalize(fixedPoint - transform.position);
+
+            float direction = startingAngle + i * bulletSeperationAngle;
+            
+            bulletScript.direction = new Vector2(Mathf.Cos(direction * Mathf.Deg2Rad), Mathf.Sin(direction * Mathf.Deg2Rad));     
         }
     }
 
@@ -402,5 +413,9 @@ public class BulletManager : MonoBehaviour
 
 
         //Add some more randomness later
+    }
+    public float getAngle(Vector2 me, Vector2 target)
+    {
+        return Mathf.Atan2(target.y - me.y, target.x - me.x) * (180 / Mathf.PI);
     }
 }
