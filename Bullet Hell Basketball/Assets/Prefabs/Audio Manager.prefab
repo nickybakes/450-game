@@ -46,8 +46,8 @@ MonoBehaviour:
   sounds:
   - name: Music
     clips:
-    - {fileID: 8300000, guid: dbc9ad23120cd9a4bb4ca808bc0107c9, type: 3}
-    volume: 0.05
+    - {fileID: 8300000, guid: 8a924fa3a8bc187429af3b99cd7505bd, type: 3}
+    volume: 0.1
     pitch: 1
     loop: 1
     source: {fileID: 0}
