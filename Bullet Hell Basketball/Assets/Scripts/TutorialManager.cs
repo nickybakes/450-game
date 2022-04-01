@@ -42,6 +42,7 @@ public class TutorialManager : MonoBehaviour
         functions[10] = GiveBallToDummy;
         functions[12] = StartBullets;
         functions[13] = HideBulletProps;
+        messageIndexDisplay.text = (currentMessageIndex + 1) + "/" + messages.Length;
         DisplayMessage();
     }
 
