@@ -24,6 +24,8 @@ public class BulletManager : MonoBehaviour
     public float timer; //Controls how long between bullets this will fire
     private float maxTime;
 
+    private float originalMaxTime;
+
     private float rotationAmountDegrees;
     public float rotationSpeed = 10;
 
@@ -64,6 +66,8 @@ public class BulletManager : MonoBehaviour
     //Make more variables so arc movement can work
     private bool otherSide = false;
 
+    private GameObject mesh;
+
     public bool destroyOnReload; //This is for any extra spawners that need to be deleted when the game is reset
 
     // Start is called before the first frame update
@@ -76,6 +80,8 @@ public class BulletManager : MonoBehaviour
         }
 
         maxTime = timer;
+        originalMaxTime = maxTime;
+        
 
         fixedPoint = transform.position;
 
@@ -87,14 +93,16 @@ public class BulletManager : MonoBehaviour
 
         //Changes material based on the spawner owner
         // if(ownerNumber == 0)
-         //{
+        //{
         //     meshRenderer.material = player1Mat;
-         //}
+        //}
 
-         //else
-         //{
-         //    meshRenderer.material = player2Mat;
-         //}
+        //else
+        //{
+        //    meshRenderer.material = player2Mat;
+        //}
+
+        Init(ownerNumber);
 
         ogPosition = transform.position;
 
@@ -114,8 +122,16 @@ public class BulletManager : MonoBehaviour
         }
     }
 
+    public void Init(int playerNumber)
+    {
+        this.ownerNumber = playerNumber;
+        transform.GetChild(1 - playerNumber).gameObject.SetActive(false);
+        mesh = transform.GetChild(playerNumber).gameObject;
+    }
+
     public void Reset()
     {
+        maxTime = originalMaxTime;
         timer = maxTime;
         rotationAmountDegrees = 0;
         currentAngle = 0;
@@ -152,25 +168,26 @@ public class BulletManager : MonoBehaviour
                         OneDirectionPattern();
 
                     else OneDirectionPattern();
-                    
+
                     break;
 
                 case BulletPatterns.down:
                     OneDirectionPattern();
                     break;
             }
-            
-            if(ownerNumber == 0){
-                timer = Mathf.Max(maxTime - Mathf.Max((gameManager.player2Score - gameManager.player1Score)/20 , 0), 0.5f);  
-                
+
+            if (ownerNumber == 0)
+            {
+                timer = Mathf.Max(maxTime - Mathf.Max((gameManager.player2Score - gameManager.player1Score) / 20, 0), 0.5f);
+
             }
 
             else
             {
-                timer = Mathf.Max(maxTime - Mathf.Max((gameManager.player1Score - gameManager.player2Score)/20, 0), 0.5f);
+                timer = Mathf.Max(maxTime - Mathf.Max((gameManager.player1Score - gameManager.player2Score) / 20, 0), 0.5f);
             }
 
-            
+
 
             //timer = maxTime;
         }
@@ -249,11 +266,11 @@ public class BulletManager : MonoBehaviour
 
     private void ArcMovement()
     {
-        
+
         if (rotationSpeed < 0)
         {
             //Debug.Log("Player 1 Angle: " + currentAngle);
-            
+
             if (currentAngle < maxAngle * Mathf.Deg2Rad && !otherSide)
             {
                 currentAngle -= angularSpeed * Time.deltaTime;
@@ -284,14 +301,14 @@ public class BulletManager : MonoBehaviour
         {
             //Debug.Log("Player 2 Angle: " + currentAngle);
 
-            if (currentAngle > - maxAngle * Mathf.Deg2Rad && !otherSide)
+            if (currentAngle > -maxAngle * Mathf.Deg2Rad && !otherSide)
             {
                 currentAngle -= angularSpeed * Time.deltaTime;
                 Vector3 offset = new Vector3(Mathf.Sin(currentAngle), Mathf.Cos(currentAngle), fixedPoint.z) * radius;
                 transform.position = fixedPoint + offset;
             }
 
-            if (currentAngle <= - maxAngle * Mathf.Deg2Rad)
+            if (currentAngle <= -maxAngle * Mathf.Deg2Rad)
             {
                 otherSide = true;
             }
@@ -308,9 +325,12 @@ public class BulletManager : MonoBehaviour
                 otherSide = false;
             }
         }
+
+        mesh.transform.rotation = Quaternion.Euler(0, 0, getAngle(transform.position, fixedPoint));
+        mesh.transform.GetChild(0).Rotate(new Vector3((200 + (120*(numBullets - 1))) * Time.deltaTime, 0, 0), Space.Self);
     }
 
-    
+
     //Method of all the shared methods that set up bullets
     private GameObject BulletSetup()
     {
@@ -333,9 +353,9 @@ public class BulletManager : MonoBehaviour
 
         return newBullet;
     }
-    
-    
-    
+
+
+
     //Bullet patters
     private void OmniPattern()
     {
@@ -360,12 +380,12 @@ public class BulletManager : MonoBehaviour
             Bullet bulletScript = newBullet.GetComponent<Bullet>();
 
             float direction = startingAngle + i * bulletSeperationAngle;
-            
-            bulletScript.direction = new Vector2(Mathf.Cos(direction * Mathf.Deg2Rad), Mathf.Sin(direction * Mathf.Deg2Rad));     
+
+            bulletScript.direction = new Vector2(Mathf.Cos(direction * Mathf.Deg2Rad), Mathf.Sin(direction * Mathf.Deg2Rad));
         }
     }
 
-    
+
 
     /// <summary>
     /// Sets the bool to the opposite value Maybe work on this when I have more time
@@ -385,13 +405,13 @@ public class BulletManager : MonoBehaviour
 
         return value;
     }
-    
+
     public void LevelUp()
     {
 
         maxTime -= 0.5f;
         numBullets++;
-        
+
         //In the last 30 seconds, random bullshit go
         /*if(gameManager.bulletLevel == 4)
         {

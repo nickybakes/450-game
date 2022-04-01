@@ -74,6 +74,7 @@ public class GameManager : MonoBehaviour
     private float bulletTimerUI;
 
     public int bulletLevelUpInterval;
+    public float bulletLevelUpCurrentTime;
 
     public GameObject playerOneWins;
     public GameObject playerTwoWins;
@@ -220,7 +221,10 @@ public class GameManager : MonoBehaviour
             bulletManagers[i].Reset();
         }
 
-        ResetPlayersAndBall();
+        bulletLevelUpCurrentTime = 0;
+        bulletLevel = 1;
+
+        ballControlScript.IsResetting = false;
     }
 
     void Update()
@@ -265,6 +269,7 @@ public class GameManager : MonoBehaviour
         if (!ballControlScript.IsResetting && !overTime)
         {
             matchTimeCurrent -= Time.deltaTime;
+            bulletLevelUpCurrentTime += Time.deltaTime;
             if (matchTimeCurrent <= 10)
             {
                 matchTimeText.text = Mathf.Max(matchTimeCurrent, 0).ToString("0.000");
@@ -331,7 +336,7 @@ public class GameManager : MonoBehaviour
     private void ShowBulletIncreaseUI()
     {
         //If timer is at 30 second interval, show bullet increased UI element for [3] seconds.
-        if ((int)matchTimeCurrent % bulletLevelUpInterval == 0 && matchTimeCurrent > 5)
+        if (bulletLevelUpCurrentTime >= bulletLevelUpInterval && matchTimeCurrent > 5)
         {
             if (increaseLevelOnce)
             {
@@ -342,6 +347,7 @@ public class GameManager : MonoBehaviour
                     bulletManagers[i].LevelUp();
                 }
             }
+            bulletLevelUpCurrentTime = 0;
             bulletIncreaseUI.gameObject.SetActive(true);
             bulletLevelUI.text = "Bullets Level: " + bulletLevel;
 
