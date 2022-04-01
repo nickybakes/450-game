@@ -21,8 +21,8 @@ public enum BulletPatterns
 public class BulletManager : MonoBehaviour
 {
     public GameObject bullet;
-    public float timer; //Controls how long between bullets this will fire
-    private float maxTime;
+    private float timer; //Controls how long between bullets this will fire
+    public float maxTime;
 
     private float originalMaxTime;
 
@@ -42,7 +42,6 @@ public class BulletManager : MonoBehaviour
     public int ownerNumber = 0; //Is this owned by player 1?
 
     //Materials
-    private MeshRenderer meshRenderer;
     public Material player1Mat;
     public Material player2Mat;
 
@@ -61,6 +60,8 @@ public class BulletManager : MonoBehaviour
     private int numBullets; //How many bullets will be spawned
     public float minAngle = 0;
     public float maxAngle = 45;
+    public float initialNumberOfBullets = 2;
+
 
     //Add some sort of level up system, and different directions bullets shoot
     //Make more variables so arc movement can work
@@ -73,58 +74,47 @@ public class BulletManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //Sets a default value if the given one isn't good
-        if (timer <= 0)
-        {
-            timer = 10.0f;
-        }
-
-        maxTime = timer;
-        originalMaxTime = maxTime;
-        
-
-        fixedPoint = transform.position;
-
-        meshRenderer = GetComponent<MeshRenderer>();
-
-        gameManager = FindObjectOfType<GameManager>();
-
-        numBullets = 1;
-
-        //Changes material based on the spawner owner
-        // if(ownerNumber == 0)
-        //{
-        //     meshRenderer.material = player1Mat;
-        //}
-
-        //else
-        //{
-        //    meshRenderer.material = player2Mat;
-        //}
-
-        Init(ownerNumber);
-
-        ogPosition = transform.position;
-
         if (distanceTravelled == 0)
         {
             distanceTravelled = 1;
         }
-
-        if (startsRight)
-        {
-            isRight = true;
-        }
-
-        else
-        {
-            isRight = false;
-        }
     }
 
-    public void Init(int playerNumber)
+    public void Init(int playerNumber, Vector2 pos, BulletLauncherData data, GameManager manager)
     {
+        gameManager = manager;
+        this.movement = data.movement;
+        this.bulletPattern = data.bulletPattern;
+        this.radius = data.arcMovementRadius;
+        this.rotationSpeed = data.rotationSpeed;
+        this.angularSpeed = data.moveFullCircleSpeed;
+        this.bulletSeperationAngle = data.bulletSeperationAngle;
+        this.minAngle = data.arcMinAngle;
+        this.maxAngle = data.arcMaxAngle;
+
+
+        timer = data.initialTimeBetweenBullets;
+        maxTime = data.initialTimeBetweenBullets;
+        originalMaxTime = data.initialTimeBetweenBullets;
+
+        numBullets = data.initialNumberOfBullets;
+
         this.ownerNumber = playerNumber;
+
+        //flip everything around for the other team
+        if (ownerNumber == 1)
+        {
+            isRight = true;
+            this.rotationSpeed = -this.rotationSpeed;
+            this.angularSpeed = -this.angularSpeed;
+            this.minAngle = -this.minAngle;
+            pos.x = -pos.x;
+        }
+
+        transform.position = pos;
+        fixedPoint = pos;
+        ogPosition = pos;
+
         transform.GetChild(1 - playerNumber).gameObject.SetActive(false);
         mesh = transform.GetChild(playerNumber).gameObject;
     }
@@ -136,14 +126,16 @@ public class BulletManager : MonoBehaviour
         rotationAmountDegrees = 0;
         currentAngle = 0;
         bulletPattern = BulletPatterns.front;
-        numBullets = 1;
+        numBullets = 2;
 
         //Add new patterns
         transform.position = fixedPoint;
+
     }
 
     private void FixedUpdate()
     {
+
         if (gameManager.paused)
             return;
 
@@ -327,7 +319,7 @@ public class BulletManager : MonoBehaviour
         }
 
         mesh.transform.rotation = Quaternion.Euler(0, 0, getAngle(transform.position, fixedPoint));
-        mesh.transform.GetChild(0).Rotate(new Vector3((200 + (120*(numBullets - 1))) * Time.deltaTime, 0, 0), Space.Self);
+        mesh.transform.GetChild(0).Rotate(new Vector3((200 + (120 * (gameManager.bulletLevel - 1))) * Time.deltaTime, 0, 0), Space.Self);
     }
 
 
@@ -339,6 +331,18 @@ public class BulletManager : MonoBehaviour
         Bullet bulletScript = newBullet.GetComponent<Bullet>();
         bulletScript.ownerNumber = ownerNumber;
         bulletScript.gameManager = gameManager;
+
+        if (ownerNumber == 0)
+        {
+            bulletScript.timer = 4 + Mathf.Max((gameManager.player2Score - gameManager.player1Score) / 13, 0);
+            bulletScript.speed = 10 + Mathf.Max((gameManager.player2Score - gameManager.player1Score) / 30, 0) + gameManager.bulletLevel;
+        }
+        else
+        {
+            bulletScript.timer = 4 + Mathf.Max((gameManager.player1Score - gameManager.player2Score) / 13, 0);
+            bulletScript.speed = 10 + Mathf.Max((gameManager.player1Score - gameManager.player2Score) / 30, 0) + gameManager.bulletLevel;
+        }
+
         MeshRenderer bulletMesh = newBullet.GetComponentInChildren<MeshRenderer>();
 
         if (bulletScript.ownerNumber == 0)
@@ -437,5 +441,10 @@ public class BulletManager : MonoBehaviour
     public float getAngle(Vector2 me, Vector2 target)
     {
         return Mathf.Atan2(target.y - me.y, target.x - me.x) * (180 / Mathf.PI);
+    }
+
+    public void MoveToInitialPosition()
+    {
+        FixedUpdate();
     }
 }

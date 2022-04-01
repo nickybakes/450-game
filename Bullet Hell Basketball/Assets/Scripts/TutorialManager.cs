@@ -31,6 +31,8 @@ public class TutorialManager : MonoBehaviour
 
     public GameObject bulletProps;
 
+    public BulletManager[] bulletManagers;
+
     void Start()
     {
         functions = new TutorialEvent[messages.Length];
@@ -68,7 +70,7 @@ public class TutorialManager : MonoBehaviour
             messages[currentMessageIndex].transform.GetChild((int)controlType).gameObject.SetActive(true);
         }
 
-        if(functions[currentMessageIndex] != null)
+        if (functions[currentMessageIndex] != null)
             functions[currentMessageIndex].Invoke();
 
     }
@@ -80,21 +82,20 @@ public class TutorialManager : MonoBehaviour
 
     public void StartBullets()
     {
-        BulletManager[] bulletManagers = FindObjectsOfType<BulletManager>();
-
         for (int i = 0; i < bulletManagers.Length; i++)
         {
             bulletManagers[i].gameObject.SetActive(true);
         }
-
         bulletProps.SetActive(true);
     }
 
-    public void HideBulletProps(){
+    public void HideBulletProps()
+    {
         bulletProps.SetActive(false);
     }
 
-    public void GiveBallToDummy(){
+    public void GiveBallToDummy()
+    {
         gameManager.player2Script.GrabBall();
     }
 }

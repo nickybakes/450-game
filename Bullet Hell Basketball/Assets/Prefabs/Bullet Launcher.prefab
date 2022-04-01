@@ -123,7 +123,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5370311947778578661}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -18.443054, y: 6.103491, z: 30.151619}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 3995656779015943579}
@@ -156,6 +156,7 @@ MonoBehaviour:
   rotationSpeed: 5
   radius: 32.3
   angularSpeed: 0.5
+  fixedPoint: {x: 0, y: 0, z: 0}
   bulletSeperationAngle: 20
   ownerNumber: 0
   player1Mat: {fileID: 2100000, guid: 7cde71b3d7938dc4c9a422c8cb605d23, type: 2}

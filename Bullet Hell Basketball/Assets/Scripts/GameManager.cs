@@ -21,11 +21,14 @@ public class GameManager : MonoBehaviour
     public GameObject leftBasketPrefab;
     public GameObject rightBasketPrefab;
 
+    public GameObject bulletManagerPrefab;
+
     //Spawning
     public Transform playerSpawnLocation;
     public Transform basketLocation;
     public Transform ballSpawnHeight;
 
+    public BulletLauncherData bulletLauncherData;
 
     private Vector2 player1SpawnPosition;
     private Vector2 player2SpawnPosition;
@@ -185,6 +188,9 @@ public class GameManager : MonoBehaviour
         rightBasket.transform.position = new Vector2(-basketLocation.position.x, basketLocation.position.y);
         ballControlScript.rightBasket = rightBasket;
 
+        //spawn the bullet launchers
+        SpawnBulletSpawnersFromData();
+
         if (isTutorial)
         {
             tutorialManager.gameManager = this;
@@ -200,8 +206,11 @@ public class GameManager : MonoBehaviour
 
             for (int i = 0; i < bulletManagers.Length; i++)
             {
+                bulletManagers[i].Reset();
+                bulletManagers[i].MoveToInitialPosition();
                 bulletManagers[i].gameObject.SetActive(false);
             }
+            tutorialManager.bulletManagers = bulletManagers;
         }
         else
         {
@@ -259,6 +268,22 @@ public class GameManager : MonoBehaviour
         bulletLevel = 1;
 
         ballControlScript.IsResetting = false;
+    }
+
+    public void SpawnBulletSpawnersFromData()
+    {
+        if (bulletLauncherData != null)
+        {
+            GameObject launcher1 = Instantiate(bulletManagerPrefab);
+            BulletManager launcherScript1 = launcher1.GetComponent<BulletManager>();
+
+            launcherScript1.Init(0, bulletLauncherData.transform.position, bulletLauncherData, this);
+
+            GameObject launcher2 = Instantiate(bulletManagerPrefab);
+            BulletManager launcherScript2 = launcher2.GetComponent<BulletManager>();
+
+            launcherScript2.Init(1, bulletLauncherData.transform.position, bulletLauncherData, this);
+        }
     }
 
     void Update()
@@ -464,6 +489,9 @@ public class GameManager : MonoBehaviour
         player1Score = 0;
         player2Score = 0;
         bulletLevel = 1;
+
+        bulletIncreaseUI.gameObject.SetActive(false);
+        bulletTimerUI = 0;
     }
 
     public void ResetPlayersAndBall()
@@ -510,7 +538,6 @@ public class GameManager : MonoBehaviour
         matchTimeText.fontSize = 75;
         matchTimeText.color = new Color(255, 255, 255);
 
-        bulletLevel = 1;
         bulletTimerUI = 0;
         bulletIncreaseUI.gameObject.SetActive(false);
     }

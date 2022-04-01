@@ -211,7 +211,7 @@ public class Ball : MonoBehaviour
                 //completes the parabola trip in one second (* by speed), changing speed based on height and dist from basket.
                 float speedMod = speed + ((300 - heightMod) / 200) + distMod + speedAddition /*+ (2 / (Vector2.Distance(transform.position, currentTarget.transform.position) + 1))*/;
                 timer += Time.deltaTime * speedMod;
-                Vector2 newPosition = CalculateParabola(startPoint, currentTarget.transform.GetChild(0).transform.position, ballHeight * heightMod, timer, false);
+                Vector2 newPosition = CalculateParabola(startPoint, currentTarget.transform.GetChild(1).transform.position, ballHeight * heightMod, timer, false);
                 if (physics.simulatePhysics)
                     return;
                 transform.position = newPosition;
@@ -261,7 +261,7 @@ public class Ball : MonoBehaviour
             {
                 SetBasketCrosshair(leftBasket, true);
 
-                Vector3[] pointsArray = PreviewParabola(transform.position, currentTarget.transform.GetChild(0).transform.position, ballHeight * HeightModifier(), previewArcSmoothness);
+                Vector3[] pointsArray = PreviewParabola(transform.position, currentTarget.transform.GetChild(1).transform.position, ballHeight * HeightModifier(), previewArcSmoothness);
                 lineRenderer.SetPositions(pointsArray);
                 lineRenderer.enabled = true;
             }
@@ -270,7 +270,7 @@ public class Ball : MonoBehaviour
 
                 SetBasketCrosshair(rightBasket, true);
 
-                Vector3[] pointsArray = PreviewParabola(transform.position, currentTarget.transform.GetChild(0).transform.position, ballHeight * HeightModifier(), previewArcSmoothness);
+                Vector3[] pointsArray = PreviewParabola(transform.position, currentTarget.transform.GetChild(1).transform.position, ballHeight * HeightModifier(), previewArcSmoothness);
                 lineRenderer.SetPositions(pointsArray);
                 lineRenderer.enabled = true;
             }
@@ -486,7 +486,7 @@ public class Ball : MonoBehaviour
         audioManager.Play("Net", 0.8f, 1.2f);
 
         //changes position of ball so it goes 'through' the basket.
-        transform.position = new Vector3(gameManager.rightBasket.transform.GetChild(0).transform.position.x, transform.position.y, transform.position.z);
+        transform.position = new Vector3(gameManager.rightBasket.transform.GetChild(1).transform.position.x, transform.position.y, transform.position.z);
 
         if (threePointShot)
         {
@@ -519,7 +519,7 @@ public class Ball : MonoBehaviour
         audioManager.Play("Net", 0.8f, 1.2f);
 
         //changes position of ball so it goes 'through' the basket.
-        transform.position = new Vector3(gameManager.leftBasket.transform.GetChild(0).transform.position.x, transform.position.y, transform.position.z);
+        transform.position = new Vector3(gameManager.leftBasket.transform.GetChild(1).transform.position.x, transform.position.y, transform.position.z);
 
         if (threePointShot)
         {
