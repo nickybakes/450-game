@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public static GameManager Instance;
     private AudioManager audioManager;
+    private Sound music;
+    private Sound pauseMusic;
 
     //TO ADD: MENU
     //[SerializeField] private MainMenu menu;
@@ -130,6 +132,8 @@ public class GameManager : MonoBehaviour
         bulletIncreaseUI = panelUI.transform.GetChild(5).GetComponent<Text>();
 
         audioManager = FindObjectOfType<AudioManager>();
+        music = audioManager.Find("Music");
+        pauseMusic = audioManager.Find("MusicPause");
 
         panelUI.SetActive(true);
         //player 1.
@@ -361,6 +365,18 @@ public class GameManager : MonoBehaviour
     {
         tempHud.SetActive(!tempHud.activeSelf);
         paused = !paused;
+
+        //toggles audio.
+        if (paused)
+        {
+            pauseMusic.source.volume = .1f;
+            music.source.volume = 0;
+        }
+        else
+        {
+            pauseMusic.source.volume = 0;
+            music.source.volume = 0.1f;
+        }
     }
 
     public void EndGame()
