@@ -239,11 +239,14 @@ public class BulletManager : MonoBehaviour
 
     private void ArcMovement()
     {
-        if (rotationSpeed > 0)
+        
+        if (rotationSpeed < 0)
         {
+            Debug.Log("Player 1 Angle: " + currentAngle);
+            
             if (currentAngle < 3 && !otherSide)
             {
-                currentAngle += angularSpeed * Time.deltaTime;
+                currentAngle -= angularSpeed * Time.deltaTime;
                 Vector3 offset = new Vector3(Mathf.Sin(currentAngle), Mathf.Cos(currentAngle), fixedPoint.z) * radius;
                 transform.position = fixedPoint + offset;
             }
@@ -255,7 +258,7 @@ public class BulletManager : MonoBehaviour
 
             if (otherSide)
             {
-                currentAngle -= angularSpeed * Time.deltaTime;
+                currentAngle += angularSpeed * Time.deltaTime;
                 Vector3 offset = new Vector3(Mathf.Sin(currentAngle), Mathf.Cos(currentAngle), fixedPoint.z) * radius;
                 transform.position = fixedPoint + offset;
             }
@@ -268,9 +271,13 @@ public class BulletManager : MonoBehaviour
 
         else
         {
+            Debug.Log("Player 2 Angle: " + currentAngle);
+
             if (currentAngle > - 3 && !otherSide)
             {
-                moveAroundPoint();
+                currentAngle -= angularSpeed * Time.deltaTime;
+                Vector3 offset = new Vector3(Mathf.Sin(currentAngle), Mathf.Cos(currentAngle), fixedPoint.z) * radius;
+                transform.position = fixedPoint + offset;
             }
 
             if (currentAngle <= -3)
@@ -280,7 +287,7 @@ public class BulletManager : MonoBehaviour
 
             if (otherSide)
             {
-                currentAngle -= angularSpeed * Time.deltaTime;
+                currentAngle += angularSpeed * Time.deltaTime;
                 Vector3 offset = new Vector3(Mathf.Sin(currentAngle), Mathf.Cos(currentAngle), fixedPoint.z) * radius;
                 transform.position = fixedPoint + offset;
             }
@@ -339,7 +346,7 @@ public class BulletManager : MonoBehaviour
     
 
     /// <summary>
-    /// Sets the bool to the opposite value 
+    /// Sets the bool to the opposite value Maybe work on this when I have more time
     /// </summary>
     /// <param name="value">The boolean to be changed</param>
     private bool reverseBool(bool value)
@@ -364,10 +371,10 @@ public class BulletManager : MonoBehaviour
         
         
         //In the last 30 seconds, random bullshit go
-        if(gameManager.bulletLevel == 4)
+        /*if(gameManager.bulletLevel == 4)
         {
             bulletPattern = BulletPatterns.omni;
-        }
+        }*/
     }
 
     /// <summary>
