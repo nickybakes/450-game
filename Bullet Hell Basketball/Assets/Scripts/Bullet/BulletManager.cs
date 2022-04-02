@@ -170,13 +170,11 @@ public class BulletManager : MonoBehaviour
 
             if (ownerNumber == 0)
             {
-                timer = Mathf.Max(maxTime - Mathf.Max((gameManager.player2Score - gameManager.player1Score) / 20, 0), 0.5f);
-
+                timer = Mathf.Max(maxTime - Mathf.Max((gameManager.player2Score - gameManager.player1Score) / 13, 0), 0.25f);
             }
-
             else
             {
-                timer = Mathf.Max(maxTime - Mathf.Max((gameManager.player1Score - gameManager.player2Score) / 20, 0), 0.5f);
+                timer = Mathf.Max(maxTime - Mathf.Max((gameManager.player1Score - gameManager.player2Score) / 13, 0), 0.25f);
             }
 
 

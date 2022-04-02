@@ -23,6 +23,8 @@ public class Ball : MonoBehaviour
 
     public BhbBallPhysics physics;
 
+    public Renderer ballRenderer;
+
     [HideInInspector]
     public GameObject leftBasket;
     [HideInInspector]
@@ -95,6 +97,8 @@ public class Ball : MonoBehaviour
         audioManager = FindObjectOfType<AudioManager>();
         IsResetting = false;
 
+        ballRenderer = transform.GetChild(4).GetComponent<Renderer>();
+
         //preset midair sounds.
         midAir = audioManager.Find("Midair");
         midAir.source.volume = 0;
@@ -109,9 +113,12 @@ public class Ball : MonoBehaviour
 
         if (transform.parent == null)
             transform.localScale = Vector3.one;
-            
+
         if (physics.simulatePhysics || transform.parent != null)
+        {
             isSwipeShot = false;
+            timer = 0;
+        }
 
         if (transform.position.x > gameManager.horizontalEdge && transform.parent == null)
         {
@@ -186,7 +193,7 @@ public class Ball : MonoBehaviour
                     }
                     calculateOnce = false;
                 }
-                
+
                 //so it's not calculated at runtime
                 heightMod = HeightModifier();
 
@@ -211,6 +218,14 @@ public class Ball : MonoBehaviour
                 //completes the parabola trip in one second (* by speed), changing speed based on height and dist from basket.
                 float speedMod = speed + ((300 - heightMod) / 200) + distMod + speedAddition /*+ (2 / (Vector2.Distance(transform.position, currentTarget.transform.position) + 1))*/;
                 timer += Time.deltaTime * speedMod;
+                if (timer >= 1)
+                {
+                    if (currentTarget == leftBasket)
+                        ScoreLeftBasket();
+                    else if (currentTarget == rightBasket)
+                        ScoreRightBasket();
+                    return;
+                }
                 Vector2 newPosition = CalculateParabola(startPoint, currentTarget.transform.GetChild(1).transform.position, ballHeight * heightMod, timer, false);
                 if (physics.simulatePhysics)
                     return;

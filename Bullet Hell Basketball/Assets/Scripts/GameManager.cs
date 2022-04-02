@@ -330,6 +330,29 @@ public class GameManager : MonoBehaviour
                 return;
             }
 
+            if (paused && Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                player1IsBot = true;
+                player2IsBot = true;
+                player1Script.isBot = true;
+                player2Script.isBot = true;
+            }
+            else if (paused && Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                player1IsBot = false;
+                player2IsBot = true;
+                player1Script.isBot = false;
+                player2Script.isBot = true;
+            }
+            else if (paused && Input.GetKeyDown(KeyCode.Alpha0))
+            {
+                player1IsBot = false;
+                player2IsBot = false;
+                player1Script.isBot = false;
+                player2Script.isBot = false;
+            }
+
+
             if (Input.GetKeyDown(KeyCode.Backspace))
             {
                 if (gameOver)
@@ -512,6 +535,9 @@ public class GameManager : MonoBehaviour
 
         player1Script.velocity = Vector2.zero;
         player2Script.velocity = Vector2.zero;
+
+        player1Script.autoCatchCooldownTimer = player1Script.autoCatchCooldownTimerMax;
+        player2Script.autoCatchCooldownTimer = player2Script.autoCatchCooldownTimerMax;
 
         if (previousScorer == -1)
         {

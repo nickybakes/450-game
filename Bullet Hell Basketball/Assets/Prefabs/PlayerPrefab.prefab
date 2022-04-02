@@ -91,6 +91,7 @@ MonoBehaviour:
   jumpsInAirMax: 1
   controllerNumber: -1
   playerNumber: 0
+  playerControlNumber: 0
   pickupRadius: 0
   animator: {fileID: 7679925284762406588}
   ballAnimator: {fileID: 4171130650560404255}
@@ -116,6 +117,7 @@ MonoBehaviour:
   isBot: 0
   botShootRange: 0
   botAlwaysDoubleJump: 0
+  isDummy: 0
 --- !u!61 &1963545057765774826
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -129,7 +131,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.06714654, y: 3.6298704}
+  m_Offset: {x: 0.29198635, y: 3.1945984}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -140,7 +142,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 3.853931, y: 7.603874}
+  m_Size: {x: 3.0418537, y: 5.8125863}
   m_EdgeRadius: 0
 --- !u!95 &4171130650560404255
 Animator:

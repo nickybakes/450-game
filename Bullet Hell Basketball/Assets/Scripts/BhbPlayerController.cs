@@ -46,10 +46,14 @@ public class BhbPlayerController : NeonHeightsCharacterController
     public int playerControlNumber;
     public float pickupRadius;
 
+    public Renderer swipeRenderer;
+
+    public Collider2D playerCollider;
+
     private GameObject ball;
     private Ball ballScript;
     private BhbBallPhysics ballPhysics;
-    private float autoCatchCooldownTimer;
+    public float autoCatchCooldownTimer;
     private GameManager gameManager;
     private AudioManager audioManager;
     private float soundTimer;
@@ -244,6 +248,8 @@ public class BhbPlayerController : NeonHeightsCharacterController
         ball = GameObject.FindGameObjectWithTag("Ball");
         ballScript = ball.GetComponent<Ball>();
         ballPhysics = ball.GetComponent<BhbBallPhysics>();
+        swipeRenderer = transform.GetChild(0).GetComponent<Renderer>();
+        playerCollider = gameObject.GetComponent<Collider2D>();
     }
 
     // Update is called once per frame
@@ -406,7 +412,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
                     if (playerNumber == 0)
                     {
-                        if (Vector2.Distance(transform.GetChild(0).transform.position, gameManager.player2.transform.position) < 5.2)
+                        if (swipeRenderer.bounds.Intersects(gameManager.player2Script.playerCollider.bounds))
                         {
                             if (ball.transform.parent != null && ball.transform.parent != transform)
                                 GrabBall();
@@ -422,7 +428,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
                     }
                     else if (playerNumber == 1)
                     {
-                        if (Vector2.Distance(transform.GetChild(0).transform.position, gameManager.player1.transform.position) < 6.5)
+                        if (swipeRenderer.bounds.Intersects(gameManager.player1Script.playerCollider.bounds))
                         {
                             if (ball.transform.parent != null && ball.transform.parent != transform)
                                 GrabBall();
@@ -442,8 +448,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
                 {
                     if (ball.transform.parent == null)
                     {
-                        Vector2 midpoint = transform.position + (transform.GetChild(0).transform.position - transform.position) / 2.0f;
-                        if (Vector2.Distance(midpoint, (Vector2)ball.transform.position + (ballPhysics.velocity * Time.deltaTime)) < 6.5)
+                        if (swipeRenderer.bounds.Intersects(ballScript.ballRenderer.bounds))
                         {
                             IsSwipeShooting = true;
                         }
@@ -555,6 +560,37 @@ public class BhbPlayerController : NeonHeightsCharacterController
             }
             UpdateAugust();
         }
+    }
+
+    void DrawBounds(Bounds b, float delay = 0)
+    {
+        // bottom
+        var p1 = new Vector3(b.min.x, b.min.y, b.min.z);
+        var p2 = new Vector3(b.max.x, b.min.y, b.min.z);
+        var p3 = new Vector3(b.max.x, b.min.y, b.max.z);
+        var p4 = new Vector3(b.min.x, b.min.y, b.max.z);
+
+        Debug.DrawLine(p1, p2, Color.blue, delay);
+        Debug.DrawLine(p2, p3, Color.red, delay);
+        Debug.DrawLine(p3, p4, Color.yellow, delay);
+        Debug.DrawLine(p4, p1, Color.magenta, delay);
+
+        // top
+        var p5 = new Vector3(b.min.x, b.max.y, b.min.z);
+        var p6 = new Vector3(b.max.x, b.max.y, b.min.z);
+        var p7 = new Vector3(b.max.x, b.max.y, b.max.z);
+        var p8 = new Vector3(b.min.x, b.max.y, b.max.z);
+
+        Debug.DrawLine(p5, p6, Color.blue, delay);
+        Debug.DrawLine(p6, p7, Color.red, delay);
+        Debug.DrawLine(p7, p8, Color.yellow, delay);
+        Debug.DrawLine(p8, p5, Color.magenta, delay);
+
+        // sides
+        Debug.DrawLine(p1, p5, Color.white, delay);
+        Debug.DrawLine(p2, p6, Color.gray, delay);
+        Debug.DrawLine(p3, p7, Color.green, delay);
+        Debug.DrawLine(p4, p8, Color.cyan, delay);
     }
 
     public void BotRandomizeBehavior()
@@ -713,6 +749,14 @@ public class BhbPlayerController : NeonHeightsCharacterController
             {
                 if (ball.transform.parent != transform)
                 {
+                    if (playerNumber == 1 && ball.transform.parent != null && gameManager.player1Script.IsSwipeShooting && Mathf.Abs(transform.position.x - ball.transform.position.x) > 10)
+                    {
+                        return false;
+                    }
+                    if (playerNumber == 1 && ballScript.isSwipeShot == true && Mathf.Abs(transform.position.x - ball.transform.position.x) > 10)
+                    {
+                        return false;
+                    }
                     if (playerNumber == 0 && ball.transform.parent != null && gameManager.player2Script.IsSwipeShooting && Mathf.Abs(transform.position.x - ball.transform.position.x) > 10)
                     {
                         return true;
@@ -755,6 +799,14 @@ public class BhbPlayerController : NeonHeightsCharacterController
             }
             if (action == Control.Right)
             {
+                if (playerNumber == 0 && ball.transform.parent != null && gameManager.player2Script.IsSwipeShooting && Mathf.Abs(transform.position.x - ball.transform.position.x) > 10)
+                {
+                    return false;
+                }
+                if (playerNumber == 0 && ballScript.isSwipeShot == true && Mathf.Abs(transform.position.x - ball.transform.position.x) > 10)
+                {
+                    return false;
+                }
                 if (playerNumber == 1 && ball.transform.parent != null && gameManager.player1Script.IsSwipeShooting && Mathf.Abs(transform.position.x - ball.transform.position.x) > 10)
                 {
                     return true;
@@ -938,8 +990,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
                 }
                 else if (ball.transform.parent == null)
                 {
-                    Vector2 midpoint = transform.position + (transform.GetChild(0).transform.position - transform.position) / 2.0f;
-                    if (Vector2.Distance(midpoint, (Vector2)ball.transform.position + (ballPhysics.velocity * Time.deltaTime)) < 3)
+                    if (Vector2.Distance(transform.GetChild(0).transform.position, (Vector2)ball.transform.position + (ballPhysics.velocity * Time.deltaTime)) < 3)
                     {
                         if (Mathf.PerlinNoise(-transform.position.y * Random.Range(-4, 4), -transform.position.x * Random.Range(-4, 4)) > .8)
                         {
