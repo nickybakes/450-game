@@ -48,6 +48,13 @@ public class GameManager : MonoBehaviour
 
     public Text matchTimeText;
 
+    public bool friendlyFire;
+
+    public GameObject[] playersTeam0;
+    public GameObject[] playersTeam1;
+    public GameObject[] playerScriptsTeam0;
+    public GameObject[] playerScriptsTeam1;
+
 
     [HideInInspector]
     public GameObject leftBasket;
