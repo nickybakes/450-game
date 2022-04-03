@@ -30,6 +30,9 @@ public class Ball : MonoBehaviour
     [HideInInspector]
     public GameObject rightBasket;
 
+    private Text onScoreTextRight;
+    private Text onScoreTextLeft;
+
     private AudioManager audioManager;
     private Sound midAir;
 
@@ -98,6 +101,9 @@ public class Ball : MonoBehaviour
         IsResetting = false;
 
         ballRenderer = transform.GetChild(4).GetComponent<Renderer>();
+
+        onScoreTextRight = gameManager.panelUI.transform.GetChild(3).GetComponent<Text>();
+        onScoreTextLeft = gameManager.panelUI.transform.GetChild(4).GetComponent<Text>();
 
         //preset midair sounds.
         midAir = audioManager.Find("Midair");
@@ -221,9 +227,15 @@ public class Ball : MonoBehaviour
                 if (timer >= 1)
                 {
                     if (currentTarget == leftBasket)
+                    {
                         ScoreLeftBasket();
+                        AfterScore();
+                    }
                     else if (currentTarget == rightBasket)
+                    {
                         ScoreRightBasket();
+                        AfterScore();
+                    }
                     return;
                 }
                 Vector2 newPosition = CalculateParabola(startPoint, currentTarget.transform.GetChild(1).transform.position, ballHeight * heightMod, timer, false);
@@ -503,21 +515,25 @@ public class Ball : MonoBehaviour
         //changes position of ball so it goes 'through' the basket.
         transform.position = new Vector3(gameManager.rightBasket.transform.GetChild(1).transform.position.x, transform.position.y, transform.position.z);
 
-        if (threePointShot)
+        if (threePointShot) //3 point
         {
             gameManager.player1Score += 3;
-            gameManager.panelUI.transform.GetChild(3).GetComponent<Text>().text = "+3";
+            onScoreTextRight.text = "+3";
             audioManager.Play("3points");
         }
-        else
+        else if (transform.parent == null) //2 point
         {
             gameManager.player1Score += 2;
-            gameManager.panelUI.transform.GetChild(3).GetComponent<Text>().text = "+2";
+            onScoreTextRight.text = "+2";
+            audioManager.Play("2points");
+        }
+        else //dunk (varied points)
+        {
+            int dunkValue = gameManager.bulletLevel * 2;
 
-            if (transform.parent == null)
-                audioManager.Play("2points");
-            else
-                audioManager.Play("Dunk");
+            gameManager.player1Score += dunkValue;
+            onScoreTextRight.text = "+" + dunkValue;
+            audioManager.Play("Dunk");
         }
         gameManager.previousScorer = 0;
         if (!gameManager.overTime)
@@ -539,24 +555,27 @@ public class Ball : MonoBehaviour
         if (threePointShot)
         {
             gameManager.player2Score += 3;
-            gameManager.panelUI.transform.GetChild(4).GetComponent<Text>().text = "+3";
+            onScoreTextLeft.text = "+3";
             audioManager.Play("3points");
         }
-        else
+        else if (transform.parent == null) //2 point
         {
             gameManager.player2Score += 2;
-            gameManager.panelUI.transform.GetChild(4).GetComponent<Text>().text = "+2";
+            onScoreTextLeft.text = "+2";
+            audioManager.Play("2points");
+        }
+        else //dunk (varied points)
+        {
+            int dunkValue = gameManager.bulletLevel * 2;
 
-            if (transform.parent == null)
-                audioManager.Play("2points");
-            else
-                audioManager.Play("Dunk");
+            gameManager.player2Score += dunkValue;
+            onScoreTextLeft.text = "+" + dunkValue;
+            audioManager.Play("Dunk");
         }
         gameManager.previousScorer = 1;
         if (!gameManager.overTime)
             gameManager.panelUI.transform.GetChild(4).gameObject.SetActive(true);
         gameManager.panelUI.transform.GetChild(1).GetComponent<Text>().text = gameManager.player2Score.ToString();
-
     }
 
     private void AfterScore()
@@ -576,15 +595,11 @@ public class Ball : MonoBehaviour
     /// </summary>
     private void PlayMidairSound()
     {
-        //changes volume based on ball's velocity.
-        float midairVolume;
-
+        //changes volume based on ball's velocity. Constantly plays.
         //if it's being held, volume = 0.
         if (transform.parent != null)
-            midairVolume = 0;
+            midAir.source.volume = 0;
         else
-            midairVolume = Mathf.Pow(physics.velocity.magnitude / 50, 3);
-
-        midAir.source.volume = midairVolume;
+            midAir.source.volume = Mathf.Pow(physics.velocity.magnitude / 50, 3);
     }
 }

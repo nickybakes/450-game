@@ -77,6 +77,7 @@ public class GameManager : MonoBehaviour
     private Text bulletLevelUI;
     private Text bulletIncreaseUI;
     private float bulletTimerUI;
+    private Text dunkLevelUI;
 
     public int bulletLevelUpInterval;
     public float bulletLevelUpCurrentTime;
@@ -140,6 +141,7 @@ public class GameManager : MonoBehaviour
 
         bulletLevelUI = panelUI.transform.GetChild(6).GetComponent<Text>();
         bulletIncreaseUI = panelUI.transform.GetChild(5).GetComponent<Text>();
+        dunkLevelUI = panelUI.transform.GetChild(7).GetComponent<Text>();
 
         audioManager = FindObjectOfType<AudioManager>();
         music = audioManager.Find("Music");
@@ -152,8 +154,9 @@ public class GameManager : MonoBehaviour
         //player 2.
         panelUI.transform.GetChild(1).GetComponent<Text>().text = "0";
 
-        //bullet level
+        //bullet level & Dunk value.
         bulletLevelUI.text = "Bullets Level: " + bulletLevel;
+        dunkLevelUI.text = "Dunks: +" + bulletLevel * 2;
 
         matchTimeText = panelUI.transform.GetChild(2).GetComponent<Text>();
         matchTimeText.text = TimeSpan.FromSeconds(Mathf.Max(matchTimeCurrent, 0)).ToString("m\\:ss");
@@ -235,8 +238,9 @@ public class GameManager : MonoBehaviour
         panelUI.transform.GetChild(1).GetComponent<Text>().text = player2Score.ToString();
         panelUI.transform.GetChild(0).GetComponent<Text>().text = player1Score.ToString();
 
-        //sets bullet level back to 1.
+        //sets bullet level and dunk value back to default.
         bulletLevelUI.text = "Bullets Level: " + bulletLevel;
+        dunkLevelUI.text = "Dunks: +" + bulletLevel * 2;
 
         if (isTutorial)
         {
@@ -408,6 +412,10 @@ public class GameManager : MonoBehaviour
                     {
                         overTime = true;
                         matchTimeText.text = "Overtime";
+                        //play overtime music.
+                        audioManager.Stop("Music");
+                        audioManager.Stop("MusicPause");
+                        audioManager.Play("Overtime");
                     }
                     else
                     {
@@ -459,6 +467,7 @@ public class GameManager : MonoBehaviour
             bulletLevelUpCurrentTime = 0;
             bulletIncreaseUI.gameObject.SetActive(true);
             bulletLevelUI.text = "Bullets Level: " + bulletLevel;
+            dunkLevelUI.text = "Dunks: +" + bulletLevel * 2;
 
             bulletTimerUI += Time.deltaTime;
         }
@@ -510,6 +519,10 @@ public class GameManager : MonoBehaviour
 
         audioManager.Play("Buzzer");
         midair.source.volume = 0;
+
+        audioManager.Stop("Overtime");
+        audioManager.Play("Music");
+        audioManager.Play("MusicPause");
 
         paused = true;
         gameOver = true;
