@@ -77,7 +77,8 @@ public class GameManager : MonoBehaviour
     private Text bulletLevelUI;
     private Text bulletIncreaseUI;
     private float bulletTimerUI;
-    private Text dunkLevelUI;
+    private Text dunkBonusUI;
+    private int dunkBonusValue;
 
     public int bulletLevelUpInterval;
     public float bulletLevelUpCurrentTime;
@@ -141,7 +142,8 @@ public class GameManager : MonoBehaviour
 
         bulletLevelUI = panelUI.transform.GetChild(6).GetComponent<Text>();
         bulletIncreaseUI = panelUI.transform.GetChild(5).GetComponent<Text>();
-        dunkLevelUI = panelUI.transform.GetChild(7).GetComponent<Text>();
+        dunkBonusUI = panelUI.transform.GetChild(7).GetComponent<Text>();
+        dunkBonusValue = (bulletLevel * 2) - 2;
 
         audioManager = FindObjectOfType<AudioManager>();
         music = audioManager.Find("Music");
@@ -156,7 +158,7 @@ public class GameManager : MonoBehaviour
 
         //bullet level & Dunk value.
         bulletLevelUI.text = "Bullets Level: " + bulletLevel;
-        dunkLevelUI.text = "Dunks: +" + bulletLevel * 2;
+        dunkBonusUI.text = "Dunk Bonus: +" + ((bulletLevel * 2) - 2);
 
         matchTimeText = panelUI.transform.GetChild(2).GetComponent<Text>();
         matchTimeText.text = TimeSpan.FromSeconds(Mathf.Max(matchTimeCurrent, 0)).ToString("m\\:ss");
@@ -240,7 +242,7 @@ public class GameManager : MonoBehaviour
 
         //sets bullet level and dunk value back to default.
         bulletLevelUI.text = "Bullets Level: " + bulletLevel;
-        dunkLevelUI.text = "Dunks: +" + bulletLevel * 2;
+        dunkBonusUI.text = "Dunk Bonus: +" + ((bulletLevel * 2) - 2);
 
         if (isTutorial)
         {
@@ -467,7 +469,7 @@ public class GameManager : MonoBehaviour
             bulletLevelUpCurrentTime = 0;
             bulletIncreaseUI.gameObject.SetActive(true);
             bulletLevelUI.text = "Bullets Level: " + bulletLevel;
-            dunkLevelUI.text = "Dunks: +" + bulletLevel * 2;
+            dunkBonusUI.text = "Dunk Bonus: +" + ((bulletLevel * 2) - 2);
 
             bulletTimerUI += Time.deltaTime;
         }

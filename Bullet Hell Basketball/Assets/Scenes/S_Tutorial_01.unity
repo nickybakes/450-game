@@ -3501,7 +3501,7 @@ GameObject:
   - component: {fileID: 1011619611}
   - component: {fileID: 1011619610}
   m_Layer: 5
-  m_Name: BulletLevel
+  m_Name: DunkBonus
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3523,7 +3523,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.000030517578, y: 349}
+  m_AnchoredPosition: {x: -0.000030517578, y: 447}
   m_SizeDelta: {x: 470.948, y: 145.378}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1011619610
@@ -7365,7 +7365,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collisionVertexPrefab: {fileID: 2382589878411412825, guid: de94585aa4ffe794c8cc1e98a3d925ff, type: 3}
   collisionSegmentPrefab: {fileID: 71431853401964895, guid: 2d19e55d322709d41b35224430022a18, type: 3}
-  editorUpdateFrame: 1
+  editorUpdateFrame: 0
   vertexColor: {r: 1, g: 0, b: 0, a: 1}
   segmentColor: {r: 1, g: 0, b: 0, a: 1}
   semiSolidPlatformColor: {r: 0, g: 0, b: 1, a: 1}
@@ -8197,7 +8197,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1.12
-  m_Text: You can also dunk by touching the hoop while holding the ball.
+  m_Text: You can also dunk by touching the hoop while holding the ball. These are
+    worth bonus points!!
 --- !u!222 &1880205928
 CanvasRenderer:
   m_ObjectHideFlags: 0
