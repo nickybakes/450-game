@@ -330,6 +330,10 @@ public class BulletManager : MonoBehaviour
         bulletScript.ownerNumber = ownerNumber;
         bulletScript.gameManager = gameManager;
 
+        if(gameManager.allBigBullets){
+            newBullet.transform.localScale = new Vector3(gameManager.bigBulletScale, gameManager.bigBulletScale, gameManager.bigBulletScale);
+        }
+
         if (ownerNumber == 0)
         {
             bulletScript.timer = 4 + Mathf.Max((gameManager.player2Score - gameManager.player1Score) / 13, 0);

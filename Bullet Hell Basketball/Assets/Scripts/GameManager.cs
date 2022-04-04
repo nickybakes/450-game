@@ -108,6 +108,8 @@ public class GameManager : MonoBehaviour
 
     public TutorialManager tutorialManager;
 
+    public bool allBigBullets;
+    public float bigBulletScale;
 
     [HideInInspector] public bool winConditionMet = false;
 
