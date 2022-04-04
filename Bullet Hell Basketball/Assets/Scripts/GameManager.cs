@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
@@ -48,13 +49,15 @@ public class GameManager : MonoBehaviour
 
     public Text matchTimeText;
 
-    public bool friendlyFire;
+    public bool friendlyFireSwipe;
+    public bool friendlyFireBullets;
 
     public GameObject[] playersTeam0;
     public GameObject[] playersTeam1;
-    public GameObject[] playerScriptsTeam0;
-    public GameObject[] playerScriptsTeam1;
+    public BhbPlayerController[] playerScriptsTeam0;
+    public BhbPlayerController[] playerScriptsTeam1;
 
+    public BhbPlayerController currentBallOwner;
 
     [HideInInspector]
     public GameObject leftBasket;
@@ -176,12 +179,12 @@ public class GameManager : MonoBehaviour
 
         player1 = Instantiate(playerPrefab);
         player1Script = player1.GetComponent<BhbPlayerController>();
-        player1Script.Init(0);
+        player1Script.Init(0, 0);
         player1Script.isBot = player1IsBot;
 
         player2 = Instantiate(playerPrefab);
         player2Script = player2.GetComponent<BhbPlayerController>();
-        player2Script.Init(1);
+        player2Script.Init(1, 1);
         player2Script.isBot = player2IsBot;
 
         ball = Instantiate(ballPrefab);
@@ -297,6 +300,8 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        if (ball.transform.parent == null)
+            currentBallOwner = null;
         //If the ball is above the screen height (will also happen when held).
         if (ball.transform.position.y > 33)
             ShowBallChevron(true);
@@ -590,4 +595,42 @@ public class GameManager : MonoBehaviour
 
         indicatorShevron.SetActive(isAboveScreen);
     }
+
+
+    public List<BhbPlayerController> SwipeBoundsIntersectCheck(BhbPlayerController source)
+    {
+        List<BhbPlayerController> victims = new List<BhbPlayerController>();
+        if (source.teamNumber == 0 && friendlyFireSwipe || source.teamNumber == 1)
+        {
+            for (int i = 0; i < playerScriptsTeam0.Length; i++)
+            {
+                if (source.swipeRenderer.bounds.Intersects(playerScriptsTeam0[i].playerCollider.bounds))
+                {
+                    victims.Add(playerScriptsTeam0[i]);
+                }
+            }
+        }
+        if (source.teamNumber == 1 && friendlyFireSwipe || source.teamNumber == 0)
+        {
+            for (int i = 0; i < playerScriptsTeam1.Length; i++)
+            {
+                if (source.swipeRenderer.bounds.Intersects(playerScriptsTeam1[i].playerCollider.bounds))
+                {
+                    victims.Add(playerScriptsTeam1[i]);
+                }
+            }
+        }
+        return victims;
+    }
+
+    public bool isBallOwnerOppositeTeam(BhbPlayerController source)
+    {
+
+        if (currentBallOwner == null)
+            return false;
+
+        return currentBallOwner.teamNumber != source.teamNumber;
+    }
+
+
 }
