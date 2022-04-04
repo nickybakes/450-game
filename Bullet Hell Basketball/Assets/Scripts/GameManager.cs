@@ -143,7 +143,6 @@ public class GameManager : MonoBehaviour
         bulletLevelUI = panelUI.transform.GetChild(6).GetComponent<Text>();
         bulletIncreaseUI = panelUI.transform.GetChild(5).GetComponent<Text>();
         dunkBonusUI = panelUI.transform.GetChild(7).GetComponent<Text>();
-        dunkBonusValue = (bulletLevel * 2) - 2;
 
         audioManager = FindObjectOfType<AudioManager>();
         music = audioManager.Find("Music");
@@ -158,7 +157,8 @@ public class GameManager : MonoBehaviour
 
         //bullet level & Dunk value.
         bulletLevelUI.text = "Bullets Level: " + bulletLevel;
-        dunkBonusUI.text = "Dunk Bonus: +" + ((bulletLevel * 2) - 2);
+        dunkBonusValue = (bulletLevel * 2) - 2;
+        dunkBonusUI.text = "Dunk Bonus: +" + dunkBonusValue;
 
         matchTimeText = panelUI.transform.GetChild(2).GetComponent<Text>();
         matchTimeText.text = TimeSpan.FromSeconds(Mathf.Max(matchTimeCurrent, 0)).ToString("m\\:ss");
@@ -205,6 +205,7 @@ public class GameManager : MonoBehaviour
             paused = false;
             matchTimeText.text = "";
             bulletLevelUI.text = "";
+            //dunkBonusUI.text = "";
 
             panelUI.transform.GetChild(0).gameObject.SetActive(false);
             panelUI.transform.GetChild(1).gameObject.SetActive(false);
@@ -242,7 +243,7 @@ public class GameManager : MonoBehaviour
 
         //sets bullet level and dunk value back to default.
         bulletLevelUI.text = "Bullets Level: " + bulletLevel;
-        dunkBonusUI.text = "Dunk Bonus: +" + ((bulletLevel * 2) - 2);
+        dunkBonusUI.text = "Dunk Bonus: +" + dunkBonusValue;
 
         if (isTutorial)
         {
@@ -469,7 +470,8 @@ public class GameManager : MonoBehaviour
             bulletLevelUpCurrentTime = 0;
             bulletIncreaseUI.gameObject.SetActive(true);
             bulletLevelUI.text = "Bullets Level: " + bulletLevel;
-            dunkBonusUI.text = "Dunk Bonus: +" + ((bulletLevel * 2) - 2);
+            dunkBonusValue = (bulletLevel * 2) - 2;
+            dunkBonusUI.text = "Dunk Bonus: +" + dunkBonusValue;
 
             bulletTimerUI += Time.deltaTime;
         }
@@ -495,7 +497,7 @@ public class GameManager : MonoBehaviour
         //toggles audio.
         if (paused)
         {
-            pauseMusic.source.volume = .1f;
+            pauseMusic.source.volume = 0.1f;
             music.source.volume = 0;
 
             midair.source.volume = 0;
