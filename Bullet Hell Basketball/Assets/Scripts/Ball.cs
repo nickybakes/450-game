@@ -224,6 +224,8 @@ public class Ball : MonoBehaviour
                         ScoreLeftBasket();
                     else if (currentTarget == rightBasket)
                         ScoreRightBasket();
+
+                    AfterScore();
                     return;
                 }
                 Vector2 newPosition = CalculateParabola(startPoint, currentTarget.transform.GetChild(1).transform.position, ballHeight * heightMod, timer, false);
