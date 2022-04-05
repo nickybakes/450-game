@@ -17,6 +17,7 @@ public class Ball : MonoBehaviour
 
     private bool boolWillHit = true;
     private bool calculateOnce = true;
+    private bool wasBeingHeld = true;
 
     private Vector3 startPoint;
     private float timer = 0.0f;
@@ -591,15 +592,25 @@ public class Ball : MonoBehaviour
     }
 
     /// <summary>
-    /// Plays midair sounds when ball is above certain velocity magnitude
+    /// Plays midair sounds when ball is above certain velocity magnitude.
+    /// Extra if statements to help sound from looping.
     /// </summary>
     private void PlayMidairSound()
     {
         //changes volume based on ball's velocity. Constantly plays.
-        //if it's being held, volume = 0.
-        if (transform.parent != null)
+        //if it's not being held, and the last update it was, play sound, update bool.
+        if (transform.parent == null && wasBeingHeld)
+        {
+            audioManager.Play("Midair");
+            wasBeingHeld = false;
+        }
+        else if (transform.parent != null && !wasBeingHeld) //being held, wasn't before.
+        {
+            audioManager.Stop("Midair");
             midAir.source.volume = 0;
-        else
-            midAir.source.volume = Mathf.Pow(physics.velocity.magnitude / 50, 3);
+            wasBeingHeld = true;
+        }
+        //Always calculates how loud the ball air sound will be.
+        midAir.source.volume = Mathf.Pow(physics.velocity.magnitude / 50, 3);
     }
 }
