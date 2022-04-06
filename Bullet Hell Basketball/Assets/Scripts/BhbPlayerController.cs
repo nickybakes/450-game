@@ -217,11 +217,11 @@ public class BhbPlayerController : NeonHeightsCharacterController
         }
     }
 
-    public void Init(int playerNumber, int teamNumber)
+    public void Init(int playerNumber, int teamNumber, int playerControlNumber)
     {
         this.playerNumber = playerNumber;
         this.teamNumber = teamNumber;
-        this.playerControlNumber = playerNumber;
+        this.playerControlNumber = playerControlNumber;
 
         if (playerNumber == 0)
         {

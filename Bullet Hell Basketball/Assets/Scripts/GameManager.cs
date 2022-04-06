@@ -32,8 +32,8 @@ public class GameManager : MonoBehaviour
 
     public BulletLauncherData bulletLauncherData;
 
-    private Vector2 player1SpawnPosition;
-    private Vector2 player2SpawnPosition;
+    private Vector2 team1SpawnPosition;
+    private Vector2 team2SpawnPosition;
     private Vector2 ballSpawnPosition;
 
     //Players and Ball
@@ -173,18 +173,34 @@ public class GameManager : MonoBehaviour
         gameOver = false;
         overTime = false;
 
-        player1SpawnPosition = new Vector2(playerSpawnLocation.position.x, playerSpawnLocation.position.y);
-        player2SpawnPosition = new Vector2(-playerSpawnLocation.position.x, playerSpawnLocation.position.y);
+        team1SpawnPosition = new Vector2(playerSpawnLocation.position.x, playerSpawnLocation.position.y);
+        team2SpawnPosition = new Vector2(-playerSpawnLocation.position.x, playerSpawnLocation.position.y);
         ballSpawnPosition = new Vector2(0, ballSpawnHeight.position.y);
+
+        GameData data = FindObjectOfType<GameData>();
+
+
+        if (data != null)
+        {
+            playerScriptsTeam0 = new BhbPlayerController[data.playerNumbersTeam0.Count];
+            for (int i = 0; i < data.playerNumbersTeam0.Count; i++)
+            {
+                GameObject player = Instantiate(playerPrefab);
+                BhbPlayerController playerScript = player.GetComponent<BhbPlayerController>();
+                playerScript.Init(data.playerNumbersTeam0[i], 0, 0);
+            }
+        }
+
+
 
         player1 = Instantiate(playerPrefab);
         player1Script = player1.GetComponent<BhbPlayerController>();
-        player1Script.Init(0, 0);
+        player1Script.Init(0, 0, -1);
         player1Script.isBot = player1IsBot;
 
         player2 = Instantiate(playerPrefab);
         player2Script = player2.GetComponent<BhbPlayerController>();
-        player2Script.Init(1, 1);
+        player2Script.Init(1, 1, -1);
         player2Script.isBot = player2IsBot;
 
         ball = Instantiate(ballPrefab);
@@ -542,8 +558,8 @@ public class GameManager : MonoBehaviour
         if (player2Script.isBot)
             player2Script.BotRandomizeBehavior();
 
-        player1.transform.position = player1SpawnPosition;
-        player2.transform.position = player2SpawnPosition;
+        player1.transform.position = team1SpawnPosition;
+        player2.transform.position = team2SpawnPosition;
 
         player1Script.velocity = Vector2.zero;
         player2Script.velocity = Vector2.zero;
@@ -557,11 +573,11 @@ public class GameManager : MonoBehaviour
         }
         else if (previousScorer == 0)
         {
-            ball.transform.position = new Vector2(player2SpawnPosition.x - 5, player2SpawnPosition.y + 10);
+            ball.transform.position = new Vector2(team2SpawnPosition.x - 5, team2SpawnPosition.y + 10);
         }
         else if (previousScorer == 1)
         {
-            ball.transform.position = new Vector2(player1SpawnPosition.x + 5, player1SpawnPosition.y + 10);
+            ball.transform.position = new Vector2(team1SpawnPosition.x + 5, team1SpawnPosition.y + 10);
         }
 
         ballControlScript.lineRenderer.enabled = false;
