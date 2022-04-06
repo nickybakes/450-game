@@ -321,7 +321,10 @@ public class BulletManager : MonoBehaviour
     }
 
 
-    //Method of all the shared methods that set up bullets
+    /// <summary>
+    /// Method of all the shared methods that set up bullets Makes one bullet
+    /// </summary>
+    /// <returns></returns>
     private GameObject BulletSetup()
     {
         GameObject newBullet = Instantiate(bullet);
@@ -329,6 +332,18 @@ public class BulletManager : MonoBehaviour
         Bullet bulletScript = newBullet.GetComponent<Bullet>();
         bulletScript.ownerNumber = ownerNumber;
         bulletScript.gameManager = gameManager;
+
+        if (gameManager.randomBigBullets)
+        {
+            int randomNumber = Random.Range(1, 5);
+
+            Debug.Log(randomNumber);
+
+            if (randomNumber == 4)
+            {
+                bulletScript.isBig = true;
+            }
+        }
 
         //Also mess with the speed of the big bullets
         if (ownerNumber == 0)
@@ -343,6 +358,11 @@ public class BulletManager : MonoBehaviour
         }
 
         if (gameManager.allBigBullets)
+        {
+            bulletScript.isBig = true;
+        }
+
+        if (bulletScript.isBig)
         {
             newBullet.transform.localScale = new Vector3(gameManager.bigBulletScale, gameManager.bigBulletScale, gameManager.bigBulletScale);
             bulletScript.speed = bulletScript.speed / 2;

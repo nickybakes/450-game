@@ -1165,8 +1165,9 @@ MonoBehaviour:
   player2IsBot: 0
   isTutorial: 0
   tutorialManager: {fileID: 0}
-  allBigBullets: 1
-  bigBulletScale: 4
+  allBigBullets: 0
+  randomBigBullets: 1
+  bigBulletScale: 3
   winConditionMet: 0
 --- !u!4 &413587147
 Transform:
