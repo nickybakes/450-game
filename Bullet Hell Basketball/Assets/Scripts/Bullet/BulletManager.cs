@@ -333,14 +333,14 @@ public class BulletManager : MonoBehaviour
         bulletScript.ownerNumber = ownerNumber;
         bulletScript.gameManager = gameManager;
 
-        if (gameManager.randomBigBullets) //Maybe only random big bullets past a bullet level?
+        if (gameManager.randomBigBullets && gameManager.bulletLevel >= 2)
         {
             //Make the bullet RNG more dynamic
-            int randomNumber = Random.Range(1, 5);
+            int randomNumber = Random.Range(1, 6 + gameManager.bulletLevel);
 
-            Debug.Log(randomNumber); 
+            //Debug.Log(randomNumber); 
 
-            if (randomNumber == 4)
+            if (randomNumber >= 6)
             {
                 bulletScript.isBig = true;
             }
