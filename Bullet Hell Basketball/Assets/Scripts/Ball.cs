@@ -43,6 +43,7 @@ public class Ball : MonoBehaviour
 
     //true if the the ball was shot via a swipe and not a normal throw
     public bool isSwipeShot;
+    private int swipeShotPasses;
 
     public float bulletTimeMax = .23f;
     public float bulletTimeCurrent;
@@ -160,6 +161,10 @@ public class Ball : MonoBehaviour
 
         PlayMidairSound();
 
+        //Resets swipe shot passes.
+        if (!isSwipeShot && physics.simulatePhysics)
+            swipeShotPasses = -1;
+
         if (transform.parent == null && physics.simulatePhysics == false)
         {
 
@@ -169,11 +174,25 @@ public class Ball : MonoBehaviour
                 //check whether the ball was thrown from the side with the target basket
                 if (isSwipeShot)
                 {
-                    //Plays swipe shot audio.
-                    audioManager.Play("SwipeShot", 0.3f, 0.9f, 1.1f);
-
                     boolWillHit = true;
                     calculateOnce = false;
+                    swipeShotPasses++;
+
+                    //special SFX for back n' forth swipes
+                    if (swipeShotPasses > 0)
+                    {
+                        audioManager.Play("SwipeShot", 1.0f);
+
+                        //caps max passing speed at 4 passes.
+                        if (swipeShotPasses > 3)
+                            swipeShotPasses = 3;
+                    }
+                    else
+                    {
+                        //Plays swipe shot audio.
+                        audioManager.Play("SwipeShot", 0.3f, 0.9f, 1.1f);
+                    }
+
                     if (currentTarget == leftBasket)
                     {
                         threePointShot = transform.position.x > 0;
@@ -199,6 +218,10 @@ public class Ball : MonoBehaviour
                         boolWillHit = transform.position.x > 0;
                     }
                     calculateOnce = false;
+
+                    //reset passes
+                    //so that on first swipe, passes is at 0.
+                    swipeShotPasses = -1;
                 }
 
                 //so it's not calculated at runtime
@@ -221,6 +244,9 @@ public class Ball : MonoBehaviour
                     speedAddition = (physics.velocity.magnitude / 2000) + (distMod * 2);
                     if (speedAddition > 0.5f)
                         speedAddition = 0.5f;
+
+                    //extra swipeshot speed based on how many swipes in a row the player's have landed.
+                    speedAddition += (swipeShotPasses / 4.0f);
                 }
                 //completes the parabola trip in one second (* by speed), changing speed based on height and dist from basket.
                 float speedMod = speed + ((300 - heightMod) / 200) + distMod + speedAddition /*+ (2 / (Vector2.Distance(transform.position, currentTarget.transform.position) + 1))*/;
