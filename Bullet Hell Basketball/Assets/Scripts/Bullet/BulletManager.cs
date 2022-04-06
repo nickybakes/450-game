@@ -170,11 +170,12 @@ public class BulletManager : MonoBehaviour
 
             if (ownerNumber == 0)
             {
-                timer = Mathf.Max(maxTime - Mathf.Max((gameManager.player2Score - gameManager.player1Score) / 13, 0), 0.25f);
+                timer = Mathf.Max(maxTime - Mathf.Max((gameManager.player2Score - gameManager.player1Score) / 15, 0), 0.25f);
             }
+            
             else
             {
-                timer = Mathf.Max(maxTime - Mathf.Max((gameManager.player1Score - gameManager.player2Score) / 13, 0), 0.25f);
+                timer = Mathf.Max(maxTime - Mathf.Max((gameManager.player1Score - gameManager.player2Score) / 15, 0), 0.25f);
             }
 
 
@@ -349,12 +350,12 @@ public class BulletManager : MonoBehaviour
         //Also mess with the speed of the big bullets
         if (ownerNumber == 0)
         {
-            bulletScript.timer = 3.5f + Mathf.Max((gameManager.player2Score - gameManager.player1Score) / 13, 0);
+            bulletScript.timer = 3.2f + Mathf.Max((gameManager.player2Score - gameManager.player1Score) / 13, 0);
             bulletScript.speed = 10 + Mathf.Max((gameManager.player2Score - gameManager.player1Score) / 30, 0) + gameManager.bulletLevel;
         }
         else
         {
-            bulletScript.timer = 3.5f + Mathf.Max((gameManager.player1Score - gameManager.player2Score) / 13, 0);
+            bulletScript.timer = 3.2f + Mathf.Max((gameManager.player1Score - gameManager.player2Score) / 13, 0);
             bulletScript.speed = 10 + Mathf.Max((gameManager.player1Score - gameManager.player2Score) / 30, 0) + gameManager.bulletLevel;
         }
 
@@ -440,7 +441,7 @@ public class BulletManager : MonoBehaviour
     public void LevelUp()
     {
 
-        maxTime -= 0.5f;
+        //maxTime -= 0.5f;
         numBullets++;
 
         //In the last 30 seconds, random bullshit go
