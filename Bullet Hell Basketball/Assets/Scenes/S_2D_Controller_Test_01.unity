@@ -4024,7 +4024,7 @@ MonoBehaviour:
   bulletSeperationAngle: 20
   arcMinAngle: -54
   arcMaxAngle: 120
-  initialNumberOfBullets: 2
+  initialNumberOfBullets: 1
 --- !u!4 &1449409615
 Transform:
   m_ObjectHideFlags: 0

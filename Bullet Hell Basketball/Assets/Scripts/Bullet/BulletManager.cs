@@ -60,7 +60,7 @@ public class BulletManager : MonoBehaviour
     private int numBullets; //How many bullets will be spawned
     public float minAngle = 0;
     public float maxAngle = 45;
-    public float initialNumberOfBullets = 2;
+    public int initialNumberOfBullets = 1; //Eventually input from bullet spawner data
 
 
     //Add some sort of level up system, and different directions bullets shoot
@@ -126,7 +126,7 @@ public class BulletManager : MonoBehaviour
         rotationAmountDegrees = 0;
         currentAngle = 0;
         bulletPattern = BulletPatterns.front;
-        numBullets = 2;
+        numBullets = initialNumberOfBullets;
 
         //Add new patterns
         transform.position = fixedPoint;
@@ -333,11 +333,12 @@ public class BulletManager : MonoBehaviour
         bulletScript.ownerNumber = ownerNumber;
         bulletScript.gameManager = gameManager;
 
-        if (gameManager.randomBigBullets)
+        if (gameManager.randomBigBullets) //Maybe only random big bullets past a bullet level?
         {
+            //Make the bullet RNG more dynamic
             int randomNumber = Random.Range(1, 5);
 
-            Debug.Log(randomNumber);
+            Debug.Log(randomNumber); 
 
             if (randomNumber == 4)
             {
@@ -348,12 +349,12 @@ public class BulletManager : MonoBehaviour
         //Also mess with the speed of the big bullets
         if (ownerNumber == 0)
         {
-            bulletScript.timer = 4 + Mathf.Max((gameManager.player2Score - gameManager.player1Score) / 13, 0);
+            bulletScript.timer = 3.5f + Mathf.Max((gameManager.player2Score - gameManager.player1Score) / 13, 0);
             bulletScript.speed = 10 + Mathf.Max((gameManager.player2Score - gameManager.player1Score) / 30, 0) + gameManager.bulletLevel;
         }
         else
         {
-            bulletScript.timer = 4 + Mathf.Max((gameManager.player1Score - gameManager.player2Score) / 13, 0);
+            bulletScript.timer = 3.5f + Mathf.Max((gameManager.player1Score - gameManager.player2Score) / 13, 0);
             bulletScript.speed = 10 + Mathf.Max((gameManager.player1Score - gameManager.player2Score) / 30, 0) + gameManager.bulletLevel;
         }
 
@@ -365,7 +366,7 @@ public class BulletManager : MonoBehaviour
         if (bulletScript.isBig)
         {
             newBullet.transform.localScale = new Vector3(gameManager.bigBulletScale, gameManager.bigBulletScale, gameManager.bigBulletScale);
-            bulletScript.speed = bulletScript.speed / 2;
+            bulletScript.speed = bulletScript.speed / 5 * 3;
         }
 
 
