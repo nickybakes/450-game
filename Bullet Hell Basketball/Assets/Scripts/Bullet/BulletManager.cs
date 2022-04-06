@@ -331,10 +331,6 @@ public class BulletManager : MonoBehaviour
         bulletScript.gameManager = gameManager;
 
         //Also mess with the speed of the big bullets
-        if(gameManager.allBigBullets){
-            newBullet.transform.localScale = new Vector3(gameManager.bigBulletScale, gameManager.bigBulletScale, gameManager.bigBulletScale);
-        }
-
         if (ownerNumber == 0)
         {
             bulletScript.timer = 4 + Mathf.Max((gameManager.player2Score - gameManager.player1Score) / 13, 0);
@@ -345,6 +341,13 @@ public class BulletManager : MonoBehaviour
             bulletScript.timer = 4 + Mathf.Max((gameManager.player1Score - gameManager.player2Score) / 13, 0);
             bulletScript.speed = 10 + Mathf.Max((gameManager.player1Score - gameManager.player2Score) / 30, 0) + gameManager.bulletLevel;
         }
+
+        if (gameManager.allBigBullets)
+        {
+            newBullet.transform.localScale = new Vector3(gameManager.bigBulletScale, gameManager.bigBulletScale, gameManager.bigBulletScale);
+            bulletScript.speed = bulletScript.speed / 2;
+        }
+
 
         MeshRenderer bulletMesh = newBullet.GetComponentInChildren<MeshRenderer>();
 
@@ -441,6 +444,7 @@ public class BulletManager : MonoBehaviour
 
         //Add some more randomness later
     }
+    
     public float getAngle(Vector2 me, Vector2 target)
     {
         return Mathf.Atan2(target.y - me.y, target.x - me.x) * (180 / Mathf.PI);

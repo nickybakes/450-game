@@ -14,6 +14,8 @@ public class Bullet : MonoBehaviour
 
     public GameManager gameManager;
 
+    public bool isBig = false; //Will this be a big bullet 
+
     // Start is called before the first frame update
     void Start()
     {
