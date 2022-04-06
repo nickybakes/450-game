@@ -181,15 +181,16 @@ public class Ball : MonoBehaviour
                     //special SFX for back n' forth swipes
                     if (swipeShotPasses > 0)
                     {
-                        audioManager.Play("SwipeShot", 1.0f);
-
                         //caps max passing speed at 4 passes.
                         if (swipeShotPasses > 3)
                             swipeShotPasses = 3;
+
+                        float newSwipePitch = swipeShotPasses + 1.0f;
+                        audioManager.Play("SwipeShot", 0.5f, newSwipePitch, newSwipePitch);
                     }
                     else
                     {
-                        //Plays swipe shot audio.
+                        //Plays normal swipe shot audio.
                         audioManager.Play("SwipeShot", 0.3f, 0.9f, 1.1f);
                     }
 
