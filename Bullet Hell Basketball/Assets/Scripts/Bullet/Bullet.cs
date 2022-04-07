@@ -101,11 +101,11 @@ public class Bullet : MonoBehaviour
                 //Insert method for when player is hit
                 if (other.gameObject.transform.position.x < transform.position.x)
                 {
-                    playerScript.GetsHit(new Vector2(-40, 20));
+                    playerScript.GetsHit(new Vector2(-40, 20), false);
                 }
                 else if (other.gameObject.transform.position.x >= transform.position.x)
                 {
-                    playerScript.GetsHit(new Vector2(40, 20));
+                    playerScript.GetsHit(new Vector2(40, 20), false);
                 }
 
                 if (!dontUpdate)
