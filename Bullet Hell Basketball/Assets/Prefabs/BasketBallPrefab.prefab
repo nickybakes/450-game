@@ -5051,9 +5051,11 @@ MonoBehaviour:
   previewArcSmoothness: 20
   spinAmt: 0.1
   physics: {fileID: 6230116665754677498}
+  ballRenderer: {fileID: 0}
   leftBasket: {fileID: 0}
   rightBasket: {fileID: 0}
   currentTarget: {fileID: 0}
+  gameManager: {fileID: 0}
   lineRenderer: {fileID: 2396805206590203897}
   isSwipeShot: 0
   bulletTimeMax: 0.23
@@ -10241,7 +10243,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2649196223168556797, guid: 0d018b114476535428b7651de079dd4d, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2649196223168556799, guid: 0d018b114476535428b7651de079dd4d, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -10331,7 +10333,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2649196223168556797, guid: 0d018b114476535428b7651de079dd4d, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2649196223168556799, guid: 0d018b114476535428b7651de079dd4d, type: 3}
       propertyPath: m_Materials.Array.data[0]
