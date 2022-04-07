@@ -179,10 +179,30 @@ public class GameManager : MonoBehaviour
         {
             GameObject gameDataObjectStandin = new GameObject("Game Data Object Standin");
             data = gameDataObjectStandin.AddComponent<GameData>();
-            data.playerControlsTeam0 = new List<int> { 8, 8, 8 };
-            data.playerNumbersTeam0 = new List<int> { 8, 8, 8 };
-            data.playerControlsTeam1 = new List<int> { 8, 8, 8 };
-            data.playerNumbersTeam1 = new List<int> { 8, 8, 8 };
+            int numOfBotsTeam0 = 4;
+            int numOfBotsTeam1 = 4;
+            data.playerControlsTeam0 = new List<int>();
+            data.playerNumbersTeam0 = new List<int>();
+            data.playerControlsTeam1 = new List<int>();
+            data.playerNumbersTeam1 = new List<int>();
+
+            for (int i = 0; i < numOfBotsTeam0; i++)
+            {
+                data.playerControlsTeam0.Add(8);
+                data.playerNumbersTeam0.Add(8);
+            }
+            for (int i = 0; i < numOfBotsTeam1; i++)
+            {
+                data.playerControlsTeam1.Add(8);
+                data.playerNumbersTeam1.Add(8);
+            }
+
+            //uncommented this code to have 2 players on KB spawn in instead of Bots
+
+            // data.playerControlsTeam0 = new List<int>() {0};
+            // data.playerNumbersTeam0 = new List<int>() {1};
+            // data.playerControlsTeam1 = new List<int>() {1};
+            // data.playerNumbersTeam1 = new List<int>() {2};
         }
 
         if (isTutorial)

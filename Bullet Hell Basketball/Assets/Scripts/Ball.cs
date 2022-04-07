@@ -278,16 +278,17 @@ public class Ball : MonoBehaviour
                 timer += Time.deltaTime * speedMod;
                 if (timer >= 1)
                 {
+                    if (IsResetting)
+                        return;
                     if (currentTarget == leftBasket)
                     {
                         ScoreLeftBasket();
-                        AfterScore();
                     }
                     else if (currentTarget == rightBasket)
                     {
                         ScoreRightBasket();
-                        AfterScore();
                     }
+                    AfterScore();
                     return;
                 }
                 Vector2 newPosition = CalculateParabola(startPoint, currentTarget.transform.GetChild(1).transform.position, ballHeight * heightMod, timer, false);
@@ -319,7 +320,7 @@ public class Ball : MonoBehaviour
         else if (transform.parent != null && !physics.simulatePhysics)
         {
 
-            int teamNumber = transform.parent.GetComponent<BhbPlayerController>().teamNumber;
+            int teamNumber = gameManager.currentBallOwner.teamNumber;
             lineRenderer.enabled = false;
 
             if (teamNumber == 0)
@@ -404,7 +405,7 @@ public class Ball : MonoBehaviour
             if (transform.parent != null)
             {
                 threePointShot = false;
-                BhbPlayerController playerController = transform.parent.gameObject.GetComponent<BhbPlayerController>();
+                BhbPlayerController playerController = gameManager.currentBallOwner;
                 if (playerController.teamNumber == 0 && collision.collider.gameObject == gameManager.leftBasket)
                     return;
                 else if (playerController.teamNumber == 1 && collision.collider.gameObject == gameManager.rightBasket)
@@ -414,6 +415,9 @@ public class Ball : MonoBehaviour
             //only if the ball goes in from top or from dunk
             if ((physics.velocity.y < 0 && transform.parent == null) || transform.parent != null)
             {
+                if (IsResetting)
+                    return;
+                    
                 if (collision.collider.gameObject == gameManager.rightBasket)
                 {
                     ScoreRightBasket();

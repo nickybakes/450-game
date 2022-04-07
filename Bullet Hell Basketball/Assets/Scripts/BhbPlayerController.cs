@@ -260,6 +260,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
         if (gameManager.paused)
             return;
 
+        //face towards the ball if not holding it
         if (ball.transform.parent != transform)
         {
             if (ball.transform.position.x < transform.position.x)
@@ -277,6 +278,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
         }
         else
         {
+            //if holding it, face toward enemy hoop
             if (teamNumber == 0)
             {
                 Quaternion q = Quaternion.Euler(0, 0, 0);
@@ -437,10 +439,6 @@ public class BhbPlayerController : NeonHeightsCharacterController
                         }
                     }
                 }
-                // else if (Vector2.Distance(ball.transform.position, transform.position) < 5.0f && autoCatchCooldownTimer > autoCatchCooldownTimerMax && ball.transform.parent != transform && ball.transform.parent != null)
-                // {
-                //     GrabBall();
-                // }
             }
             else if (!ballScript.IsBullet && swipeCooldownTimeCurrent >= swipeCooldownTimeMax && !IsStunned && !IsSwiping && Vector2.Distance(ball.transform.position, transform.position) < 5.0f && autoCatchCooldownTimer > autoCatchCooldownTimerMax && ball.transform.parent == null)
             {
