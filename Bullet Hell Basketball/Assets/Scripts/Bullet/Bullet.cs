@@ -2,6 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum BulletMovement
+{
+    straight,
+    sine
+}
+
+
 public class Bullet : MonoBehaviour
 {
     public int speed; //Multiplies this by time.deltaTime to increase the speed
@@ -14,7 +21,9 @@ public class Bullet : MonoBehaviour
 
     public GameManager gameManager;
 
-    public bool isBig = false; //Will this be a big bullet 
+    public bool isBig = false; //Will this be a big bullet
+
+    public BulletMovement movement = BulletMovement.straight;
 
     // Start is called before the first frame update
     void Start()
@@ -63,7 +72,13 @@ public class Bullet : MonoBehaviour
 
 
 
-        transform.Translate(direction * Time.deltaTime * speed, Space.World);
+        switch (movement)
+        {
+            case BulletMovement.straight:
+                transform.Translate(direction * Time.deltaTime * speed, Space.World);
+                break;
+        }
+        
     }
 
     private void FixedUpdate()
