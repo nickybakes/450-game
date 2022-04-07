@@ -18,6 +18,10 @@ public class MainMenuManager : MonoBehaviour
     private bool[] canMoveSelection = new bool[9];
 
     public PanelManager TitlePanel;
+    public PanelManager MainPanel;
+    public PanelManager ModePanel;
+    public PanelManager PlayerPanel;
+    public PanelManager StagePanel;
     public PanelManager OptionsPanel;
 
     public Button currentSelection;
