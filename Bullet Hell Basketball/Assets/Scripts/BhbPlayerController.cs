@@ -605,7 +605,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
     }
 
 
-    public void GetsHit(Vector2 knockback)
+    public void GetsHit(Vector2 knockback, bool isByPlayer)
     {
         if (!IsStunned && invinsibilityTimeCurrent >= invinsibilityTimeMax)
         {
@@ -621,7 +621,10 @@ public class BhbPlayerController : NeonHeightsCharacterController
             }
 
             //sound if any player gets hit. (including bullets & player swipes)
-            audioManager.Play("Hit", 0.9f, 1.1f);
+            if (isByPlayer)
+                audioManager.Play("Hit", 0.9f, 1.1f);
+            else
+                audioManager.Play("HitBullet", 0.9f, 1.1f);
         }
     }
 
