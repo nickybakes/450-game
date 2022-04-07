@@ -419,11 +419,11 @@ public class BhbPlayerController : NeonHeightsCharacterController
                             GrabBall();
                         if (swipeVictims[i].transform.position.x < transform.position.x)
                         {
-                            swipeVictims[i].GetsHit(new Vector2(-50, 20));
+                            swipeVictims[i].GetsHit(new Vector2(-50, 20), true);
                         }
                         else if (swipeVictims[i].transform.position.x >= transform.position.x)
                         {
-                            swipeVictims[i].GetsHit(new Vector2(50, 20));
+                            swipeVictims[i].GetsHit(new Vector2(50, 20), true);
                         }
                     }
                 }

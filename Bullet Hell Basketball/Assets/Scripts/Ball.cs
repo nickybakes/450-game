@@ -569,13 +569,13 @@ public class Ball : MonoBehaviour
 
         if (threePointShot) //3 point
         {
-            gameManager.player1Score += 3;
+            gameManager.team0Score += 3;
             onScoreTextRight.text = "+3";
             audioManager.Play("3points");
         }
         else if (transform.parent == null) //2 point
         {
-            gameManager.player1Score += 2;
+            gameManager.team0Score += 2;
             onScoreTextRight.text = "+2";
             audioManager.Play("2points");
         }
@@ -583,7 +583,7 @@ public class Ball : MonoBehaviour
         {
             int dunkValue = gameManager.bulletLevel * 2;
 
-            gameManager.player1Score += dunkValue;
+            gameManager.team0Score += dunkValue;
             onScoreTextRight.text = "+" + dunkValue;
             audioManager.Play("Dunk");
         }
@@ -606,13 +606,13 @@ public class Ball : MonoBehaviour
 
         if (threePointShot)
         {
-            gameManager.player2Score += 3;
+            gameManager.team1Score += 3;
             onScoreTextLeft.text = "+3";
             audioManager.Play("3points");
         }
         else if (transform.parent == null) //2 point
         {
-            gameManager.player2Score += 2;
+            gameManager.team1Score += 2;
             onScoreTextLeft.text = "+2";
             audioManager.Play("2points");
         }
@@ -620,7 +620,7 @@ public class Ball : MonoBehaviour
         {
             int dunkValue = gameManager.bulletLevel * 2;
 
-            gameManager.player2Score += dunkValue;
+            gameManager.team1Score += dunkValue;
             onScoreTextLeft.text = "+" + dunkValue;
             audioManager.Play("Dunk");
         }
