@@ -40,6 +40,7 @@ public class Ball : MonoBehaviour
     public GameObject currentTarget;
     public GameManager gameManager;
     public LineRenderer lineRenderer;
+    private TrailRenderer trailRenderer;
 
     //true if the the ball was shot via a swipe and not a normal throw
     public bool isSwipeShot;
@@ -101,6 +102,7 @@ public class Ball : MonoBehaviour
         lineRenderer.positionCount = previewArcSmoothness;
         audioManager = FindObjectOfType<AudioManager>();
         IsResetting = false;
+        trailRenderer = transform.GetChild(0).GetComponent<TrailRenderer>();
 
         ballRenderer = transform.GetChild(4).GetComponent<Renderer>();
 
@@ -163,7 +165,15 @@ public class Ball : MonoBehaviour
 
         //Resets swipe shot passes.
         if (!isSwipeShot && physics.simulatePhysics)
+        {
             swipeShotPasses = -1;
+        }
+        if (!isSwipeShot)
+        {
+            //resets color to white.
+            trailRenderer.startColor = Color.white;
+            trailRenderer.endColor = Color.white;
+        }
 
         if (transform.parent == null && physics.simulatePhysics == false)
         {
@@ -185,14 +195,28 @@ public class Ball : MonoBehaviour
                         if (swipeShotPasses > 3)
                             swipeShotPasses = 3;
 
-                        float newSwipePitch = swipeShotPasses + 1.0f;
-                        audioManager.Play("SwipeShot", 0.5f, newSwipePitch, newSwipePitch);
+                        float newSwipePitch = 1.0f + ((swipeShotPasses - 1.0f) / 12.0f);
+                        audioManager.Play("SwipeRally", 0.3f, newSwipePitch, newSwipePitch);
+
+                        switch (swipeShotPasses)
+                        {
+                            case 1:
+                                trailRenderer.startColor = new Color32(255, 125, 125, 1);
+                                trailRenderer.endColor = new Color32(255, 125, 125, 1);
+                                break;
+                            case 2:
+                                trailRenderer.startColor = new Color32(255, 50, 50, 1);
+                                trailRenderer.endColor = new Color32(255, 50, 50, 1);
+                                break;
+                            case 3:
+                                trailRenderer.startColor = new Color32(255, 0, 0, 1);
+                                trailRenderer.endColor = new Color32(255, 0, 0, 1);
+                                break;
+                        }
                     }
-                    else
-                    {
-                        //Plays normal swipe shot audio.
-                        audioManager.Play("SwipeShot", 0.3f, 0.9f, 1.1f);
-                    }
+
+                    //Plays swipe shot audio.
+                    audioManager.Play("SwipeShot", 0.3f, 0.9f, 1.1f);
 
                     if (currentTarget == leftBasket)
                     {
