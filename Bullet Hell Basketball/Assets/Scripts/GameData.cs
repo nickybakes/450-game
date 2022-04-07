@@ -25,7 +25,7 @@ public class GameData : MonoBehaviour
 
     0 = keyboard 1 (WASD Space N)
     1 = keyboard 2 (PL;' < ^)
-    2-10 = gamepad slots 1-8
+    2-9 = gamepad slots 1-8
     -1 = bot (nothing)
 
     */
