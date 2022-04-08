@@ -5,7 +5,8 @@ using UnityEngine;
 public enum BulletMovement
 {
     straight,
-    sine
+    sine,
+    heatSeeking
 }
 
 
@@ -23,11 +24,15 @@ public class Bullet : MonoBehaviour
 
     public bool isBig = false; //Will this be a big bullet
 
-    public BulletMovement movement = BulletMovement.straight;
+    public BulletMovement movement = BulletMovement.sine;
+
+    private Vector3 ogPosition;
 
     // Start is called before the first frame update
     void Start()
     {
+        ogPosition = transform.position;
+        
         if (speed <= 0)
         {
             speed = 1;
@@ -77,6 +82,11 @@ public class Bullet : MonoBehaviour
             case BulletMovement.straight:
                 transform.Translate(direction * Time.deltaTime * speed, Space.World);
                 break;
+
+            case BulletMovement.sine:
+                //Get the normal of direction multiply by length then both by the sin of the time alive
+                
+                break;
         }
         
     }
@@ -96,15 +106,6 @@ public class Bullet : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
-
-    /*private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.tag == "Player")
-        {
-            Debug.Log("Bullet hit!");
-            Destroy(this.gameObject);
-        }
-    }*/
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -136,8 +137,4 @@ public class Bullet : MonoBehaviour
         return Mathf.Atan2(target.y - me.y, target.x - me.x) * (180 / Mathf.PI);
     }
 
-    /*private void OnCollisionEnter2D(Collision2D collision)
-    {
-
-    }*/
 }

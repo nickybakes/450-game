@@ -333,6 +333,7 @@ public class BulletManager : MonoBehaviour
         Bullet bulletScript = newBullet.GetComponent<Bullet>();
         bulletScript.ownerNumber = ownerNumber;
         bulletScript.gameManager = gameManager;
+        bulletScript.movement = BulletMovement.sine;
 
         if (gameManager.randomBigBullets && gameManager.bulletLevel >= 2)
         {
