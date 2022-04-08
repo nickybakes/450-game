@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour
     //[SerializeField] private MainMenu menu;
 
     public GameObject playerPrefab;
+
+    public GameObject playerHeaderPrefab;
     public GameObject ballPrefab;
     public GameObject leftBasketPrefab;
     public GameObject rightBasketPrefab;
@@ -72,6 +74,7 @@ public class GameManager : MonoBehaviour
 
     public GameObject tempHud;
     public GameObject panelUI;
+    public GameObject playerHeadersPanel;
 
     private BulletManager[] bulletManagers;
     public int bulletLevel;
@@ -199,10 +202,10 @@ public class GameManager : MonoBehaviour
 
             //uncommented this code to have 2 players on KB spawn in instead of Bots
 
-            // data.playerControlsTeam0 = new List<int>() {0};
-            // data.playerNumbersTeam0 = new List<int>() {1};
-            // data.playerControlsTeam1 = new List<int>() {1};
-            // data.playerNumbersTeam1 = new List<int>() {2};
+            data.playerControlsTeam0 = new List<int>() {0};
+            data.playerNumbersTeam0 = new List<int>() {1};
+            data.playerControlsTeam1 = new List<int>() {1};
+            data.playerNumbersTeam1 = new List<int>() {2};
         }
 
         if (isTutorial)
@@ -277,6 +280,7 @@ public class GameManager : MonoBehaviour
     private void SpawnPlayer(GameObject[] playerObjects, BhbPlayerController[] playerScripts, List<int> playerNumbers, List<int> controlNumbers, int index, int team)
     {
         GameObject player = Instantiate(playerPrefab);
+        GameObject playerHeader = Instantiate(playerHeaderPrefab, playerHeadersPanel.transform);
         BhbPlayerController playerScript = player.GetComponent<BhbPlayerController>();
         if (playerNumbers[index] == 8)
         {
@@ -296,6 +300,7 @@ public class GameManager : MonoBehaviour
         }
         playerObjects[index] = player;
         playerScripts[index] = playerScript;
+        playerHeader.GetComponent<PlayerHeader>().Init(playerScript);
     }
 
     private void BeginMatch()

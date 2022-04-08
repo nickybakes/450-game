@@ -2,6 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+/*
+// Player Header
+// has health count on there out of 4
+bullets take 1
+big bullets take 2
+explosions take 3
+
+on 0/4 hp
+KO'd text appears on their player
+they become transparent hologram material
+after 1 second, KO'd text switches to 3 second timer counting down
+While happening, switch player to fall anim, and move them linearly to their spawn position (get their positon on player list and make them not overlap)
+once 3 seconds is up, refill health to 4, give invincibility frames, dead = false (enable controls), switch back to non transparent material
+
+Resetting players between rounds should make them all Not Dead (only if they were dead, do reset hp unless its 0)
+	Unless its the resetting the whole game, in that case yeah
+
+
+*/
+
 public enum Control
 {
     Up,
@@ -46,6 +67,8 @@ public class BhbPlayerController : NeonHeightsCharacterController
     public int teamNumber;
     public int playerControlNumber;
     public float pickupRadius;
+
+    public int health;
 
     public Renderer swipeRenderer;
 
