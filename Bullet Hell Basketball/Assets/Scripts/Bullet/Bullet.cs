@@ -24,7 +24,7 @@ public class Bullet : MonoBehaviour
 
     public bool isBig = false; //Will this be a big bullet
 
-    public BulletMovement movement = BulletMovement.sine;
+    public BulletMovement movement;
 
     private Vector3 ogPosition;
 
@@ -86,6 +86,12 @@ public class Bullet : MonoBehaviour
             case BulletMovement.sine:
                 //Get the normal of direction multiply by length then both by the sin of the time alive
                 
+                break;
+
+            case BulletMovement.heatSeeking:
+                //Find the position of the basketball
+                Transform ball = FindObjectOfType<Ball>().gameObject.transform;
+                transform.Translate(ball.position * Time.deltaTime * speed, Space.World);
                 break;
         }
         

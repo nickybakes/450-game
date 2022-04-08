@@ -9,7 +9,8 @@ public class BulletLauncherData : MonoBehaviour
 
     public BulletPatterns bulletPattern;
 
-
+    public BulletMovement bulletMovement;
+    
     public float initialTimeBetweenBullets;
 
     public float arcMovementRadius;

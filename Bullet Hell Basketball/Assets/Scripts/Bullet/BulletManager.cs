@@ -61,6 +61,7 @@ public class BulletManager : MonoBehaviour
     public float minAngle = 0;
     public float maxAngle = 45;
     public int initialNumberOfBullets = 1; //Eventually input from bullet spawner data
+    private BulletMovement bulletMovement;
 
 
     //Add some sort of level up system, and different directions bullets shoot
@@ -91,6 +92,7 @@ public class BulletManager : MonoBehaviour
         this.bulletSeperationAngle = data.bulletSeperationAngle;
         this.minAngle = data.arcMinAngle;
         this.maxAngle = data.arcMaxAngle;
+        this.bulletMovement = data.bulletMovement;
 
 
         timer = data.initialTimeBetweenBullets;
@@ -333,7 +335,7 @@ public class BulletManager : MonoBehaviour
         Bullet bulletScript = newBullet.GetComponent<Bullet>();
         bulletScript.ownerNumber = ownerNumber;
         bulletScript.gameManager = gameManager;
-        bulletScript.movement = BulletMovement.sine;
+        bulletScript.movement = bulletMovement;
 
         if (gameManager.randomBigBullets && gameManager.bulletLevel >= 2)
         {
