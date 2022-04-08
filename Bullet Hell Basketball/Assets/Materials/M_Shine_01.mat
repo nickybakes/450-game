@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: M_Crosshair_03
+  m_Name: M_Shine_01
   m_Shader: {fileID: -6465566751694194690, guid: 44cb91027ac4d2245a00f9f916f11a45, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -49,7 +49,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Texture2D_d83222331d634ef4a300b6c20d3cbf63:
-        m_Texture: {fileID: 2800000, guid: bb4ccaab617d472428d18245badf36aa, type: 3}
+        m_Texture: {fileID: 2800000, guid: 0fdaeb511463a4444b674fd54c18541a, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseMap:
@@ -125,7 +125,7 @@ Material:
     - Vector1_56788b39262e4cc59f79cb511db724a2: 1
     - Vector1_60a8ba2ffdd24f5e8e1ebdfbc8b1b585: 1
     - Vector1_6f1abcde03d04b08ae86fa7483f5756b: 1
-    - Vector1_809b69cad2724fb5a162444e83dd6e43: 2.1
+    - Vector1_809b69cad2724fb5a162444e83dd6e43: 1.4
     - Vector1_b6042e8d7bc34effa1f3a5070f7faa61: 1
     - Vector1_bccf2dd9d94f48a3974c8d5fe7aa7c1d: 0.78
     - Vector1_cb1b2f0c113d406d8533bdaf4f4893a0: 0.5
@@ -162,7 +162,7 @@ Material:
     - Color_7620fbab10274e9b837472023ccf4420: {r: 1, g: 0, b: 0, a: 0}
     - Color_b798e69b6a424b02a39ba414ab679949: {r: 1, g: 1, b: 1, a: 1}
     - Color_d455355dbed04d919ec9d444c1857280: {r: 1, g: 1, b: 1, a: 0}
-    - Color_eeba584f81514bfeaf2c6ee81f7896e9: {r: 1, g: 0, b: 0, a: 0}
+    - Color_eeba584f81514bfeaf2c6ee81f7896e9: {r: 1, g: 1, b: 1, a: 0}
     - Vector2_27d25440e3c54207a9f315cf2fa82238: {r: 1, g: 1, b: 0, a: 0}
     - Vector2_9bf3af82f82347a2a9099e52b0e7ea3a: {r: 0, g: 0, b: 0, a: 0}
     - Vector2_ae34cb358ea048da8f13ee05b3346761: {r: 0, g: 0, b: 0, a: 0}

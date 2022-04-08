@@ -27,6 +27,8 @@ public class GameManager : MonoBehaviour
 
     public GameObject bulletManagerPrefab;
 
+    public GameObject homingBulletPrefab;
+
     //Spawning
     public Transform playerSpawnLocation;
     public Transform basketLocation;
@@ -202,10 +204,10 @@ public class GameManager : MonoBehaviour
 
             //uncommented this code to have 2 players on KB spawn in instead of Bots
 
-            data.playerControlsTeam0 = new List<int>() {0};
-            data.playerNumbersTeam0 = new List<int>() {1};
-            data.playerControlsTeam1 = new List<int>() {1};
-            data.playerNumbersTeam1 = new List<int>() {2};
+            data.playerControlsTeam0 = new List<int>() { 0 };
+            data.playerNumbersTeam0 = new List<int>() { 1 };
+            data.playerControlsTeam1 = new List<int>() { 1 };
+            data.playerNumbersTeam1 = new List<int>() { 2 };
         }
 
         if (isTutorial)
@@ -364,6 +366,14 @@ public class GameManager : MonoBehaviour
 
             launcherScript2.Init(1, bulletLauncherData.transform.position, bulletLauncherData, this);
         }
+    }
+
+    public void SpawnHomingBullet()
+    {
+        GameObject bullet = Instantiate(homingBulletPrefab);
+        HomingBullet bulletScript = bullet.GetComponent<HomingBullet>();
+        bulletScript.ball = ballControlScript;
+
     }
 
     void Update()

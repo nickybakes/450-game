@@ -91,10 +91,10 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        BhbPlayerController playerScript = other.gameObject.GetComponent<BhbPlayerController>();
-
         if (other.gameObject.tag == "Player")
         {
+            BhbPlayerController playerScript = other.gameObject.GetComponent<BhbPlayerController>();
+
             if (ownerNumber != playerScript.teamNumber)
             {
                 // Debug.Log("Bullet hit!");
@@ -114,7 +114,7 @@ public class Bullet : MonoBehaviour
         }
     }
 
-    public float getAngle(Vector2 me, Vector2 target)
+    public static float getAngle(Vector2 me, Vector2 target)
     {
         return Mathf.Atan2(target.y - me.y, target.x - me.x) * (180 / Mathf.PI);
     }
