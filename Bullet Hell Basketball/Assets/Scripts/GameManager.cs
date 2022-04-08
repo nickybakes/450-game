@@ -29,6 +29,13 @@ public class GameManager : MonoBehaviour
 
     public GameObject homingBulletPrefab;
 
+    public GameObject powerUpPrefab;
+
+    public float powerUpTimeSpawnMin = 16;
+    public float powerUpTimeSpawnMax = 32;
+    public float powerUpTimeSpawn;
+    public float powerUpTimeSpawnCurrent;
+
     //Spawning
     public Transform playerSpawnLocation;
     public Transform basketLocation;
@@ -350,6 +357,24 @@ public class GameManager : MonoBehaviour
         bulletLevel = 1;
 
         ballControlScript.IsResetting = false;
+    }
+
+    public void SpawnPowerRandomUp()
+    {
+        PowerupType type = (PowerupType)UnityEngine.Random.Range(0, 2);
+
+        float yPos = UnityEngine.Random.Range(4f, 9f);
+        if (UnityEngine.Random.Range(0, 1) == 0)
+        {
+            yPos = UnityEngine.Random.Range(16f, 26f);
+        }
+
+
+        GameObject p = Instantiate(powerUpPrefab);
+
+        p.transform.position = new Vector2(0, yPos);
+        Powerup pScript = p.GetComponent<Powerup>();
+        pScript.Init(type);
     }
 
     public void SpawnBulletSpawnersFromData()

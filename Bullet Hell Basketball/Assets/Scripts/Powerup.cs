@@ -26,7 +26,13 @@ public class Powerup : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        transform.position = new Vector2(transform.position.x, Mathf.Sin(Time.time * 3) * 1.4f);
+    }
 
+    public void Init(PowerupType type){
+        this.type = type;
+
+        transform.GetChild((int) type).gameObject.SetActive(true);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
