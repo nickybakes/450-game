@@ -9,10 +9,14 @@ public class Explosion : MonoBehaviour
 
     public int ownerNumber;
 
+    private ParticleSystem ps;
+
+
     // Start is called before the first frame update
     void Start()
     {
-
+        ps = GetComponent<ParticleSystem>();
+        ps.Play();
     }
 
     // Update is called once per frame

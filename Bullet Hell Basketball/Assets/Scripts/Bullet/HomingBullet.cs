@@ -15,6 +15,8 @@ public class HomingBullet : MonoBehaviour
 
     public float maxSpeed;
 
+    public GameObject crosshair;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -31,6 +33,8 @@ public class HomingBullet : MonoBehaviour
         direction = Vector2.Lerp(direction, ball.transform.position - transform.position, .5f);
 
         transform.rotation = Quaternion.Euler(0, 0, Bullet.getAngle(Vector2.zero, direction));
+
+        crosshair.transform.position = new Vector3(ball.transform.position.x, ball.transform.position.y, -2);
 
         if (Vector2.Distance(transform.position, ball.transform.position) < 1.5f)
         {
