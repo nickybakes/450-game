@@ -113,7 +113,7 @@ public class Bullet : MonoBehaviour
 
         if (other.gameObject.tag == "Player")
         {
-            if (ownerNumber != playerScript.playerNumber)
+            if (ownerNumber != playerScript.teamNumber)
             {
                 // Debug.Log("Bullet hit!");
                 //Insert method for when player is hit

@@ -97,6 +97,6 @@ public class TutorialManager : MonoBehaviour
 
     public void GiveBallToDummy()
     {
-        gameManager.player2Script.GrabBall();
+        gameManager.playerScriptsTeam1[0].GrabBall();
     }
 }

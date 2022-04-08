@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
@@ -31,15 +32,11 @@ public class GameManager : MonoBehaviour
 
     public BulletLauncherData bulletLauncherData;
 
-    private Vector2 player1SpawnPosition;
-    private Vector2 player2SpawnPosition;
+    private Vector2 team0SpawnPosition;
+    private Vector2 team1SpawnPosition;
     private Vector2 ballSpawnPosition;
 
     //Players and Ball
-    [HideInInspector]
-    public GameObject player1;
-    [HideInInspector]
-    public GameObject player2;
     [HideInInspector]
     public GameObject ball;
 
@@ -48,6 +45,15 @@ public class GameManager : MonoBehaviour
 
     public Text matchTimeText;
 
+    public bool friendlyFireSwipe;
+    public bool friendlyFireBullets;
+
+    public GameObject[] playersTeam0;
+    public GameObject[] playersTeam1;
+    public BhbPlayerController[] playerScriptsTeam0;
+    public BhbPlayerController[] playerScriptsTeam1;
+
+    public BhbPlayerController currentBallOwner;
 
     [HideInInspector]
     public GameObject leftBasket;
@@ -55,10 +61,6 @@ public class GameManager : MonoBehaviour
     [HideInInspector]
     public GameObject rightBasket;
 
-    [HideInInspector]
-    public BhbPlayerController player1Script;
-    [HideInInspector]
-    public BhbPlayerController player2Script;
     [HideInInspector]
 
     public BhbBallPhysics ballPhysicsScript;
@@ -97,13 +99,10 @@ public class GameManager : MonoBehaviour
 
 
     //Score Tracker
-    public int player1Score = 0;
-    public int player2Score = 0;
+    public int team0Score = 0;
+    public int team1Score = 0;
 
     public int previousScorer = -1;
-
-    public bool player1IsBot;
-    public bool player2IsBot;
 
     public bool isTutorial;
 
@@ -133,8 +132,8 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         matchTimeCurrent = matchTimeMax;
-        player1Score = 0;
-        player2Score = 0;
+        team0Score = 0;
+        team1Score = 0;
         bulletLevel = 1;
         bulletTimerUI = 0;
         increaseLevelOnce = true;
@@ -171,19 +170,62 @@ public class GameManager : MonoBehaviour
         gameOver = false;
         overTime = false;
 
-        player1SpawnPosition = new Vector2(playerSpawnLocation.position.x, playerSpawnLocation.position.y);
-        player2SpawnPosition = new Vector2(-playerSpawnLocation.position.x, playerSpawnLocation.position.y);
+        team0SpawnPosition = new Vector2(playerSpawnLocation.position.x, playerSpawnLocation.position.y);
+        team1SpawnPosition = new Vector2(-playerSpawnLocation.position.x, playerSpawnLocation.position.y);
         ballSpawnPosition = new Vector2(0, ballSpawnHeight.position.y);
 
-        player1 = Instantiate(playerPrefab);
-        player1Script = player1.GetComponent<BhbPlayerController>();
-        player1Script.Init(0);
-        player1Script.isBot = player1IsBot;
+        GameData loadedData = FindObjectOfType<GameData>();
+        GameData data = loadedData;
 
-        player2 = Instantiate(playerPrefab);
-        player2Script = player2.GetComponent<BhbPlayerController>();
-        player2Script.Init(1);
-        player2Script.isBot = player2IsBot;
+
+        if (loadedData == null)
+        {
+            GameObject gameDataObjectStandin = new GameObject("Game Data Object Standin");
+            data = gameDataObjectStandin.AddComponent<GameData>();
+            int numOfBotsTeam0 = 4;
+            int numOfBotsTeam1 = 4;
+            data.playerControlsTeam0 = new List<int>();
+            data.playerNumbersTeam0 = new List<int>();
+            data.playerControlsTeam1 = new List<int>();
+            data.playerNumbersTeam1 = new List<int>();
+
+            for (int i = 0; i < numOfBotsTeam0; i++)
+            {
+                data.playerControlsTeam0.Add(8);
+                data.playerNumbersTeam0.Add(8);
+            }
+            for (int i = 0; i < numOfBotsTeam1; i++)
+            {
+                data.playerControlsTeam1.Add(8);
+                data.playerNumbersTeam1.Add(8);
+            }
+
+            //uncommented this code to have 2 players on KB spawn in instead of Bots
+
+            // data.playerControlsTeam0 = new List<int>() {0};
+            // data.playerNumbersTeam0 = new List<int>() {1};
+            // data.playerControlsTeam1 = new List<int>() {1};
+            // data.playerNumbersTeam1 = new List<int>() {2};
+        }
+
+        if (isTutorial)
+        {
+
+        }
+
+        playersTeam0 = new GameObject[data.playerNumbersTeam0.Count];
+        playerScriptsTeam0 = new BhbPlayerController[data.playerNumbersTeam0.Count];
+        for (int i = 0; i < data.playerNumbersTeam0.Count; i++)
+        {
+            SpawnPlayer(playersTeam0, playerScriptsTeam0, data.playerControlsTeam0, data.playerControlsTeam0, i, 0);
+        }
+
+        playersTeam1 = new GameObject[data.playerNumbersTeam1.Count];
+        playerScriptsTeam1 = new BhbPlayerController[data.playerNumbersTeam1.Count];
+        for (int i = 0; i < data.playerNumbersTeam1.Count; i++)
+        {
+            SpawnPlayer(playersTeam1, playerScriptsTeam1, data.playerControlsTeam1, data.playerControlsTeam1, i, 1);
+        }
 
         ball = Instantiate(ballPrefab);
         ballControlScript = ball.GetComponent<Ball>();
@@ -235,14 +277,38 @@ public class GameManager : MonoBehaviour
         BeginMatch();
     }
 
+    private void SpawnPlayer(GameObject[] playerObjects, BhbPlayerController[] playerScripts, List<int> playerNumbers, List<int> controlNumbers, int index, int team)
+    {
+        GameObject player = Instantiate(playerPrefab);
+        BhbPlayerController playerScript = player.GetComponent<BhbPlayerController>();
+        if (playerNumbers[index] == 8)
+        {
+            //create bot
+            playerScript.Init(playerNumbers[index], team, 0);
+            playerScript.isBot = true;
+
+            //spawn bot Header on Canvas
+        }
+        else
+        {
+            //create regular player
+            playerScript.Init(playerNumbers[index], team, controlNumbers[index]);
+
+            //spawn player Header on Canvas
+
+        }
+        playerObjects[index] = player;
+        playerScripts[index] = playerScript;
+    }
+
     private void BeginMatch()
     {
         matchTimeCurrent = matchTimeMax;
 
-        player1Score = 0;
-        player2Score = 0;
-        panelUI.transform.GetChild(1).GetComponent<Text>().text = player2Score.ToString();
-        panelUI.transform.GetChild(0).GetComponent<Text>().text = player1Score.ToString();
+        team0Score = 0;
+        team1Score = 0;
+        panelUI.transform.GetChild(1).GetComponent<Text>().text = team1Score.ToString();
+        panelUI.transform.GetChild(0).GetComponent<Text>().text = team0Score.ToString();
 
         //sets bullet level and dunk value back to default.
         bulletLevelUI.text = "Bullets Level: " + bulletLevel;
@@ -300,6 +366,8 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        if (ball.transform.parent == null)
+            currentBallOwner = null;
         //If the ball is above the screen height (will also happen when held).
         if (ball.transform.position.y > 33)
             ShowBallChevron(true);
@@ -322,14 +390,14 @@ public class GameManager : MonoBehaviour
                 }
             }
 
-            if (player1Script.controllerNumber == -1)
-            {
-                for (int i = 1; i <= 8; i++)
-                {
-                    if ((Input.GetButton("J" + i + "A") || Input.GetButton("J" + i + "B") || Input.GetButton("J" + i + "X") || Input.GetButton("J" + i + "Y") || Input.GetButton("J" + i + "Start") || Mathf.Abs(Input.GetAxis("J" + i + "Horizontal")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "Vertical")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "DHorizontal")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "DVertical")) > .5f) && player2Script.controllerNumber != i)
-                        player1Script.controllerNumber = i;
-                }
-            }
+            // if (player1Script.controllerNumber == -1)
+            // {
+            //     for (int i = 1; i <= 8; i++)
+            //     {
+            //         if ((Input.GetButton("J" + i + "A") || Input.GetButton("J" + i + "B") || Input.GetButton("J" + i + "X") || Input.GetButton("J" + i + "Y") || Input.GetButton("J" + i + "Start") || Mathf.Abs(Input.GetAxis("J" + i + "Horizontal")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "Vertical")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "DHorizontal")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "DVertical")) > .5f) && player2Script.controllerNumber != i)
+            //             player1Script.controllerNumber = i;
+            //     }
+            // }
         }
         else
         {
@@ -340,27 +408,27 @@ public class GameManager : MonoBehaviour
                 return;
             }
 
-            if (paused && Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                player1IsBot = true;
-                player2IsBot = true;
-                player1Script.isBot = true;
-                player2Script.isBot = true;
-            }
-            else if (paused && Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                player1IsBot = false;
-                player2IsBot = true;
-                player1Script.isBot = false;
-                player2Script.isBot = true;
-            }
-            else if (paused && Input.GetKeyDown(KeyCode.Alpha0))
-            {
-                player1IsBot = false;
-                player2IsBot = false;
-                player1Script.isBot = false;
-                player2Script.isBot = false;
-            }
+            // if (paused && Input.GetKeyDown(KeyCode.Alpha2))
+            // {
+            //     player1IsBot = true;
+            //     player2IsBot = true;
+            //     player1Script.isBot = true;
+            //     player2Script.isBot = true;
+            // }
+            // else if (paused && Input.GetKeyDown(KeyCode.Alpha1))
+            // {
+            //     player1IsBot = false;
+            //     player2IsBot = true;
+            //     player1Script.isBot = false;
+            //     player2Script.isBot = true;
+            // }
+            // else if (paused && Input.GetKeyDown(KeyCode.Alpha0))
+            // {
+            //     player1IsBot = false;
+            //     player2IsBot = false;
+            //     player1Script.isBot = false;
+            //     player2Script.isBot = false;
+            // }
 
 
             if (Input.GetKeyDown(KeyCode.Backspace))
@@ -414,7 +482,7 @@ public class GameManager : MonoBehaviour
                 }
                 if (matchTimeCurrent <= 0)
                 {
-                    if (player1Score == player2Score)
+                    if (team0Score == team1Score)
                     {
                         overTime = true;
                         matchTimeText.text = "Overtime";
@@ -434,22 +502,22 @@ public class GameManager : MonoBehaviour
             ShowBulletIncreaseUI();
         }
 
-        if (player1Script.controllerNumber == -1)
-        {
-            for (int i = 1; i <= 8; i++)
-            {
-                if ((Input.GetButton("J" + i + "A") || Input.GetButton("J" + i + "B") || Input.GetButton("J" + i + "X") || Input.GetButton("J" + i + "Y") || Input.GetButton("J" + i + "Start") || Mathf.Abs(Input.GetAxis("J" + i + "Horizontal")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "Vertical")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "DHorizontal")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "DVertical")) > .5f) && player2Script.controllerNumber != i)
-                    player1Script.controllerNumber = i;
-            }
-        }
-        else if (player2Script.controllerNumber == -1)
-        {
-            for (int i = 1; i <= 8; i++)
-            {
-                if ((Input.GetButton("J" + i + "A") || Input.GetButton("J" + i + "B") || Input.GetButton("J" + i + "X") || Input.GetButton("J" + i + "Y") || Input.GetButton("J" + i + "Start") || Mathf.Abs(Input.GetAxis("J" + i + "Horizontal")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "Vertical")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "DHorizontal")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "DVertical")) > .5f) && player1Script.controllerNumber != i)
-                    player2Script.controllerNumber = i;
-            }
-        }
+        // if (player1Script.controllerNumber == -1)
+        // {
+        //     for (int i = 1; i <= 8; i++)
+        //     {
+        //         if ((Input.GetButton("J" + i + "A") || Input.GetButton("J" + i + "B") || Input.GetButton("J" + i + "X") || Input.GetButton("J" + i + "Y") || Input.GetButton("J" + i + "Start") || Mathf.Abs(Input.GetAxis("J" + i + "Horizontal")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "Vertical")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "DHorizontal")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "DVertical")) > .5f) && player2Script.controllerNumber != i)
+        //             player1Script.controllerNumber = i;
+        //     }
+        // }
+        // else if (player2Script.controllerNumber == -1)
+        // {
+        //     for (int i = 1; i <= 8; i++)
+        //     {
+        //         if ((Input.GetButton("J" + i + "A") || Input.GetButton("J" + i + "B") || Input.GetButton("J" + i + "X") || Input.GetButton("J" + i + "Y") || Input.GetButton("J" + i + "Start") || Mathf.Abs(Input.GetAxis("J" + i + "Horizontal")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "Vertical")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "DHorizontal")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "DVertical")) > .5f) && player1Script.controllerNumber != i)
+        //             player2Script.controllerNumber = i;
+        //     }
+        // }
     }
 
     /// <summary>
@@ -515,11 +583,11 @@ public class GameManager : MonoBehaviour
     public void EndGame()
     {
         //player 1.
-        panelUI.transform.GetChild(0).GetComponent<Text>().text = player1Score.ToString();
+        panelUI.transform.GetChild(0).GetComponent<Text>().text = team0Score.ToString();
         //player 2.
-        panelUI.transform.GetChild(1).GetComponent<Text>().text = player2Score.ToString();
+        panelUI.transform.GetChild(1).GetComponent<Text>().text = team1Score.ToString();
 
-        if (player1Score > player2Score)
+        if (team0Score > team1Score)
             playerOneWins.SetActive(!playerOneWins.activeSelf);
         else
             playerTwoWins.SetActive(!playerTwoWins.activeSelf);
@@ -534,8 +602,8 @@ public class GameManager : MonoBehaviour
         paused = true;
         gameOver = true;
         overTime = false;
-        player1Score = 0;
-        player2Score = 0;
+        team0Score = 0;
+        team1Score = 0;
         bulletLevel = 1;
 
         bulletIncreaseUI.gameObject.SetActive(false);
@@ -544,20 +612,38 @@ public class GameManager : MonoBehaviour
 
     public void ResetPlayersAndBall()
     {
-        if (player1Script.isBot)
-            player1Script.BotRandomizeBehavior();
+        for (int i = 0; i < playerScriptsTeam0.Length; i++)
+        {
+            if (playerScriptsTeam0[i].isBot)
+                playerScriptsTeam0[i].BotRandomizeBehavior();
+        }
 
-        if (player2Script.isBot)
-            player2Script.BotRandomizeBehavior();
+        for (int i = 0; i < playerScriptsTeam1.Length; i++)
+        {
+            if (playerScriptsTeam1[i].isBot)
+                playerScriptsTeam1[i].BotRandomizeBehavior();
+        }
 
-        player1.transform.position = player1SpawnPosition;
-        player2.transform.position = player2SpawnPosition;
+        float playerSpawnSeparationAmount = 2;
+        float startingPosition0X = team0SpawnPosition.x - ((playerScriptsTeam0.Length / 2f) - .5f) * playerSpawnSeparationAmount;
+        float startingPosition1X = team1SpawnPosition.x + ((playerScriptsTeam1.Length / 2f) - .5f) * playerSpawnSeparationAmount;
 
-        player1Script.velocity = Vector2.zero;
-        player2Script.velocity = Vector2.zero;
+        for (int i = 0; i < playerScriptsTeam0.Length; i++)
+        {
+            playerScriptsTeam0[i].velocity = Vector2.zero;
+            playerScriptsTeam0[i].autoCatchCooldownTimer = playerScriptsTeam0[i].autoCatchCooldownTimerMax;
+            float posX = startingPosition0X + i * playerSpawnSeparationAmount;
+            playersTeam0[i].transform.position = new Vector2(posX, team0SpawnPosition.y);
 
-        player1Script.autoCatchCooldownTimer = player1Script.autoCatchCooldownTimerMax;
-        player2Script.autoCatchCooldownTimer = player2Script.autoCatchCooldownTimerMax;
+        }
+
+        for (int i = 0; i < playerScriptsTeam1.Length; i++)
+        {
+            playerScriptsTeam1[i].velocity = Vector2.zero;
+            playerScriptsTeam1[i].autoCatchCooldownTimer = playerScriptsTeam1[i].autoCatchCooldownTimerMax;
+            float posX = startingPosition1X - i * playerSpawnSeparationAmount;
+            playersTeam1[i].transform.position = new Vector2(posX, team1SpawnPosition.y);
+        }
 
         if (previousScorer == -1)
         {
@@ -565,11 +651,11 @@ public class GameManager : MonoBehaviour
         }
         else if (previousScorer == 0)
         {
-            ball.transform.position = new Vector2(player2SpawnPosition.x - 5, player2SpawnPosition.y + 10);
+            ball.transform.position = new Vector2(team1SpawnPosition.x - 5, team1SpawnPosition.y + 10);
         }
         else if (previousScorer == 1)
         {
-            ball.transform.position = new Vector2(player1SpawnPosition.x + 5, player1SpawnPosition.y + 10);
+            ball.transform.position = new Vector2(team0SpawnPosition.x + 5, team0SpawnPosition.y + 10);
         }
 
         ballControlScript.lineRenderer.enabled = false;
@@ -603,4 +689,42 @@ public class GameManager : MonoBehaviour
 
         indicatorShevron.SetActive(isAboveScreen);
     }
+
+
+    public List<BhbPlayerController> SwipeBoundsIntersectCheck(BhbPlayerController source)
+    {
+        List<BhbPlayerController> victims = new List<BhbPlayerController>();
+        if (source.teamNumber == 0 && friendlyFireSwipe || source.teamNumber == 1)
+        {
+            for (int i = 0; i < playerScriptsTeam0.Length; i++)
+            {
+                if (source.swipeRenderer.bounds.Intersects(playerScriptsTeam0[i].playerCollider.bounds))
+                {
+                    victims.Add(playerScriptsTeam0[i]);
+                }
+            }
+        }
+        if (source.teamNumber == 1 && friendlyFireSwipe || source.teamNumber == 0)
+        {
+            for (int i = 0; i < playerScriptsTeam1.Length; i++)
+            {
+                if (source.swipeRenderer.bounds.Intersects(playerScriptsTeam1[i].playerCollider.bounds))
+                {
+                    victims.Add(playerScriptsTeam1[i]);
+                }
+            }
+        }
+        return victims;
+    }
+
+    public bool isBallOwnerOppositeTeam(BhbPlayerController source)
+    {
+
+        if (currentBallOwner == null)
+            return false;
+
+        return currentBallOwner.teamNumber != source.teamNumber;
+    }
+
+
 }
