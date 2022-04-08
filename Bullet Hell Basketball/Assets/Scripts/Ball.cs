@@ -278,16 +278,17 @@ public class Ball : MonoBehaviour
                 timer += Time.deltaTime * speedMod;
                 if (timer >= 1)
                 {
+                    if (IsResetting)
+                        return;
                     if (currentTarget == leftBasket)
                     {
                         ScoreLeftBasket();
-                        AfterScore();
                     }
                     else if (currentTarget == rightBasket)
                     {
                         ScoreRightBasket();
-                        AfterScore();
                     }
+                    AfterScore();
                     return;
                 }
                 Vector2 newPosition = CalculateParabola(startPoint, currentTarget.transform.GetChild(1).transform.position, ballHeight * heightMod, timer, false);
@@ -319,10 +320,10 @@ public class Ball : MonoBehaviour
         else if (transform.parent != null && !physics.simulatePhysics)
         {
 
-            int playerNumber = transform.parent.GetComponent<BhbPlayerController>().playerNumber;
+            int teamNumber = gameManager.currentBallOwner.teamNumber;
             lineRenderer.enabled = false;
 
-            if (playerNumber == 0)
+            if (teamNumber == 0)
             {
                 currentTarget = rightBasket;
             }
@@ -404,16 +405,19 @@ public class Ball : MonoBehaviour
             if (transform.parent != null)
             {
                 threePointShot = false;
-                BhbPlayerController playerController = transform.parent.gameObject.GetComponent<BhbPlayerController>();
-                if (playerController.playerNumber == 0 && collision.collider.gameObject == gameManager.leftBasket)
+                BhbPlayerController playerController = gameManager.currentBallOwner;
+                if (playerController.teamNumber == 0 && collision.collider.gameObject == gameManager.leftBasket)
                     return;
-                else if (playerController.playerNumber == 1 && collision.collider.gameObject == gameManager.rightBasket)
+                else if (playerController.teamNumber == 1 && collision.collider.gameObject == gameManager.rightBasket)
                     return;
             }
 
             //only if the ball goes in from top or from dunk
             if ((physics.velocity.y < 0 && transform.parent == null) || transform.parent != null)
             {
+                if (IsResetting)
+                    return;
+                    
                 if (collision.collider.gameObject == gameManager.rightBasket)
                 {
                     ScoreRightBasket();
@@ -569,13 +573,13 @@ public class Ball : MonoBehaviour
 
         if (threePointShot) //3 point
         {
-            gameManager.player1Score += 3;
+            gameManager.team0Score += 3;
             onScoreTextRight.text = "+3";
             audioManager.Play("3points");
         }
         else if (transform.parent == null) //2 point
         {
-            gameManager.player1Score += 2;
+            gameManager.team0Score += 2;
             onScoreTextRight.text = "+2";
             audioManager.Play("2points");
         }
@@ -583,14 +587,14 @@ public class Ball : MonoBehaviour
         {
             int dunkValue = gameManager.bulletLevel * 2;
 
-            gameManager.player1Score += dunkValue;
+            gameManager.team0Score += dunkValue;
             onScoreTextRight.text = "+" + dunkValue;
             audioManager.Play("Dunk");
         }
         gameManager.previousScorer = 0;
         if (!gameManager.overTime)
             gameManager.panelUI.transform.GetChild(3).gameObject.SetActive(true);
-        gameManager.panelUI.transform.GetChild(0).GetComponent<Text>().text = gameManager.player1Score.ToString();
+        gameManager.panelUI.transform.GetChild(0).GetComponent<Text>().text = gameManager.team0Score.ToString();
     }
 
     /// <summary>
@@ -606,13 +610,13 @@ public class Ball : MonoBehaviour
 
         if (threePointShot)
         {
-            gameManager.player2Score += 3;
+            gameManager.team1Score += 3;
             onScoreTextLeft.text = "+3";
             audioManager.Play("3points");
         }
         else if (transform.parent == null) //2 point
         {
-            gameManager.player2Score += 2;
+            gameManager.team1Score += 2;
             onScoreTextLeft.text = "+2";
             audioManager.Play("2points");
         }
@@ -620,14 +624,15 @@ public class Ball : MonoBehaviour
         {
             int dunkValue = gameManager.bulletLevel * 2;
 
-            gameManager.player2Score += dunkValue;
+            gameManager.team1Score += dunkValue;
             onScoreTextLeft.text = "+" + dunkValue;
             audioManager.Play("Dunk");
         }
         gameManager.previousScorer = 1;
         if (!gameManager.overTime)
             gameManager.panelUI.transform.GetChild(4).gameObject.SetActive(true);
-        gameManager.panelUI.transform.GetChild(1).GetComponent<Text>().text = gameManager.player2Score.ToString();
+        gameManager.panelUI.transform.GetChild(1).GetComponent<Text>().text = gameManager.team1Score.ToString();
+
     }
 
     private void AfterScore()

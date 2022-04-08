@@ -170,11 +170,11 @@ public class BulletManager : MonoBehaviour
 
             if (ownerNumber == 0)
             {
-                timer = Mathf.Max(maxTime - Mathf.Max((gameManager.player2Score - gameManager.player1Score) / 13, 0), 0.25f);
+                timer = Mathf.Max(maxTime - Mathf.Max((gameManager.team1Score - gameManager.team0Score) / 13, 0), 0.25f);
             }
             else
             {
-                timer = Mathf.Max(maxTime - Mathf.Max((gameManager.player1Score - gameManager.player2Score) / 13, 0), 0.25f);
+                timer = Mathf.Max(maxTime - Mathf.Max((gameManager.team0Score - gameManager.team1Score) / 13, 0), 0.25f);
             }
 
 
@@ -332,13 +332,13 @@ public class BulletManager : MonoBehaviour
 
         if (ownerNumber == 0)
         {
-            bulletScript.timer = 4 + Mathf.Max((gameManager.player2Score - gameManager.player1Score) / 13, 0);
-            bulletScript.speed = 10 + Mathf.Max((gameManager.player2Score - gameManager.player1Score) / 30, 0) + gameManager.bulletLevel;
+            bulletScript.timer = 4 + Mathf.Max((gameManager.team1Score - gameManager.team0Score) / 13, 0);
+            bulletScript.speed = 10 + Mathf.Max((gameManager.team1Score - gameManager.team0Score) / 30, 0) + gameManager.bulletLevel;
         }
         else
         {
-            bulletScript.timer = 4 + Mathf.Max((gameManager.player1Score - gameManager.player2Score) / 13, 0);
-            bulletScript.speed = 10 + Mathf.Max((gameManager.player1Score - gameManager.player2Score) / 30, 0) + gameManager.bulletLevel;
+            bulletScript.timer = 4 + Mathf.Max((gameManager.team0Score - gameManager.team1Score) / 13, 0);
+            bulletScript.speed = 10 + Mathf.Max((gameManager.team0Score - gameManager.team1Score) / 30, 0) + gameManager.bulletLevel;
         }
 
         MeshRenderer bulletMesh = newBullet.GetComponentInChildren<MeshRenderer>();
