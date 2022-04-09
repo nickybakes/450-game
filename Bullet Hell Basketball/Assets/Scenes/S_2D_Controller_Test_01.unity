@@ -1130,6 +1130,11 @@ MonoBehaviour:
   rightBasketPrefab: {fileID: 3348590631432724730, guid: 91f6523bf3e94f044894c583bcbfed25, type: 3}
   bulletManagerPrefab: {fileID: 5370311947778578661, guid: f5dd710dd082b174b94806c38794438e, type: 3}
   homingBulletPrefab: {fileID: 0}
+  powerUpPrefab: {fileID: 0}
+  powerUpTimeSpawnMin: 16
+  powerUpTimeSpawnMax: 32
+  powerUpTimeSpawn: 0
+  powerUpTimeSpawnCurrent: 0
   playerSpawnLocation: {fileID: 1366659346}
   basketLocation: {fileID: 1774745519}
   ballSpawnHeight: {fileID: 434115448}
@@ -5446,6 +5451,7 @@ GameObject:
   - component: {fileID: 1845412992}
   - component: {fileID: 1845412991}
   - component: {fileID: 1845412994}
+  - component: {fileID: 1845412995}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -5550,6 +5556,18 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
+--- !u!114 &1845412995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1845412990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb52f99182795854dabe7ab310d8a3c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1848869818 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 34ab6ffe89c500f41942d3a14e509c1d, type: 3}
