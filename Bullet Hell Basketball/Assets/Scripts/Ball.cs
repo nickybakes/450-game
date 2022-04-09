@@ -106,8 +106,8 @@ public class Ball : MonoBehaviour
 
         ballRenderer = transform.GetChild(4).GetComponent<Renderer>();
 
-        onScoreTextRight = gameManager.panelUI.transform.GetChild(3).GetComponent<Text>();
-        onScoreTextLeft = gameManager.panelUI.transform.GetChild(4).GetComponent<Text>();
+        onScoreTextRight = gameManager.panelUI.transform.GetChild(3).GetComponentInChildren<Text>();
+        onScoreTextLeft = gameManager.panelUI.transform.GetChild(4).GetComponentInChildren<Text>();
 
         //preset midair sounds.
         midAir = audioManager.Find("Midair");

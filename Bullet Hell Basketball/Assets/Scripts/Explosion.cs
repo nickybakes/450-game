@@ -7,33 +7,82 @@ public class Explosion : MonoBehaviour
 
     public float timeAlive = 0;
 
-    public int ownerNumber;
+    public int ownerNumber = -1;
 
     private ParticleSystem ps;
+    private ParticleSystemRenderer psRenderer;
+    private ParticleSystemRenderer psRenderer1;
+    private ParticleSystemRenderer psRenderer2;
+
+    private CameraShake cameraShake;
+
+    public Material[] materialsTeam0;
+    public Material[] materialsTeam1;
 
 
     // Start is called before the first frame update
     void Start()
     {
         ps = GetComponent<ParticleSystem>();
+        psRenderer = GetComponent<ParticleSystemRenderer>();
+        psRenderer1 = transform.GetChild(0).GetComponent<ParticleSystemRenderer>();
+        psRenderer2 = transform.GetChild(1).GetComponent<ParticleSystemRenderer>();
+        cameraShake = FindObjectOfType<Camera>().GetComponent<CameraShake>();
+    }
+
+    void Init(int ownerNumber)
+    {
+        this.ownerNumber = ownerNumber;
+        this.timeAlive = 0;
+        if (this.ownerNumber == 0)
+        {
+            psRenderer.material = materialsTeam0[0];
+            psRenderer1.material = materialsTeam0[1];
+            psRenderer2.material = materialsTeam0[2];
+            psRenderer2.trailMaterial = materialsTeam0[3];
+        }
+        if (this.ownerNumber == 1)
+        {
+            psRenderer.material = materialsTeam1[0];
+            psRenderer1.material = materialsTeam1[1];
+            psRenderer2.material = materialsTeam1[2];
+            psRenderer2.trailMaterial = materialsTeam1[3];
+        }
+
         ps.Play();
+        StartCoroutine(cameraShake.Shake(.2f, .5f));
     }
 
     // Update is called once per frame
     void Update()
     {
-        timeAlive += Time.deltaTime;
-
-        if (timeAlive > 2)
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-            Destroy(gameObject);
+            Init(this.ownerNumber);
         }
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            Init(0);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            Init(1);
+        }
+
+        // timeAlive += Time.deltaTime;
+
+        // if (timeAlive > 2)
+        // {
+        //     Destroy(gameObject);
+        // }
     }
 
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (timeAlive < .17)
+        if (timeAlive > .6 && timeAlive < .24)
         {
             if (other.gameObject.tag == "Player")
             {
@@ -52,9 +101,11 @@ public class Explosion : MonoBehaviour
                 }
             }
 
-            if (other.gameObject.tag == "Ball" && other.transform.parent == null)
+            if (other.gameObject.tag == "Ball")
             {
                 Ball ballScript = other.gameObject.GetComponent<Ball>();
+                ballScript.physics.simulatePhysics = true;
+                other.transform.parent = null;
 
                 if (other.gameObject.transform.position.x < transform.position.x)
                 {

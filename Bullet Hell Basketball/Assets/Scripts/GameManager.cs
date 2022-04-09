@@ -372,8 +372,8 @@ public class GameManager : MonoBehaviour
 
         GameObject p = Instantiate(powerUpPrefab);
 
-        p.transform.position = new Vector2(0, yPos);
         Powerup pScript = p.GetComponent<Powerup>();
+        pScript.originalPosition = new Vector2(0, yPos);
         pScript.Init(type);
     }
 

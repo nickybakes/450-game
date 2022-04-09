@@ -22,11 +22,11 @@ public class BulletExplosion : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            ps.Play();
-            StartCoroutine(cameraShake.Shake(.2f, .5f));
-        }
+        // if (Input.GetKeyDown(KeyCode.Escape))
+        // {
+        //     ps.Play();
+        //     StartCoroutine(cameraShake.Shake(.2f, .5f));
+        // }
         //if (!ps.isEmitting) //if no longer emitting, destroy prefab.
         //{
         //    Destroy(this);

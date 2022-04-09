@@ -16,6 +16,7 @@ public class Powerup : MonoBehaviour
     public PowerupType type;
 
     public GameManager gameManager;
+    public Vector2 originalPosition;
 
     // Start is called before the first frame update
     void Start()
@@ -26,13 +27,14 @@ public class Powerup : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position = new Vector2(transform.position.x, Mathf.Sin(Time.time * 3) * 1.4f);
+        transform.position = new Vector2(originalPosition.x, originalPosition.y + Mathf.Sin(Time.time * 3) * 1.2f);
     }
 
-    public void Init(PowerupType type){
+    public void Init(PowerupType type)
+    {
         this.type = type;
 
-        transform.GetChild((int) type).gameObject.SetActive(true);
+        transform.GetChild((int)type).gameObject.SetActive(true);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
