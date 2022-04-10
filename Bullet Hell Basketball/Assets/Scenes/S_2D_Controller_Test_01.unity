@@ -4258,7 +4258,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movement: 2
   bulletPattern: 1
-  bulletMovement: 2
+  bulletMovement: 0
   initialTimeBetweenBullets: 3
   arcMovementRadius: 32.3
   rotationSpeed: 10
