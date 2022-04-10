@@ -96,11 +96,11 @@ public class Bullet : MonoBehaviour
                 transform.Translate((direction + offset) *  Time.deltaTime * speed, Space.World);
                 break;
 
-            case BulletMovement.heatSeeking:
+            /*case BulletMovement.heatSeeking:
                 //Find the position of the basketball
                 Transform ball = FindObjectOfType<Ball>().gameObject.transform;
                 transform.Translate(ball.position * Time.deltaTime * speed, Space.World);
-                break;
+                break;*/
         }
         
     }

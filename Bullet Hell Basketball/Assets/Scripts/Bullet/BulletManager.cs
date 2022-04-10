@@ -465,7 +465,7 @@ public class BulletManager : MonoBehaviour
     /// <summary>
     /// Spawns another bullet spawner
     /// </summary>
-    private void SpawnAnother()
+    /*private void SpawnAnother()
     {
         GameObject newBulletManger = Instantiate(this.gameObject);
         BulletManager newScript = newBulletManger.GetComponent<BulletManager>();
@@ -476,7 +476,7 @@ public class BulletManager : MonoBehaviour
 
 
         //Add some more randomness later
-    }
+    }*/
     
     public float getAngle(Vector2 me, Vector2 target)
     {
