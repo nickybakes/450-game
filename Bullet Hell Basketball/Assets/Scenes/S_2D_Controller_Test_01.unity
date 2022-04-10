@@ -4267,6 +4267,8 @@ MonoBehaviour:
   arcMinAngle: -54
   arcMaxAngle: 120
   initialNumberOfBullets: 1
+  sinWaveLength: 0.5
+  sinWaveFrequency: 2
 --- !u!4 &1449409615
 Transform:
   m_ObjectHideFlags: 0

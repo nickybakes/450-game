@@ -63,6 +63,9 @@ public class BulletManager : MonoBehaviour
     public int initialNumberOfBullets = 1; //Eventually input from bullet spawner data
     private BulletMovement bulletMovement;
 
+    private float sinWaveLength;
+    private float sinWaveFrequency;
+
 
     //Add some sort of level up system, and different directions bullets shoot
     //Make more variables so arc movement can work
@@ -93,6 +96,8 @@ public class BulletManager : MonoBehaviour
         this.minAngle = data.arcMinAngle;
         this.maxAngle = data.arcMaxAngle;
         this.bulletMovement = data.bulletMovement;
+        this.sinWaveLength = data.sinWaveLength;
+        this.sinWaveFrequency = data.sinWaveFrequency;
 
 
         timer = data.initialTimeBetweenBullets;
@@ -336,6 +341,9 @@ public class BulletManager : MonoBehaviour
         bulletScript.ownerNumber = ownerNumber;
         bulletScript.gameManager = gameManager;
         bulletScript.movement = bulletMovement;
+
+        bulletScript.sinLength = sinWaveLength;
+        bulletScript.frequency = sinWaveFrequency;
 
         if (gameManager.randomBigBullets && gameManager.bulletLevel >= 2)
         {

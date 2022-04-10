@@ -29,6 +29,8 @@ public class Bullet : MonoBehaviour
 
     public float sinLength;
 
+    public float frequency; //Frequency of the sin wave
+
     private Vector3 ogPosition;
 
     // Start is called before the first frame update
@@ -36,7 +38,6 @@ public class Bullet : MonoBehaviour
     {
         ogPosition = transform.position;
         timeAlive = 0;
-        sinLength = .5f; //For testing purposes only
         
         if (speed <= 0)
         {
@@ -91,7 +92,7 @@ public class Bullet : MonoBehaviour
             case BulletMovement.sine:
                 //Get the normal of direction multiply by length then both by the sin of the time alive
                 Vector2 normal = perpCW(direction);
-                Vector2 offset = (normal * sinLength) * Mathf.Sin(timeAlive);
+                Vector2 offset = (normal * sinLength) * Mathf.Sin(timeAlive * frequency);
                 transform.Translate((direction + offset) *  Time.deltaTime * speed, Space.World);
                 break;
 
