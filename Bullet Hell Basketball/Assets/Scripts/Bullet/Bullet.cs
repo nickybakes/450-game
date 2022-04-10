@@ -33,6 +33,9 @@ public class Bullet : MonoBehaviour
 
     private Vector3 ogPosition;
 
+    private Vector2 normal;
+    private Vector2 offset;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -65,6 +68,12 @@ public class Bullet : MonoBehaviour
             }
             transform.rotation = Quaternion.Euler(0, 0, getAngle(Vector2.zero, gameManager.ballPhysicsScript.velocity));
         }
+        
+        else if(movement == BulletMovement.sine)
+        {
+            transform.rotation = Quaternion.Euler(0, 0, getAngle(Vector2.zero, direction + offset));
+        }
+        
         else
         {
             transform.rotation = Quaternion.Euler(0, 0, getAngle(Vector2.zero, direction));
@@ -91,8 +100,8 @@ public class Bullet : MonoBehaviour
 
             case BulletMovement.sine:
                 //Get the normal of direction multiply by length then both by the sin of the time alive
-                Vector2 normal = perpCW(direction);
-                Vector2 offset = (normal * sinLength) * Mathf.Sin(timeAlive * frequency);
+                normal = perpCW(direction);
+                offset = (normal * sinLength) * Mathf.Sin(timeAlive * frequency);
                 transform.Translate((direction + offset) *  Time.deltaTime * speed, Space.World);
                 break;
 
