@@ -15,6 +15,7 @@ public class Bullet : MonoBehaviour
     public int speed; //Multiplies this by time.deltaTime to increase the speed
     public Vector2 direction;
     public float timer;
+    private float timeAlive;
     public int ownerNumber = 0;
 
     //used for the ball turning into a bullet
@@ -26,12 +27,16 @@ public class Bullet : MonoBehaviour
 
     public BulletMovement movement;
 
+    public float sinLength;
+
     private Vector3 ogPosition;
 
     // Start is called before the first frame update
     void Start()
     {
         ogPosition = transform.position;
+        timeAlive = 0;
+        sinLength = 1f; //For testing purposes only
         
         if (speed <= 0)
         {
@@ -85,7 +90,8 @@ public class Bullet : MonoBehaviour
 
             case BulletMovement.sine:
                 //Get the normal of direction multiply by length then both by the sin of the time alive
-                
+                Vector2 normal = perpCW(direction);
+                transform.Translate((normal * sinLength) * Mathf.Sin(timeAlive) * Time.deltaTime * speed, Space.World);
                 break;
 
             case BulletMovement.heatSeeking:
@@ -105,6 +111,7 @@ public class Bullet : MonoBehaviour
         if (gameManager.paused)
             return;
 
+        timeAlive += Time.deltaTime;
         timer -= Time.deltaTime;
 
         if (timer <= 0)
@@ -141,6 +148,17 @@ public class Bullet : MonoBehaviour
     public float getAngle(Vector2 me, Vector2 target)
     {
         return Mathf.Atan2(target.y - me.y, target.x - me.x) * (180 / Mathf.PI);
+    }
+
+
+    /// <summary>
+    /// gets the perpidicular vector to this one, going around clock wise
+    /// </summary>
+    /// <param name="vector">The vector we want to modify</param>
+    /// <returns></returns>
+    private Vector2 perpCW(Vector2 vector)
+    {
+        return new Vector2(vector.y, -1 * vector.x);
     }
 
 }
