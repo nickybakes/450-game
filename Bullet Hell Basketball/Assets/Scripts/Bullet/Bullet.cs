@@ -36,7 +36,7 @@ public class Bullet : MonoBehaviour
     {
         ogPosition = transform.position;
         timeAlive = 0;
-        sinLength = 1f; //For testing purposes only
+        sinLength = .5f; //For testing purposes only
         
         if (speed <= 0)
         {
@@ -91,7 +91,8 @@ public class Bullet : MonoBehaviour
             case BulletMovement.sine:
                 //Get the normal of direction multiply by length then both by the sin of the time alive
                 Vector2 normal = perpCW(direction);
-                transform.Translate((normal * sinLength) * Mathf.Sin(timeAlive) * Time.deltaTime * speed, Space.World);
+                Vector2 offset = (normal * sinLength) * Mathf.Sin(timeAlive);
+                transform.Translate((direction + offset) *  Time.deltaTime * speed, Space.World);
                 break;
 
             case BulletMovement.heatSeeking:
