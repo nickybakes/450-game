@@ -435,6 +435,20 @@ public class BulletManager : MonoBehaviour
             float direction = startingAngle + i * bulletSeperationAngle;
 
             bulletScript.direction = new Vector2(Mathf.Cos(direction * Mathf.Deg2Rad), Mathf.Sin(direction * Mathf.Deg2Rad));
+
+            //Creates double helix
+            if(bulletMovement == BulletMovement.sine)
+            {
+                if(i % 2 != 0)
+                {
+                    bulletScript.movement = BulletMovement.counterSine;
+                }
+
+                else
+                {
+                    bulletScript.movement = BulletMovement.sine;
+                }
+            }
         }
     }
 
