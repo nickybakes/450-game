@@ -223,11 +223,6 @@ public class GameManager : MonoBehaviour
             data.playerNumbersTeam1 = new List<int>() { 2 };
         }
 
-        if (isTutorial)
-        {
-
-        }
-
         playersTeam0 = new GameObject[data.playerNumbersTeam0.Count];
         playerScriptsTeam0 = new BhbPlayerController[data.playerNumbersTeam0.Count];
         for (int i = 0; i < data.playerNumbersTeam0.Count; i++)
@@ -279,6 +274,9 @@ public class GameManager : MonoBehaviour
                 bulletManagers[i].gameObject.SetActive(false);
             }
             tutorialManager.bulletManagers = bulletManagers;
+
+            audioManager.Stop("Music");
+            audioManager.Play("MusicTutorial");
         }
         else
         {

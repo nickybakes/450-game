@@ -58,6 +58,13 @@ MonoBehaviour:
     pitch: 1
     loop: 1
     source: {fileID: 0}
+  - name: MusicTutorial
+    clips:
+    - {fileID: 8300000, guid: 0a80c7c8dd3a3e84c9deaffb7aff0795, type: 3}
+    volume: 0.1
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
   - name: Overtime
     clips:
     - {fileID: 8300000, guid: cb7244f0b325f354e9a7b4a378ef5ab2, type: 3}
