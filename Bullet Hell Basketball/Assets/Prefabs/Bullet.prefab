@@ -64,10 +64,6 @@ MonoBehaviour:
   dontUpdate: 0
   gameManager: {fileID: 0}
   ps: {fileID: 4860955265722537127}
-  isBig: 0
-  movement: 0
-  sinLength: 0
-  frequency: 0
 --- !u!58 &130120717617434444
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -153,7 +149,7 @@ ParticleSystem:
   ringBufferLoopRange: {x: 0, y: 1}
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   useRigidbodyForVelocity: 1
@@ -220,7 +216,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.4
+      scalar: 0.3
       minScalar: 0.18
       maxCurve:
         serializedVersion: 2
@@ -705,13 +701,13 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     randomizeRotationDirection: 0
-    maxNumParticles: 1000
+    maxNumParticles: 20
     size3D: 0
     rotation3D: 0
     gravityModifier:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0
+      scalar: 4
       minScalar: 0
       maxCurve:
         serializedVersion: 2
