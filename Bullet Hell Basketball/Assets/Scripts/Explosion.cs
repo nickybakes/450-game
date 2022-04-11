@@ -112,9 +112,6 @@ public class Explosion : MonoBehaviour
                     ballScript.physics.velocity = new Vector2(80, 60);
                 }
             }
-
-            //Explosion plays regardless of what's hit.
-            audioManager.Play("Explosion", 0.9f, 1.1f);
         }
     }
 }
