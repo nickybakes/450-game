@@ -44,7 +44,7 @@ public class HomingBullet : MonoBehaviour
 
         transform.Translate(direction * speed * Time.deltaTime, Space.World);
 
-        crosshair.transform.position = Vector3.Lerp(crosshair.transform.position, new Vector3(ball.transform.position.x, ball.transform.position.y, 0), .5f);
+        crosshair.transform.position = Vector3.Lerp(crosshair.transform.position, new Vector3(ball.transform.position.x, ball.transform.position.y, 0), .1f);
 
         float bulletDistance = Vector2.Distance(transform.position, ball.transform.position);
 

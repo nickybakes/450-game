@@ -352,6 +352,13 @@ public class GameManager : MonoBehaviour
             }
         }
 
+        for (int i = 0; i < allAlivePowerups.Count; i++)
+        {
+            Destroy(allAlivePowerups[i].gameObject);
+        }
+
+        allAlivePowerups.Clear();
+
         bulletManagers = FindObjectsOfType<BulletManager>();
 
         for (int i = 0; i < bulletManagers.Length; i++)
@@ -801,13 +808,13 @@ public class GameManager : MonoBehaviour
 
     public Powerup SwipePowerupCheck(BhbPlayerController source)
     {
-        // for (int i = 0; i < allAlivePowerups.Count; i++)
-        // {
-        //     if (source.swipeRenderer.bounds.Intersects(allAlivePowerups))
-        //     {
-        //         return allAlivePowerups[i];
-        //     }
-        // }
+        for (int i = 0; i < allAlivePowerups.Count; i++)
+        {
+            if (source.swipeRenderer.bounds.Intersects(allAlivePowerups[i].powerupCollider.bounds))
+            {
+                return allAlivePowerups[i];
+            }
+        }
         return null;
     }
 

@@ -385,7 +385,7 @@ GameObject:
   - component: {fileID: 82139426823121694}
   - component: {fileID: 8816717625503881782}
   - component: {fileID: 3900978617676190435}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Plane_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -466,7 +466,7 @@ GameObject:
   - component: {fileID: 2121358742010533419}
   - component: {fileID: 85078536762956362}
   - component: {fileID: 6920094358372309827}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Plane_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1165,7 +1165,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8114424638394800869}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Homing
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1290,7 +1290,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6301884237697625058}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Shield
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1510,7 +1510,7 @@ GameObject:
   - component: {fileID: 6449068944269853551}
   - component: {fileID: 6449068944269853552}
   - component: {fileID: 2718361100974889775}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Powerup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1567,6 +1567,7 @@ MonoBehaviour:
   type: 0
   gameManager: {fileID: 0}
   originalPosition: {x: 0, y: 0}
+  powerupCollider: {fileID: 0}
 --- !u!1 &6449068944381814734
 GameObject:
   m_ObjectHideFlags: 0
@@ -1578,7 +1579,7 @@ GameObject:
   - component: {fileID: 6449068944381814730}
   - component: {fileID: 6449068944381814731}
   - component: {fileID: 6449068944381814732}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Plane_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1593,8 +1594,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6449068944381814734}
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: -0.109}
-  m_LocalScale: {x: 0.779942, y: 0.779942, z: 0.779942}
+  m_LocalPosition: {x: 0, y: 0, z: 0.03}
+  m_LocalScale: {x: 0.7999521, y: 0.7999521, z: 0.7999521}
   m_Children: []
   m_Father: {fileID: 6449068944269853551}
   m_RootOrder: 3
@@ -1659,7 +1660,7 @@ GameObject:
   - component: {fileID: 8036179529265815317}
   - component: {fileID: 9039583756559642603}
   - component: {fileID: 4146986387515633974}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Plane_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1674,8 +1675,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6466791768891260153}
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.11}
+  m_LocalScale: {x: 1.18, y: 1.18, z: 1.18}
   m_Children: []
   m_Father: {fileID: 6449068944269853551}
   m_RootOrder: 4
@@ -1865,7 +1866,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9113909039943003425}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Airstrike
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1903,7 +1904,7 @@ GameObject:
   - component: {fileID: 7056778936343135110}
   - component: {fileID: 9039982330125247934}
   - component: {fileID: 2174954058192052289}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Plane_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1984,7 +1985,7 @@ GameObject:
   - component: {fileID: 1862340799045601530}
   - component: {fileID: 8015211666202320724}
   - component: {fileID: 1757963919095452272}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2373,7 +2374,7 @@ GameObject:
   - component: {fileID: 8750257615189624191}
   - component: {fileID: 4454147089172092750}
   - component: {fileID: 3700201291529734481}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}

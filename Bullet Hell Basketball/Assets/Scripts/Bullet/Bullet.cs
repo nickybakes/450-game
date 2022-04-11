@@ -81,7 +81,7 @@ public class Bullet : MonoBehaviour
             if (ps != null)
             {
                 ps.transform.parent = null;
-                ps.Stop();
+                ps.Play();
             }
             Destroy(this.gameObject);
         }
@@ -120,7 +120,7 @@ public class Bullet : MonoBehaviour
                     if (ps != null)
                     {
                         ps.transform.parent = null;
-                        ps.Stop();
+                        ps.Play();
                     }
                     Destroy(this.gameObject);
                 }

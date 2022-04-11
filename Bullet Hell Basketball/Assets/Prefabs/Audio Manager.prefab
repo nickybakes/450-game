@@ -82,6 +82,13 @@ MonoBehaviour:
     pitch: 1
     loop: 0
     source: {fileID: 0}
+  - name: HitBullet
+    clips:
+    - {fileID: 8300000, guid: f20e15043bf1ece4e80cd0fd557c6149, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
   - name: Buzzer
     clips:
     - {fileID: 8300000, guid: 789cbb3829141a545a0c38a1eb7771e2, type: 3}
@@ -126,6 +133,13 @@ MonoBehaviour:
     pitch: 1
     loop: 0
     source: {fileID: 0}
+  - name: SwipeRally
+    clips:
+    - {fileID: 8300000, guid: 6393dd7ffe4c37342b25529d9e40bc59, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
   - name: Shot
     clips:
     - {fileID: 8300000, guid: 1e5d71bc49fb5e84bbe17b2236db4e34, type: 3}
@@ -163,4 +177,39 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     loop: 1
+    source: {fileID: 0}
+  - name: HomingBulletStart
+    clips:
+    - {fileID: 8300000, guid: df8bc1a27af85d44cbe96bd4ee979501, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: HomingBulletBeep
+    clips:
+    - {fileID: 8300000, guid: 9eadc405c60e07641a49e4652ad9545e, type: 3}
+    volume: 0.3
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: HomingBulletFlying
+    clips:
+    - {fileID: 8300000, guid: c284c1624f5020f4a864f155f6417a85, type: 3}
+    volume: 0.1
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
+  - name: HomingBulletClose
+    clips:
+    - {fileID: 8300000, guid: 89bc99c62114ba945a63970655e7666d, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Explosion
+    clips:
+    - {fileID: 8300000, guid: e0e0c32a59874b44d8b8a0d809074aa0, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
     source: {fileID: 0}

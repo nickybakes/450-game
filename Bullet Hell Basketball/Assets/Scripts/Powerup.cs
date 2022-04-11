@@ -18,10 +18,12 @@ public class Powerup : MonoBehaviour
     public GameManager gameManager;
     public Vector2 originalPosition;
 
+    public Collider2D powerupCollider;
+
     // Start is called before the first frame update
     void Start()
     {
-
+        powerupCollider = GetComponent<Collider2D>();
     }
 
     // Update is called once per frame

@@ -152,15 +152,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bullet: {fileID: 2649196223168556797, guid: 0d018b114476535428b7651de079dd4d, type: 3}
-  timer: 3
+  maxTime: 0
   rotationSpeed: 5
   radius: 32.3
   angularSpeed: 0.5
-  fixedPoint: {x: 0, y: 0, z: 0}
   bulletSeperationAngle: 20
   ownerNumber: 0
   player1Mat: {fileID: 2100000, guid: 7cde71b3d7938dc4c9a422c8cb605d23, type: 2}
   player2Mat: {fileID: 2100000, guid: 92873352d5998c64193f75fbe99a85ae, type: 2}
+  trailMatrialTeam1: {fileID: 2100000, guid: c94be079aa5360f448db47d27e20ce14, type: 2}
   gameManager: {fileID: 0}
   movement: 0
   bulletPattern: 0
@@ -168,6 +168,7 @@ MonoBehaviour:
   startsRight: 0
   minAngle: -54.4
   maxAngle: 119.1
+  initialNumberOfBullets: 2
   destroyOnReload: 0
 --- !u!1 &8685140341575997100
 GameObject:

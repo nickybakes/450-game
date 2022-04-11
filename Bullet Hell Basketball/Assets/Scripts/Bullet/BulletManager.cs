@@ -44,6 +44,7 @@ public class BulletManager : MonoBehaviour
     //Materials
     public Material player1Mat;
     public Material player2Mat;
+    public Material trailMatrialTeam1;
 
     public GameManager gameManager;
 
@@ -342,6 +343,7 @@ public class BulletManager : MonoBehaviour
         }
 
         MeshRenderer bulletMesh = newBullet.GetComponentInChildren<MeshRenderer>();
+        ParticleSystemRenderer ps = newBullet.transform.GetChild(1).GetComponent<ParticleSystemRenderer>();
 
         if (bulletScript.ownerNumber == 0)
         {
@@ -351,6 +353,7 @@ public class BulletManager : MonoBehaviour
         else
         {
             bulletMesh.material = player2Mat;
+            ps.trailMaterial = trailMatrialTeam1;
         }
 
         return newBullet;
