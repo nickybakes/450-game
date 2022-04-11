@@ -24,7 +24,6 @@ public class HomingBullet : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        direction = Vector2.down;
         crosshair.transform.parent = null;
         audioManager = FindObjectOfType<AudioManager>();
         audioManager.Play("HomingBulletStart");
@@ -45,7 +44,7 @@ public class HomingBullet : MonoBehaviour
 
         transform.Translate(direction * speed * Time.deltaTime, Space.World);
 
-        crosshair.transform.position = Vector3.Lerp(crosshair.transform.position, new Vector3(ball.transform.position.x, ball.transform.position.y, -1), .5f);
+        crosshair.transform.position = Vector3.Lerp(crosshair.transform.position, new Vector3(ball.transform.position.x, ball.transform.position.y, 0), .5f);
 
         float bulletDistance = Vector2.Distance(transform.position, ball.transform.position);
 

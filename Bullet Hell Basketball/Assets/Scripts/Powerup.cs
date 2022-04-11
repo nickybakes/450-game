@@ -48,6 +48,7 @@ public class Powerup : MonoBehaviour
                 gameManager.SpawnHomingBullet();
             }
 
+            gameManager.allAlivePowerups.Remove(this);
             Destroy(gameObject);
 
             // if (other.gameObject.transform.position.x < transform.position.x)

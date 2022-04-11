@@ -38,6 +38,8 @@ public class GameManager : MonoBehaviour
     public float powerUpTimeSpawn;
     public float powerUpTimeSpawnCurrent;
 
+    public List<Powerup> allAlivePowerups;
+
     //Spawning
     public Transform playerSpawnLocation;
     public Transform basketLocation;
@@ -148,6 +150,8 @@ public class GameManager : MonoBehaviour
         bulletLevel = 1;
         bulletTimerUI = 0;
         increaseLevelOnce = true;
+
+        allAlivePowerups = new List<Powerup>();
 
         //lowest interval is 5 seconds.
         if (bulletLevelUpInterval <= 4)
@@ -361,22 +365,44 @@ public class GameManager : MonoBehaviour
         ballControlScript.IsResetting = false;
     }
 
-    public void SpawnPowerRandomUp()
+    public void SpawnRandomPowerUp()
     {
-        PowerupType type = (PowerupType)UnityEngine.Random.Range(0, 2);
+        PowerupType type = (PowerupType)UnityEngine.Random.Range(0, 3);
 
-        float yPos = UnityEngine.Random.Range(4f, 9f);
-        if (UnityEngine.Random.Range(0, 1) == 0)
+        bool closeToAnotherPowerup = false;
+        float yPos, xPos;
+        int closeChecks = 0;
+        do
         {
-            yPos = UnityEngine.Random.Range(16f, 26f);
-        }
+            yPos = UnityEngine.Random.Range(4f, 9f);
+            if (UnityEngine.Random.Range(0, 2) == 0)
+            {
+                yPos = UnityEngine.Random.Range(16f, 32f);
+            }
+            xPos = UnityEngine.Random.Range(-10f, 10f);
 
+            closeToAnotherPowerup = false;
+            foreach (Powerup powerup in allAlivePowerups)
+            {
+                if (Vector2.Distance(new Vector2(xPos, yPos), powerup.transform.position) < 5)
+                {
+                    closeToAnotherPowerup = true;
+                    break;
+                }
+            }
+            closeChecks++;
+        } while (closeToAnotherPowerup && closeChecks < 50);
 
-        GameObject p = Instantiate(powerUpPrefab);
+        if (closeChecks == 50)
+            return;
+
+        GameObject p = Instantiate(powerUpPrefab, new Vector2(xPos, yPos), Quaternion.identity);
 
         Powerup pScript = p.GetComponent<Powerup>();
-        pScript.originalPosition = new Vector2(0, yPos);
+        pScript.originalPosition = new Vector2(xPos, yPos);
+        pScript.gameManager = this;
         pScript.Init(type);
+        allAlivePowerups.Add(pScript);
     }
 
     public void SpawnBulletSpawnersFromData()
@@ -408,12 +434,18 @@ public class GameManager : MonoBehaviour
 
     public void SpawnHomingBullet()
     {
-        GameObject bullet = Instantiate(homingBulletPrefab);
-        bullet.transform.position = new Vector3(0, 40, -1);
-        HomingBullet bulletScript = bullet.GetComponent<HomingBullet>();
-        bulletScript.ball = ballControlScript;
-        bulletScript.gameManager = this;
+        Vector2[] startPositions = new Vector2[] { new Vector2(0, 40), new Vector2(40, 20), new Vector2(-40, 20) };
+        Vector2[] directions = new Vector2[] { Vector2.down, Vector2.right, Vector2.left };
 
+        for (int i = 0; i < startPositions.Length; i++)
+        {
+            GameObject bullet = Instantiate(homingBulletPrefab);
+            bullet.transform.position = startPositions[i];
+            HomingBullet bulletScript = bullet.GetComponent<HomingBullet>();
+            bulletScript.ball = ballControlScript;
+            bulletScript.direction = directions[i];
+            bulletScript.gameManager = this;
+        }
     }
 
     void Update()
@@ -572,6 +604,11 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             SpawnHomingBullet();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            SpawnRandomPowerUp();
         }
 
         // if (player1Script.controllerNumber == -1)

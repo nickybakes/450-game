@@ -81,7 +81,7 @@ GameObject:
   - component: {fileID: 7801393476103321156}
   - component: {fileID: 3998518275727366887}
   - component: {fileID: 61899369077046636}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Crosshair
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -95,13 +95,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6927914775906215561}
-  m_LocalRotation: {x: -0.09383044, y: -0.7008537, z: 0.7008537, w: -0.09383044}
-  m_LocalPosition: {x: 5.42, y: 0, z: -2.45}
-  m_LocalScale: {x: 0.7591531, y: 0.75915295, z: 0.75915295}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: -0.7071068, w: 0}
+  m_LocalPosition: {x: 2.88, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3348590631432724733}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: -164.749}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: -180}
 --- !u!33 &3998518275727366887
 MeshFilter:
   m_ObjectHideFlags: 0

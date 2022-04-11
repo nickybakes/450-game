@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 139369133781566639}
   - component: {fileID: 7838506712085482220}
   - component: {fileID: 8598203680899876808}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Flash_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1998779879223842274}
   m_LocalRotation: {x: -0.70710576, y: -0, z: -0, w: 0.70710784}
-  m_LocalPosition: {x: 0, y: 0, z: 0.81}
+  m_LocalPosition: {x: 0, y: 0, z: 0.39999563}
   m_LocalScale: {x: 1.065216, y: 1.065216, z: 1.065216}
   m_Children: []
   m_Father: {fileID: 2520608162428302638}
@@ -91,7 +91,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2520608162428302638}
   - component: {fileID: 5934438583580291321}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Homing Bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -147,7 +147,7 @@ GameObject:
   - component: {fileID: 7785531986728503895}
   - component: {fileID: 1691780452527504799}
   - component: {fileID: 2035837242621622402}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Crosshair
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -162,7 +162,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6223182589519963191}
   m_LocalRotation: {x: -0.70710576, y: -0, z: -0, w: 0.70710784}
-  m_LocalPosition: {x: 0, y: 0, z: -2}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2520608162428302638}
@@ -228,7 +228,7 @@ GameObject:
   - component: {fileID: 7972036930602879257}
   - component: {fileID: 3157202360530784962}
   - component: {fileID: 4882633036038518784}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Flash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -243,7 +243,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7732962534621947710}
   m_LocalRotation: {x: -0.70710576, y: -0, z: -0, w: 0.70710784}
-  m_LocalPosition: {x: 0, y: 0, z: 1.01}
+  m_LocalPosition: {x: 0, y: 0, z: 0.5999956}
   m_LocalScale: {x: 1.6644, y: 1.6644, z: 1.6644}
   m_Children: []
   m_Father: {fileID: 2520608162428302638}
@@ -353,6 +353,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: c6aa29412a4fdd1498862c7f7c31812f, type: 2}
+    - target: {fileID: 919132149155446097, guid: 435ad23b2eda8fb43961d12d448cf9a6, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 435ad23b2eda8fb43961d12d448cf9a6, type: 3}
 --- !u!4 &2128770134165616877 stripped
@@ -407,9 +411,17 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: -0
       objectReference: {fileID: 0}
+    - target: {fileID: 8004103087378110378, guid: f7b1d37e07508ec468a2d03bce96bb99, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8721793205336660193, guid: f7b1d37e07508ec468a2d03bce96bb99, type: 3}
       propertyPath: lengthInSec
       value: 0.83
+      objectReference: {fileID: 0}
+    - target: {fileID: 8721793205336660193, guid: f7b1d37e07508ec468a2d03bce96bb99, type: 3}
+      propertyPath: InitialModule.maxNumParticles
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 8721793205336660193, guid: f7b1d37e07508ec468a2d03bce96bb99, type: 3}
       propertyPath: InitialModule.startLifetime.scalar

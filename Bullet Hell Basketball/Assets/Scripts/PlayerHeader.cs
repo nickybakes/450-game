@@ -34,7 +34,7 @@ public class PlayerHeader : MonoBehaviour
             return;
 
         transform.position = cam.WorldToScreenPoint(new Vector3(player.transform.position.x, player.transform.position.y + player.height, 0));
-        hpText.text = player.health.ToString();
+        // hpText.text = player.health.ToString();
     }
 
     public void Init(BhbPlayerController player)
