@@ -451,6 +451,12 @@ public class BhbPlayerController : NeonHeightsCharacterController
                             swipeVictims[i].GetsHit(new Vector2(50, 20), true);
                         }
                     }
+
+                    Powerup powerup = gameManager.SwipePowerupCheck(this);
+                    if (powerup != null)
+                    {
+                        powerup.ActivatePowerup();
+                    }
                 }
                 if (IsSwiping && swipeTimeCurrent <= .5)
                 {

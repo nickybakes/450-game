@@ -37,28 +37,33 @@ public class Powerup : MonoBehaviour
         transform.GetChild((int)type).gameObject.SetActive(true);
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    public void ActivatePowerup()
     {
-        if (other.gameObject.tag == "Player")
+        if (type == PowerupType.HomingBullet)
         {
-            BhbPlayerController playerScript = other.gameObject.GetComponent<BhbPlayerController>();
-
-            if (type == PowerupType.HomingBullet)
-            {
-                gameManager.SpawnHomingBullet();
-            }
-
-            gameManager.allAlivePowerups.Remove(this);
-            Destroy(gameObject);
-
-            // if (other.gameObject.transform.position.x < transform.position.x)
-            // {
-            //     playerScript.GetsHit(new Vector2(-80, 50), false);
-            // }
-            // else if (other.gameObject.transform.position.x >= transform.position.x)
-            // {
-            //     playerScript.GetsHit(new Vector2(80, 50), false);
-            // }
+            gameManager.SpawnHomingBullet();
         }
+
+        gameManager.allAlivePowerups.Remove(this);
+        Destroy(gameObject);
     }
+
+    // private void OnTriggerEnter2D(Collider2D other)
+    // {
+    //     if (other.gameObject.tag == "Player")
+    //     {
+    //         BhbPlayerController playerScript = other.gameObject.GetComponent<BhbPlayerController>();
+
+
+
+    //         // if (other.gameObject.transform.position.x < transform.position.x)
+    //         // {
+    //         //     playerScript.GetsHit(new Vector2(-80, 50), false);
+    //         // }
+    //         // else if (other.gameObject.transform.position.x >= transform.position.x)
+    //         // {
+    //         //     playerScript.GetsHit(new Vector2(80, 50), false);
+    //         // }
+    //     }
+    // }
 }

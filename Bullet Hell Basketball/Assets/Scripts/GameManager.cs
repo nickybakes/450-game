@@ -799,6 +799,18 @@ public class GameManager : MonoBehaviour
         indicatorShevron.SetActive(isAboveScreen);
     }
 
+    public Powerup SwipePowerupCheck(BhbPlayerController source)
+    {
+        // for (int i = 0; i < allAlivePowerups.Count; i++)
+        // {
+        //     if (source.swipeRenderer.bounds.Intersects(allAlivePowerups))
+        //     {
+        //         return allAlivePowerups[i];
+        //     }
+        // }
+        return null;
+    }
+
 
     public List<BhbPlayerController> SwipeBoundsIntersectCheck(BhbPlayerController source)
     {
