@@ -4772,7 +4772,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movement: 2
-  bulletPattern: 1
+  bulletPattern: 3
   bulletMovement: 1
   initialTimeBetweenBullets: 3
   arcMovementRadius: 32.3

@@ -15,7 +15,8 @@ public enum BulletPatterns
 {
     omni,
     front,
-    down
+    down,
+    angular
 }
 
 public class BulletManager : MonoBehaviour
@@ -161,17 +162,17 @@ public class BulletManager : MonoBehaviour
                     OmniPattern();
                     break;
 
-                case BulletPatterns.front:
+                case BulletPatterns.angular:
 
                     if (ownerNumber == 0)
-                        OneDirectionPattern();
+                        AngularPattern();
 
-                    else OneDirectionPattern();
+                    else AngularPattern();
 
                     break;
 
                 case BulletPatterns.down:
-                    OneDirectionPattern();
+                    AngularPattern();
                     break;
             }
 
@@ -410,7 +411,7 @@ public class BulletManager : MonoBehaviour
         }
     }
 
-    private void OneDirectionPattern()
+    private void AngularPattern()
     {
         float bulletAngle = getAngle(transform.position, fixedPoint);
         //Debug.Log(bulletAngle);
