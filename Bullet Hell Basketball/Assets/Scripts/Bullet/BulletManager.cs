@@ -162,6 +162,15 @@ public class BulletManager : MonoBehaviour
                     OmniPattern();
                     break;
 
+                case BulletPatterns.front:
+
+                    if (ownerNumber == 0)
+                        AngularPattern();
+
+                    else AngularPattern();
+
+                    break;
+
                 case BulletPatterns.angular:
 
                     if (ownerNumber == 0)
