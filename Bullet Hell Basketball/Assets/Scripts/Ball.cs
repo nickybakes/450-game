@@ -17,26 +17,34 @@ public class Ball : MonoBehaviour
 
     private bool boolWillHit = true;
     private bool calculateOnce = true;
+    private bool wasBeingHeld = true;
 
     private Vector3 startPoint;
     private float timer = 0.0f;
 
     public BhbBallPhysics physics;
 
+    public Renderer ballRenderer;
+
     [HideInInspector]
     public GameObject leftBasket;
     [HideInInspector]
     public GameObject rightBasket;
 
+    private Text onScoreTextRight;
+    private Text onScoreTextLeft;
+
     private AudioManager audioManager;
     private Sound midAir;
 
     public GameObject currentTarget;
-    private GameManager gameManager;
+    public GameManager gameManager;
     public LineRenderer lineRenderer;
+    private TrailRenderer trailRenderer;
 
     //true if the the ball was shot via a swipe and not a normal throw
     public bool isSwipeShot;
+    private int swipeShotPasses;
 
     public float bulletTimeMax = .23f;
     public float bulletTimeCurrent;
@@ -94,6 +102,12 @@ public class Ball : MonoBehaviour
         lineRenderer.positionCount = previewArcSmoothness;
         audioManager = FindObjectOfType<AudioManager>();
         IsResetting = false;
+        trailRenderer = transform.GetChild(0).GetComponent<TrailRenderer>();
+
+        ballRenderer = transform.GetChild(4).GetComponent<Renderer>();
+
+        onScoreTextRight = gameManager.panelUI.transform.GetChild(3).GetComponentInChildren<Text>();
+        onScoreTextLeft = gameManager.panelUI.transform.GetChild(4).GetComponentInChildren<Text>();
 
         //preset midair sounds.
         midAir = audioManager.Find("Midair");
@@ -109,9 +123,12 @@ public class Ball : MonoBehaviour
 
         if (transform.parent == null)
             transform.localScale = Vector3.one;
-            
+
         if (physics.simulatePhysics || transform.parent != null)
+        {
             isSwipeShot = false;
+            timer = 0;
+        }
 
         if (transform.position.x > gameManager.horizontalEdge && transform.parent == null)
         {
@@ -146,6 +163,18 @@ public class Ball : MonoBehaviour
 
         PlayMidairSound();
 
+        //Resets swipe shot passes.
+        if (!isSwipeShot && physics.simulatePhysics)
+        {
+            swipeShotPasses = -1;
+        }
+        if (!isSwipeShot)
+        {
+            //resets color to white.
+            trailRenderer.startColor = Color.white;
+            trailRenderer.endColor = Color.white;
+        }
+
         if (transform.parent == null && physics.simulatePhysics == false)
         {
 
@@ -155,11 +184,40 @@ public class Ball : MonoBehaviour
                 //check whether the ball was thrown from the side with the target basket
                 if (isSwipeShot)
                 {
-                    //Plays swipe shot audio.
-                    audioManager.Play("SwipeShot", 0.9f, 1.1f);
-
                     boolWillHit = true;
                     calculateOnce = false;
+                    swipeShotPasses++;
+
+                    //special SFX for back n' forth swipes
+                    if (swipeShotPasses > 0)
+                    {
+                        //caps max passing speed at 4 passes.
+                        if (swipeShotPasses > 3)
+                            swipeShotPasses = 3;
+
+                        float newSwipePitch = 1.0f + ((swipeShotPasses - 1.0f) / 12.0f);
+                        audioManager.Play("SwipeRally", 0.3f, newSwipePitch, newSwipePitch);
+
+                        switch (swipeShotPasses)
+                        {
+                            case 1:
+                                trailRenderer.startColor = new Color32(255, 125, 125, 1);
+                                trailRenderer.endColor = new Color32(255, 125, 125, 1);
+                                break;
+                            case 2:
+                                trailRenderer.startColor = new Color32(255, 50, 50, 1);
+                                trailRenderer.endColor = new Color32(255, 50, 50, 1);
+                                break;
+                            case 3:
+                                trailRenderer.startColor = new Color32(255, 0, 0, 1);
+                                trailRenderer.endColor = new Color32(255, 0, 0, 1);
+                                break;
+                        }
+                    }
+
+                    //Plays swipe shot audio.
+                    audioManager.Play("SwipeShot", 0.3f, 0.9f, 1.1f);
+
                     if (currentTarget == leftBasket)
                     {
                         threePointShot = transform.position.x > 0;
@@ -185,8 +243,12 @@ public class Ball : MonoBehaviour
                         boolWillHit = transform.position.x > 0;
                     }
                     calculateOnce = false;
+
+                    //reset passes
+                    //so that on first swipe, passes is at 0.
+                    swipeShotPasses = -1;
                 }
-                
+
                 //so it's not calculated at runtime
                 heightMod = HeightModifier();
 
@@ -207,11 +269,29 @@ public class Ball : MonoBehaviour
                     speedAddition = (physics.velocity.magnitude / 2000) + (distMod * 2);
                     if (speedAddition > 0.5f)
                         speedAddition = 0.5f;
+
+                    //extra swipeshot speed based on how many swipes in a row the player's have landed.
+                    speedAddition += (swipeShotPasses / 4.0f);
                 }
                 //completes the parabola trip in one second (* by speed), changing speed based on height and dist from basket.
                 float speedMod = speed + ((300 - heightMod) / 200) + distMod + speedAddition /*+ (2 / (Vector2.Distance(transform.position, currentTarget.transform.position) + 1))*/;
                 timer += Time.deltaTime * speedMod;
-                Vector2 newPosition = CalculateParabola(startPoint, currentTarget.transform.GetChild(0).transform.position, ballHeight * heightMod, timer, false);
+                if (timer >= 1)
+                {
+                    if (IsResetting)
+                        return;
+                    if (currentTarget == leftBasket)
+                    {
+                        ScoreLeftBasket();
+                    }
+                    else if (currentTarget == rightBasket)
+                    {
+                        ScoreRightBasket();
+                    }
+                    AfterScore();
+                    return;
+                }
+                Vector2 newPosition = CalculateParabola(startPoint, currentTarget.transform.GetChild(1).transform.position, ballHeight * heightMod, timer, false);
                 if (physics.simulatePhysics)
                     return;
                 transform.position = newPosition;
@@ -240,10 +320,10 @@ public class Ball : MonoBehaviour
         else if (transform.parent != null && !physics.simulatePhysics)
         {
 
-            int playerNumber = transform.parent.GetComponent<BhbPlayerController>().playerNumber;
+            int teamNumber = gameManager.currentBallOwner.teamNumber;
             lineRenderer.enabled = false;
 
-            if (playerNumber == 0)
+            if (teamNumber == 0)
             {
                 currentTarget = rightBasket;
             }
@@ -261,7 +341,7 @@ public class Ball : MonoBehaviour
             {
                 SetBasketCrosshair(leftBasket, true);
 
-                Vector3[] pointsArray = PreviewParabola(transform.position, currentTarget.transform.GetChild(0).transform.position, ballHeight * HeightModifier(), previewArcSmoothness);
+                Vector3[] pointsArray = PreviewParabola(transform.position, currentTarget.transform.GetChild(1).transform.position, ballHeight * HeightModifier(), previewArcSmoothness);
                 lineRenderer.SetPositions(pointsArray);
                 lineRenderer.enabled = true;
             }
@@ -270,7 +350,7 @@ public class Ball : MonoBehaviour
 
                 SetBasketCrosshair(rightBasket, true);
 
-                Vector3[] pointsArray = PreviewParabola(transform.position, currentTarget.transform.GetChild(0).transform.position, ballHeight * HeightModifier(), previewArcSmoothness);
+                Vector3[] pointsArray = PreviewParabola(transform.position, currentTarget.transform.GetChild(1).transform.position, ballHeight * HeightModifier(), previewArcSmoothness);
                 lineRenderer.SetPositions(pointsArray);
                 lineRenderer.enabled = true;
             }
@@ -325,16 +405,19 @@ public class Ball : MonoBehaviour
             if (transform.parent != null)
             {
                 threePointShot = false;
-                BhbPlayerController playerController = transform.parent.gameObject.GetComponent<BhbPlayerController>();
-                if (playerController.playerNumber == 0 && collision.collider.gameObject == gameManager.leftBasket)
+                BhbPlayerController playerController = gameManager.currentBallOwner;
+                if (playerController.teamNumber == 0 && collision.collider.gameObject == gameManager.leftBasket)
                     return;
-                else if (playerController.playerNumber == 1 && collision.collider.gameObject == gameManager.rightBasket)
+                else if (playerController.teamNumber == 1 && collision.collider.gameObject == gameManager.rightBasket)
                     return;
             }
 
             //only if the ball goes in from top or from dunk
             if ((physics.velocity.y < 0 && transform.parent == null) || transform.parent != null)
             {
+                if (IsResetting)
+                    return;
+
                 if (collision.collider.gameObject == gameManager.rightBasket)
                 {
                     ScoreRightBasket();
@@ -486,28 +569,32 @@ public class Ball : MonoBehaviour
         audioManager.Play("Net", 0.8f, 1.2f);
 
         //changes position of ball so it goes 'through' the basket.
-        transform.position = new Vector3(gameManager.rightBasket.transform.GetChild(0).transform.position.x, transform.position.y, transform.position.z);
+        transform.position = new Vector3(gameManager.rightBasket.transform.GetChild(1).transform.position.x, transform.position.y, transform.position.z);
 
-        if (threePointShot)
+        if (threePointShot) //3 point
         {
-            gameManager.player1Score += 3;
-            gameManager.panelUI.transform.GetChild(3).GetComponent<Text>().text = "+3";
+            gameManager.team0Score += 3;
+            onScoreTextRight.text = "+3";
             audioManager.Play("3points");
         }
-        else
+        else if (transform.parent == null) //2 point
         {
-            gameManager.player1Score += 2;
-            gameManager.panelUI.transform.GetChild(3).GetComponent<Text>().text = "+2";
+            gameManager.team0Score += 2;
+            onScoreTextRight.text = "+2";
+            audioManager.Play("2points");
+        }
+        else //dunk (varied points)
+        {
+            int dunkValue = gameManager.bulletLevel * 2;
 
-            if (transform.parent == null)
-                audioManager.Play("2points");
-            else
-                audioManager.Play("Dunk");
+            gameManager.team0Score += dunkValue;
+            onScoreTextRight.text = "+" + dunkValue;
+            audioManager.Play("Dunk");
         }
         gameManager.previousScorer = 0;
         if (!gameManager.overTime)
             gameManager.panelUI.transform.GetChild(3).gameObject.SetActive(true);
-        gameManager.panelUI.transform.GetChild(0).GetComponent<Text>().text = gameManager.player1Score.ToString();
+        gameManager.panelUI.transform.GetChild(0).GetComponent<Text>().text = gameManager.team0Score.ToString();
     }
 
     /// <summary>
@@ -519,36 +606,45 @@ public class Ball : MonoBehaviour
         audioManager.Play("Net", 0.8f, 1.2f);
 
         //changes position of ball so it goes 'through' the basket.
-        transform.position = new Vector3(gameManager.leftBasket.transform.GetChild(0).transform.position.x, transform.position.y, transform.position.z);
+        transform.position = new Vector3(gameManager.leftBasket.transform.GetChild(1).transform.position.x, transform.position.y, transform.position.z);
 
         if (threePointShot)
         {
-            gameManager.player2Score += 3;
-            gameManager.panelUI.transform.GetChild(4).GetComponent<Text>().text = "+3";
+            gameManager.team1Score += 3;
+            onScoreTextLeft.text = "+3";
             audioManager.Play("3points");
         }
-        else
+        else if (transform.parent == null) //2 point
         {
-            gameManager.player2Score += 2;
-            gameManager.panelUI.transform.GetChild(4).GetComponent<Text>().text = "+2";
+            gameManager.team1Score += 2;
+            onScoreTextLeft.text = "+2";
+            audioManager.Play("2points");
+        }
+        else //dunk (varied points)
+        {
+            int dunkValue = gameManager.bulletLevel * 2;
 
-            if (transform.parent == null)
-                audioManager.Play("2points");
-            else
-                audioManager.Play("Dunk");
+            gameManager.team1Score += dunkValue;
+            onScoreTextLeft.text = "+" + dunkValue;
+            audioManager.Play("Dunk");
         }
         gameManager.previousScorer = 1;
         if (!gameManager.overTime)
             gameManager.panelUI.transform.GetChild(4).gameObject.SetActive(true);
-        gameManager.panelUI.transform.GetChild(1).GetComponent<Text>().text = gameManager.player2Score.ToString();
+        gameManager.panelUI.transform.GetChild(1).GetComponent<Text>().text = gameManager.team1Score.ToString();
 
     }
 
     private void AfterScore()
     {
-
         physics.simulatePhysics = true;
         lineRenderer.enabled = false;
+
+        HomingBullet[] homingBullets = FindObjectsOfType<HomingBullet>();
+        foreach (HomingBullet hb in homingBullets)
+        {
+            hb.Explode();
+        }
 
         if (gameManager.overTime)
             gameManager.EndGame();
@@ -557,19 +653,25 @@ public class Ball : MonoBehaviour
     }
 
     /// <summary>
-    /// Plays midair sounds when ball is above certain velocity magnitude
+    /// Plays midair sounds when ball is above certain velocity magnitude.
+    /// Extra if statements to help sound from looping.
     /// </summary>
     private void PlayMidairSound()
     {
-        //changes volume based on ball's velocity.
-        float midairVolume;
-
-        //if it's being held, volume = 0.
-        if (transform.parent != null)
-            midairVolume = 0;
-        else
-            midairVolume = Mathf.Pow(physics.velocity.magnitude / 50, 3);
-
-        midAir.source.volume = midairVolume;
+        //changes volume based on ball's velocity. Constantly plays.
+        //if it's not being held, and the last update it was, play sound, update bool.
+        if (transform.parent == null && wasBeingHeld)
+        {
+            audioManager.Play("Midair");
+            wasBeingHeld = false;
+        }
+        else if (transform.parent != null && !wasBeingHeld) //being held, wasn't before.
+        {
+            audioManager.Stop("Midair");
+            midAir.source.volume = 0;
+            wasBeingHeld = true;
+        }
+        //Always calculates how loud the ball air sound will be.
+        midAir.source.volume = Mathf.Pow(physics.velocity.magnitude / 50, 3);
     }
 }

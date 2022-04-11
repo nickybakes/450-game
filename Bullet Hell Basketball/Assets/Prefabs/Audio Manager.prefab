@@ -46,8 +46,22 @@ MonoBehaviour:
   sounds:
   - name: Music
     clips:
-    - {fileID: 8300000, guid: dbc9ad23120cd9a4bb4ca808bc0107c9, type: 3}
-    volume: 0.05
+    - {fileID: 8300000, guid: 8a924fa3a8bc187429af3b99cd7505bd, type: 3}
+    volume: 0.1
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
+  - name: MusicPause
+    clips:
+    - {fileID: 8300000, guid: 656f9622b16dbf94fb48928ade33bed1, type: 3}
+    volume: 0.1
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
+  - name: Overtime
+    clips:
+    - {fileID: 8300000, guid: cb7244f0b325f354e9a7b4a378ef5ab2, type: 3}
+    volume: 0.1
     pitch: 1
     loop: 1
     source: {fileID: 0}

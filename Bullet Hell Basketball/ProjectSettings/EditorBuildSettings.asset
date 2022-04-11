@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/S_2D_Controller_Test_01.unity
     guid: 347f19b89487b6d42a70c02bc7b3a305
+  - enabled: 1
+    path: Assets/Scenes/S_Tutorial_01.unity
+    guid: 7f1c2c7a277ab9541b065c0f83db9d05
   m_configObjects: {}
