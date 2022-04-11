@@ -18,6 +18,7 @@ public class HomingBullet : MonoBehaviour
     public GameObject crosshair;
     public GameManager gameManager;
     private AudioManager audioManager;
+    private float beepTimer = 0.0f;
     private bool hasPlayedOnce = false;
 
     // Start is called before the first frame update
@@ -47,6 +48,15 @@ public class HomingBullet : MonoBehaviour
         crosshair.transform.position = Vector3.Lerp(crosshair.transform.position, new Vector3(ball.transform.position.x, ball.transform.position.y, -1), .5f);
 
         float bulletDistance = Vector2.Distance(transform.position, ball.transform.position);
+
+        //Audio for beepTimer
+        beepTimer += Time.deltaTime;
+
+        if (beepTimer >= (bulletDistance / 50.0f))
+        {
+            beepTimer = 0.0f;   
+            audioManager.Play("HomingBulletBeep");
+        }
 
         //Audio for when the homing bullet is very close to its target.
         if (hasPlayedOnce && bulletDistance > 20.0f)
