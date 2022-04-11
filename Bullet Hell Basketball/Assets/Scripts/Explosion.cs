@@ -19,6 +19,8 @@ public class Explosion : MonoBehaviour
     public Material[] materialsTeam0;
     public Material[] materialsTeam1;
 
+    public GameManager gameManager;
+
 
     // Start is called before the first frame update
     void Start()
@@ -28,9 +30,10 @@ public class Explosion : MonoBehaviour
         psRenderer1 = transform.GetChild(0).GetComponent<ParticleSystemRenderer>();
         psRenderer2 = transform.GetChild(1).GetComponent<ParticleSystemRenderer>();
         cameraShake = FindObjectOfType<Camera>().GetComponent<CameraShake>();
+        StartCoroutine(cameraShake.Shake(.2f, .5f));
     }
 
-    void Init(int ownerNumber)
+    public void Init(int ownerNumber)
     {
         this.ownerNumber = ownerNumber;
         this.timeAlive = 0;
@@ -48,14 +51,18 @@ public class Explosion : MonoBehaviour
             psRenderer2.material = materialsTeam1[2];
             psRenderer2.trailMaterial = materialsTeam1[3];
         }
-
-        ps.Play();
-        StartCoroutine(cameraShake.Shake(.2f, .5f));
     }
 
     // Update is called once per frame
     void Update()
     {
+
+        if (gameManager.paused)
+        {
+            return;
+        }
+
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             Init(this.ownerNumber);
@@ -71,7 +78,7 @@ public class Explosion : MonoBehaviour
             Init(1);
         }
 
-        // timeAlive += Time.deltaTime;
+        this.timeAlive += Time.deltaTime;
 
         // if (timeAlive > 2)
         // {
@@ -80,24 +87,25 @@ public class Explosion : MonoBehaviour
     }
 
 
-    private void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerStay2D(Collider2D other)
     {
-        if (timeAlive > .6 && timeAlive < .24)
+        if (timeAlive > .06f && timeAlive < .24f)
         {
             if (other.gameObject.tag == "Player")
             {
                 BhbPlayerController playerScript = other.gameObject.GetComponent<BhbPlayerController>();
 
-                if (ownerNumber != playerScript.teamNumber)
+                if (ownerNumber == -1 || ownerNumber != playerScript.teamNumber)
                 {
                     if (other.gameObject.transform.position.x < transform.position.x)
                     {
-                        playerScript.GetsHit(new Vector2(-80, 50), false);
+                        playerScript.GetsHit(new Vector2(-80, 85), false);
                     }
                     else if (other.gameObject.transform.position.x >= transform.position.x)
                     {
-                        playerScript.GetsHit(new Vector2(80, 50), false);
+                        playerScript.GetsHit(new Vector2(80, 85), false);
                     }
+                    playerScript.stunTimeCurrent = -playerScript.stunTimeMax;
                 }
             }
 

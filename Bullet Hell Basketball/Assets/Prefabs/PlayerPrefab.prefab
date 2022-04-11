@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3082754990088966468}
   - component: {fileID: 3082754990088966471}
   - component: {fileID: 1963545057765774826}
+  - component: {fileID: 4406512918818029360}
   m_Layer: 0
   m_Name: PlayerPrefab
   m_TagString: Player
@@ -91,8 +92,13 @@ MonoBehaviour:
   jumpsInAirMax: 1
   controllerNumber: -1
   playerNumber: 0
+  teamNumber: 0
   playerControlNumber: 0
   pickupRadius: 0
+  health: 0
+  swipeRenderer: {fileID: 0}
+  playerCollider: {fileID: 0}
+  autoCatchCooldownTimer: 0
   animator: {fileID: 7679925284762406588}
   ballAnimator: {fileID: 4171130650560404255}
   ballHolder: {fileID: 7283189372690240402}
@@ -144,6 +150,27 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 3.0418537, y: 5.8125863}
   m_EdgeRadius: 0
+--- !u!50 &4406512918818029360
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3082754990088966472}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 1
+  m_SleepingMode: 0
+  m_CollisionDetection: 1
+  m_Constraints: 0
 --- !u!95 &4171130650560404255
 Animator:
   serializedVersion: 3

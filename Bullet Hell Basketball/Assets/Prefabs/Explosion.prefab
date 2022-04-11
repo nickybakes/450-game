@@ -42,7 +42,7 @@ ParticleSystem:
   serializedVersion: 7
   lengthInSec: 1.37
   simulationSpeed: 1
-  stopAction: 0
+  stopAction: 2
   cullingMode: 0
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
@@ -4967,6 +4967,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 8d35f91204ee881488a698f329d4624f, type: 2}
   - {fileID: 2100000, guid: 499e69b8ae076f94d87c30cacab81926, type: 2}
   - {fileID: 2100000, guid: c94be079aa5360f448db47d27e20ce14, type: 2}
+  gameManager: {fileID: 0}
 --- !u!199 &2760302803450972954
 ParticleSystemRenderer:
   serializedVersion: 6
@@ -5043,7 +5044,7 @@ ParticleSystem:
   serializedVersion: 7
   lengthInSec: 1
   simulationSpeed: 1
-  stopAction: 0
+  stopAction: 2
   cullingMode: 0
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
@@ -9830,7 +9831,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 3.85
+  m_Radius: 5.48
 --- !u!1 &2760302803483071771
 GameObject:
   m_ObjectHideFlags: 0
@@ -9873,7 +9874,7 @@ ParticleSystem:
   serializedVersion: 7
   lengthInSec: 1
   simulationSpeed: 1
-  stopAction: 0
+  stopAction: 2
   cullingMode: 0
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}

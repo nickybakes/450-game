@@ -14,6 +14,8 @@ public class Bullet : MonoBehaviour
 
     public GameManager gameManager;
 
+    public ParticleSystem ps;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -76,6 +78,11 @@ public class Bullet : MonoBehaviour
 
         if (timer <= 0)
         {
+            if (ps != null)
+            {
+                ps.transform.parent = null;
+                ps.Stop();
+            }
             Destroy(this.gameObject);
         }
     }
@@ -109,7 +116,14 @@ public class Bullet : MonoBehaviour
                 }
 
                 if (!dontUpdate)
+                {
+                    if (ps != null)
+                    {
+                        ps.transform.parent = null;
+                        ps.Stop();
+                    }
                     Destroy(this.gameObject);
+                }
             }
         }
     }

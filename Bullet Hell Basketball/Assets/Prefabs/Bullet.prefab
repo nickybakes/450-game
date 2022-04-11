@@ -62,6 +62,7 @@ MonoBehaviour:
   ownerNumber: 0
   dontUpdate: 0
   gameManager: {fileID: 0}
+  ps: {fileID: 4860955265722537127}
 --- !u!58 &130120717617434444
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -154,11 +155,24 @@ PrefabInstance:
       propertyPath: m_Name
       value: SmokeTrail
       objectReference: {fileID: 0}
+    - target: {fileID: 8004103087378110378, guid: f7b1d37e07508ec468a2d03bce96bb99, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8721793205336660193, guid: f7b1d37e07508ec468a2d03bce96bb99, type: 3}
+      propertyPath: stopAction
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f7b1d37e07508ec468a2d03bce96bb99, type: 3}
 --- !u!4 &7756597849147352454 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5898419322351102400, guid: f7b1d37e07508ec468a2d03bce96bb99, type: 3}
+  m_PrefabInstance: {fileID: 4215261201031302214}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &4860955265722537127 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 8721793205336660193, guid: f7b1d37e07508ec468a2d03bce96bb99, type: 3}
   m_PrefabInstance: {fileID: 4215261201031302214}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8217456347485392646

@@ -124,7 +124,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
     public float stunTimeMax = .1f;
 
-    private float stunTimeCurrent = 0;
+    public float stunTimeCurrent = 0;
 
     public float invinsibilityTimeMax = .15f;
 

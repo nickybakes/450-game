@@ -1204,7 +1204,8 @@ MonoBehaviour:
   leftBasketPrefab: {fileID: 3348590631432724730, guid: f4a474a58c7946541ae657582f017722, type: 3}
   rightBasketPrefab: {fileID: 3348590631432724730, guid: 91f6523bf3e94f044894c583bcbfed25, type: 3}
   bulletManagerPrefab: {fileID: 5370311947778578661, guid: f5dd710dd082b174b94806c38794438e, type: 3}
-  homingBulletPrefab: {fileID: 0}
+  explosionPrefab: {fileID: 2760302803450972953, guid: c4c2c8999d8396d4085ff7aea427133c, type: 3}
+  homingBulletPrefab: {fileID: 2883470823732361329, guid: 0de902a81dee9e142abe3d887b6e0ea8, type: 3}
   powerUpPrefab: {fileID: 6449068944269853553, guid: 619ba7d2e748ab44ebb55ef460c16273, type: 3}
   powerUpTimeSpawnMin: 16
   powerUpTimeSpawnMax: 32
@@ -2235,6 +2236,10 @@ PrefabInstance:
     - target: {fileID: 2760302803450972953, guid: c4c2c8999d8396d4085ff7aea427133c, type: 3}
       propertyPath: m_Name
       value: Explosion_01
+      objectReference: {fileID: 0}
+    - target: {fileID: 2760302803450972953, guid: c4c2c8999d8396d4085ff7aea427133c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2760302803450972955, guid: c4c2c8999d8396d4085ff7aea427133c, type: 3}
       propertyPath: m_RootOrder
@@ -4634,6 +4639,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Explosion_02
       objectReference: {fileID: 0}
+    - target: {fileID: 2760302803450972953, guid: c4c2c8999d8396d4085ff7aea427133c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2760302803450972955, guid: c4c2c8999d8396d4085ff7aea427133c, type: 3}
       propertyPath: m_RootOrder
       value: 28
@@ -6823,6 +6832,10 @@ PrefabInstance:
     - target: {fileID: 2760302803450972953, guid: c4c2c8999d8396d4085ff7aea427133c, type: 3}
       propertyPath: m_Name
       value: Explosion
+      objectReference: {fileID: 0}
+    - target: {fileID: 2760302803450972953, guid: c4c2c8999d8396d4085ff7aea427133c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2760302803450972955, guid: c4c2c8999d8396d4085ff7aea427133c, type: 3}
       propertyPath: m_RootOrder

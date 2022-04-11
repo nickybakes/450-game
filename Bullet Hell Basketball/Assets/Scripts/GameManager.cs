@@ -27,6 +27,8 @@ public class GameManager : MonoBehaviour
 
     public GameObject bulletManagerPrefab;
 
+    public GameObject explosionPrefab;
+
     public GameObject homingBulletPrefab;
 
     public GameObject powerUpPrefab;
@@ -393,11 +395,23 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    
+    public void SpawnExplosion(int teamNumber, Vector2 location){
+
+        GameObject explosion = Instantiate(explosionPrefab);
+        explosion.transform.position = location;
+        Explosion explosionScript = explosion.GetComponent<Explosion>();
+        explosionScript.gameManager = this;
+        explosionScript.Init(teamNumber);
+    }
+
     public void SpawnHomingBullet()
     {
         GameObject bullet = Instantiate(homingBulletPrefab);
+        bullet.transform.position = new Vector3(0, 40, -1);
         HomingBullet bulletScript = bullet.GetComponent<HomingBullet>();
         bulletScript.ball = ballControlScript;
+        bulletScript.gameManager = this;
 
     }
 
@@ -537,6 +551,11 @@ public class GameManager : MonoBehaviour
 
             //Shows bullets increased UI element on regular interval.
             ShowBulletIncreaseUI();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            SpawnHomingBullet();
         }
 
         // if (player1Script.controllerNumber == -1)
