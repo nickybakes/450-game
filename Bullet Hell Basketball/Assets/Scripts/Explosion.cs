@@ -20,13 +20,12 @@ public class Explosion : MonoBehaviour
     public Material[] materialsTeam1;
 
     public GameManager gameManager;
-    private AudioManager audioManager;
+    private AudioSource explosion;
 
-
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
-
+        explosion = GetComponent<AudioSource>();
+        explosion.pitch = Random.Range(0.9f, 1.1f);
     }
 
     public void Init(int ownerNumber)
@@ -37,7 +36,6 @@ public class Explosion : MonoBehaviour
         psRenderer2 = transform.GetChild(1).GetComponent<ParticleSystemRenderer>();
         cameraShake = FindObjectOfType<Camera>().GetComponent<CameraShake>();
         StartCoroutine(cameraShake.Shake(.2f, .5f));
-        audioManager = FindObjectOfType<AudioManager>();
 
         this.ownerNumber = ownerNumber;
         this.timeAlive = 0;
