@@ -6,7 +6,7 @@ public enum BulletMovement
 {
     straight,
     sine,
-    heatSeeking
+    counterSine, //Will be used for double helix
 }
 
 
@@ -42,7 +42,7 @@ public class Bullet : MonoBehaviour
     {
         ogPosition = transform.position;
         timeAlive = 0;
-        
+
         if (speed <= 0)
         {
             speed = 1;
@@ -69,12 +69,12 @@ public class Bullet : MonoBehaviour
             }
             transform.rotation = Quaternion.Euler(0, 0, getAngle(Vector2.zero, gameManager.ballPhysicsScript.velocity));
         }
-        
-        else if(movement == BulletMovement.sine)
+
+        else if (movement == BulletMovement.sine)
         {
             transform.rotation = Quaternion.Euler(0, 0, getAngle(Vector2.zero, direction + offset));
         }
-        
+
         else
         {
             transform.rotation = Quaternion.Euler(0, 0, getAngle(Vector2.zero, direction));
@@ -103,16 +103,16 @@ public class Bullet : MonoBehaviour
                 //Get the normal of direction multiply by length then both by the sin of the time alive
                 normal = perpCW(direction);
                 offset = (normal * sinLength) * Mathf.Sin(timeAlive * frequency);
-                transform.Translate((direction + offset) *  Time.deltaTime * speed, Space.World);
+                transform.Translate((direction + offset) * Time.deltaTime * speed, Space.World);
                 break;
 
-            /*case BulletMovement.heatSeeking:
-                //Find the position of the basketball
-                Transform ball = FindObjectOfType<Ball>().gameObject.transform;
-                transform.Translate(ball.position * Time.deltaTime * speed, Space.World);
+            /*case BulletMovement.counterSine:
+                normal = perpCCW(direction);
+                offset = (normal * sinLength) * Mathf.Sin(timeAlive * frequency);
+                transform.Translate((direction + offset) * Time.deltaTime * speed, Space.World);
                 break;*/
         }
-        
+
     }
 
     private void FixedUpdate()
@@ -183,6 +183,11 @@ public class Bullet : MonoBehaviour
     private Vector2 perpCW(Vector2 vector)
     {
         return new Vector2(vector.y, -1 * vector.x);
+    }
+
+    private Vector2 perpCCW(Vector2 vector)
+    {
+        return new Vector2(-1 * vector.y, vector.x);
     }
 
 }
