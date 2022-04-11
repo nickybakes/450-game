@@ -17,12 +17,17 @@ public class HomingBullet : MonoBehaviour
 
     public GameObject crosshair;
     public GameManager gameManager;
+    private AudioManager audioManager;
+    private bool hasPlayedOnce = false;
 
     // Start is called before the first frame update
     void Start()
     {
         direction = Vector2.down;
         crosshair.transform.parent = null;
+        audioManager = FindObjectOfType<AudioManager>();
+        audioManager.Play("HomingBulletStart");
+        audioManager.Play("HomingBulletFlying");
     }
 
     // Update is called once per frame
@@ -41,7 +46,19 @@ public class HomingBullet : MonoBehaviour
 
         crosshair.transform.position = Vector3.Lerp(crosshair.transform.position, new Vector3(ball.transform.position.x, ball.transform.position.y, -1), .5f);
 
-        if (Vector2.Distance(transform.position, ball.transform.position) < 2.5f)
+        float bulletDistance = Vector2.Distance(transform.position, ball.transform.position);
+
+        //Audio for when the homing bullet is very close to its target.
+        if (hasPlayedOnce && bulletDistance > 20.0f)
+        {
+            hasPlayedOnce = false;
+        }
+        if (bulletDistance < 8.0f && !hasPlayedOnce)
+        {
+            hasPlayedOnce = true;
+            audioManager.Play("HomingBulletClose");
+        }
+        if (bulletDistance < 2.5f)
         {
             Explode();
         }
@@ -58,11 +75,17 @@ public class HomingBullet : MonoBehaviour
 
     public void Explode()
     {
+        //Removes any sound effects. Explosion dealt with in Explosion.cs
+        audioManager.Stop("HomingBulletStart");
+        audioManager.Stop("HomingBulletFlying");
+        audioManager.Stop("HomingBulletClose");
+
         // gameManager.SpawnExplosion(-1, new Vector2(transform.position.x, transform.position.y + Random.Range(0, 7)));
         // gameManager.SpawnExplosion(-1, new Vector2(transform.position.x + Random.Range(-7, 7), transform.position.y));
         // gameManager.SpawnExplosion(-1, new Vector2(transform.position.x + Random.Range(-7, 7), transform.position.y));
         gameManager.SpawnExplosion(-1, transform.position);
         Destroy(crosshair);
         Destroy(gameObject);
+
     }
 }

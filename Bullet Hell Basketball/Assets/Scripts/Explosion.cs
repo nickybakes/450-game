@@ -20,6 +20,7 @@ public class Explosion : MonoBehaviour
     public Material[] materialsTeam1;
 
     public GameManager gameManager;
+    private AudioManager audioManager;
 
 
     // Start is called before the first frame update
@@ -36,6 +37,7 @@ public class Explosion : MonoBehaviour
         psRenderer2 = transform.GetChild(1).GetComponent<ParticleSystemRenderer>();
         cameraShake = FindObjectOfType<Camera>().GetComponent<CameraShake>();
         StartCoroutine(cameraShake.Shake(.2f, .5f));
+        audioManager = FindObjectOfType<AudioManager>();
 
         this.ownerNumber = ownerNumber;
         this.timeAlive = 0;
@@ -110,6 +112,9 @@ public class Explosion : MonoBehaviour
                     ballScript.physics.velocity = new Vector2(80, 60);
                 }
             }
+
+            //Explosion plays regardless of what's hit.
+            audioManager.Play("Explosion", 0.9f, 1.1f);
         }
     }
 }
