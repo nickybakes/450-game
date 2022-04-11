@@ -1211,6 +1211,7 @@ MonoBehaviour:
   powerUpTimeSpawnMax: 32
   powerUpTimeSpawn: 0
   powerUpTimeSpawnCurrent: 0
+  allAlivePowerups: []
   playerSpawnLocation: {fileID: 1366659346}
   basketLocation: {fileID: 1774745519}
   ballSpawnHeight: {fileID: 434115448}
