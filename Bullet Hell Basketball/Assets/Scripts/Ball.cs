@@ -417,7 +417,7 @@ public class Ball : MonoBehaviour
             {
                 if (IsResetting)
                     return;
-                    
+
                 if (collision.collider.gameObject == gameManager.rightBasket)
                 {
                     ScoreRightBasket();
@@ -637,9 +637,14 @@ public class Ball : MonoBehaviour
 
     private void AfterScore()
     {
-
         physics.simulatePhysics = true;
         lineRenderer.enabled = false;
+
+        HomingBullet[] homingBullets = FindObjectsOfType<HomingBullet>();
+        foreach (HomingBullet hb in homingBullets)
+        {
+            hb.Explode();
+        }
 
         if (gameManager.overTime)
             gameManager.EndGame();

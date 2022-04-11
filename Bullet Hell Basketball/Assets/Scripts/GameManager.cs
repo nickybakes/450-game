@@ -395,8 +395,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    
-    public void SpawnExplosion(int teamNumber, Vector2 location){
+
+    public void SpawnExplosion(int teamNumber, Vector2 location)
+    {
 
         GameObject explosion = Instantiate(explosionPrefab);
         explosion.transform.position = location;
@@ -551,6 +552,21 @@ public class GameManager : MonoBehaviour
 
             //Shows bullets increased UI element on regular interval.
             ShowBulletIncreaseUI();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            SpawnExplosion(-1, new Vector2(0, 20));
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            SpawnExplosion(0, new Vector2(0, 20));
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            SpawnExplosion(1, new Vector2(0, 20));
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha3))

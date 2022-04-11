@@ -58,9 +58,10 @@ public class HomingBullet : MonoBehaviour
 
     public void Explode()
     {
-        gameManager.SpawnExplosion(-1, new Vector2(transform.position.x, transform.position.y + Random.Range(0, 7)));
-        gameManager.SpawnExplosion(-1, new Vector2(transform.position.x + Random.Range(-7, 7), transform.position.y));
-        gameManager.SpawnExplosion(-1, new Vector2(transform.position.x + Random.Range(-7, 7), transform.position.y));
+        // gameManager.SpawnExplosion(-1, new Vector2(transform.position.x, transform.position.y + Random.Range(0, 7)));
+        // gameManager.SpawnExplosion(-1, new Vector2(transform.position.x + Random.Range(-7, 7), transform.position.y));
+        // gameManager.SpawnExplosion(-1, new Vector2(transform.position.x + Random.Range(-7, 7), transform.position.y));
+        gameManager.SpawnExplosion(-1, transform.position);
         Destroy(crosshair);
         Destroy(gameObject);
     }

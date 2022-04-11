@@ -25,16 +25,18 @@ public class Explosion : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
+    }
+
+    public void Init(int ownerNumber)
+    {
         ps = GetComponent<ParticleSystem>();
         psRenderer = GetComponent<ParticleSystemRenderer>();
         psRenderer1 = transform.GetChild(0).GetComponent<ParticleSystemRenderer>();
         psRenderer2 = transform.GetChild(1).GetComponent<ParticleSystemRenderer>();
         cameraShake = FindObjectOfType<Camera>().GetComponent<CameraShake>();
         StartCoroutine(cameraShake.Shake(.2f, .5f));
-    }
 
-    public void Init(int ownerNumber)
-    {
         this.ownerNumber = ownerNumber;
         this.timeAlive = 0;
         if (this.ownerNumber == 0)
@@ -60,22 +62,6 @@ public class Explosion : MonoBehaviour
         if (gameManager.paused)
         {
             return;
-        }
-
-
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            Init(this.ownerNumber);
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            Init(0);
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            Init(1);
         }
 
         this.timeAlive += Time.deltaTime;

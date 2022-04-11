@@ -132,8 +132,8 @@ MonoBehaviour:
   ball: {fileID: 0}
   direction: {x: 0, y: 0}
   speed: 0
-  acceleration: 5
-  maxSpeed: 8
+  acceleration: 3
+  maxSpeed: 25
   crosshair: {fileID: 6223182589519963191}
   gameManager: {fileID: 0}
 --- !u!1 &6223182589519963191
