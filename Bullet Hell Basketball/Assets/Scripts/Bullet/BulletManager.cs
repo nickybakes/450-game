@@ -60,7 +60,11 @@ public class BulletManager : MonoBehaviour
     private int numBullets; //How many bullets will be spawned
     public float minAngle = 0;
     public float maxAngle = 45;
-    public float initialNumberOfBullets = 2;
+    public int initialNumberOfBullets = 1; //Eventually input from bullet spawner data
+    private BulletMovement bulletMovement;
+
+    private float sinWaveLength;
+    private float sinWaveFrequency;
 
 
     //Add some sort of level up system, and different directions bullets shoot
@@ -91,6 +95,9 @@ public class BulletManager : MonoBehaviour
         this.bulletSeperationAngle = data.bulletSeperationAngle;
         this.minAngle = data.arcMinAngle;
         this.maxAngle = data.arcMaxAngle;
+        this.bulletMovement = data.bulletMovement;
+        this.sinWaveLength = data.sinWaveLength;
+        this.sinWaveFrequency = data.sinWaveFrequency;
 
 
         timer = data.initialTimeBetweenBullets;
@@ -126,7 +133,7 @@ public class BulletManager : MonoBehaviour
         rotationAmountDegrees = 0;
         currentAngle = 0;
         bulletPattern = BulletPatterns.front;
-        numBullets = 2;
+        numBullets = initialNumberOfBullets;
 
         //Add new patterns
         transform.position = fixedPoint;
@@ -172,6 +179,7 @@ public class BulletManager : MonoBehaviour
             {
                 timer = Mathf.Max(maxTime - Mathf.Max((gameManager.team1Score - gameManager.team0Score) / 13, 0), 0.25f);
             }
+            
             else
             {
                 timer = Mathf.Max(maxTime - Mathf.Max((gameManager.team0Score - gameManager.team1Score) / 13, 0), 0.25f);
@@ -321,7 +329,10 @@ public class BulletManager : MonoBehaviour
     }
 
 
-    //Method of all the shared methods that set up bullets
+    /// <summary>
+    /// Method of all the shared methods that set up bullets Makes one bullet
+    /// </summary>
+    /// <returns></returns>
     private GameObject BulletSetup()
     {
         GameObject newBullet = Instantiate(bullet);
@@ -329,7 +340,25 @@ public class BulletManager : MonoBehaviour
         Bullet bulletScript = newBullet.GetComponent<Bullet>();
         bulletScript.ownerNumber = ownerNumber;
         bulletScript.gameManager = gameManager;
+        bulletScript.movement = bulletMovement;
 
+        bulletScript.sinLength = sinWaveLength;
+        bulletScript.frequency = sinWaveFrequency;
+
+        if (gameManager.randomBigBullets && gameManager.bulletLevel >= 2)
+        {
+            //Make the bullet RNG more dynamic
+            int randomNumber = Random.Range(1, 6 + gameManager.bulletLevel);
+
+            //Debug.Log(randomNumber); 
+
+            if (randomNumber >= 6)
+            {
+                bulletScript.isBig = true;
+            }
+        }
+
+        //Also mess with the speed of the big bullets
         if (ownerNumber == 0)
         {
             bulletScript.timer = 4 + Mathf.Max((gameManager.team1Score - gameManager.team0Score) / 13, 0);
@@ -340,6 +369,18 @@ public class BulletManager : MonoBehaviour
             bulletScript.timer = 4 + Mathf.Max((gameManager.team0Score - gameManager.team1Score) / 13, 0);
             bulletScript.speed = 10 + Mathf.Max((gameManager.team0Score - gameManager.team1Score) / 30, 0) + gameManager.bulletLevel;
         }
+
+        if (gameManager.allBigBullets)
+        {
+            bulletScript.isBig = true;
+        }
+
+        if (bulletScript.isBig)
+        {
+            newBullet.transform.localScale = new Vector3(gameManager.bigBulletScale, gameManager.bigBulletScale, gameManager.bigBulletScale);
+            bulletScript.speed = bulletScript.speed / 5 * 3;
+        }
+
 
         MeshRenderer bulletMesh = newBullet.GetComponentInChildren<MeshRenderer>();
 
@@ -411,7 +452,7 @@ public class BulletManager : MonoBehaviour
     public void LevelUp()
     {
 
-        maxTime -= 0.5f;
+        //maxTime -= 0.5f;
         numBullets++;
 
         //In the last 30 seconds, random bullshit go
@@ -424,7 +465,7 @@ public class BulletManager : MonoBehaviour
     /// <summary>
     /// Spawns another bullet spawner
     /// </summary>
-    private void SpawnAnother()
+    /*private void SpawnAnother()
     {
         GameObject newBulletManger = Instantiate(this.gameObject);
         BulletManager newScript = newBulletManger.GetComponent<BulletManager>();
@@ -435,7 +476,8 @@ public class BulletManager : MonoBehaviour
 
 
         //Add some more randomness later
-    }
+    }*/
+    
     public float getAngle(Vector2 me, Vector2 target)
     {
         return Mathf.Atan2(target.y - me.y, target.x - me.x) * (180 / Mathf.PI);

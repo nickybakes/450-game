@@ -9,7 +9,8 @@ public class BulletLauncherData : MonoBehaviour
 
     public BulletPatterns bulletPattern;
 
-
+    public BulletMovement bulletMovement;
+    
     public float initialTimeBetweenBullets;
 
     public float arcMovementRadius;
@@ -25,4 +26,8 @@ public class BulletLauncherData : MonoBehaviour
     public float arcMaxAngle = 45;
 
     public int initialNumberOfBullets = 2;
+
+    public float sinWaveLength;
+
+    public float sinWaveFrequency;
 }

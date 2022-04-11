@@ -2,11 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum BulletMovement
+{
+    straight,
+    sine,
+    heatSeeking
+}
+
+
 public class Bullet : MonoBehaviour
 {
     public int speed; //Multiplies this by time.deltaTime to increase the speed
     public Vector2 direction;
     public float timer;
+    private float timeAlive;
     public int ownerNumber = 0;
 
     //used for the ball turning into a bullet
@@ -15,10 +24,25 @@ public class Bullet : MonoBehaviour
     public GameManager gameManager;
 
     public ParticleSystem ps;
+    public bool isBig = false; //Will this be a big bullet
+
+    public BulletMovement movement;
+
+    public float sinLength;
+
+    public float frequency; //Frequency of the sin wave
+
+    private Vector3 ogPosition;
+
+    private Vector2 normal;
+    private Vector2 offset;
 
     // Start is called before the first frame update
     void Start()
     {
+        ogPosition = transform.position;
+        timeAlive = 0;
+        
         if (speed <= 0)
         {
             speed = 1;
@@ -45,6 +69,12 @@ public class Bullet : MonoBehaviour
             }
             transform.rotation = Quaternion.Euler(0, 0, getAngle(Vector2.zero, gameManager.ballPhysicsScript.velocity));
         }
+        
+        else if(movement == BulletMovement.sine)
+        {
+            transform.rotation = Quaternion.Euler(0, 0, getAngle(Vector2.zero, direction + offset));
+        }
+        
         else
         {
             transform.rotation = Quaternion.Euler(0, 0, getAngle(Vector2.zero, direction));
@@ -63,7 +93,26 @@ public class Bullet : MonoBehaviour
 
 
 
-        transform.Translate(direction * Time.deltaTime * speed, Space.World);
+        switch (movement)
+        {
+            case BulletMovement.straight:
+                transform.Translate(direction * Time.deltaTime * speed, Space.World);
+                break;
+
+            case BulletMovement.sine:
+                //Get the normal of direction multiply by length then both by the sin of the time alive
+                normal = perpCW(direction);
+                offset = (normal * sinLength) * Mathf.Sin(timeAlive * frequency);
+                transform.Translate((direction + offset) *  Time.deltaTime * speed, Space.World);
+                break;
+
+            /*case BulletMovement.heatSeeking:
+                //Find the position of the basketball
+                Transform ball = FindObjectOfType<Ball>().gameObject.transform;
+                transform.Translate(ball.position * Time.deltaTime * speed, Space.World);
+                break;*/
+        }
+        
     }
 
     private void FixedUpdate()
@@ -74,6 +123,7 @@ public class Bullet : MonoBehaviour
         if (gameManager.paused)
             return;
 
+        timeAlive += Time.deltaTime;
         timer -= Time.deltaTime;
 
         if (timer <= 0)
@@ -86,15 +136,6 @@ public class Bullet : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
-
-    /*private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.tag == "Player")
-        {
-            Debug.Log("Bullet hit!");
-            Destroy(this.gameObject);
-        }
-    }*/
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -133,8 +174,15 @@ public class Bullet : MonoBehaviour
         return Mathf.Atan2(target.y - me.y, target.x - me.x) * (180 / Mathf.PI);
     }
 
-    /*private void OnCollisionEnter2D(Collision2D collision)
-    {
 
-    }*/
+    /// <summary>
+    /// gets the perpidicular vector to this one, going around clock wise
+    /// </summary>
+    /// <param name="vector">The vector we want to modify</param>
+    /// <returns></returns>
+    private Vector2 perpCW(Vector2 vector)
+    {
+        return new Vector2(vector.y, -1 * vector.x);
+    }
+
 }

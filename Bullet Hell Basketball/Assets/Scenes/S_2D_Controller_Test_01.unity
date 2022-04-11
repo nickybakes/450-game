@@ -1250,6 +1250,9 @@ MonoBehaviour:
   previousScorer: -1
   isTutorial: 0
   tutorialManager: {fileID: 0}
+  allBigBullets: 0
+  randomBigBullets: 1
+  bigBulletScale: 3
   winConditionMet: 0
 --- !u!4 &413587147
 Transform:
@@ -4769,6 +4772,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movement: 2
   bulletPattern: 1
+  bulletMovement: 1
   initialTimeBetweenBullets: 3
   arcMovementRadius: 32.3
   rotationSpeed: 10
@@ -4776,7 +4780,9 @@ MonoBehaviour:
   bulletSeperationAngle: 20
   arcMinAngle: -54
   arcMaxAngle: 120
-  initialNumberOfBullets: 2
+  initialNumberOfBullets: 1
+  sinWaveLength: 0.5
+  sinWaveFrequency: 2
 --- !u!4 &1449409615
 Transform:
   m_ObjectHideFlags: 0
