@@ -70,7 +70,7 @@ public class Bullet : MonoBehaviour
             transform.rotation = Quaternion.Euler(0, 0, getAngle(Vector2.zero, gameManager.ballPhysicsScript.velocity));
         }
 
-        else if (movement == BulletMovement.sine)
+        else if (movement != BulletMovement.straight)
         {
             transform.rotation = Quaternion.Euler(0, 0, getAngle(Vector2.zero, direction + offset));
         }
@@ -106,11 +106,11 @@ public class Bullet : MonoBehaviour
                 transform.Translate((direction + offset) * Time.deltaTime * speed, Space.World);
                 break;
 
-            /*case BulletMovement.counterSine:
+            case BulletMovement.counterSine:
                 normal = perpCCW(direction);
                 offset = (normal * sinLength) * Mathf.Sin(timeAlive * frequency);
                 transform.Translate((direction + offset) * Time.deltaTime * speed, Space.World);
-                break;*/
+                break;
         }
 
     }
@@ -185,6 +185,11 @@ public class Bullet : MonoBehaviour
         return new Vector2(vector.y, -1 * vector.x);
     }
 
+    /// <summary>
+    /// gets the perpidicular vector to this one, going around counter clock wise
+    /// </summary>
+    /// <param name="vector">The vector that will change</param>
+    /// <returns></returns>
     private Vector2 perpCCW(Vector2 vector)
     {
         return new Vector2(-1 * vector.y, vector.x);
