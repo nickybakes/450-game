@@ -195,6 +195,11 @@ public class MainMenuManager : MonoBehaviour
         }
     }
 
+    public void PlayGame()
+    {
+        SceneManager.LoadScene(1);
+    }
+
     //takes you back to the first menu
     /*
     public void OptionsMenuBackButton()
