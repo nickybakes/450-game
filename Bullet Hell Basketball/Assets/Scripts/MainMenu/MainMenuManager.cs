@@ -17,12 +17,14 @@ public class MainMenuManager : MonoBehaviour
     private string[] controllers = { "1", "2", "3", "4", "5", "6", "7", "8", "K" };
     private bool[] canMoveSelection = new bool[9];
 
-    public PanelManager TitlePanel;
-    public PanelManager MainPanel;
-    public PanelManager ModePanel;
-    public PanelManager PlayerPanel;
-    public PanelManager StagePanel;
-    public PanelManager OptionsPanel;
+    //public PanelManager TitlePanel;
+    //public PanelManager MainPanel;
+    //public PanelManager ModePanel;
+    //public PanelManager PlayerPanel;
+    //public PanelManager StagePanel;
+    //public PanelManager OptionsPanel;
+
+    public PanelManager[] Panels;
 
     public Button currentSelection;
 
@@ -30,9 +32,15 @@ public class MainMenuManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        OptionsPanel.gameObject.SetActive(false);
 
-        EventSystem.current.firstSelectedGameObject = TitlePanel.defaultButton.gameObject;
+        foreach (PanelManager panel in Panels)
+        {
+            panel.gameObject.SetActive(false);
+        }
+
+        Panels[0].gameObject.SetActive(true);
+
+        EventSystem.current.firstSelectedGameObject = Panels[0].defaultButton.gameObject;
 
     }
 
@@ -151,18 +159,50 @@ public class MainMenuManager : MonoBehaviour
     }
 
     //the method to call when the top left button on the titlePanel is submitted
-    public void ButtonToAnotherScreen()
+    public void SwitchToPanel(int i)
     {
-        TitlePanel.DisableMenu();
-        OptionsPanel.EnableMenu();
+        foreach (PanelManager panel in Panels)
+        {
+            panel.DisableMenu();
+        }
+
+        Panels[i].EnableMenu();
+    }
+
+    public void StepUp()
+    {
+        for (int i = 0; i < Panels.Length; i++)
+        {
+            if (i != Panels.Length - 1 && Panels[i].enabled)
+            {
+                Panels[i].DisableMenu();
+                Panels[i+1].EnableMenu();
+                break;
+            }
+        }
+    }
+
+    public void StepBack()
+    {
+        for(int i = 0; i < Panels.Length; i++)
+        {
+            if (i != 0 && Panels[i].enabled)
+            {
+                Panels[i].DisableMenu();
+                Panels[i - 1].EnableMenu();
+                break;
+            }
+        }
     }
 
     //takes you back to the first menu
+    /*
     public void OptionsMenuBackButton()
     {
         OptionsPanel.DisableMenu();
         TitlePanel.EnableMenu();
     }
+    */
 
     //closes application window or ends Unity editor playing
     public void QuitGame()

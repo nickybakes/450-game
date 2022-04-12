@@ -11,16 +11,22 @@ public class PanelManager : MonoBehaviour
 
     public MainMenuManager mainMenuManager;
 
+    public bool enabled;
+
     // Start is called before the first frame update
     void Start()
     {
         if (mainMenuManager == null)
             mainMenuManager = FindObjectOfType<MainMenuManager>();
+
+        enabled = true;
     }
+
+
 
     public void EnableMenu()
     {
-
+        enabled = true;
         gameObject.SetActive(true);
         defaultButton.Select();
     }
@@ -28,5 +34,6 @@ public class PanelManager : MonoBehaviour
     public void DisableMenu()
     {
         gameObject.SetActive(false);
+        enabled = false;
     }
 }
