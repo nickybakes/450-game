@@ -7,7 +7,7 @@ public class Explosion : MonoBehaviour
 
     public float timeAlive = 0;
 
-    public int ownerNumber = -1;
+    public int teamNumber = -1;
 
     private ParticleSystem ps;
     private ParticleSystemRenderer psRenderer;
@@ -37,16 +37,16 @@ public class Explosion : MonoBehaviour
         cameraShake = FindObjectOfType<Camera>().GetComponent<CameraShake>();
         StartCoroutine(cameraShake.Shake(.2f, .5f));
 
-        this.ownerNumber = ownerNumber;
+        this.teamNumber = ownerNumber;
         this.timeAlive = 0;
-        if (this.ownerNumber == 0)
+        if (this.teamNumber == 0)
         {
             psRenderer.material = materialsTeam0[0];
             psRenderer1.material = materialsTeam0[1];
             psRenderer2.material = materialsTeam0[2];
             psRenderer2.trailMaterial = materialsTeam0[3];
         }
-        if (this.ownerNumber == 1)
+        if (this.teamNumber == 1)
         {
             psRenderer.material = materialsTeam1[0];
             psRenderer1.material = materialsTeam1[1];
@@ -81,7 +81,7 @@ public class Explosion : MonoBehaviour
             {
                 BhbPlayerController playerScript = other.gameObject.GetComponent<BhbPlayerController>();
 
-                if (ownerNumber == -1 || ownerNumber != playerScript.teamNumber)
+                if (teamNumber == -1 || teamNumber != playerScript.teamNumber)
                 {
                     if (other.gameObject.transform.position.x < transform.position.x)
                     {
@@ -97,6 +97,9 @@ public class Explosion : MonoBehaviour
 
             if (other.gameObject.tag == "Ball")
             {
+                if (other.transform.parent != null && gameManager.currentBallOwner.teamNumber == teamNumber)
+                    return;
+
                 Ball ballScript = other.gameObject.GetComponent<Ball>();
                 ballScript.physics.simulatePhysics = true;
                 other.transform.parent = null;

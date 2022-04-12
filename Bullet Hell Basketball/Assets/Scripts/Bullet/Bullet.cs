@@ -21,11 +21,6 @@ public class Bullet : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (speed <= 0)
-        {
-            speed = 1;
-        }
-
         //Sets a default value if the given one isn't good
         if (timer <= 0)
         {
@@ -52,7 +47,14 @@ public class Bullet : MonoBehaviour
         }
         else
         {
-            transform.rotation = Quaternion.Euler(0, 0, getAngle(Vector2.zero, direction));
+            if (transform.parent != null)
+            {
+                transform.rotation = Quaternion.Euler(0, transform.parent.rotation.eulerAngles.y, getAngle(Vector2.zero, direction));
+            }
+            else
+            {
+                transform.rotation = Quaternion.Euler(0, 0, getAngle(Vector2.zero, direction));
+            }
         }
 
         if (dontUpdate)

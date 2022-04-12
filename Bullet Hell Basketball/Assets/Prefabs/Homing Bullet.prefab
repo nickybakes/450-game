@@ -133,8 +133,8 @@ MonoBehaviour:
   ball: {fileID: 0}
   direction: {x: 0, y: 0}
   speed: 0
-  acceleration: 3
-  maxSpeed: 25
+  acceleration: 6
+  maxSpeed: 30
   crosshair: {fileID: 6223182589519963191}
   gameManager: {fileID: 0}
   beepingSounds: {fileID: 4393392919492347482}

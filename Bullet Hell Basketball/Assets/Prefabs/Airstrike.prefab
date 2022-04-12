@@ -50,7 +50,7 @@ MonoBehaviour:
   crosshairTeam1: {fileID: 2100000, guid: 9838f11288799a24189172c6a9a8a04d, type: 2}
   bulletPrefab: {fileID: 2649196223168556797, guid: 0d018b114476535428b7651de079dd4d, type: 3}
   gameManager: {fileID: 0}
-  bulletSpeed: 40
+  bulletSpeed: 55
   firingInterval: 0.1
   player1Mat: {fileID: 2100000, guid: ed2b3a768409c33448bac5985c812af5, type: 2}
   player2Mat: {fileID: 2100000, guid: 4ed863d2621394440a6e9071da5e2655, type: 2}
