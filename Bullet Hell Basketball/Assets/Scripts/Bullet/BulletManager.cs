@@ -165,23 +165,19 @@ public class BulletManager : MonoBehaviour
                 case BulletPatterns.front:
 
                     if (ownerNumber == 0)
-                        AngularPattern();
+                        OneDirection(0);
 
-                    else AngularPattern();
+                    else OneDirection(180);
 
                     break;
 
                 case BulletPatterns.angular:
-
-                    if (ownerNumber == 0)
-                        AngularPattern();
-
-                    else AngularPattern();
-
+                    AngularPattern();
                     break;
 
                 case BulletPatterns.down:
-                    AngularPattern();
+                    //Does not work?
+                    OneDirection(270);
                     break;
             }
 
@@ -450,6 +446,13 @@ public class BulletManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void OneDirection(float degreees)
+    {
+        GameObject newBullet = BulletSetup();
+        Bullet bulletScript = newBullet.GetComponent<Bullet>();
+        bulletScript.direction = new Vector2(Mathf.Cos(Mathf.Deg2Rad * (degreees)), Mathf.Sin(Mathf.Deg2Rad * (degreees)));
     }
 
 
