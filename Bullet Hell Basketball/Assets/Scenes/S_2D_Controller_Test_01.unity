@@ -1206,6 +1206,7 @@ MonoBehaviour:
   bulletManagerPrefab: {fileID: 5370311947778578661, guid: f5dd710dd082b174b94806c38794438e, type: 3}
   explosionPrefab: {fileID: 2760302803450972953, guid: c4c2c8999d8396d4085ff7aea427133c, type: 3}
   homingBulletPrefab: {fileID: 2883470823732361329, guid: 0de902a81dee9e142abe3d887b6e0ea8, type: 3}
+  airStrikePrefab: {fileID: 7573789256363336255, guid: 80cdee53c51be2d41abd3298531a3ccb, type: 3}
   powerUpPrefab: {fileID: 6449068944269853553, guid: 619ba7d2e748ab44ebb55ef460c16273, type: 3}
   powerUpTimeSpawnMin: 16
   powerUpTimeSpawnMax: 32
@@ -4401,7 +4402,7 @@ MonoBehaviour:
   bulletSeperationAngle: 20
   arcMinAngle: -54
   arcMaxAngle: 120
-  initialNumberOfBullets: 2
+  initialNumberOfBullets: 1
 --- !u!4 &1449409615
 Transform:
   m_ObjectHideFlags: 0
@@ -5286,7 +5287,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collisionVertexPrefab: {fileID: 2382589878411412825, guid: de94585aa4ffe794c8cc1e98a3d925ff, type: 3}
   collisionSegmentPrefab: {fileID: 71431853401964895, guid: 2d19e55d322709d41b35224430022a18, type: 3}
-  editorUpdateFrame: 1
+  editorUpdateFrame: 0
   vertexColor: {r: 1, g: 0, b: 0, a: 1}
   segmentColor: {r: 1, g: 0, b: 0, a: 1}
   semiSolidPlatformColor: {r: 0, g: 0, b: 1, a: 1}

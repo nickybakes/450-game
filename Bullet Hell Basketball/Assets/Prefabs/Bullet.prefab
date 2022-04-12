@@ -55,6 +55,7 @@ MonoBehaviour:
   dontUpdate: 0
   gameManager: {fileID: 0}
   ps: {fileID: 6906962215700477121}
+  explosive: 0
 --- !u!58 &130120717617434444
 CircleCollider2D:
   m_ObjectHideFlags: 0

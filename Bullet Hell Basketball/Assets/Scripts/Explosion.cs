@@ -105,9 +105,13 @@ public class Explosion : MonoBehaviour
                 {
                     ballScript.physics.velocity = new Vector2(-80, 60);
                 }
-                else if (other.gameObject.transform.position.x >= transform.position.x)
+                else if (other.gameObject.transform.position.x > transform.position.x)
                 {
                     ballScript.physics.velocity = new Vector2(80, 60);
+                }
+                else if (other.gameObject.transform.position.x == transform.position.x)
+                {
+                    ballScript.physics.velocity = new Vector2(0, 80);
                 }
             }
         }

@@ -16,6 +16,8 @@ public class Bullet : MonoBehaviour
 
     public ParticleSystem ps;
 
+    public bool explosive;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -37,6 +39,9 @@ public class Bullet : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(explosive)
+            transform.GetChild(2).gameObject.SetActive(true);
+
         if (dontUpdate && gameManager.ballControlScript.IsBullet)
         {
             if (transform.parent != null)
@@ -83,6 +88,8 @@ public class Bullet : MonoBehaviour
                 ps.transform.parent = null;
                 ps.Play();
             }
+            if (explosive)
+                gameManager.SpawnExplosion(ownerNumber, transform.position);
             Destroy(this.gameObject);
         }
     }
@@ -122,6 +129,8 @@ public class Bullet : MonoBehaviour
                         ps.transform.parent = null;
                         ps.Play();
                     }
+                    if (explosive)
+                        gameManager.SpawnExplosion(ownerNumber, transform.position);
                     Destroy(this.gameObject);
                 }
             }

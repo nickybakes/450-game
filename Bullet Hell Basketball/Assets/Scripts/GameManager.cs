@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour
     public GameObject explosionPrefab;
 
     public GameObject homingBulletPrefab;
+    public GameObject airStrikePrefab;
 
     public GameObject powerUpPrefab;
 
@@ -451,6 +452,14 @@ public class GameManager : MonoBehaviour
             bulletScript.direction = directions[i];
             bulletScript.gameManager = this;
         }
+    }
+
+    public void SpawnAirStrike(int teamNumber)
+    {
+        GameObject airStrike = Instantiate(airStrikePrefab);
+        Airstrike airStrikeScript = airStrike.GetComponent<Airstrike>();
+        airStrikeScript.teamNumber = teamNumber;
+        airStrikeScript.gameManager = this;
     }
 
     void Update()

@@ -20,10 +20,11 @@ public class Powerup : MonoBehaviour
 
     public Collider2D powerupCollider;
 
+    public ParticleSystem ps;
+
     // Start is called before the first frame update
     void Start()
     {
-        powerupCollider = GetComponent<Collider2D>();
     }
 
     // Update is called once per frame
@@ -39,12 +40,19 @@ public class Powerup : MonoBehaviour
         transform.GetChild((int)type).gameObject.SetActive(true);
     }
 
-    public void ActivatePowerup()
+    public void ActivatePowerup(int teamNumber)
     {
         if (type == PowerupType.HomingBullet)
         {
             gameManager.SpawnHomingBullet();
         }
+        else if (type == PowerupType.Airstrike)
+        {
+            gameManager.SpawnAirStrike(teamNumber);
+        }
+
+        ps.transform.parent = null;
+        ps.Play();
 
         gameManager.allAlivePowerups.Remove(this);
         Destroy(gameObject);

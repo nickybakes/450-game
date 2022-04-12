@@ -455,7 +455,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
                     Powerup powerup = gameManager.SwipePowerupCheck(this);
                     if (powerup != null)
                     {
-                        powerup.ActivatePowerup();
+                        powerup.ActivatePowerup(teamNumber);
                     }
                 }
                 if (IsSwiping && swipeTimeCurrent <= .5)
