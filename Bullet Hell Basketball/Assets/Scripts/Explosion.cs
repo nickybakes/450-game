@@ -85,11 +85,11 @@ public class Explosion : MonoBehaviour
                 {
                     if (other.gameObject.transform.position.x < transform.position.x)
                     {
-                        playerScript.GetsHit(new Vector2(-80, 85), false);
+                        playerScript.GetsHit(new Vector2(-80, 85), false, true);
                     }
                     else if (other.gameObject.transform.position.x >= transform.position.x)
                     {
-                        playerScript.GetsHit(new Vector2(80, 85), false);
+                        playerScript.GetsHit(new Vector2(80, 85), false, true);
                     }
                     playerScript.stunTimeCurrent = -playerScript.stunTimeMax;
                 }

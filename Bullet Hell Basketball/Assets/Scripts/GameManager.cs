@@ -625,6 +625,16 @@ public class GameManager : MonoBehaviour
             SpawnRandomPowerUp();
         }
 
+        if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            SpawnAirStrike(0);
+        }
+        
+        if (Input.GetKeyDown(KeyCode.Alpha6))
+        {
+            SpawnAirStrike(1);
+        }
+
         // if (player1Script.controllerNumber == -1)
         // {
         //     for (int i = 1; i <= 8; i++)

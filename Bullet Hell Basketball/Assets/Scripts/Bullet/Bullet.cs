@@ -39,7 +39,7 @@ public class Bullet : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(explosive)
+        if (explosive)
             transform.GetChild(2).gameObject.SetActive(true);
 
         if (dontUpdate && gameManager.ballControlScript.IsBullet)
@@ -61,10 +61,10 @@ public class Bullet : MonoBehaviour
         if (gameManager.paused)
             return;
 
-        if (transform.parent != null)
-        {
-            transform.localRotation = Quaternion.Inverse(transform.parent.rotation);
-        }
+        // if (transform.parent != null)
+        // {
+        //     transform.localRotation = Quaternion.Inverse(transform.parent.rotation);
+        // }
 
 
 
@@ -113,14 +113,18 @@ public class Bullet : MonoBehaviour
             {
                 // Debug.Log("Bullet hit!");
                 //Insert method for when player is hit
-                if (other.gameObject.transform.position.x < transform.position.x)
+                if (!explosive)
                 {
-                    playerScript.GetsHit(new Vector2(-40, 20), false);
+                    if (other.gameObject.transform.position.x < transform.position.x)
+                    {
+                        playerScript.GetsHit(new Vector2(-40, 20), false, false);
+                    }
+                    else if (other.gameObject.transform.position.x >= transform.position.x)
+                    {
+                        playerScript.GetsHit(new Vector2(40, 20), false, false);
+                    }
                 }
-                else if (other.gameObject.transform.position.x >= transform.position.x)
-                {
-                    playerScript.GetsHit(new Vector2(40, 20), false);
-                }
+
 
                 if (!dontUpdate)
                 {

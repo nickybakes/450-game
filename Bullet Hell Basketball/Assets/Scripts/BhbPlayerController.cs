@@ -444,11 +444,11 @@ public class BhbPlayerController : NeonHeightsCharacterController
                             GrabBall();
                         if (swipeVictims[i].transform.position.x < transform.position.x)
                         {
-                            swipeVictims[i].GetsHit(new Vector2(-50, 20), true);
+                            swipeVictims[i].GetsHit(new Vector2(-50, 20), true, false);
                         }
                         else if (swipeVictims[i].transform.position.x >= transform.position.x)
                         {
-                            swipeVictims[i].GetsHit(new Vector2(50, 20), true);
+                            swipeVictims[i].GetsHit(new Vector2(50, 20), true, false);
                         }
                     }
 
@@ -632,9 +632,9 @@ public class BhbPlayerController : NeonHeightsCharacterController
     }
 
 
-    public void GetsHit(Vector2 knockback, bool isByPlayer)
+    public void GetsHit(Vector2 knockback, bool isByPlayer, bool ignoreAlreadyStunned)
     {
-        if (!IsStunned && invinsibilityTimeCurrent >= invinsibilityTimeMax)
+        if ((!IsStunned && invinsibilityTimeCurrent >= invinsibilityTimeMax) || ignoreAlreadyStunned)
         {
             IsStunned = true;
             grounded = false;
