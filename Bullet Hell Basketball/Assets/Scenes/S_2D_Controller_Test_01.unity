@@ -1233,10 +1233,11 @@ MonoBehaviour:
   ballPhysicsScript: {fileID: 0}
   ballControlScript: {fileID: 0}
   horizontalEdge: 35
-  tempHud: {fileID: 29890431}
+  pausedMenuUI: {fileID: 29890431}
   panelUI: {fileID: 616705882}
   playerHeadersPanel: {fileID: 1704394085}
   bulletLevel: 0
+  numOfBulletLevelUps: 3
   bulletLevelUpInterval: 30
   bulletLevelUpCurrentTime: 0
   playerOneWins: {fileID: 1602340319}
@@ -5287,7 +5288,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collisionVertexPrefab: {fileID: 2382589878411412825, guid: de94585aa4ffe794c8cc1e98a3d925ff, type: 3}
   collisionSegmentPrefab: {fileID: 71431853401964895, guid: 2d19e55d322709d41b35224430022a18, type: 3}
-  editorUpdateFrame: 0
+  editorUpdateFrame: 1
   vertexColor: {r: 1, g: 0, b: 0, a: 1}
   segmentColor: {r: 1, g: 0, b: 0, a: 1}
   semiSolidPlatformColor: {r: 0, g: 0, b: 1, a: 1}

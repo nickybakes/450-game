@@ -981,6 +981,16 @@ public class BhbPlayerController : NeonHeightsCharacterController
                         return false;
                     }
                 }
+                else if (ball.transform != transform)
+                {
+                    if (gameManager.SwipePowerupCheck(this) != null)
+                    {
+                        if (Mathf.PerlinNoise(-transform.position.y * Random.Range(-4, 4), -transform.position.x * Random.Range(-4, 4)) > .7)
+                        {
+                            return true;
+                        }
+                    }
+                }
 
                 return false;
             }
