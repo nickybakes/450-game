@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: M_Basic_Hologram_UI_03
+  m_Name: M_Basic_Hologram_UI_03a
   m_Shader: {fileID: -6465566751694194690, guid: 03011805782ef584cbef532847d00f1f, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -49,7 +49,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Texture2D_d83222331d634ef4a300b6c20d3cbf63:
-        m_Texture: {fileID: 2800000, guid: ad8b18ebffb455a468307254dabbf6fa, type: 3}
+        m_Texture: {fileID: 2800000, guid: 27fff7e326893c34aabcced8beb8e914, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseMap:
@@ -122,11 +122,11 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - Boolean_44eebb52ba8d4ababa8fc5e699bef335: 0
-    - Boolean_5a7735198a684cc598dc9142cf5b579f: 1
+    - Boolean_5a7735198a684cc598dc9142cf5b579f: 0
     - Boolean_8dee08b0e5f84dbca92b3545cfcb2d9a: 0
     - Vector1_0073512ebf244602bae9319b52f0f122: 80
     - Vector1_02849f611ec74c859a8dd4f34dadc73d: 0
-    - Vector1_073139c9600e4de4bf4efcffa02d579b: 0.8
+    - Vector1_073139c9600e4de4bf4efcffa02d579b: 1.09
     - Vector1_0e28c270a2b1442db3b5e6bfc8ab9da9: 25
     - Vector1_105c279df20e41cc864a17bc123ddf4c: 1.5
     - Vector1_2b7d7186b8224d398eb5d0149ea4a54e: 6
@@ -135,14 +135,14 @@ Material:
     - Vector1_54db80331ab64b3c9c8a8ac13ed0efc9: 4
     - Vector1_56788b39262e4cc59f79cb511db724a2: 1
     - Vector1_60a8ba2ffdd24f5e8e1ebdfbc8b1b585: 1
-    - Vector1_6f1abcde03d04b08ae86fa7483f5756b: 1
+    - Vector1_6f1abcde03d04b08ae86fa7483f5756b: 47.6
     - Vector1_70fbee0dc03a4b7a9f03204db0c42c27: 15.8
     - Vector1_75789e282b334090bd387cd14d20c67a: 15.8
     - Vector1_809b69cad2724fb5a162444e83dd6e43: 1.4
     - Vector1_a6378551a6394e2e8c38e808448dca51: 0.18
     - Vector1_b6042e8d7bc34effa1f3a5070f7faa61: 1
     - Vector1_bccf2dd9d94f48a3974c8d5fe7aa7c1d: 0.78
-    - Vector1_cb1b2f0c113d406d8533bdaf4f4893a0: 0.378
+    - Vector1_cb1b2f0c113d406d8533bdaf4f4893a0: 0.318
     - Vector1_d6077c8f48f345a39b43d6acea5a6a8c: 0
     - Vector1_da325d751ba24c7c9198338ec6a31fc4: 0.3
     - Vector1_e47bbb755a174030816c751784567cd0: 0

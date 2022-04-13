@@ -7,6 +7,15 @@ public class HologramButton : MonoBehaviour, ISelectHandler, IDeselectHandler// 
 {
     //Do this when the selectable UI object is selected.
 
+    private MainMenuManager menuManager;
+    private Button buttonComponent;
+
+    void Awake()
+    {
+        menuManager = FindObjectOfType<MainMenuManager>();
+        buttonComponent = GetComponent<Button>();
+    }
+
     public void OnSelect(BaseEventData eventData)
     {
         SelectVisual();
@@ -34,24 +43,24 @@ public class HologramButton : MonoBehaviour, ISelectHandler, IDeselectHandler// 
         // }
     }
 
-    private void SelectVisual()
+    public void SelectVisual()
     {
         transform.GetChild(0).gameObject.SetActive(true);
     }
 
-    private void DeselectVisual()
+    public void DeselectVisual()
     {
         transform.GetChild(0).gameObject.SetActive(false);
     }
 
     public void OnMouseEnter()
     {
-        SelectVisual();
+        buttonComponent.Select();
     }
 
     public void OnMouseExit()
     {
-        if (EventSystem.current.currentSelectedGameObject != gameObject)
-            DeselectVisual();
+        // if (EventSystem.current.currentSelectedGameObject != gameObject)
+        //     DeselectVisual();
     }
 }

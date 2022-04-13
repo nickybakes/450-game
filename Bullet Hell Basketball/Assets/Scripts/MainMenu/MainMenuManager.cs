@@ -5,6 +5,14 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
+public enum Menu
+{
+    Title,
+    Main,
+    GamemodeSelect,
+    ExhibitionTeamSetup
+}
+
 public static class Controller
 {
     public const KeyCode j10 = KeyCode.Joystick1Button0;
@@ -25,7 +33,7 @@ public class MainMenuManager : MonoBehaviour
     //public PanelManager StagePanel;
     //public PanelManager OptionsPanel;
 
-    public PanelManager[] Panels;
+    public PanelManager[] panels;
 
     public Button currentSelection;
 
@@ -38,14 +46,14 @@ public class MainMenuManager : MonoBehaviour
         audioManager = FindObjectOfType<AudioManager>();
         audioManager.Play("MusicMenu");
 
-        foreach (PanelManager panel in Panels)
+        foreach (PanelManager panel in panels)
         {
             panel.gameObject.SetActive(false);
         }
 
-        Panels[0].gameObject.SetActive(true);
+        panels[0].gameObject.SetActive(true);
 
-        EventSystem.current.firstSelectedGameObject = Panels[0].defaultButton.gameObject;
+        EventSystem.current.firstSelectedGameObject = panels[0].defaultButton.gameObject;
 
     }
 
@@ -74,6 +82,12 @@ public class MainMenuManager : MonoBehaviour
                 masterController = controllers[i];
 
                 Debug.Log(currentSelection);
+                HologramButton hologramButton = currentSelection.gameObject.GetComponent<HologramButton>();
+                if (hologramButton != null)
+                {
+                    hologramButton.DeselectVisual();
+                    Debug.Log(hologramButton);
+                }
                 ExecuteEvents.Execute(currentSelection.gameObject,
                     new BaseEventData(EventSystem.current), ExecuteEvents.submitHandler);
                 break;
@@ -83,7 +97,7 @@ public class MainMenuManager : MonoBehaviour
             float horizontalInput = 0f;
             float verticalInput = 0f;
 
-            
+
 
 
             if (((Input.GetAxis("J" + controllers[i] + "Vertical") + (Input.GetAxis("J" + controllers[i] + "Horizontal")) == 0)))
@@ -156,22 +170,22 @@ public class MainMenuManager : MonoBehaviour
     //the method to call when the top left button on the titlePanel is submitted
     public void SwitchToPanel(int i)
     {
-        foreach (PanelManager panel in Panels)
+        foreach (PanelManager panel in panels)
         {
             panel.DisableMenu();
         }
 
-        Panels[i].EnableMenu();
+        panels[i].EnableMenu();
     }
 
     public void StepUp()
     {
-        for (int i = 0; i < Panels.Length; i++)
+        for (int i = 0; i < panels.Length; i++)
         {
-            if (i != Panels.Length - 1 && Panels[i].gameObject.activeSelf)
+            if (i != panels.Length - 1 && panels[i].gameObject.activeSelf)
             {
-                Panels[i].DisableMenu();
-                Panels[i+1].EnableMenu();
+                panels[i].DisableMenu();
+                panels[i + 1].EnableMenu();
                 break;
             }
         }
@@ -179,12 +193,12 @@ public class MainMenuManager : MonoBehaviour
 
     public void OpenSetup()
     {
-        for (int i = 0; i < Panels.Length; i++)
+        for (int i = 0; i < panels.Length; i++)
         {
-            Panels[i].DisableMenu();
+            panels[i].DisableMenu();
         }
-        Panels[3].EnableMenu();
-        
+        panels[3].EnableMenu();
+
         //Master Controller should indicate whicnh player is set to P1
 
     }
@@ -192,12 +206,12 @@ public class MainMenuManager : MonoBehaviour
 
     public void StepBack()
     {
-        for(int i = 0; i < Panels.Length; i++)
+        for (int i = 0; i < panels.Length; i++)
         {
-            if (i != 0 && Panels[i].gameObject.activeSelf)
+            if (i != 0 && panels[i].gameObject.activeSelf)
             {
-                Panels[i].DisableMenu();
-                Panels[i - 1].EnableMenu();
+                panels[i].DisableMenu();
+                panels[i - 1].EnableMenu();
                 break;
             }
         }
