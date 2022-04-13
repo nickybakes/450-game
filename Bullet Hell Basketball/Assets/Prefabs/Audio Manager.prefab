@@ -58,6 +58,13 @@ MonoBehaviour:
     pitch: 1
     loop: 1
     source: {fileID: 0}
+  - name: MusicPauseStart
+    clips:
+    - {fileID: 8300000, guid: 1b5c776ff9579a445a08ef74a12c9bcb, type: 3}
+    volume: 0.2
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
   - name: MusicTutorial
     clips:
     - {fileID: 8300000, guid: 0a80c7c8dd3a3e84c9deaffb7aff0795, type: 3}
@@ -210,6 +217,27 @@ MonoBehaviour:
     clips:
     - {fileID: 8300000, guid: 89bc99c62114ba945a63970655e7666d, type: 3}
     volume: 0.5
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: BigBulletStart
+    clips:
+    - {fileID: 8300000, guid: 913add3f2accbba47962b863cdbd3eab, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: BigBulletFlying
+    clips:
+    - {fileID: 8300000, guid: dcbef261fb642b249ab87d9b50fa6c4d, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
+  - name: Shield
+    clips:
+    - {fileID: 8300000, guid: 3ea201551bf77904a96df4d0d5857eb3, type: 3}
+    volume: 0.3
     pitch: 1
     loop: 0
     source: {fileID: 0}

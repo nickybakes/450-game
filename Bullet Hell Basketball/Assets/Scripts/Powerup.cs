@@ -23,6 +23,7 @@ public class Powerup : MonoBehaviour
     public ParticleSystem ps;
 
     public GameObject bulletPrefab;
+    private AudioManager audioManager;
 
     public Material explosiveBulletMatTeam0;
     public Material explosiveBulletMatTeam1;
@@ -30,6 +31,7 @@ public class Powerup : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        audioManager = FindObjectOfType<AudioManager>();
     }
 
     // Update is called once per frame
@@ -59,6 +61,8 @@ public class Powerup : MonoBehaviour
         {
             Vector2[] directions = new Vector2[] { new Vector2(.5f, .5f), new Vector2(0, 0), new Vector2(.5f, -.5f) };
             Vector2[] positions = new Vector2[] { new Vector2(3, 4), new Vector2(3.5f, 0), new Vector2(3, -4) };
+
+            audioManager.Play("Shield");
 
             for (int i = 0; i < directions.Length; i++)
             {

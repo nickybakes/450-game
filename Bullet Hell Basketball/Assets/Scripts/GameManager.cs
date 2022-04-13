@@ -697,6 +697,7 @@ public class GameManager : MonoBehaviour
         //toggles audio.
         if (paused)
         {
+            audioManager.Play("MusicPauseStart");
             pauseMusic.source.volume = 0.1f;
             music.source.volume = 0;
 
