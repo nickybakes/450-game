@@ -67,7 +67,7 @@ public class SuperBullet : MonoBehaviour
         float scale = Mathf.Lerp(maxScale, 1, (float)currentHits / (float)maxHits);
         transform.localScale = new Vector3(scale, scale, scale);
 
-        transform.Translate(new Vector3( Time.deltaTime * direction * (Mathf.Lerp(baseSpeed, topSpeed, (float)currentHits / (float)maxHits)), 0, 0), Space.World);
+        transform.Translate(new Vector3(Time.deltaTime * direction * (Mathf.Lerp(baseSpeed, topSpeed, (float)currentHits / (float)maxHits)), 0, 0), Space.World);
 
         timer += Time.deltaTime;
 
@@ -85,18 +85,23 @@ public class SuperBullet : MonoBehaviour
 
     public void Shrink()
     {
-        timer = 0;
         currentHits++;
+        ps.Play();
 
         if (currentHits == maxHits)
         {
             if (ps != null)
             {
                 ps.transform.parent = null;
+                ParticleSystem.MainModule module = ps.main;
+                module.stopAction = ParticleSystemStopAction.Destroy;
                 ps.Play();
             }
+            if(timer < shrinkInterval)
+                gameManager.SpawnExplosion(teamNumber, transform.position);
             Destroy(this.gameObject);
         }
+        timer = 0;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
