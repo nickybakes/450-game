@@ -58,6 +58,20 @@ MonoBehaviour:
     pitch: 1
     loop: 1
     source: {fileID: 0}
+  - name: MusicPauseStart
+    clips:
+    - {fileID: 8300000, guid: 1b5c776ff9579a445a08ef74a12c9bcb, type: 3}
+    volume: 0.2
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: MusicTutorial
+    clips:
+    - {fileID: 8300000, guid: 0a80c7c8dd3a3e84c9deaffb7aff0795, type: 3}
+    volume: 0.1
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
   - name: Overtime
     clips:
     - {fileID: 8300000, guid: cb7244f0b325f354e9a7b4a378ef5ab2, type: 3}
@@ -78,6 +92,13 @@ MonoBehaviour:
   - name: Hit
     clips:
     - {fileID: 8300000, guid: f5cec3311b85ebd41ac4b7b96b7678d3, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: HitBullet
+    clips:
+    - {fileID: 8300000, guid: f20e15043bf1ece4e80cd0fd557c6149, type: 3}
     volume: 0.5
     pitch: 1
     loop: 0
@@ -126,6 +147,13 @@ MonoBehaviour:
     pitch: 1
     loop: 0
     source: {fileID: 0}
+  - name: SwipeRally
+    clips:
+    - {fileID: 8300000, guid: 6393dd7ffe4c37342b25529d9e40bc59, type: 3}
+    volume: 0.3
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
   - name: Shot
     clips:
     - {fileID: 8300000, guid: 1e5d71bc49fb5e84bbe17b2236db4e34, type: 3}
@@ -163,4 +191,60 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     loop: 1
+    source: {fileID: 0}
+  - name: HomingBulletStart
+    clips:
+    - {fileID: 8300000, guid: df8bc1a27af85d44cbe96bd4ee979501, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: HomingBulletBeep
+    clips:
+    - {fileID: 8300000, guid: 9eadc405c60e07641a49e4652ad9545e, type: 3}
+    volume: 0.3
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: HomingBulletFlying
+    clips:
+    - {fileID: 8300000, guid: c284c1624f5020f4a864f155f6417a85, type: 3}
+    volume: 0.1
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
+  - name: HomingBulletClose
+    clips:
+    - {fileID: 8300000, guid: 89bc99c62114ba945a63970655e7666d, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: BigBulletStart
+    clips:
+    - {fileID: 8300000, guid: 913add3f2accbba47962b863cdbd3eab, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: BigBulletFlying
+    clips:
+    - {fileID: 8300000, guid: dcbef261fb642b249ab87d9b50fa6c4d, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
+  - name: Shield
+    clips:
+    - {fileID: 8300000, guid: 3ea201551bf77904a96df4d0d5857eb3, type: 3}
+    volume: 0.3
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Explosion
+    clips:
+    - {fileID: 8300000, guid: e0e0c32a59874b44d8b8a0d809074aa0, type: 3}
+    volume: 0.2
+    pitch: 1
+    loop: 0
     source: {fileID: 0}

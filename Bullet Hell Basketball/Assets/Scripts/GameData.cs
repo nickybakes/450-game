@@ -34,6 +34,10 @@ public class GameData : MonoBehaviour
 
     public bool allBigBullets;
 
+    public int numOfBulletLevelUps = 3;
+
+    public float matchLength = 120;
+
 
     // Set up singleton here
     private void Awake()

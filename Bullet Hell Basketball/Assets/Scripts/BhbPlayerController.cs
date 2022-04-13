@@ -444,12 +444,18 @@ public class BhbPlayerController : NeonHeightsCharacterController
                             GrabBall();
                         if (swipeVictims[i].transform.position.x < transform.position.x)
                         {
-                            swipeVictims[i].GetsHit(new Vector2(-50, 20), true);
+                            swipeVictims[i].GetsHit(new Vector2(-50, 20), true, false);
                         }
                         else if (swipeVictims[i].transform.position.x >= transform.position.x)
                         {
-                            swipeVictims[i].GetsHit(new Vector2(50, 20), true);
+                            swipeVictims[i].GetsHit(new Vector2(50, 20), true, false);
                         }
+                    }
+
+                    Powerup powerup = gameManager.SwipePowerupCheck(this);
+                    if (powerup != null)
+                    {
+                        powerup.ActivatePowerup(this);
                     }
                 }
                 if (IsSwiping && swipeTimeCurrent <= .5)
@@ -626,9 +632,9 @@ public class BhbPlayerController : NeonHeightsCharacterController
     }
 
 
-    public void GetsHit(Vector2 knockback, bool isByPlayer)
+    public void GetsHit(Vector2 knockback, bool isByPlayer, bool ignoreAlreadyStunned)
     {
-        if (!IsStunned && invinsibilityTimeCurrent >= invinsibilityTimeMax)
+        if ((!IsStunned && invinsibilityTimeCurrent >= invinsibilityTimeMax) || ignoreAlreadyStunned)
         {
             IsStunned = true;
             grounded = false;
@@ -973,6 +979,16 @@ public class BhbPlayerController : NeonHeightsCharacterController
                             return true;
                         }
                         return false;
+                    }
+                }
+                else if (ball.transform != transform)
+                {
+                    if (gameManager.SwipePowerupCheck(this) != null)
+                    {
+                        if (Mathf.PerlinNoise(-transform.position.y * Random.Range(-4, 4), -transform.position.x * Random.Range(-4, 4)) > .7)
+                        {
+                            return true;
+                        }
                     }
                 }
 
