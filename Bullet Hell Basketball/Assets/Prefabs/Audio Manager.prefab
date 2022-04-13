@@ -150,7 +150,7 @@ MonoBehaviour:
   - name: SwipeRally
     clips:
     - {fileID: 8300000, guid: 6393dd7ffe4c37342b25529d9e40bc59, type: 3}
-    volume: 0.5
+    volume: 0.3
     pitch: 1
     loop: 0
     source: {fileID: 0}
@@ -244,7 +244,7 @@ MonoBehaviour:
   - name: Explosion
     clips:
     - {fileID: 8300000, guid: e0e0c32a59874b44d8b8a0d809074aa0, type: 3}
-    volume: 0.5
+    volume: 0.3
     pitch: 1
     loop: 0
     source: {fileID: 0}
