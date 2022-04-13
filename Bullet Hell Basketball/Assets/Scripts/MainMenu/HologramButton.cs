@@ -43,6 +43,27 @@ public class HologramButton : MonoBehaviour, ISelectHandler, IDeselectHandler// 
         // }
     }
 
+    
+    public void OnModeSelect()
+    {
+        if (transform.GetChild(4).gameObject != null)
+         {
+         	transform.GetChild(3).gameObject.SetActive(true);
+         	transform.GetChild(4).gameObject.SetActive(false);
+         }
+    }
+
+
+    public void OnModeDeselect()
+    {
+        if (transform.GetChild(4).gameObject != null)
+         {
+         	transform.GetChild(4).gameObject.SetActive(true);
+         	transform.GetChild(3).gameObject.SetActive(false);
+         }
+    }
+    
+
     public void SelectVisual()
     {
         transform.GetChild(0).gameObject.SetActive(true);

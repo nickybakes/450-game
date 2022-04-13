@@ -80,7 +80,7 @@ public class MainMenuManager : MonoBehaviour
             if (Input.GetButtonDown("J" + controllers[i] + "A"))
             {
                 masterController = controllers[i];
-
+                
                 Debug.Log(currentSelection);
                 HologramButton hologramButton = currentSelection.gameObject.GetComponent<HologramButton>();
                 if (hologramButton != null)
@@ -221,6 +221,12 @@ public class MainMenuManager : MonoBehaviour
     {
         Destroy(FindObjectOfType<AudioManager>().gameObject);
         SceneManager.LoadScene(1);
+    }
+
+    public void PlayTutorial()
+    {
+        Destroy(FindObjectOfType<AudioManager>().gameObject);
+        SceneManager.LoadScene(2);
     }
 
     //takes you back to the first menu
