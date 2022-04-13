@@ -15,6 +15,7 @@ public static class Controller
 public class MainMenuManager : MonoBehaviour
 {
     private string[] controllers = { "1", "2", "3", "4", "5", "6", "7", "8", "K" };
+    private string masterController;
     private bool[] canMoveSelection = new bool[9];
 
     //public PanelManager TitlePanel;
@@ -66,6 +67,8 @@ public class MainMenuManager : MonoBehaviour
             //checks if controllers or keyboard have pressed "A" or space, if so, "click" the current button
             if (Input.GetButtonDown("J" + controllers[i] + "A"))
             {
+                masterController = controllers[i];
+
                 Debug.Log(currentSelection);
                 ExecuteEvents.Execute(currentSelection.gameObject,
                     new BaseEventData(EventSystem.current), ExecuteEvents.submitHandler);
@@ -76,19 +79,7 @@ public class MainMenuManager : MonoBehaviour
             float horizontalInput = 0f;
             float verticalInput = 0f;
 
-            // if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.P))
-            //     verticalInput = 1;
-            // if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.Semicolon))
-            //     verticalInput = -1;
-            // if (!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.Semicolon) && !Input.GetKey(KeyCode.P))
-            //     verticalInput = 0;
-
-            // if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.Quote))
-            //     horizontalInput = 1;
-            // if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.L))
-            //     horizontalInput = -1;
-            // if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.Quote) && !Input.GetKey(KeyCode.L))
-            //     horizontalInput = 0;
+            
 
 
             if (((Input.GetAxis("J" + controllers[i] + "Vertical") + (Input.GetAxis("J" + controllers[i] + "Horizontal")) == 0)))
@@ -181,6 +172,19 @@ public class MainMenuManager : MonoBehaviour
             }
         }
     }
+
+    public void OpenSetup()
+    {
+        for (int i = 0; i < Panels.Length; i++)
+        {
+            Panels[i].DisableMenu();
+        }
+        Panels[3].EnableMenu();
+        
+        //Master Controller should indicate whicnh player is set to P1
+
+    }
+
 
     public void StepBack()
     {
