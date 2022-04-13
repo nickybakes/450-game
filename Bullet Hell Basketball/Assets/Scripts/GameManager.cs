@@ -164,6 +164,10 @@ public class GameManager : MonoBehaviour
         pauseMusic = audioManager.Find("MusicPause");
         midair = audioManager.Find("Midair");
 
+        audioManager.Play("Music");
+        audioManager.Play("MusicPause");
+        pauseMusic.source.volume = 0.0f;
+
         panelUI.SetActive(true);
         //player 1.
         panelUI.transform.GetChild(0).GetComponent<Text>().text = "0";

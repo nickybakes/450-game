@@ -29,10 +29,14 @@ public class MainMenuManager : MonoBehaviour
 
     public Button currentSelection;
 
+    private AudioManager audioManager;
+
 
     // Start is called before the first frame update
     void Start()
     {
+        audioManager = FindObjectOfType<AudioManager>();
+        audioManager.Play("MusicMenu");
 
         foreach (PanelManager panel in Panels)
         {
@@ -201,6 +205,7 @@ public class MainMenuManager : MonoBehaviour
 
     public void PlayGame()
     {
+        Destroy(FindObjectOfType<AudioManager>().gameObject);
         SceneManager.LoadScene(1);
     }
 
