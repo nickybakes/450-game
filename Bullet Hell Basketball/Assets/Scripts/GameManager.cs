@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour
     public GameObject explosionPrefab;
 
     public GameObject homingBulletPrefab;
+    public GameObject airStrikePrefab;
 
     public GameObject powerUpPrefab;
 
@@ -85,7 +86,7 @@ public class GameManager : MonoBehaviour
 
     public float horizontalEdge = 40;
 
-    public GameObject tempHud;
+    public GameObject pausedMenuUI;
     public GameObject panelUI;
     public GameObject playerHeadersPanel;
 
@@ -98,7 +99,9 @@ public class GameManager : MonoBehaviour
     private Text dunkBonusUI;
     private int dunkBonusValue;
 
-    public int bulletLevelUpInterval;
+    public int numOfBulletLevelUps = 3;
+
+    public float bulletLevelUpInterval;
     public float bulletLevelUpCurrentTime;
 
     public GameObject playerOneWins;
@@ -147,18 +150,10 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        matchTimeCurrent = matchTimeMax;
-        team0Score = 0;
-        team1Score = 0;
-        bulletLevel = 1;
-        bulletTimerUI = 0;
-        increaseLevelOnce = true;
+        paused = true;
+
 
         allAlivePowerups = new List<Powerup>();
-
-        //lowest interval is 5 seconds.
-        if (bulletLevelUpInterval <= 4)
-            bulletLevelUpInterval = 30;
 
         bulletLevelUI = panelUI.transform.GetChild(6).GetComponent<Text>();
         bulletIncreaseUI = panelUI.transform.GetChild(5).GetComponent<Text>();
@@ -175,18 +170,8 @@ public class GameManager : MonoBehaviour
         //player 2.
         panelUI.transform.GetChild(1).GetComponent<Text>().text = "0";
 
-        //bullet level & Dunk value.
-        bulletLevelUI.text = "Bullets Level: " + bulletLevel;
-        dunkBonusValue = (bulletLevel * 2) - 2;
-        dunkBonusUI.text = "Dunk Bonus: +" + dunkBonusValue;
-
         matchTimeText = panelUI.transform.GetChild(2).GetComponent<Text>();
         matchTimeText.text = TimeSpan.FromSeconds(Mathf.Max(matchTimeCurrent, 0)).ToString("m\\:ss");
-
-
-        paused = true;
-        gameOver = false;
-        overTime = false;
 
         team0SpawnPosition = new Vector2(playerSpawnLocation.position.x, playerSpawnLocation.position.y);
         team1SpawnPosition = new Vector2(-playerSpawnLocation.position.x, playerSpawnLocation.position.y);
@@ -228,7 +213,7 @@ public class GameManager : MonoBehaviour
 
         if (isTutorial)
         {
-
+            data.numOfBulletLevelUps = 3;
         }
 
         playersTeam0 = new GameObject[data.playerNumbersTeam0.Count];
@@ -244,6 +229,10 @@ public class GameManager : MonoBehaviour
         {
             SpawnPlayer(playersTeam1, playerScriptsTeam1, data.playerControlsTeam1, data.playerControlsTeam1, i, 1);
         }
+
+        matchTimeMax = data.matchLength;
+
+        bulletLevelUpInterval = matchTimeMax / (numOfBulletLevelUps + 1);
 
         ball = Instantiate(ballPrefab);
         ballControlScript = ball.GetComponent<Ball>();
@@ -264,7 +253,7 @@ public class GameManager : MonoBehaviour
         if (isTutorial)
         {
             tutorialManager.gameManager = this;
-            Destroy(tempHud);
+            Destroy(pausedMenuUI);
             paused = false;
             matchTimeText.text = "";
             bulletLevelUI.text = "";
@@ -282,6 +271,9 @@ public class GameManager : MonoBehaviour
                 bulletManagers[i].gameObject.SetActive(false);
             }
             tutorialManager.bulletManagers = bulletManagers;
+
+            audioManager.Stop("Music");
+            audioManager.Play("MusicTutorial");
         }
         else
         {
@@ -355,6 +347,13 @@ public class GameManager : MonoBehaviour
             }
         }
 
+        for (int i = 0; i < allAlivePowerups.Count; i++)
+        {
+            Destroy(allAlivePowerups[i].gameObject);
+        }
+
+        allAlivePowerups.Clear();
+
         bulletManagers = FindObjectsOfType<BulletManager>();
 
         for (int i = 0; i < bulletManagers.Length; i++)
@@ -364,6 +363,12 @@ public class GameManager : MonoBehaviour
 
         bulletLevelUpCurrentTime = 0;
         bulletLevel = 1;
+        increaseLevelOnce = true;
+
+        //bullet level & Dunk value.
+        bulletLevelUI.text = "Bullets Level: " + bulletLevel;
+        dunkBonusValue = (bulletLevel * 2) - 2;
+        dunkBonusUI.text = "Dunk Bonus: +" + dunkBonusValue;
 
         ballControlScript.IsResetting = false;
     }
@@ -449,6 +454,14 @@ public class GameManager : MonoBehaviour
             bulletScript.direction = directions[i];
             bulletScript.gameManager = this;
         }
+    }
+
+    public void SpawnAirStrike(int teamNumber)
+    {
+        GameObject airStrike = Instantiate(airStrikePrefab);
+        Airstrike airStrikeScript = airStrike.GetComponent<Airstrike>();
+        airStrikeScript.teamNumber = teamNumber;
+        airStrikeScript.gameManager = this;
     }
 
     void Update()
@@ -614,6 +627,16 @@ public class GameManager : MonoBehaviour
             SpawnRandomPowerUp();
         }
 
+        if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            SpawnAirStrike(0);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha6))
+        {
+            SpawnAirStrike(1);
+        }
+
         // if (player1Script.controllerNumber == -1)
         // {
         //     for (int i = 1; i <= 8; i++)
@@ -674,12 +697,13 @@ public class GameManager : MonoBehaviour
 
     public void ToggleHowToPlay()
     {
-        tempHud.SetActive(!tempHud.activeSelf);
+        pausedMenuUI.SetActive(!pausedMenuUI.activeSelf);
         paused = !paused;
 
         //toggles audio.
         if (paused)
         {
+            audioManager.Play("MusicPauseStart");
             pauseMusic.source.volume = 0.1f;
             music.source.volume = 0;
 
@@ -800,6 +824,18 @@ public class GameManager : MonoBehaviour
             indicatorShevron.transform.position = new Vector3(ball.transform.position.x, 33, 0);
 
         indicatorShevron.SetActive(isAboveScreen);
+    }
+
+    public Powerup SwipePowerupCheck(BhbPlayerController source)
+    {
+        for (int i = 0; i < allAlivePowerups.Count; i++)
+        {
+            if (source.swipeRenderer.bounds.Intersects(allAlivePowerups[i].powerupCollider.bounds) || source.playerCollider.bounds.Intersects(allAlivePowerups[i].powerupCollider.bounds))
+            {
+                return allAlivePowerups[i];
+            }
+        }
+        return null;
     }
 
 

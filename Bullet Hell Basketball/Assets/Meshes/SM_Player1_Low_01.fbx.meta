@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 617d24316da1c584bb93c2f80cefeb13
+guid: b811aca79a7d29a4482a4e10f0802dfb
 ModelImporter:
   serializedVersion: 20200
   internalIDToNameTable: []
@@ -7,18 +7,8 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: hologram
-    second: {fileID: 2100000, guid: 90d278b380c6a5749b13fb0e028d4350, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: lights
-    second: {fileID: 2100000, guid: 162fe368b7cb7bb479368c2a53f6f690, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: metal
-    second: {fileID: 2100000, guid: 23ed90f3e35a51c4390106b1602d29e1, type: 2}
+      name: yellow
+    second: {fileID: 2100000, guid: b7962ed14571edb41a0d36d5ce017943, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -60,7 +50,7 @@ ModelImporter:
     importLights: 1
     fileIdsGeneration: 2
     swapUVChannels: 0
-    generateSecondaryUV: 1
+    generateSecondaryUV: 0
     useFileUnits: 1
     keepQuads: 0
     weldVertices: 1
