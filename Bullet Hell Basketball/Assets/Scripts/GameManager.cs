@@ -124,8 +124,10 @@ public class GameManager : MonoBehaviour
 
     public TutorialManager tutorialManager;
 
+    public bool doubleHelix; //Will double helix shoot out
+    
     public bool allBigBullets;
-    public bool randomBigBullets; //Will there be a random chance of a big bullet?
+
     public float bigBulletScale;
 
     [HideInInspector] public bool winConditionMet = false;

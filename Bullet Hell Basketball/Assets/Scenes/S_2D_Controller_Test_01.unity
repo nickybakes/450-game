@@ -1251,8 +1251,8 @@ MonoBehaviour:
   previousScorer: -1
   isTutorial: 0
   tutorialManager: {fileID: 0}
+  doubleHelix: 0
   allBigBullets: 0
-  randomBigBullets: 1
   bigBulletScale: 3
   winConditionMet: 0
 --- !u!4 &413587147
@@ -4773,7 +4773,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movement: 2
   bulletPattern: 4
-  bulletMovement: 0
+  bulletMovement: 1
   initialTimeBetweenBullets: 3
   arcMovementRadius: 32.3
   rotationSpeed: 10

@@ -355,19 +355,6 @@ public class BulletManager : MonoBehaviour
         bulletScript.sinLength = sinWaveLength;
         bulletScript.frequency = sinWaveFrequency;
 
-        if (gameManager.randomBigBullets && gameManager.bulletLevel >= 2)
-        {
-            //Make the bullet RNG more dynamic
-            int randomNumber = Random.Range(1, 6 + gameManager.bulletLevel);
-
-            //Debug.Log(randomNumber); 
-
-            if (randomNumber >= 6)
-            {
-                bulletScript.isBig = true;
-            }
-        }
-
         //Also mess with the speed of the big bullets
         if (ownerNumber == 0)
         {
@@ -437,7 +424,7 @@ public class BulletManager : MonoBehaviour
             bulletScript.direction = new Vector2(Mathf.Cos(direction * Mathf.Deg2Rad), Mathf.Sin(direction * Mathf.Deg2Rad));
 
             //Creates double helix
-            if(bulletMovement == BulletMovement.sine)
+            if(bulletMovement == BulletMovement.sine && gameManager.doubleHelix)
             {
                 if(i % 2 != 0)
                 {
