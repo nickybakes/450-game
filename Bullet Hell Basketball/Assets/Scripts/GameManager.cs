@@ -32,6 +32,8 @@ public class GameManager : MonoBehaviour
     public GameObject homingBulletPrefab;
     public GameObject airStrikePrefab;
 
+    public GameObject superBulletPrefab;
+
     public GameObject powerUpPrefab;
 
     public float powerUpTimeSpawnMin = 16;
@@ -127,6 +129,8 @@ public class GameManager : MonoBehaviour
 
     public TutorialManager tutorialManager;
 
+    public CameraShake cameraShake;
+
 
     [HideInInspector] public bool winConditionMet = false;
 
@@ -149,6 +153,7 @@ public class GameManager : MonoBehaviour
     {
         paused = true;
 
+        cameraShake = FindObjectOfType<Camera>().GetComponent<CameraShake>();
 
         allAlivePowerups = new List<Powerup>();
 
@@ -369,7 +374,7 @@ public class GameManager : MonoBehaviour
 
     public void SpawnRandomPowerUp()
     {
-        PowerupType type = (PowerupType)UnityEngine.Random.Range(0, 3);
+        PowerupType type = (PowerupType)UnityEngine.Random.Range(0, 4);
 
         bool closeToAnotherPowerup = false;
         float yPos, xPos;
@@ -456,6 +461,14 @@ public class GameManager : MonoBehaviour
         Airstrike airStrikeScript = airStrike.GetComponent<Airstrike>();
         airStrikeScript.teamNumber = teamNumber;
         airStrikeScript.gameManager = this;
+    }
+
+    public void SpawnSuperBullet(int teamNumber)
+    {
+        GameObject superBullet = Instantiate(superBulletPrefab);
+        SuperBullet superBulletScript = superBullet.GetComponent<SuperBullet>();
+        superBulletScript.Init(teamNumber, this);
+        StartCoroutine(cameraShake.Shake(.2f, .5f));
     }
 
     void Update()
@@ -631,6 +644,16 @@ public class GameManager : MonoBehaviour
             SpawnAirStrike(1);
         }
 
+        if (Input.GetKeyDown(KeyCode.Alpha7))
+        {
+            SpawnSuperBullet(0);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha8))
+        {
+            SpawnSuperBullet(1);
+        }
+
         // if (player1Script.controllerNumber == -1)
         // {
         //     for (int i = 1; i <= 8; i++)
@@ -738,6 +761,18 @@ public class GameManager : MonoBehaviour
 
         bulletIncreaseUI.gameObject.SetActive(false);
         bulletTimerUI = 0;
+
+        HomingBullet[] homingBullets = FindObjectsOfType<HomingBullet>();
+        foreach (HomingBullet hb in homingBullets)
+        {
+            hb.Explode();
+        }
+
+        SuperBullet[] superBullets = FindObjectsOfType<SuperBullet>();
+        foreach (SuperBullet sb in superBullets)
+        {
+            sb.ForceDestroy();
+        }
     }
 
     public void ResetPlayersAndBall()

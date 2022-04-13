@@ -7,7 +7,8 @@ public enum PowerupType
     HomingBullet,
     Airstrike,
 
-    BulletShield
+    BulletShield,
+    SuperBullet
 }
 
 public class Powerup : MonoBehaviour
@@ -67,7 +68,7 @@ public class Powerup : MonoBehaviour
             for (int i = 0; i < directions.Length; i++)
             {
                 GameObject newBullet = Instantiate(bulletPrefab, player.transform);
-                newBullet.transform.position = new Vector2(player.transform.position.x, player.transform.position.y + (player.height/2.0f));
+                newBullet.transform.position = new Vector2(player.transform.position.x, player.transform.position.y + (player.height / 2.0f));
                 newBullet.transform.Translate(positions[i], Space.Self);
                 Bullet bulletScript = newBullet.GetComponent<Bullet>();
                 bulletScript.ownerNumber = player.teamNumber;
@@ -89,6 +90,10 @@ public class Powerup : MonoBehaviour
                     bulletMesh.material = explosiveBulletMatTeam1;
                 }
             }
+        }
+        else if (type == PowerupType.SuperBullet)
+        {
+            gameManager.SpawnSuperBullet(player.teamNumber);
         }
 
         ps.transform.parent = null;
