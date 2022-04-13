@@ -26,6 +26,8 @@ public class MainMenuManager : MonoBehaviour
     private string masterController;
     private bool[] canMoveSelection = new bool[9];
 
+    public Material borderFlashMaterial;
+
     //public PanelManager TitlePanel;
     //public PanelManager MainPanel;
     //public PanelManager ModePanel;

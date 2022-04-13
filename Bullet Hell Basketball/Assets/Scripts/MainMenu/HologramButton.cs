@@ -10,10 +10,13 @@ public class HologramButton : MonoBehaviour, ISelectHandler, IDeselectHandler// 
     private MainMenuManager menuManager;
     private Button buttonComponent;
 
+    private Image border;
+
     void Awake()
     {
         menuManager = FindObjectOfType<MainMenuManager>();
         buttonComponent = GetComponent<Button>();
+        border = transform.GetChild(1).GetComponent<Image>();
     }
 
     public void OnSelect(BaseEventData eventData)
@@ -67,11 +70,13 @@ public class HologramButton : MonoBehaviour, ISelectHandler, IDeselectHandler// 
     public void SelectVisual()
     {
         transform.GetChild(0).gameObject.SetActive(true);
+        border.material = menuManager.borderFlashMaterial;
     }
 
     public void DeselectVisual()
     {
         transform.GetChild(0).gameObject.SetActive(false);
+        border.material = null;
     }
 
     public void OnMouseEnter()
