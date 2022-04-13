@@ -16,6 +16,7 @@ public enum BulletPatterns
     omni,
     front,
     down,
+    up,
     angular
 }
 
@@ -133,7 +134,7 @@ public class BulletManager : MonoBehaviour
         timer = maxTime;
         rotationAmountDegrees = 0;
         currentAngle = 0;
-        bulletPattern = BulletPatterns.front;
+        //bulletPattern = this.bulletPattern;
         numBullets = initialNumberOfBullets;
 
         //Add new patterns
@@ -176,8 +177,11 @@ public class BulletManager : MonoBehaviour
                     break;
 
                 case BulletPatterns.down:
-                    //Does not work?
                     OneDirection(270);
+                    break;
+
+                case BulletPatterns.up:
+                    OneDirection(90);
                     break;
             }
 
