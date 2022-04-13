@@ -4957,7 +4957,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeAlive: 0
-  ownerNumber: -1
+  teamNumber: -1
   materialsTeam0:
   - {fileID: 2100000, guid: 9ac8bd8e3b328654e8c6358b2e5edaaa, type: 2}
   - {fileID: 2100000, guid: 6bf7a3925c053644bad5777524c7ceb9, type: 2}
@@ -4969,7 +4969,6 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 499e69b8ae076f94d87c30cacab81926, type: 2}
   - {fileID: 2100000, guid: c94be079aa5360f448db47d27e20ce14, type: 2}
   gameManager: {fileID: 0}
-  explosionSound: {fileID: 601638816664492791}
 --- !u!199 &2760302803450972954
 ParticleSystemRenderer:
   serializedVersion: 6
@@ -9846,7 +9845,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: e0e0c32a59874b44d8b8a0d809074aa0, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.5
+  m_Volume: 0.2
   m_Pitch: 1
   Loop: 0
   Mute: 0
