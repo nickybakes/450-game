@@ -168,7 +168,7 @@ public class MainMenuManager : MonoBehaviour
     {
         for (int i = 0; i < Panels.Length; i++)
         {
-            if (i != Panels.Length - 1 && Panels[i].enabled)
+            if (i != Panels.Length - 1 && Panels[i].gameObject.activeSelf)
             {
                 Panels[i].DisableMenu();
                 Panels[i+1].EnableMenu();
@@ -194,7 +194,7 @@ public class MainMenuManager : MonoBehaviour
     {
         for(int i = 0; i < Panels.Length; i++)
         {
-            if (i != 0 && Panels[i].enabled)
+            if (i != 0 && Panels[i].gameObject.activeSelf)
             {
                 Panels[i].DisableMenu();
                 Panels[i - 1].EnableMenu();
