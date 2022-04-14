@@ -83,12 +83,10 @@ public class MainMenuManager : MonoBehaviour
             {
                 masterController = controllers[i];
                 
-                Debug.Log(currentSelection);
                 HologramButton hologramButton = currentSelection.gameObject.GetComponent<HologramButton>();
                 if (hologramButton != null)
                 {
                     hologramButton.DeselectVisual();
-                    Debug.Log(hologramButton);
                 }
                 ExecuteEvents.Execute(currentSelection.gameObject,
                     new BaseEventData(EventSystem.current), ExecuteEvents.submitHandler);

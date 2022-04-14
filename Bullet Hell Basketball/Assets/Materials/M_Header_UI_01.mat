@@ -129,11 +129,11 @@ Material:
     - Vector1_073139c9600e4de4bf4efcffa02d579b: 1.06
     - Vector1_0e28c270a2b1442db3b5e6bfc8ab9da9: 25
     - Vector1_105c279df20e41cc864a17bc123ddf4c: 1.5
-    - Vector1_2b7d7186b8224d398eb5d0149ea4a54e: 6
+    - Vector1_2b7d7186b8224d398eb5d0149ea4a54e: 3.8
     - Vector1_34758b9bdbe24febbb8735da2473714c: 1
     - Vector1_42a5b61eba6044ed94f943c8decdebea: 2.81
     - Vector1_54db80331ab64b3c9c8a8ac13ed0efc9: 4
-    - Vector1_56788b39262e4cc59f79cb511db724a2: 9.27
+    - Vector1_56788b39262e4cc59f79cb511db724a2: 1
     - Vector1_60a8ba2ffdd24f5e8e1ebdfbc8b1b585: 1
     - Vector1_6f1abcde03d04b08ae86fa7483f5756b: 1
     - Vector1_70fbee0dc03a4b7a9f03204db0c42c27: 10
@@ -141,8 +141,9 @@ Material:
     - Vector1_809b69cad2724fb5a162444e83dd6e43: 1.4
     - Vector1_a6378551a6394e2e8c38e808448dca51: 0.18
     - Vector1_b6042e8d7bc34effa1f3a5070f7faa61: 1
-    - Vector1_bccf2dd9d94f48a3974c8d5fe7aa7c1d: 1.38
-    - Vector1_cb1b2f0c113d406d8533bdaf4f4893a0: 0.374
+    - Vector1_bccf2dd9d94f48a3974c8d5fe7aa7c1d: 0
+    - Vector1_cb1b2f0c113d406d8533bdaf4f4893a0: 0.605
+    - Vector1_d051d0505f964dafb1940e9b24f223b1: 1
     - Vector1_d6077c8f48f345a39b43d6acea5a6a8c: 0
     - Vector1_da325d751ba24c7c9198338ec6a31fc4: 0.1
     - Vector1_e47bbb755a174030816c751784567cd0: 0
