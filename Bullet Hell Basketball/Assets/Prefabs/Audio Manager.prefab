@@ -255,3 +255,38 @@ MonoBehaviour:
     pitch: 1
     loop: 0
     source: {fileID: 0}
+  - name: ButtonBack
+    clips:
+    - {fileID: 8300000, guid: 5d10674ede364eb4c91b1e2c9bb825fa, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: ButtonHover
+    clips:
+    - {fileID: 8300000, guid: c0bf10622e1960c47a09fac944fc75d3, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: ButtonSelect
+    clips:
+    - {fileID: 8300000, guid: fa9b50348816bdd4699b388aca01d258, type: 3}
+    volume: 0.3
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: ControllerOn
+    clips:
+    - {fileID: 8300000, guid: 2bd5fd3e9a7a6e845b8eb3483f75ee8a, type: 3}
+    volume: 0.2
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: ControllerOff
+    clips:
+    - {fileID: 8300000, guid: ba5f14f7cc5951a448a3ffff3285cdcf, type: 3}
+    volume: 0.2
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}

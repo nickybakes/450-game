@@ -188,6 +188,7 @@ public class MainMenuManager : MonoBehaviour
             {
                 panels[i].DisableMenu();
                 panels[i + 1].EnableMenu();
+                audioManager.Play("ButtonSelect");
                 break;
             }
         }
@@ -214,6 +215,7 @@ public class MainMenuManager : MonoBehaviour
             {
                 panels[i].DisableMenu();
                 panels[i - 1].EnableMenu();
+                audioManager.Play("ButtonBack");
                 break;
             }
         }
