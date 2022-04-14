@@ -25,6 +25,10 @@ public class PanelManager : MonoBehaviour
     {
         enabled = true;
         gameObject.SetActive(true);
+        if (mainMenuManager.currentSelection != null)
+        {
+            mainMenuManager.currentSelection.gameObject.GetComponent<HologramButton>().ForceDeselectVisual();
+        }
         defaultButton.Select();
     }
 

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 58382039047315315}
   - component: {fileID: 58382039047315316}
   - component: {fileID: 58382039047315317}
+  - component: {fileID: 2700125168937760118}
   m_Layer: 5
   m_Name: P Number
   m_TagString: Untagged
@@ -94,6 +95,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
   m_EffectDistance: {x: 2.5, y: -2.5}
+  m_UseGraphicAlpha: 1
+--- !u!114 &2700125168937760118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 58382039047315319}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
+  m_EffectDistance: {x: 0, y: -2.12}
   m_UseGraphicAlpha: 1
 --- !u!1 &58382039176797833
 GameObject:
@@ -365,6 +381,7 @@ GameObject:
   - component: {fileID: 58382039831993267}
   - component: {fileID: 58382039831993265}
   - component: {fileID: 58382039831993266}
+  - component: {fileID: 2478206044582330119}
   m_Layer: 5
   m_Name: Shevron
   m_TagString: Untagged
@@ -429,6 +446,21 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &2478206044582330119
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 58382039831993268}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.8039216}
+  m_EffectDistance: {x: 4, y: 4}
+  m_UseGraphicAlpha: 1
 --- !u!1 &58382040029648158
 GameObject:
   m_ObjectHideFlags: 0
