@@ -255,7 +255,7 @@ public class MainMenuManager : MonoBehaviour
         if(GameObject.Find("Squeak").GetComponentInChildren<Text>().text == "Semi-Frequent")
         {
             GameObject.Find("Squeak").GetComponentInChildren<Text>().text = "Frequent";
-            BhbPlayerController.shoeSqueakRate = 0.0f;
+            BhbPlayerController.shoeSqueakRate = 0.01f;
         }
         else if (GameObject.Find("Squeak").GetComponentInChildren<Text>().text == "Frequent")
         {

@@ -268,6 +268,11 @@ public class BhbPlayerController : NeonHeightsCharacterController
         flashTimeCurrent = flashTimeMax;
         soundTimer = 0;
 
+        if (shoeSqueakRate == 0.0f)
+        {
+            shoeSqueakRate = 0.5f;
+        }
+
         gameManager = FindObjectOfType<GameManager>();
         audioManager = FindObjectOfType<AudioManager>();
         ball = GameObject.FindGameObjectWithTag("Ball");

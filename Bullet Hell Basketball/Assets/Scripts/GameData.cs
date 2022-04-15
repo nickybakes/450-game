@@ -52,7 +52,10 @@ public class GameData : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        if (matchLength == 0)
+        {
+            matchLength = 120;
+        }
     }
 
     // Update is called once per frame
