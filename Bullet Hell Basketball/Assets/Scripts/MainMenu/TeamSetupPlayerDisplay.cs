@@ -14,6 +14,18 @@ public class TeamSetupPlayerDisplay : MonoBehaviour
     public int playerNumber;
 
     public int inputId;
+
+    public Text inputMethod;
+
+    public GameObject shineFull;
+
+    public Image shineColored;
+    public Image shineWhite;
+
+    public float shineAnimationTimeCurrent;
+    public float shineAnimationTimeMax = .6f;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -23,13 +35,44 @@ public class TeamSetupPlayerDisplay : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (shineAnimationTimeCurrent < shineAnimationTimeMax)
+        {
+            shineFull.gameObject.SetActive(true);
+            shineAnimationTimeCurrent += Time.deltaTime;
+            float scale = Mathf.Lerp(.4f, 2f, shineAnimationTimeCurrent / shineAnimationTimeMax);
+            float alpha = Mathf.Clamp((shineAnimationTimeMax - shineAnimationTimeCurrent) / shineAnimationTimeMax, 0, 1);
+            shineFull.transform.localScale = new Vector3(scale, scale, scale);
+            shineColored.color = new Color(shineColored.color.r, shineColored.color.g, shineColored.color.b, alpha);
+            shineWhite.color = new Color(1, 1, 1, alpha);
+        }
+        else
+        {
+            shineFull.gameObject.SetActive(false);
+        }
 
+    }
+
+    public void PlayShineAnimation()
+    {
+        shineAnimationTimeCurrent = 0;
+        shineFull.gameObject.SetActive(true);
     }
 
     public void Init(int playerNumber, int inputId)
     {
         this.playerNumber = playerNumber;
         this.inputId = inputId;
+
+        inputMethod.text = "";
+
+        if (inputId == 0)
+        {
+            inputMethod.text = "Keyboard 1";
+        }
+        else if (inputId == 1)
+        {
+            inputMethod.text = "Keyboard 2";
+        }
 
         this.color = PlayerHeader.colors[this.playerNumber];
 
@@ -38,5 +81,9 @@ public class TeamSetupPlayerDisplay : MonoBehaviour
         else
             playerNumberText.text = "BOT";
         shevron.color = color;
+
+        shineColored.color = color;
+
+        PlayShineAnimation();
     }
 }

@@ -17,8 +17,8 @@ public class GameData : MonoBehaviour
     8 = bot
 
     */
-    public List<int> playerNumbersTeam0;
-    public List<int> playerNumbersTeam1;
+    public List<int> playerNumbersTeam0 = new List<int>();
+    public List<int> playerNumbersTeam1 = new List<int>();
 
 
     /*
@@ -29,14 +29,14 @@ public class GameData : MonoBehaviour
     -1 = bot (nothing)
 
     */
-    public List<int> playerControlsTeam0;
-    public List<int> playerControlsTeam1;
+    public List<int> playerControlsTeam0 = new List<int>();
+    public List<int> playerControlsTeam1 = new List<int>();
 
     public bool allBigBullets;
 
     public int numOfBulletLevelUps = 3;
 
-    public static float matchLength;
+    public float matchLength;
 
 
     // Set up singleton here
@@ -45,7 +45,12 @@ public class GameData : MonoBehaviour
         if (Instance == null)
             Instance = this;
         else if (Instance != this)
+        {
             Destroy(this);
+            return;
+        }
+
+        DontDestroyOnLoad(this.gameObject);
     }
 
 

@@ -10,7 +10,9 @@ public enum Menu
     Title,
     Main,
     GamemodeSelect,
-    ExhibitionTeamSetup
+    ExhibitionTeamSetup,
+    Customize,
+    Options
 }
 
 public static class Controller
@@ -23,7 +25,7 @@ public static class Controller
 public class MainMenuManager : MonoBehaviour
 {
     private string[] controllers = { "1", "2", "3", "4", "5", "6", "7", "8", "K" };
-    private string masterController;
+    public string masterController;
     private bool[] canMoveSelection = new bool[9];
 
     public Material borderFlashMaterial;
@@ -41,7 +43,16 @@ public class MainMenuManager : MonoBehaviour
 
     private AudioManager audioManager;
     private Button prevSelection;
-    private int currentPanel;
+    public Menu currentPanelId;
+
+    private GameData data;
+
+    public GridLayoutGroup gridTeam0;
+    public GridLayoutGroup gridTeam1;
+
+    public GameObject teamSetupPlayerDisplayPrefab;
+
+    public Text maxPlayersReachedWarning;
 
 
     // Start is called before the first frame update
@@ -50,20 +61,35 @@ public class MainMenuManager : MonoBehaviour
         audioManager = FindObjectOfType<AudioManager>();
         audioManager.Play("MusicMenu");
 
-        foreach (PanelManager panel in panels)
+        for (int i = 0; i < panels.Length; i++)
         {
-            panel.gameObject.SetActive(false);
+            panels[i].gameObject.SetActive(false);
+            panels[i].panelId = (Menu)i;
         }
 
         panels[0].gameObject.SetActive(true);
 
         EventSystem.current.firstSelectedGameObject = panels[0].defaultButton.gameObject;
 
+
+        GameData loadedData = FindObjectOfType<GameData>();
+        data = loadedData;
+
+        if (loadedData == null)
+        {
+            GameObject gameDataObject = new GameObject("Game Data Manager");
+            data = gameDataObject.AddComponent<GameData>();
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (currentPanelId == Menu.ExhibitionTeamSetup)
+        {
+            maxPlayersReachedWarning.gameObject.SetActive(data.playerNumbersTeam0.Count + data.playerNumbersTeam1.Count == 8);
+        }
+
         //checks to make sure we are selecting a valid selection (Button)
         if (EventSystem.current.currentSelectedGameObject != null)
         {
@@ -78,21 +104,79 @@ public class MainMenuManager : MonoBehaviour
             currentSelection = null;
         }
 
-        for (int i = 1; currentSelection != null && i < 9; i++)
+        for (int i = 0; currentSelection != null && i < 9; i++)
         {
             //checks if controllers or keyboard have pressed "A" or space, if so, "click" the current button
             if (Input.GetButtonDown("J" + controllers[i] + "A"))
             {
+                if (currentPanelId == Menu.ExhibitionTeamSetup)
+                {
+                    int inputId = 0;
+
+                    if (i == 8 && Input.GetKeyDown(KeyCode.Return))
+                        inputId = 1;
+                    else if (i != 8)
+                        inputId = i + 2;
+
+                    if (!IsInputIdInGame(inputId))
+                    {
+                        AddPlayerToGame(inputId);
+                        break;
+                    }
+
+                }
+
                 masterController = controllers[i];
-                
+
                 HologramButton hologramButton = currentSelection.gameObject.GetComponent<HologramButton>();
-                if (hologramButton != null)
+                Menu previousPanelId = currentPanelId;
+                ExecuteEvents.Execute(currentSelection.gameObject,
+                    new BaseEventData(EventSystem.current), ExecuteEvents.submitHandler);
+                if (hologramButton != null && previousPanelId != currentPanelId)
                 {
                     hologramButton.DeselectVisual();
                 }
-                ExecuteEvents.Execute(currentSelection.gameObject,
-                    new BaseEventData(EventSystem.current), ExecuteEvents.submitHandler);
                 break;
+            }
+
+            if (currentPanelId == Menu.ExhibitionTeamSetup && i == 8)
+            {
+                if (Input.GetKeyDown(KeyCode.Q) && IsInputIdInGame(0))
+                {
+                    RemovePlayerFromGame(0);
+                    break;
+                }
+                else if (Input.GetKeyDown(KeyCode.O) && IsInputIdInGame(1))
+                {
+                    RemovePlayerFromGame(1);
+                    break;
+                }
+                else if (Input.GetKeyDown(KeyCode.N) && IsInputIdInGame(0))
+                {
+                    SwapTeam(0);
+                    break;
+                }
+                else if (Input.GetKeyDown(KeyCode.DownArrow) && IsInputIdInGame(1))
+                {
+                    SwapTeam(1);
+                    break;
+                }
+            }
+
+            if (currentPanelId == Menu.ExhibitionTeamSetup && Input.GetButtonDown("J" + controllers[i] + "B") && i != 8)
+            {
+                if (IsInputIdInGame(i + 2))
+                {
+                    RemovePlayerFromGame(i + 2);
+                }
+            }
+
+            if (currentPanelId == Menu.ExhibitionTeamSetup && Input.GetButtonDown("J" + controllers[i] + "X") && i != 8)
+            {
+                if (IsInputIdInGame(i + 2))
+                {
+                    SwapTeam(i + 2);
+                }
             }
 
             //get the current direction the player is pressing in
@@ -203,6 +287,238 @@ public class MainMenuManager : MonoBehaviour
         }
     }
 
+    public void OpenExhibitionTeamSetup()
+    {
+        StepUp();
+        data.playerNumbersTeam0 = new List<int>();
+        data.playerNumbersTeam1 = new List<int>();
+        data.playerControlsTeam0 = new List<int>();
+        data.playerControlsTeam1 = new List<int>();
+
+        foreach (Transform child in gridTeam0.transform)
+        {
+            GameObject.Destroy(child.gameObject);
+        }
+
+        foreach (Transform child in gridTeam1.transform)
+        {
+            GameObject.Destroy(child.gameObject);
+        }
+
+        if (masterController == "K" || masterController == "M")
+        {
+            AddPlayerToGame(0);
+        }
+        else
+        {
+            AddPlayerToGame(int.Parse(masterController) + 1);
+        }
+    }
+
+    public void AddPlayerToGame(int inputId)
+    {
+        int playerNumber = GetSmalledAvailablePlayerNumber();
+        if (playerNumber == 8 || data.playerNumbersTeam0.Count + data.playerNumbersTeam1.Count >= 8)
+        {
+            return;
+        }
+        if (data.playerNumbersTeam0.Count <= data.playerNumbersTeam1.Count)
+        {
+            //add to Yellow team
+            GameObject g = Instantiate(teamSetupPlayerDisplayPrefab, gridTeam0.transform);
+            TeamSetupPlayerDisplay gScript = g.GetComponent<TeamSetupPlayerDisplay>();
+            gScript.Init(playerNumber, inputId);
+            data.playerControlsTeam0.Add(inputId);
+            data.playerNumbersTeam0.Add(playerNumber);
+        }
+        else
+        {
+            //add to Blue team
+            GameObject g = Instantiate(teamSetupPlayerDisplayPrefab, gridTeam1.transform);
+            TeamSetupPlayerDisplay gScript = g.GetComponent<TeamSetupPlayerDisplay>();
+            gScript.Init(playerNumber, inputId);
+            data.playerControlsTeam1.Add(inputId);
+            data.playerNumbersTeam1.Add(playerNumber);
+        }
+    }
+
+    public void RemovePlayerFromGame(int inputId)
+    {
+        int teamNumber = GetWhichTeamPlayerIsIn(inputId);
+
+        if (teamNumber == 0)
+        {
+            //remove player from Yellow team
+            int i = data.playerControlsTeam0.IndexOf(inputId);
+            data.playerNumbersTeam0.RemoveAt(i);
+            data.playerControlsTeam0.RemoveAt(i);
+            Destroy(gridTeam0.transform.GetChild(i).gameObject);
+        }
+        else
+        {
+            //remove player from Blue team
+            int i = data.playerControlsTeam1.IndexOf(inputId);
+            data.playerNumbersTeam1.RemoveAt(i);
+            data.playerControlsTeam1.RemoveAt(i);
+            Destroy(gridTeam1.transform.GetChild(i).gameObject);
+        }
+    }
+
+    public void SwapTeam(int inputId)
+    {
+        int teamNumber = GetWhichTeamPlayerIsIn(inputId);
+        if (teamNumber == 0)
+        {
+            //Swap from yellow team to blue team
+            int i = data.playerControlsTeam0.IndexOf(inputId);
+            data.playerNumbersTeam0.RemoveAt(i);
+            data.playerControlsTeam0.RemoveAt(i);
+
+            TeamSetupPlayerDisplay gScript = gridTeam0.transform.GetChild(i).GetComponent<TeamSetupPlayerDisplay>();
+            gridTeam0.transform.GetChild(i).SetParent(gridTeam1.transform);
+            data.playerNumbersTeam1.Add(gScript.playerNumber);
+            data.playerControlsTeam1.Add(gScript.inputId);
+            gScript.PlayShineAnimation();
+        }
+        else
+        {
+            //Swap from blue team to yellow team
+            int i = data.playerControlsTeam1.IndexOf(inputId);
+            data.playerNumbersTeam1.RemoveAt(i);
+            data.playerControlsTeam1.RemoveAt(i);
+
+            TeamSetupPlayerDisplay gScript = gridTeam1.transform.GetChild(i).GetComponent<TeamSetupPlayerDisplay>();
+            gridTeam1.transform.GetChild(i).SetParent(gridTeam0.transform);
+            data.playerNumbersTeam0.Add(gScript.playerNumber);
+            data.playerControlsTeam0.Add(gScript.inputId);
+            gScript.PlayShineAnimation();
+        }
+    }
+
+    public void AddBotToTeam(int teamNumber)
+    {
+        if (data.playerNumbersTeam0.Count + data.playerNumbersTeam1.Count >= 8)
+        {
+            return;
+        }
+        if (teamNumber == 0)
+        {
+            //add to Yellow team
+            GameObject g = Instantiate(teamSetupPlayerDisplayPrefab, gridTeam0.transform);
+            TeamSetupPlayerDisplay gScript = g.GetComponent<TeamSetupPlayerDisplay>();
+            gScript.Init(8, -1);
+            data.playerControlsTeam0.Add(-1);
+            data.playerNumbersTeam0.Add(8);
+        }
+        else
+        {
+            //add to Blue team
+            GameObject g = Instantiate(teamSetupPlayerDisplayPrefab, gridTeam1.transform);
+            TeamSetupPlayerDisplay gScript = g.GetComponent<TeamSetupPlayerDisplay>();
+            gScript.Init(8, -1);
+            data.playerControlsTeam1.Add(-1);
+            data.playerNumbersTeam1.Add(8);
+        }
+    }
+
+    public void RemoveBotFromTeam(int teamNumber)
+    {
+        if (teamNumber == 0)
+        {
+            //remove most recently placed bot from Yellow team
+            for (int i = data.playerNumbersTeam0.Count - 1; i >= 0; i--)
+            {
+                if (data.playerNumbersTeam0[i] == 8)
+                {
+                    data.playerNumbersTeam0.RemoveAt(i);
+                    data.playerControlsTeam0.RemoveAt(i);
+                    Destroy(gridTeam0.transform.GetChild(i).gameObject);
+                    break;
+                }
+            }
+        }
+        else
+        {
+            //remove most recently placed bot from Blue team
+            for (int i = data.playerNumbersTeam1.Count - 1; i >= 0; i--)
+            {
+                if (data.playerNumbersTeam1[i] == 8)
+                {
+                    data.playerNumbersTeam1.RemoveAt(i);
+                    data.playerControlsTeam1.RemoveAt(i);
+                    Destroy(gridTeam1.transform.GetChild(i).gameObject);
+                    break;
+                }
+            }
+        }
+    }
+
+    public void AddBotTeam0()
+    {
+        AddBotToTeam(0);
+    }
+
+    public void RemoveBotTeam0()
+    {
+        RemoveBotFromTeam(0);
+    }
+
+    public void AddBotTeam1()
+    {
+        AddBotToTeam(1);
+    }
+
+    public void RemoveBotTeam1()
+    {
+        RemoveBotFromTeam(1);
+    }
+
+    public int GetWhichTeamPlayerIsIn(int inputId)
+    {
+        if (data.playerControlsTeam0.Contains(inputId))
+            return 0;
+        else
+            return 1;
+    }
+
+    public int GetSmalledAvailablePlayerNumber()
+    {
+        bool[] activePlayerNumbers = new bool[8];
+        for (int i = 0; i < data.playerNumbersTeam0.Count; i++)
+        {
+            if (data.playerNumbersTeam0[i] != 8)
+                activePlayerNumbers[data.playerNumbersTeam0[i]] = true;
+        }
+        for (int i = 0; i < data.playerNumbersTeam1.Count; i++)
+        {
+            if (data.playerNumbersTeam1[i] != 8)
+                activePlayerNumbers[data.playerNumbersTeam1[i]] = true;
+        }
+
+        for (int i = 0; i < activePlayerNumbers.Length; i++)
+        {
+            if (!activePlayerNumbers[i])
+                return i;
+        }
+        return activePlayerNumbers.Length;
+    }
+
+    public bool IsInputIdInGame(int inputId)
+    {
+        for (int i = 0; i < data.playerControlsTeam0.Count; i++)
+        {
+            if (data.playerControlsTeam0[i] == inputId)
+                return true;
+        }
+        for (int i = 0; i < data.playerControlsTeam1.Count; i++)
+        {
+            if (data.playerControlsTeam1[i] == inputId)
+                return true;
+        }
+        return false;
+    }
+
+
     public void OpenSetup()
     {
         for (int i = 0; i < panels.Length; i++)
@@ -235,11 +551,11 @@ public class MainMenuManager : MonoBehaviour
         Destroy(FindObjectOfType<AudioManager>().gameObject);
         //if(GameObject.Find("Squeak").GetComponentInChildren<Text>().text == "Semi-Frequent")
         //{
-            //BhbPlayerController.shoeSqueakRate = 0.5f;
+        //BhbPlayerController.shoeSqueakRate = 0.5f;
         //}
         //if(GameObject.Find("Timer").GetComponentInChildren<Text>().text == "3:00")
         //{
-            //GameManager.matchTimeMax = 180;
+        //GameManager.matchTimeMax = 180;
         //}
         SceneManager.LoadScene(1);
     }
@@ -252,7 +568,7 @@ public class MainMenuManager : MonoBehaviour
 
     public void SqueakyOnClick()
     {
-        if(GameObject.Find("Squeak").GetComponentInChildren<Text>().text == "Semi-Frequent")
+        if (GameObject.Find("Squeak").GetComponentInChildren<Text>().text == "Semi-Frequent")
         {
             GameObject.Find("Squeak").GetComponentInChildren<Text>().text = "Frequent";
             BhbPlayerController.shoeSqueakRate = 0.01f;
@@ -271,7 +587,7 @@ public class MainMenuManager : MonoBehaviour
 
     public void CameraShakeOnClick()
     {
-        if(GameObject.Find("CameraShake").GetComponentInChildren<Text>().text == "Enabled")
+        if (GameObject.Find("CameraShake").GetComponentInChildren<Text>().text == "Enabled")
         {
             GameObject.Find("CameraShake").GetComponentInChildren<Text>().text = "Disabled";
         }
@@ -283,7 +599,7 @@ public class MainMenuManager : MonoBehaviour
 
     public void PowerOnClick()
     {
-        if(GameObject.Find("Power").GetComponentInChildren<Text>().text == "Enabled")
+        if (GameObject.Find("Power").GetComponentInChildren<Text>().text == "Enabled")
         {
             GameObject.Find("Power").GetComponentInChildren<Text>().text = "Disabled";
         }
@@ -295,31 +611,31 @@ public class MainMenuManager : MonoBehaviour
 
     public void TimerOnClick()
     {
-        if(GameObject.Find("Timer").GetComponentInChildren<Text>().text == "2:00")
+        if (GameObject.Find("Timer").GetComponentInChildren<Text>().text == "2:00")
         {
             GameObject.Find("Timer").GetComponentInChildren<Text>().text = "3:00";
-            GameData.matchLength = 180;
+            data.matchLength = 180;
         }
         else if (GameObject.Find("Timer").GetComponentInChildren<Text>().text == "3:00")
         {
             GameObject.Find("Timer").GetComponentInChildren<Text>().text = "4:00";
-            GameData.matchLength = 240;
+            data.matchLength = 240;
         }
         else if (GameObject.Find("Timer").GetComponentInChildren<Text>().text == "4:00")
         {
             GameObject.Find("Timer").GetComponentInChildren<Text>().text = "5:00";
-            GameData.matchLength = 300;
+            data.matchLength = 300;
         }
         else if (GameObject.Find("Timer").GetComponentInChildren<Text>().text == "5:00")
         {
             GameObject.Find("Timer").GetComponentInChildren<Text>().text = "2:00";
-            GameData.matchLength = 120;
+            data.matchLength = 120;
         }
     }
 
     public void BulletSizeOnClick()
     {
-        if(GameObject.Find("Bullets").GetComponentInChildren<Text>().text == "Small Only")
+        if (GameObject.Find("Bullets").GetComponentInChildren<Text>().text == "Small Only")
         {
             GameObject.Find("Bullets").GetComponentInChildren<Text>().text = "Big Only";
         }
@@ -339,7 +655,7 @@ public class MainMenuManager : MonoBehaviour
 
     public void DunkBonusOnClick()
     {
-        if(GameObject.Find("DunkBonus").GetComponentInChildren<Text>().text == "Enabled")
+        if (GameObject.Find("DunkBonus").GetComponentInChildren<Text>().text == "Enabled")
         {
             GameObject.Find("DunkBonus").GetComponentInChildren<Text>().text = "Disabled";
         }

@@ -35,13 +35,17 @@ public class HologramButton : MonoBehaviour, ISelectHandler, IDeselectHandler// 
         trigger = gameObject.AddComponent<EventTrigger>();
         EventTrigger.Entry entry = new EventTrigger.Entry();
         EventTrigger.Entry exit = new EventTrigger.Entry();
+        EventTrigger.Entry click = new EventTrigger.Entry();
         entry.eventID = EventTriggerType.PointerEnter;
         exit.eventID = EventTriggerType.PointerExit;
+        click.eventID = EventTriggerType.PointerClick;
         trigger.runInEditMode = true;
         entry.callback.AddListener((eventData) => { this.OnMouseEnter(); });
         exit.callback.AddListener((eventData) => { this.OnMouseExit(); });
+        click.callback.AddListener((eventData) => { this.OnMouseClick(); });
         trigger.triggers.Add(entry);
         trigger.triggers.Add(exit);
+        trigger.triggers.Add(click);
 
         text = GetComponentInChildren<Text>();
         if (text != null)
@@ -53,7 +57,7 @@ public class HologramButton : MonoBehaviour, ISelectHandler, IDeselectHandler// 
                 Destroy(textShadow);
             textShadow = text.gameObject.AddComponent<Shadow>();
             textShadow.effectColor = new Color(0, 0, 0, 1);
-            textShadow.effectDistance = new Vector2(0, -4 * (Mathf.Max(2.5f, 1.0f/text.transform.localScale.y)));
+            textShadow.effectDistance = new Vector2(0, -4 * (Mathf.Max(2.5f, 1.0f / text.transform.localScale.y)));
             textShadow.enabled = false;
         }
 
@@ -129,6 +133,11 @@ public class HologramButton : MonoBehaviour, ISelectHandler, IDeselectHandler// 
         }
     }
 
+    public void OnMouseClick()
+    {
+        menuManager.masterController = "M";
+    }
+
     public void OnMouseEnter()
     {
         buttonComponent.Select();
@@ -140,7 +149,8 @@ public class HologramButton : MonoBehaviour, ISelectHandler, IDeselectHandler// 
         //     DeselectVisual();
     }
 
-    public void ForceDeselectVisual(){
+    public void ForceDeselectVisual()
+    {
         DeselectVisual();
     }
 }

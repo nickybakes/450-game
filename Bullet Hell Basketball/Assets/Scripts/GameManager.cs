@@ -224,17 +224,17 @@ public class GameManager : MonoBehaviour
         playerScriptsTeam0 = new BhbPlayerController[data.playerNumbersTeam0.Count];
         for (int i = 0; i < data.playerNumbersTeam0.Count; i++)
         {
-            SpawnPlayer(playersTeam0, playerScriptsTeam0, data.playerControlsTeam0, data.playerControlsTeam0, i, 0);
+            SpawnPlayer(playersTeam0, playerScriptsTeam0, data.playerNumbersTeam0, data.playerControlsTeam0, i, 0);
         }
 
         playersTeam1 = new GameObject[data.playerNumbersTeam1.Count];
         playerScriptsTeam1 = new BhbPlayerController[data.playerNumbersTeam1.Count];
         for (int i = 0; i < data.playerNumbersTeam1.Count; i++)
         {
-            SpawnPlayer(playersTeam1, playerScriptsTeam1, data.playerControlsTeam1, data.playerControlsTeam1, i, 1);
+            SpawnPlayer(playersTeam1, playerScriptsTeam1, data.playerNumbersTeam1, data.playerControlsTeam1, i, 1);
         }
 
-        matchTimeMax = GameData.matchLength;
+        matchTimeMax = data.matchLength;
 
         bulletLevelUpInterval = matchTimeMax / (numOfBulletLevelUps + 1);
 
@@ -299,7 +299,7 @@ public class GameManager : MonoBehaviour
         if (playerNumbers[index] == 8)
         {
             //create bot
-            playerScript.Init(playerNumbers[index], team, 0);
+            playerScript.Init(8, team, -1);
             playerScript.isBot = true;
 
             //spawn bot Header on Canvas

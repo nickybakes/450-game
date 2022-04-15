@@ -44,11 +44,6 @@ public class Bullet : MonoBehaviour
     {
         ogPosition = transform.position;
         timeAlive = 0;
-        
-        if (speed <= 0)
-        {
-            speed = 1;
-        }
 
         //Sets a default value if the given one isn't good
         if (timer <= 0)

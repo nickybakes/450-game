@@ -11,6 +11,7 @@ public class PanelManager : MonoBehaviour
 
     public MainMenuManager mainMenuManager;
 
+    public Menu panelId;
 
     // Start is called before the first frame update
     void Start()
@@ -30,6 +31,7 @@ public class PanelManager : MonoBehaviour
             mainMenuManager.currentSelection.gameObject.GetComponent<HologramButton>().ForceDeselectVisual();
         }
         defaultButton.Select();
+        mainMenuManager.currentPanelId = this.panelId;
     }
 
     public void DisableMenu()
