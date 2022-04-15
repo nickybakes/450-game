@@ -116,6 +116,7 @@ public class GameManager : MonoBehaviour
     public GameObject yellowShevrons;
     public GameObject blueShevrons;
     public GameObject indicatorShevron;
+    public Text indicatorText;
 
     public bool gameOver;
     public bool paused;
@@ -875,6 +876,7 @@ public class GameManager : MonoBehaviour
         {
             indicatorShevron.transform.position = cam.WorldToScreenPoint(new Vector3(ball.transform.position.x, 33, 0));
         }
+        indicatorText.text = (ball.transform.position.y - 33).ToString("F0") + "M";
         indicatorShevron.SetActive(isAboveScreen);
     }
 
