@@ -107,6 +107,7 @@ public class BulletManager : MonoBehaviour
         originalMaxTime = data.initialTimeBetweenBullets;
 
         numBullets = data.initialNumberOfBullets;
+        initialNumberOfBullets = data.initialNumberOfBullets;
 
         this.ownerNumber = playerNumber;
 
