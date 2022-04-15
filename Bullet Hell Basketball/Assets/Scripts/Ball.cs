@@ -646,6 +646,12 @@ public class Ball : MonoBehaviour
             hb.Explode();
         }
 
+        SuperBullet[] superBullets = FindObjectsOfType<SuperBullet>();
+        foreach (SuperBullet sb in superBullets)
+        {
+            sb.ForceDestroy();
+        }
+
         if (gameManager.overTime)
             gameManager.EndGame();
         else
