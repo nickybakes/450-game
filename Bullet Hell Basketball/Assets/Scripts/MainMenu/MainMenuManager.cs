@@ -40,6 +40,8 @@ public class MainMenuManager : MonoBehaviour
     public Button currentSelection;
 
     private AudioManager audioManager;
+    private Button prevSelection;
+    private int currentPanel;
 
 
     // Start is called before the first frame update
@@ -97,8 +99,12 @@ public class MainMenuManager : MonoBehaviour
             float horizontalInput = 0f;
             float verticalInput = 0f;
 
-
-
+            //hover sound for buttons. Does not play on title screen.
+            if (prevSelection != currentSelection && !panels[0].isActiveAndEnabled)
+            {
+                audioManager.Play("ButtonHover");
+            }
+            prevSelection = currentSelection;
 
             if (((Input.GetAxis("J" + controllers[i] + "Vertical") + (Input.GetAxis("J" + controllers[i] + "Horizontal")) == 0)))
             {
@@ -176,6 +182,11 @@ public class MainMenuManager : MonoBehaviour
         }
 
         panels[i].EnableMenu();
+
+        if (i == 1)
+            audioManager.Play("ButtonBack");
+        else
+            audioManager.Play("ButtonSelect");
     }
 
     public void StepUp()
