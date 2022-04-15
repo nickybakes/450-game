@@ -590,10 +590,12 @@ public class MainMenuManager : MonoBehaviour
         if (GameObject.Find("CameraShake").GetComponentInChildren<Text>().text == "Enabled")
         {
             GameObject.Find("CameraShake").GetComponentInChildren<Text>().text = "Disabled";
+            data.cameraShake = false;
         }
         else if (GameObject.Find("CameraShake").GetComponentInChildren<Text>().text == "Disabled")
         {
             GameObject.Find("CameraShake").GetComponentInChildren<Text>().text = "Enabled";
+            data.cameraShake = true;
         }
     }
 
@@ -602,10 +604,12 @@ public class MainMenuManager : MonoBehaviour
         if (GameObject.Find("Power").GetComponentInChildren<Text>().text == "Enabled")
         {
             GameObject.Find("Power").GetComponentInChildren<Text>().text = "Disabled";
+            data.powerUps = false;
         }
         else if (GameObject.Find("Power").GetComponentInChildren<Text>().text == "Disabled")
         {
             GameObject.Find("Power").GetComponentInChildren<Text>().text = "Enabled";
+            data.powerUps = true;
         }
     }
 
@@ -638,18 +642,22 @@ public class MainMenuManager : MonoBehaviour
         if (GameObject.Find("Bullets").GetComponentInChildren<Text>().text == "Small Only")
         {
             GameObject.Find("Bullets").GetComponentInChildren<Text>().text = "Big Only";
+            data.bulletSpawnage = BulletSpawnage.BigOnly;
         }
         else if (GameObject.Find("Bullets").GetComponentInChildren<Text>().text == "Big Only")
         {
             GameObject.Find("Bullets").GetComponentInChildren<Text>().text = "Big & Small";
+            data.bulletSpawnage = BulletSpawnage.BothRegularAndBig;
         }
         else if (GameObject.Find("Bullets").GetComponentInChildren<Text>().text == "Big & Small")
         {
             GameObject.Find("Bullets").GetComponentInChildren<Text>().text = "No Bullets";
+            data.bulletSpawnage = BulletSpawnage.None;
         }
         else if (GameObject.Find("Bullets").GetComponentInChildren<Text>().text == "No Bullets")
         {
             GameObject.Find("Bullets").GetComponentInChildren<Text>().text = "Small Only";
+            data.bulletSpawnage = BulletSpawnage.RegularOnly;
         }
     }
 

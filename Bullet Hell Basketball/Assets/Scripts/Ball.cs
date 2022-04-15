@@ -652,6 +652,12 @@ public class Ball : MonoBehaviour
             sb.ForceDestroy();
         }
 
+        BulletPortal[] bulletPortals = FindObjectsOfType<BulletPortal>();
+        foreach (BulletPortal portal in bulletPortals)
+        {
+            // sb.ForceDestroy();
+        }
+
         if (gameManager.overTime)
             gameManager.EndGame();
         else

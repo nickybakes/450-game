@@ -18,7 +18,11 @@ public class PlayerHeader : MonoBehaviour
     public Text hpText;
 
     public Image shevron;
+
+    public Image whiteOutline;
     public Text playerNumberText;
+
+    private GameManager gameManager;
 
 
     // Start is called before the first frame update
@@ -34,10 +38,12 @@ public class PlayerHeader : MonoBehaviour
             return;
 
         transform.position = cam.WorldToScreenPoint(new Vector3(player.transform.position.x, player.transform.position.y + player.height, 0));
+
+        whiteOutline.gameObject.SetActive(player.transform == gameManager.ball.transform.parent);
         // hpText.text = player.health.ToString();
     }
 
-    public void Init(BhbPlayerController player)
+    public void Init(BhbPlayerController player, GameManager gm)
     {
         this.player = player;
         this.color = colors[player.playerNumber];
@@ -46,6 +52,7 @@ public class PlayerHeader : MonoBehaviour
         else
             playerNumberText.text = "BOT";
         shevron.color = color;
-
+        
+        this.gameManager = gm;
     }
 }

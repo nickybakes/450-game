@@ -36,10 +36,13 @@ public class GameManager : MonoBehaviour
 
     public GameObject powerUpPrefab;
 
-    public float powerUpTimeSpawnMin = 16;
-    public float powerUpTimeSpawnMax = 32;
+    public float powerUpTimeSpawnMin = 12;
+    public float powerUpTimeSpawnMax = 27;
     public float powerUpTimeSpawn;
     public float powerUpTimeSpawnCurrent;
+    public int powerUpsSpawnInARow;
+
+    private PowerupType previousPowerupType = PowerupType.SuperBullet;
 
     public List<Powerup> allAlivePowerups;
 
@@ -129,10 +132,12 @@ public class GameManager : MonoBehaviour
 
     public TutorialManager tutorialManager;
 
-    public bool allBigBullets;
-    public bool randomBigBullets; //Will there be a random chance of a big bullet?
+    public BulletSpawnage bulletSpawnage;
     public float bigBulletScale;
     public CameraShake cameraShake;
+
+    public bool cameraShakeEnabled;
+    public bool powerUpsEnabled;
 
 
     [HideInInspector] public bool winConditionMet = false;
@@ -157,6 +162,7 @@ public class GameManager : MonoBehaviour
         paused = true;
 
         cameraShake = FindObjectOfType<Camera>().GetComponent<CameraShake>();
+        cameraShake.gameManager = this;
 
         allAlivePowerups = new List<Powerup>();
 
@@ -214,10 +220,10 @@ public class GameManager : MonoBehaviour
 
             //uncommented this code to have 2 players on KB spawn in instead of Bots
 
-            data.playerControlsTeam0 = new List<int>() {0};
-            data.playerNumbersTeam0 = new List<int>() {1};
-            data.playerControlsTeam1 = new List<int>() {1};
-            data.playerNumbersTeam1 = new List<int>() {2};
+            data.playerControlsTeam0 = new List<int>() { 0 };
+            data.playerNumbersTeam0 = new List<int>() { 0 };
+            data.playerControlsTeam1 = new List<int>() { 1 };
+            data.playerNumbersTeam1 = new List<int>() { 1 };
         }
 
         if (isTutorial)
@@ -243,6 +249,10 @@ public class GameManager : MonoBehaviour
 
         bulletLevelUpInterval = matchTimeMax / (numOfBulletLevelUps + 1);
 
+        powerUpsEnabled = data.powerUps;
+        cameraShakeEnabled = data.cameraShake;
+        bulletSpawnage = data.bulletSpawnage;
+
         ball = Instantiate(ballPrefab);
         ballControlScript = ball.GetComponent<Ball>();
         ballPhysicsScript = ball.GetComponent<BhbBallPhysics>();
@@ -257,7 +267,8 @@ public class GameManager : MonoBehaviour
         ballControlScript.rightBasket = rightBasket;
 
         //spawn the bullet launchers
-        SpawnBulletSpawnersFromData();
+        if (bulletSpawnage != BulletSpawnage.None)
+            SpawnBulletSpawnersFromData();
 
         if (isTutorial)
         {
@@ -319,7 +330,7 @@ public class GameManager : MonoBehaviour
         }
         playerObjects[index] = player;
         playerScripts[index] = playerScript;
-        playerHeader.GetComponent<PlayerHeader>().Init(playerScript);
+        playerHeader.GetComponent<PlayerHeader>().Init(playerScript, this);
     }
 
     private void BeginMatch()
@@ -362,6 +373,8 @@ public class GameManager : MonoBehaviour
         }
 
         allAlivePowerups.Clear();
+        powerUpTimeSpawn = UnityEngine.Random.Range(powerUpTimeSpawnMin, powerUpTimeSpawnMax);
+
 
         bulletManagers = FindObjectsOfType<BulletManager>();
 
@@ -385,6 +398,10 @@ public class GameManager : MonoBehaviour
     public void SpawnRandomPowerUp()
     {
         PowerupType type = (PowerupType)UnityEngine.Random.Range(0, 4);
+        while (type == previousPowerupType)
+            type = (PowerupType)UnityEngine.Random.Range(0, 4);
+
+        previousPowerupType = type;
 
         bool closeToAnotherPowerup = false;
         float yPos, xPos;
@@ -409,9 +426,6 @@ public class GameManager : MonoBehaviour
             }
             closeChecks++;
         } while (closeToAnotherPowerup && closeChecks < 50);
-
-        if (closeChecks == 50)
-            return;
 
         GameObject p = Instantiate(powerUpPrefab, new Vector2(xPos, yPos), Quaternion.identity);
 
@@ -525,29 +539,6 @@ public class GameManager : MonoBehaviour
                 return;
             }
 
-            // if (paused && Input.GetKeyDown(KeyCode.Alpha2))
-            // {
-            //     player1IsBot = true;
-            //     player2IsBot = true;
-            //     player1Script.isBot = true;
-            //     player2Script.isBot = true;
-            // }
-            // else if (paused && Input.GetKeyDown(KeyCode.Alpha1))
-            // {
-            //     player1IsBot = false;
-            //     player2IsBot = true;
-            //     player1Script.isBot = false;
-            //     player2Script.isBot = true;
-            // }
-            // else if (paused && Input.GetKeyDown(KeyCode.Alpha0))
-            // {
-            //     player1IsBot = false;
-            //     player2IsBot = false;
-            //     player1Script.isBot = false;
-            //     player2Script.isBot = false;
-            // }
-
-
             if (Input.GetKeyDown(KeyCode.Backspace))
             {
                 if (gameOver)
@@ -611,6 +602,26 @@ public class GameManager : MonoBehaviour
                     else
                     {
                         EndGame();
+                    }
+                }
+            }
+
+            if (powerUpsEnabled)
+            {
+                powerUpTimeSpawnCurrent += Time.deltaTime;
+                if (powerUpTimeSpawnCurrent >= powerUpTimeSpawn)
+                {
+                    SpawnRandomPowerUp();
+                    powerUpTimeSpawnCurrent = 0;
+                    powerUpTimeSpawn = UnityEngine.Random.Range(powerUpTimeSpawnMin, powerUpTimeSpawnMax);
+                    if (powerUpsSpawnInARow == 0)
+                    {
+                        powerUpsSpawnInARow = UnityEngine.Random.Range(0, 4);
+                    }
+                    else
+                    {
+                        powerUpsSpawnInARow--;
+                        powerUpTimeSpawn = .6f;
                     }
                 }
             }

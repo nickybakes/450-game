@@ -2,6 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum BulletSpawnage
+{
+    RegularOnly,
+    BigOnly,
+    BothRegularAndBig,
+    None
+}
 public class GameData : MonoBehaviour
 {
 
@@ -32,11 +39,16 @@ public class GameData : MonoBehaviour
     public List<int> playerControlsTeam0 = new List<int>();
     public List<int> playerControlsTeam1 = new List<int>();
 
-    public bool allBigBullets;
+    public BulletSpawnage bulletSpawnage = BulletSpawnage.RegularOnly;
+
 
     public int numOfBulletLevelUps = 3;
 
-    public float matchLength;
+    public float matchLength = 120;
+
+    public bool powerUps = true;
+
+    public bool cameraShake = true;
 
 
     // Set up singleton here

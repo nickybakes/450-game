@@ -356,7 +356,7 @@ public class BulletManager : MonoBehaviour
         bulletScript.sinLength = sinWaveLength;
         bulletScript.frequency = sinWaveFrequency;
 
-        if (gameManager.randomBigBullets && gameManager.bulletLevel >= 2)
+        if (gameManager.bulletSpawnage == BulletSpawnage.BothRegularAndBig && gameManager.bulletLevel >= 2)
         {
             //Make the bullet RNG more dynamic
             int randomNumber = Random.Range(1, 6 + gameManager.bulletLevel);
@@ -381,7 +381,7 @@ public class BulletManager : MonoBehaviour
             bulletScript.speed = 10 + Mathf.Max((gameManager.team0Score - gameManager.team1Score) / 30, 0) + gameManager.bulletLevel;
         }
 
-        if (gameManager.allBigBullets)
+        if (gameManager.bulletSpawnage == BulletSpawnage.BigOnly)
         {
             bulletScript.isBig = true;
         }
