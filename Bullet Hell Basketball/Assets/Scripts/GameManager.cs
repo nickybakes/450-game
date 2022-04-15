@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     /// The instance of the GameManager (it's a singleton).
     /// </summary>
     public static GameManager Instance;
+    public Camera cam;
     private AudioManager audioManager;
     private Sound music;
     private Sound pauseMusic;
@@ -871,8 +872,9 @@ public class GameManager : MonoBehaviour
     private void ShowBallChevron(bool isAboveScreen)
     {
         if (isAboveScreen)
-            indicatorShevron.transform.position = new Vector3(ball.transform.position.x, 33, 0);
-
+        {
+            indicatorShevron.transform.position = cam.WorldToScreenPoint(new Vector3(ball.transform.position.x, 33, 0));
+        }
         indicatorShevron.SetActive(isAboveScreen);
     }
 
