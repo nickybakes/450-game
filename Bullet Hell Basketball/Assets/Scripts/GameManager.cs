@@ -56,7 +56,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector]
     public GameObject ball;
 
-    public float matchTimeMax = 180;
+    public static float matchTimeMax;
     public float matchTimeCurrent;
 
     public Text matchTimeText;

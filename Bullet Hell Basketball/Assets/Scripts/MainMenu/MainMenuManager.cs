@@ -233,6 +233,14 @@ public class MainMenuManager : MonoBehaviour
     public void PlayGame()
     {
         Destroy(FindObjectOfType<AudioManager>().gameObject);
+        if(GameObject.Find("Squeak").GetComponentInChildren<Text>().text == "Semi-Frequent")
+        {
+            BhbPlayerController.shoeSqueakRate = 0.5f;
+        }
+        if(GameObject.Find("Timer").GetComponentInChildren<Text>().text == "3:00")
+        {
+            GameManager.matchTimeMax = 180;
+        }
         SceneManager.LoadScene(1);
     }
 
@@ -290,18 +298,22 @@ public class MainMenuManager : MonoBehaviour
         if(GameObject.Find("Timer").GetComponentInChildren<Text>().text == "2:00")
         {
             GameObject.Find("Timer").GetComponentInChildren<Text>().text = "3:00";
+            GameManager.matchTimeMax = 180;
         }
         else if (GameObject.Find("Timer").GetComponentInChildren<Text>().text == "3:00")
         {
             GameObject.Find("Timer").GetComponentInChildren<Text>().text = "4:00";
+            GameManager.matchTimeMax = 240;
         }
         else if (GameObject.Find("Timer").GetComponentInChildren<Text>().text == "4:00")
         {
             GameObject.Find("Timer").GetComponentInChildren<Text>().text = "5:00";
+            GameManager.matchTimeMax = 300;
         }
         else if (GameObject.Find("Timer").GetComponentInChildren<Text>().text == "5:00")
         {
             GameObject.Find("Timer").GetComponentInChildren<Text>().text = "2:00";
+            GameManager.matchTimeMax = 120;
         }
     }
 
