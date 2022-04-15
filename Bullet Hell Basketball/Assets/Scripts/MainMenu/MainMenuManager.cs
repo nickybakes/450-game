@@ -298,22 +298,22 @@ public class MainMenuManager : MonoBehaviour
         if(GameObject.Find("Timer").GetComponentInChildren<Text>().text == "2:00")
         {
             GameObject.Find("Timer").GetComponentInChildren<Text>().text = "3:00";
-            GameManager.matchTimeMax = 180;
+            GameData.matchLength = 180;
         }
         else if (GameObject.Find("Timer").GetComponentInChildren<Text>().text == "3:00")
         {
             GameObject.Find("Timer").GetComponentInChildren<Text>().text = "4:00";
-            GameManager.matchTimeMax = 240;
+            GameData.matchLength = 240;
         }
         else if (GameObject.Find("Timer").GetComponentInChildren<Text>().text == "4:00")
         {
             GameObject.Find("Timer").GetComponentInChildren<Text>().text = "5:00";
-            GameManager.matchTimeMax = 300;
+            GameData.matchLength = 300;
         }
         else if (GameObject.Find("Timer").GetComponentInChildren<Text>().text == "5:00")
         {
             GameObject.Find("Timer").GetComponentInChildren<Text>().text = "2:00";
-            GameManager.matchTimeMax = 120;
+            GameData.matchLength = 120;
         }
     }
 

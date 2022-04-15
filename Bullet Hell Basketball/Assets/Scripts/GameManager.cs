@@ -56,7 +56,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector]
     public GameObject ball;
 
-    public static float matchTimeMax;
+    public float matchTimeMax = 180;
     public float matchTimeCurrent;
 
     public Text matchTimeText;
@@ -234,7 +234,7 @@ public class GameManager : MonoBehaviour
             SpawnPlayer(playersTeam1, playerScriptsTeam1, data.playerControlsTeam1, data.playerControlsTeam1, i, 1);
         }
 
-        matchTimeMax = data.matchLength;
+        matchTimeMax = GameData.matchLength;
 
         bulletLevelUpInterval = matchTimeMax / (numOfBulletLevelUps + 1);
 

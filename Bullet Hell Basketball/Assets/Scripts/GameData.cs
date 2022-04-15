@@ -36,7 +36,7 @@ public class GameData : MonoBehaviour
 
     public int numOfBulletLevelUps = 3;
 
-    public float matchLength = 120;
+    public static float matchLength;
 
 
     // Set up singleton here
