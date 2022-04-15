@@ -91,7 +91,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
     public float dribbleSoundTimerCurrent = 0;
     public float dribbleSoundTimerMax = .24f;
 
-
+    public static float shoeSqueakRate;
 
     public bool facingRight = true;
 
@@ -340,7 +340,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
             {
                 soundTimer = 0;
                 //random chance to play.
-                if (Random.Range(0.1f, 0.8f) > 0.5)
+                if (Random.Range(0.1f, 0.8f) > shoeSqueakRate)
                     audioManager.Play("Squeak", 0.8f, 1.2f);
             }
             soundTimer += Time.deltaTime;
@@ -357,7 +357,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
             {
                 soundTimer = 0;
                 //random chance to play.
-                if (Random.Range(0.1f, 0.8f) > 0.5)
+                if (Random.Range(0.1f, 0.8f) >shoeSqueakRate)
                     audioManager.Play("Squeak", 0.8f, 1.2f);
             }
             soundTimer += Time.deltaTime;

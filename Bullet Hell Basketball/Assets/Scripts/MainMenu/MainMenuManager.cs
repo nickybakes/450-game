@@ -231,6 +231,101 @@ public class MainMenuManager : MonoBehaviour
         SceneManager.LoadScene(2);
     }
 
+    public void SqueakyOnClick()
+    {
+        if(GameObject.Find("Squeak").GetComponentInChildren<Text>().text == "Semi-Frequent")
+        {
+            GameObject.Find("Squeak").GetComponentInChildren<Text>().text = "Frequent";
+            BhbPlayerController.shoeSqueakRate = 0.0f;
+        }
+        else if (GameObject.Find("Squeak").GetComponentInChildren<Text>().text == "Frequent")
+        {
+            GameObject.Find("Squeak").GetComponentInChildren<Text>().text = "Never";
+            BhbPlayerController.shoeSqueakRate = 10000.0f;
+        }
+        else if (GameObject.Find("Squeak").GetComponentInChildren<Text>().text == "Never")
+        {
+            GameObject.Find("Squeak").GetComponentInChildren<Text>().text = "Semi-Frequent";
+            BhbPlayerController.shoeSqueakRate = 0.5f;
+        }
+    }
+
+    public void CameraShakeOnClick()
+    {
+        if(GameObject.Find("CameraShake").GetComponentInChildren<Text>().text == "Enabled")
+        {
+            GameObject.Find("CameraShake").GetComponentInChildren<Text>().text = "Disabled";
+        }
+        else if (GameObject.Find("CameraShake").GetComponentInChildren<Text>().text == "Disabled")
+        {
+            GameObject.Find("CameraShake").GetComponentInChildren<Text>().text = "Enabled";
+        }
+    }
+
+    public void PowerOnClick()
+    {
+        if(GameObject.Find("Power").GetComponentInChildren<Text>().text == "Enabled")
+        {
+            GameObject.Find("Power").GetComponentInChildren<Text>().text = "Disabled";
+        }
+        else if (GameObject.Find("Power").GetComponentInChildren<Text>().text == "Disabled")
+        {
+            GameObject.Find("Power").GetComponentInChildren<Text>().text = "Enabled";
+        }
+    }
+
+    public void TimerOnClick()
+    {
+        if(GameObject.Find("Timer").GetComponentInChildren<Text>().text == "2:00")
+        {
+            GameObject.Find("Timer").GetComponentInChildren<Text>().text = "3:00";
+        }
+        else if (GameObject.Find("Timer").GetComponentInChildren<Text>().text == "3:00")
+        {
+            GameObject.Find("Timer").GetComponentInChildren<Text>().text = "4:00";
+        }
+        else if (GameObject.Find("Timer").GetComponentInChildren<Text>().text == "4:00")
+        {
+            GameObject.Find("Timer").GetComponentInChildren<Text>().text = "5:00";
+        }
+        else if (GameObject.Find("Timer").GetComponentInChildren<Text>().text == "5:00")
+        {
+            GameObject.Find("Timer").GetComponentInChildren<Text>().text = "2:00";
+        }
+    }
+
+    public void BulletSizeOnClick()
+    {
+        if(GameObject.Find("Bullets").GetComponentInChildren<Text>().text == "Small Only")
+        {
+            GameObject.Find("Bullets").GetComponentInChildren<Text>().text = "Big Only";
+        }
+        else if (GameObject.Find("Bullets").GetComponentInChildren<Text>().text == "Big Only")
+        {
+            GameObject.Find("Bullets").GetComponentInChildren<Text>().text = "Big & Small";
+        }
+        else if (GameObject.Find("Bullets").GetComponentInChildren<Text>().text == "Big & Small")
+        {
+            GameObject.Find("Bullets").GetComponentInChildren<Text>().text = "No Bullets";
+        }
+        else if (GameObject.Find("Bullets").GetComponentInChildren<Text>().text == "No Bullets")
+        {
+            GameObject.Find("Bullets").GetComponentInChildren<Text>().text = "Small Only";
+        }
+    }
+
+    public void DunkBonusOnClick()
+    {
+        if(GameObject.Find("DunkBonus").GetComponentInChildren<Text>().text == "Enabled")
+        {
+            GameObject.Find("DunkBonus").GetComponentInChildren<Text>().text = "Disabled";
+        }
+        else if (GameObject.Find("DunkBonus").GetComponentInChildren<Text>().text == "Disabled")
+        {
+            GameObject.Find("DunkBonus").GetComponentInChildren<Text>().text = "Enabled";
+        }
+    }
+
     //takes you back to the first menu
     /*
     public void OptionsMenuBackButton()

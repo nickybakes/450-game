@@ -748,8 +748,8 @@ RectTransform:
   m_Father: {fileID: 1862339622}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1318,8 +1318,8 @@ MonoBehaviour:
   - {fileID: 1428856484}
   - {fileID: 2048296562}
   - {fileID: 646552576}
-  - {fileID: 1854661006}
-  - {fileID: 285869802}
+  - {fileID: 1671047534}
+  - {fileID: 895917875}
   currentSelection: {fileID: 0}
 --- !u!4 &118828421
 Transform:
@@ -1631,7 +1631,7 @@ MonoBehaviour:
   m_Navigation:
     m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
+    m_SelectOnUp: {fileID: 409127829}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
@@ -1662,12 +1662,12 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 118828420}
         m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
-        m_MethodName: SwitchToPanel
-        m_Mode: 3
+        m_MethodName: StepBack
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 5
+          m_IntArgument: 3
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -2335,10 +2335,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 4
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
+    m_SelectOnDown: {fileID: 1318951691}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
@@ -2384,7 +2384,7 @@ GameObject:
   - component: {fileID: 285869803}
   - component: {fileID: 285869802}
   m_Layer: 5
-  m_Name: Options
+  m_Name: OptionsOld
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3751,7 +3751,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -486, y: -214}
+  m_AnchoredPosition: {x: -373.00006, y: -214}
   m_SizeDelta: {x: 581.752, y: 106.438}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &409127828
@@ -3782,10 +3782,10 @@ MonoBehaviour:
   m_Navigation:
     m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 691893963}
+    m_SelectOnUp: {fileID: 1118810391}
+    m_SelectOnDown: {fileID: 168313397}
     m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
+    m_SelectOnRight: {fileID: 916860403}
   m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 0, g: 0, b: 0, a: 0}
@@ -3813,7 +3813,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 118828420}
         m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
-        m_MethodName: StepUp
+        m_MethodName: BulletSizeOnClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4267,10 +4267,10 @@ MonoBehaviour:
   m_Navigation:
     m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 691893963}
+    m_SelectOnUp: {fileID: 1086428808}
+    m_SelectOnDown: {fileID: 1226677817}
     m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
+    m_SelectOnRight: {fileID: 473598351}
   m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 0, g: 0, b: 0, a: 0}
@@ -4298,7 +4298,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 118828420}
         m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
-        m_MethodName: StepUp
+        m_MethodName: SqueakyOnClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4329,7 +4329,7 @@ GameObject:
   - component: {fileID: 473598351}
   - component: {fileID: 473598350}
   m_Layer: 5
-  m_Name: Camera Shake
+  m_Name: CameraShake
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4386,9 +4386,9 @@ MonoBehaviour:
   m_Navigation:
     m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 691893963}
-    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnUp: {fileID: 1086428808}
+    m_SelectOnDown: {fileID: 1226677817}
+    m_SelectOnLeft: {fileID: 470108958}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 0
   m_Colors:
@@ -4417,7 +4417,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 118828420}
         m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
-        m_MethodName: StepUp
+        m_MethodName: CameraShakeOnClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4813,7 +4813,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 118828420}
         m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
-        m_MethodName: StepBack
+        m_MethodName: PlayGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6853,8 +6853,8 @@ RectTransform:
   m_Father: {fileID: 790306901}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -8630,12 +8630,12 @@ GameObject:
   - component: {fileID: 895917874}
   - component: {fileID: 895917875}
   m_Layer: 5
-  m_Name: Audio
+  m_Name: Options
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &895917874
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8674,7 +8674,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e36a1620abcd50740803cecd378e30fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultButton: {fileID: 0}
+  defaultButton: {fileID: 473598351}
   mainMenuManager: {fileID: 118828420}
 --- !u!1 &903390298
 GameObject:
@@ -8800,7 +8800,7 @@ GameObject:
   - component: {fileID: 916860403}
   - component: {fileID: 916860402}
   m_Layer: 5
-  m_Name: Dunk Bonus
+  m_Name: DunkBonus
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8826,7 +8826,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 493, y: -214}
+  m_AnchoredPosition: {x: 381, y: -214}
   m_SizeDelta: {x: 581.752, y: 106.438}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &916860402
@@ -8857,9 +8857,9 @@ MonoBehaviour:
   m_Navigation:
     m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 691893963}
-    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnUp: {fileID: 1602039117}
+    m_SelectOnDown: {fileID: 168313397}
+    m_SelectOnLeft: {fileID: 409127829}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 0
   m_Colors:
@@ -8888,7 +8888,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 118828420}
         m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
-        m_MethodName: StepUp
+        m_MethodName: DunkBonusOnClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -8938,8 +8938,8 @@ RectTransform:
   m_Father: {fileID: 2056981991}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -10459,10 +10459,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
+    m_SelectOnUp: {fileID: 1318951691}
+    m_SelectOnDown: {fileID: 470108958}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
@@ -11198,7 +11198,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -11279,7 +11279,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -486, y: 119}
+  m_AnchoredPosition: {x: -373, y: 119}
   m_SizeDelta: {x: 581.752, y: 106.438}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1118810390
@@ -11311,9 +11311,9 @@ MonoBehaviour:
     m_Mode: 4
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 691893963}
+    m_SelectOnDown: {fileID: 409127829}
     m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
+    m_SelectOnRight: {fileID: 1602039117}
   m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 0, g: 0, b: 0, a: 0}
@@ -11341,7 +11341,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 118828420}
         m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
-        m_MethodName: StepUp
+        m_MethodName: PowerOnClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -12417,7 +12417,7 @@ MonoBehaviour:
   m_Navigation:
     m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
+    m_SelectOnUp: {fileID: 470108958}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
@@ -12453,7 +12453,7 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 5
+          m_IntArgument: 1
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -13002,10 +13002,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
+    m_SelectOnUp: {fileID: 282879138}
+    m_SelectOnDown: {fileID: 1086428808}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
@@ -14996,7 +14996,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: OFF
+  m_Text: Enabled
 --- !u!222 &1506192809
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -15533,7 +15533,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 493, y: 119}
+  m_AnchoredPosition: {x: 381, y: 119}
   m_SizeDelta: {x: 581.752, y: 106.438}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1602039116
@@ -15565,8 +15565,8 @@ MonoBehaviour:
     m_Mode: 4
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 691893963}
-    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnDown: {fileID: 916860403}
+    m_SelectOnLeft: {fileID: 1118810391}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 0
   m_Colors:
@@ -15595,7 +15595,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 118828420}
         m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
-        m_MethodName: StepUp
+        m_MethodName: TimerOnClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -15939,12 +15939,12 @@ GameObject:
   - component: {fileID: 1671047533}
   - component: {fileID: 1671047534}
   m_Layer: 5
-  m_Name: Audio_01
+  m_Name: Customize
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1671047533
 RectTransform:
   m_ObjectHideFlags: 0
@@ -15982,7 +15982,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e36a1620abcd50740803cecd378e30fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultButton: {fileID: 0}
+  defaultButton: {fileID: 1118810391}
   mainMenuManager: {fileID: 118828420}
 --- !u!1 &1671309758
 GameObject:
@@ -16353,7 +16353,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -17818,12 +17818,12 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 118828420}
         m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
-        m_MethodName: StepBack
+        m_MethodName: StepUp
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 6
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -18039,7 +18039,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
