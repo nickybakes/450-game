@@ -18,7 +18,7 @@ public class HologramButton : MonoBehaviour, ISelectHandler, IDeselectHandler// 
     private int selectedFontSize;
 
     private Shadow textShadow;
-    private Outline textOutline;
+    private UnityEngine.UI.Outline textOutline;
 
     public bool hideBorderWhileSelected;
 
@@ -53,7 +53,7 @@ public class HologramButton : MonoBehaviour, ISelectHandler, IDeselectHandler// 
             defaultFontSize = text.fontSize;
             selectedFontSize = (int)(defaultFontSize * 1.07f);
             textShadow = text.GetComponent<Shadow>();
-            if (textShadow != null && !(textShadow is Outline))
+            if (textShadow != null && !(textShadow is UnityEngine.UI.Outline))
                 Destroy(textShadow);
             textShadow = text.gameObject.AddComponent<Shadow>();
             textShadow.effectColor = new Color(0, 0, 0, 1);

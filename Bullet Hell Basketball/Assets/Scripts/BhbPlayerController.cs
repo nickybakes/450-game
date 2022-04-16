@@ -146,6 +146,12 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
     public bool isDummy;
 
+    public Outline outline;
+
+    private Color outlineColorTeam0 = new Color(1, 0.9411765f, 0);
+    private Color outlineColorTeam1 = new Color(0, 0.125490196f, 1);
+
+
     public bool IsSwiping
     {
         get { return swipeTimeCurrent < swipeTimeMax; }
@@ -255,6 +261,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
             Destroy(player1Mesh);
             animator = player2Animator;
             player2Mesh.SetActive(true);
+            outline = player2Mesh.transform.GetChild(0).GetComponent<Outline>();
         }
     }
 
@@ -303,9 +310,22 @@ public class BhbPlayerController : NeonHeightsCharacterController
                 transform.SetPositionAndRotation(transform.position, q);
                 facingRight = true;
             }
+
+            outline.OutlineWidth = 5;
+            if (teamNumber == 0)
+            {
+                outline.OutlineColor = outlineColorTeam0;
+            }
+            else
+            {
+                outline.OutlineColor = outlineColorTeam1;
+            }
         }
         else
         {
+            outline.OutlineWidth = 10;
+            outline.OutlineColor = Color.white;
+
             //if holding it, face toward enemy hoop
             if (teamNumber == 0)
             {
@@ -362,7 +382,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
             {
                 soundTimer = 0;
                 //random chance to play.
-                if (Random.Range(0.1f, 0.8f) >shoeSqueakRate)
+                if (Random.Range(0.1f, 0.8f) > shoeSqueakRate)
                     audioManager.Play("Squeak", 0.8f, 1.2f);
             }
             soundTimer += Time.deltaTime;
