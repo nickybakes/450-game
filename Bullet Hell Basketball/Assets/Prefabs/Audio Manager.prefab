@@ -265,14 +265,14 @@ MonoBehaviour:
   - name: ButtonHover
     clips:
     - {fileID: 8300000, guid: c0bf10622e1960c47a09fac944fc75d3, type: 3}
-    volume: 0.2
+    volume: 0.1
     pitch: 1
     loop: 0
     source: {fileID: 0}
   - name: ButtonSelect
     clips:
     - {fileID: 8300000, guid: fa9b50348816bdd4699b388aca01d258, type: 3}
-    volume: 0.3
+    volume: 0.4
     pitch: 1
     loop: 0
     source: {fileID: 0}
