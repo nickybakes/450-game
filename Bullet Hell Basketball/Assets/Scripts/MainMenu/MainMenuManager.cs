@@ -599,13 +599,25 @@ public class MainMenuManager : MonoBehaviour
 
     public void PowerOnClick()
     {
-        if (GameObject.Find("Power").GetComponentInChildren<Text>().text == "Enabled")
+        if (GameObject.Find("Power").GetComponentInChildren<Text>().text == "Off")
         {
-            GameObject.Find("Power").GetComponentInChildren<Text>().text = "Disabled";
+            GameObject.Find("Power").GetComponentInChildren<Text>().text = "Low";
         }
-        else if (GameObject.Find("Power").GetComponentInChildren<Text>().text == "Disabled")
+        else if (GameObject.Find("Power").GetComponentInChildren<Text>().text == "Low")
         {
-            GameObject.Find("Power").GetComponentInChildren<Text>().text = "Enabled";
+            GameObject.Find("Power").GetComponentInChildren<Text>().text = "Medium";
+        }
+        else if (GameObject.Find("Power").GetComponentInChildren<Text>().text == "Medium")
+        {
+            GameObject.Find("Power").GetComponentInChildren<Text>().text = "High";
+        }
+        else if (GameObject.Find("Power").GetComponentInChildren<Text>().text == "High")
+        {
+            GameObject.Find("Power").GetComponentInChildren<Text>().text = "Chaotic";
+        }
+        else if (GameObject.Find("Power").GetComponentInChildren<Text>().text == "Chaotic")
+        {
+            GameObject.Find("Power").GetComponentInChildren<Text>().text = "Off";
         }
     }
 
