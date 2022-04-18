@@ -149,7 +149,8 @@ public class BhbPlayerController : NeonHeightsCharacterController
     public Outline outline;
 
     private Color outlineColorTeam0 = new Color(1, 0.9411765f, 0);
-    private Color outlineColorTeam1 = new Color(0, 0.125490196f, 1);
+    private Color outlineColorTeam1 = new Color(0, 0.8f, 1);
+    private Color outlineWithBall = new Color(1, 1, 1);
 
 
     public bool IsSwiping
@@ -324,7 +325,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
         else
         {
             outline.OutlineWidth = 10;
-            outline.OutlineColor = Color.white;
+            outline.OutlineColor = outlineWithBall;
 
             //if holding it, face toward enemy hoop
             if (teamNumber == 0)
