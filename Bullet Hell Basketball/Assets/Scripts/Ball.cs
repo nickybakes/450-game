@@ -68,6 +68,8 @@ public class Ball : MonoBehaviour
                 bulletTimeCurrent = bulletTimeMax;
                 transform.GetChild(2).gameObject.SetActive(false);
                 transform.GetChild(3).gameObject.SetActive(false);
+                trailRenderer.startColor = Color.white;
+                trailRenderer.endColor = Color.white;
             }
         }
     }
@@ -97,12 +99,12 @@ public class Ball : MonoBehaviour
 
     private void Start()
     {
+        trailRenderer = transform.GetChild(0).GetComponent<TrailRenderer>();
         IsBullet = false;
         gameManager = FindObjectOfType<GameManager>();
         lineRenderer.positionCount = previewArcSmoothness;
         audioManager = FindObjectOfType<AudioManager>();
         IsResetting = false;
-        trailRenderer = transform.GetChild(0).GetComponent<TrailRenderer>();
 
         ballRenderer = transform.GetChild(4).GetComponent<Renderer>();
 
@@ -168,7 +170,7 @@ public class Ball : MonoBehaviour
         {
             swipeShotPasses = 0;
         }
-        if (!isSwipeShot)
+        if (!isSwipeShot && !IsBullet)
         {
             //resets color to white.
             trailRenderer.startColor = Color.white;
@@ -373,11 +375,15 @@ public class Ball : MonoBehaviour
         {
             currentTarget = rightBasket;
             transform.GetChild(2).gameObject.SetActive(true);
+            trailRenderer.startColor = new Color(1, 0.9411765f, 0);
+            trailRenderer.endColor = new Color(1, 0.9411765f, 0);
         }
         else
         {
             currentTarget = leftBasket;
             transform.GetChild(3).gameObject.SetActive(true);
+            trailRenderer.startColor = new Color(0, 0.1f, 1);
+            trailRenderer.endColor = new Color(0, 0.1f, 1);
         }
 
         isSwipeShot = swipeShot;
