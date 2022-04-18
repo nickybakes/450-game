@@ -875,8 +875,14 @@ public class GameManager : MonoBehaviour
         if (isAboveScreen)
         {
             indicatorShevron.transform.position = cam.WorldToScreenPoint(new Vector3(ball.transform.position.x, 33, 0));
+
+            float sizeChange = (ball.transform.position.y - 33);
+            float scaleChange = 1.0f + (sizeChange / 20.0f);
+
+            indicatorText.text = sizeChange.ToString("F0") + "m";
+            indicatorText.fontSize = 48 + (int)sizeChange;
+            indicatorShevron.transform.localScale = new Vector3(scaleChange, scaleChange, 1.0f);
         }
-        indicatorText.text = (ball.transform.position.y - 33).ToString("F0") + "M";
         indicatorShevron.SetActive(isAboveScreen);
     }
 
