@@ -91,7 +91,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
     public float dribbleSoundTimerCurrent = 0;
     public float dribbleSoundTimerMax = .24f;
 
-
+    public static float shoeSqueakRate;
 
     public bool facingRight = true;
 
@@ -145,6 +145,12 @@ public class BhbPlayerController : NeonHeightsCharacterController
     public bool botAlwaysDoubleJump;
 
     public bool isDummy;
+
+    public Outline outline;
+
+    private Color outlineColorTeam0 = new Color(1, 0.9411765f, 0);
+    private Color outlineColorTeam1 = new Color(0, 0.125490196f, 1);
+
 
     public bool IsSwiping
     {
@@ -255,6 +261,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
             Destroy(player1Mesh);
             animator = player2Animator;
             player2Mesh.SetActive(true);
+            outline = player2Mesh.transform.GetChild(0).GetComponent<Outline>();
         }
     }
 
@@ -267,6 +274,11 @@ public class BhbPlayerController : NeonHeightsCharacterController
         swipeTimeCurrent = swipeTimeMax;
         flashTimeCurrent = flashTimeMax;
         soundTimer = 0;
+
+        if (shoeSqueakRate == 0.0f)
+        {
+            shoeSqueakRate = 0.5f;
+        }
 
         gameManager = FindObjectOfType<GameManager>();
         audioManager = FindObjectOfType<AudioManager>();
@@ -298,9 +310,22 @@ public class BhbPlayerController : NeonHeightsCharacterController
                 transform.SetPositionAndRotation(transform.position, q);
                 facingRight = true;
             }
+
+            outline.OutlineWidth = 5;
+            if (teamNumber == 0)
+            {
+                outline.OutlineColor = outlineColorTeam0;
+            }
+            else
+            {
+                outline.OutlineColor = outlineColorTeam1;
+            }
         }
         else
         {
+            outline.OutlineWidth = 10;
+            outline.OutlineColor = Color.white;
+
             //if holding it, face toward enemy hoop
             if (teamNumber == 0)
             {
@@ -340,7 +365,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
             {
                 soundTimer = 0;
                 //random chance to play.
-                if (Random.Range(0.1f, 0.8f) > 0.5)
+                if (Random.Range(0.1f, 0.8f) > shoeSqueakRate)
                     audioManager.Play("Squeak", 0.8f, 1.2f);
             }
             soundTimer += Time.deltaTime;
@@ -357,7 +382,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
             {
                 soundTimer = 0;
                 //random chance to play.
-                if (Random.Range(0.1f, 0.8f) > 0.5)
+                if (Random.Range(0.1f, 0.8f) > shoeSqueakRate)
                     audioManager.Play("Squeak", 0.8f, 1.2f);
             }
             soundTimer += Time.deltaTime;
@@ -444,12 +469,18 @@ public class BhbPlayerController : NeonHeightsCharacterController
                             GrabBall();
                         if (swipeVictims[i].transform.position.x < transform.position.x)
                         {
-                            swipeVictims[i].GetsHit(new Vector2(-50, 20), true);
+                            swipeVictims[i].GetsHit(new Vector2(-50, 20), true, false);
                         }
                         else if (swipeVictims[i].transform.position.x >= transform.position.x)
                         {
-                            swipeVictims[i].GetsHit(new Vector2(50, 20), true);
+                            swipeVictims[i].GetsHit(new Vector2(50, 20), true, false);
                         }
+                    }
+
+                    Powerup powerup = gameManager.SwipePowerupCheck(this);
+                    if (powerup != null)
+                    {
+                        powerup.ActivatePowerup(this);
                     }
                 }
                 if (IsSwiping && swipeTimeCurrent <= .5)
@@ -626,9 +657,9 @@ public class BhbPlayerController : NeonHeightsCharacterController
     }
 
 
-    public void GetsHit(Vector2 knockback, bool isByPlayer)
+    public void GetsHit(Vector2 knockback, bool isByPlayer, bool ignoreAlreadyStunned)
     {
-        if (!IsStunned && invinsibilityTimeCurrent >= invinsibilityTimeMax)
+        if ((!IsStunned && invinsibilityTimeCurrent >= invinsibilityTimeMax) || ignoreAlreadyStunned)
         {
             IsStunned = true;
             grounded = false;
@@ -973,6 +1004,16 @@ public class BhbPlayerController : NeonHeightsCharacterController
                             return true;
                         }
                         return false;
+                    }
+                }
+                else if (ball.transform != transform)
+                {
+                    if (gameManager.SwipePowerupCheck(this) != null)
+                    {
+                        if (Mathf.PerlinNoise(-transform.position.y * Random.Range(-4, 4), -transform.position.x * Random.Range(-4, 4)) > .7)
+                        {
+                            return true;
+                        }
                     }
                 }
 

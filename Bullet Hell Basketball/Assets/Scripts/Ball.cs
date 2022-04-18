@@ -166,7 +166,7 @@ public class Ball : MonoBehaviour
         //Resets swipe shot passes.
         if (!isSwipeShot && physics.simulatePhysics)
         {
-            swipeShotPasses = -1;
+            swipeShotPasses = 0;
         }
         if (!isSwipeShot)
         {
@@ -192,8 +192,8 @@ public class Ball : MonoBehaviour
                     if (swipeShotPasses > 0)
                     {
                         //caps max passing speed at 4 passes.
-                        if (swipeShotPasses > 3)
-                            swipeShotPasses = 3;
+                        if (swipeShotPasses > 4)
+                            swipeShotPasses = 4;
 
                         float newSwipePitch = 1.0f + ((swipeShotPasses - 1.0f) / 12.0f);
                         audioManager.Play("SwipeRally", 0.3f, newSwipePitch, newSwipePitch);
@@ -201,14 +201,18 @@ public class Ball : MonoBehaviour
                         switch (swipeShotPasses)
                         {
                             case 1:
+                                trailRenderer.startColor = new Color32(255, 200, 200, 1);
+                                trailRenderer.endColor = new Color32(255, 200, 200, 1);
+                                break;
+                            case 2:
                                 trailRenderer.startColor = new Color32(255, 125, 125, 1);
                                 trailRenderer.endColor = new Color32(255, 125, 125, 1);
                                 break;
-                            case 2:
+                            case 3:
                                 trailRenderer.startColor = new Color32(255, 50, 50, 1);
                                 trailRenderer.endColor = new Color32(255, 50, 50, 1);
                                 break;
-                            case 3:
+                            case 4:
                                 trailRenderer.startColor = new Color32(255, 0, 0, 1);
                                 trailRenderer.endColor = new Color32(255, 0, 0, 1);
                                 break;
@@ -644,6 +648,18 @@ public class Ball : MonoBehaviour
         foreach (HomingBullet hb in homingBullets)
         {
             hb.Explode();
+        }
+
+        SuperBullet[] superBullets = FindObjectsOfType<SuperBullet>();
+        foreach (SuperBullet sb in superBullets)
+        {
+            sb.ForceDestroy();
+        }
+
+        BulletPortal[] bulletPortals = FindObjectsOfType<BulletPortal>();
+        foreach (BulletPortal portal in bulletPortals)
+        {
+            // sb.ForceDestroy();
         }
 
         if (gameManager.overTime)

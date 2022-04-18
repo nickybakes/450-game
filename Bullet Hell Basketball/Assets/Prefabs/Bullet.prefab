@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2649196223168556769}
-  - component: {fileID: 2649196223168556768}
   - component: {fileID: 2649196223168556770}
   - component: {fileID: 130120717617434444}
   - component: {fileID: 3656997591394670924}
@@ -32,19 +31,11 @@ Transform:
   m_LocalScale: {x: 1.342743, y: 1.342743, z: 1.342743}
   m_Children:
   - {fileID: 8467044925800196333}
-  - {fileID: 7756597849147352454}
   - {fileID: 1056191470537257311}
+  - {fileID: 7756597849147352454}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &2649196223168556768
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2649196223168556797}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!114 &2649196223168556770
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -63,11 +54,8 @@ MonoBehaviour:
   ownerNumber: 0
   dontUpdate: 0
   gameManager: {fileID: 0}
-  ps: {fileID: 4860955265722537127}
-  isBig: 0
-  movement: 0
-  sinLength: 0
-  frequency: 0
+  ps: {fileID: 6906962215700477121}
+  explosive: 0
 --- !u!58 &130120717617434444
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -135,7 +123,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2649196223168556769}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!198 &6906962215700477121
 ParticleSystem:
@@ -153,7 +141,7 @@ ParticleSystem:
   ringBufferLoopRange: {x: 0, y: 1}
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   useRigidbodyForVelocity: 1
@@ -220,8 +208,8 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.4
-      minScalar: 0.18
+      scalar: 0.2
+      minScalar: 0.03
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -389,8 +377,8 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.8
-      minScalar: 0.6
+      scalar: 0.25
+      minScalar: 0.2
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -705,7 +693,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     randomizeRotationDirection: 0
-    maxNumParticles: 1000
+    maxNumParticles: 20
     size3D: 0
     rotation3D: 0
     gravityModifier:
@@ -1080,7 +1068,7 @@ ParticleSystem:
       countCurve:
         serializedVersion: 2
         minMaxState: 0
-        scalar: 38.9
+        scalar: 5
         minScalar: 30
         maxCurve:
           serializedVersion: 2
@@ -4972,7 +4960,7 @@ ParticleSystemRenderer:
   m_FreeformStretching: 0
   m_RotateWithStretchDirection: 1
   m_VertexStreams: 00010304
-  m_Mesh: {fileID: 0}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
   m_Mesh1: {fileID: 0}
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
@@ -4986,7 +4974,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5898419322351102400, guid: f7b1d37e07508ec468a2d03bce96bb99, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5898419322351102400, guid: f7b1d37e07508ec468a2d03bce96bb99, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5045,11 +5033,6 @@ PrefabInstance:
 --- !u!4 &7756597849147352454 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5898419322351102400, guid: f7b1d37e07508ec468a2d03bce96bb99, type: 3}
-  m_PrefabInstance: {fileID: 4215261201031302214}
-  m_PrefabAsset: {fileID: 0}
---- !u!198 &4860955265722537127 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 8721793205336660193, guid: f7b1d37e07508ec468a2d03bce96bb99, type: 3}
   m_PrefabInstance: {fileID: 4215261201031302214}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8217456347485392646

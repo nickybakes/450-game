@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     /// The instance of the GameManager (it's a singleton).
     /// </summary>
     public static GameManager Instance;
+    public Camera cam;
     private AudioManager audioManager;
     private Sound music;
     private Sound pauseMusic;
@@ -30,13 +31,19 @@ public class GameManager : MonoBehaviour
     public GameObject explosionPrefab;
 
     public GameObject homingBulletPrefab;
+    public GameObject airStrikePrefab;
+
+    public GameObject superBulletPrefab;
 
     public GameObject powerUpPrefab;
 
-    public float powerUpTimeSpawnMin = 16;
-    public float powerUpTimeSpawnMax = 32;
+    public float powerUpTimeSpawnMin = 12;
+    public float powerUpTimeSpawnMax = 27;
     public float powerUpTimeSpawn;
     public float powerUpTimeSpawnCurrent;
+    public int powerUpsSpawnInARow;
+
+    private PowerupType previousPowerupType = PowerupType.SuperBullet;
 
     public List<Powerup> allAlivePowerups;
 
@@ -85,7 +92,7 @@ public class GameManager : MonoBehaviour
 
     public float horizontalEdge = 40;
 
-    public GameObject tempHud;
+    public GameObject pausedMenuUI;
     public GameObject panelUI;
     public GameObject playerHeadersPanel;
 
@@ -98,7 +105,9 @@ public class GameManager : MonoBehaviour
     private Text dunkBonusUI;
     private int dunkBonusValue;
 
-    public int bulletLevelUpInterval;
+    public int numOfBulletLevelUps = 3;
+
+    public float bulletLevelUpInterval;
     public float bulletLevelUpCurrentTime;
 
     public GameObject playerOneWins;
@@ -107,6 +116,7 @@ public class GameManager : MonoBehaviour
     public GameObject yellowShevrons;
     public GameObject blueShevrons;
     public GameObject indicatorShevron;
+    public Text indicatorText;
 
     public bool gameOver;
     public bool paused;
@@ -124,11 +134,13 @@ public class GameManager : MonoBehaviour
 
     public TutorialManager tutorialManager;
 
-    public bool doubleHelix; //Will double helix shoot out
-    
-    public bool allBigBullets;
-
+    public BulletSpawnage bulletSpawnage;
     public float bigBulletScale;
+    public CameraShake cameraShake;
+
+    public bool cameraShakeEnabled;
+    public bool powerUpsEnabled;
+
 
     [HideInInspector] public bool winConditionMet = false;
 
@@ -149,18 +161,12 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        matchTimeCurrent = matchTimeMax;
-        team0Score = 0;
-        team1Score = 0;
-        bulletLevel = 1;
-        bulletTimerUI = 0;
-        increaseLevelOnce = true;
+        paused = true;
+
+        cameraShake = FindObjectOfType<Camera>().GetComponent<CameraShake>();
+        cameraShake.gameManager = this;
 
         allAlivePowerups = new List<Powerup>();
-
-        //lowest interval is 5 seconds.
-        if (bulletLevelUpInterval <= 4)
-            bulletLevelUpInterval = 30;
 
         bulletLevelUI = panelUI.transform.GetChild(6).GetComponent<Text>();
         bulletIncreaseUI = panelUI.transform.GetChild(5).GetComponent<Text>();
@@ -171,24 +177,18 @@ public class GameManager : MonoBehaviour
         pauseMusic = audioManager.Find("MusicPause");
         midair = audioManager.Find("Midair");
 
+        audioManager.Play("Music");
+        audioManager.Play("MusicPause");
+        pauseMusic.source.volume = 0.0f;
+
         panelUI.SetActive(true);
         //player 1.
         panelUI.transform.GetChild(0).GetComponent<Text>().text = "0";
         //player 2.
         panelUI.transform.GetChild(1).GetComponent<Text>().text = "0";
 
-        //bullet level & Dunk value.
-        bulletLevelUI.text = "Bullets Level: " + bulletLevel;
-        dunkBonusValue = (bulletLevel * 2) - 2;
-        dunkBonusUI.text = "Dunk Bonus: +" + dunkBonusValue;
-
         matchTimeText = panelUI.transform.GetChild(2).GetComponent<Text>();
         matchTimeText.text = TimeSpan.FromSeconds(Mathf.Max(matchTimeCurrent, 0)).ToString("m\\:ss");
-
-
-        paused = true;
-        gameOver = false;
-        overTime = false;
 
         team0SpawnPosition = new Vector2(playerSpawnLocation.position.x, playerSpawnLocation.position.y);
         team1SpawnPosition = new Vector2(-playerSpawnLocation.position.x, playerSpawnLocation.position.y);
@@ -222,30 +222,38 @@ public class GameManager : MonoBehaviour
 
             //uncommented this code to have 2 players on KB spawn in instead of Bots
 
-            data.playerControlsTeam0 = new List<int>() {0};
-            data.playerNumbersTeam0 = new List<int>() {1};
-            data.playerControlsTeam1 = new List<int>() {1};
-            data.playerNumbersTeam1 = new List<int>() {2};
+            data.playerControlsTeam0 = new List<int>() { 0 };
+            data.playerNumbersTeam0 = new List<int>() { 0 };
+            data.playerControlsTeam1 = new List<int>() { 1 };
+            data.playerNumbersTeam1 = new List<int>() { 1 };
         }
 
         if (isTutorial)
         {
-
+            data.numOfBulletLevelUps = 3;
         }
 
         playersTeam0 = new GameObject[data.playerNumbersTeam0.Count];
         playerScriptsTeam0 = new BhbPlayerController[data.playerNumbersTeam0.Count];
         for (int i = 0; i < data.playerNumbersTeam0.Count; i++)
         {
-            SpawnPlayer(playersTeam0, playerScriptsTeam0, data.playerControlsTeam0, data.playerControlsTeam0, i, 0);
+            SpawnPlayer(playersTeam0, playerScriptsTeam0, data.playerNumbersTeam0, data.playerControlsTeam0, i, 0);
         }
 
         playersTeam1 = new GameObject[data.playerNumbersTeam1.Count];
         playerScriptsTeam1 = new BhbPlayerController[data.playerNumbersTeam1.Count];
         for (int i = 0; i < data.playerNumbersTeam1.Count; i++)
         {
-            SpawnPlayer(playersTeam1, playerScriptsTeam1, data.playerControlsTeam1, data.playerControlsTeam1, i, 1);
+            SpawnPlayer(playersTeam1, playerScriptsTeam1, data.playerNumbersTeam1, data.playerControlsTeam1, i, 1);
         }
+
+        matchTimeMax = data.matchLength;
+
+        bulletLevelUpInterval = matchTimeMax / (numOfBulletLevelUps + 1);
+
+        powerUpsEnabled = data.powerUps;
+        cameraShakeEnabled = data.cameraShake;
+        bulletSpawnage = data.bulletSpawnage;
 
         ball = Instantiate(ballPrefab);
         ballControlScript = ball.GetComponent<Ball>();
@@ -261,12 +269,13 @@ public class GameManager : MonoBehaviour
         ballControlScript.rightBasket = rightBasket;
 
         //spawn the bullet launchers
-        SpawnBulletSpawnersFromData();
+        if (bulletSpawnage != BulletSpawnage.None)
+            SpawnBulletSpawnersFromData();
 
         if (isTutorial)
         {
             tutorialManager.gameManager = this;
-            Destroy(tempHud);
+            Destroy(pausedMenuUI);
             paused = false;
             matchTimeText.text = "";
             bulletLevelUI.text = "";
@@ -284,6 +293,9 @@ public class GameManager : MonoBehaviour
                 bulletManagers[i].gameObject.SetActive(false);
             }
             tutorialManager.bulletManagers = bulletManagers;
+
+            audioManager.Stop("Music");
+            audioManager.Play("MusicTutorial");
         }
         else
         {
@@ -305,7 +317,7 @@ public class GameManager : MonoBehaviour
         if (playerNumbers[index] == 8)
         {
             //create bot
-            playerScript.Init(playerNumbers[index], team, 0);
+            playerScript.Init(8, team, -1);
             playerScript.isBot = true;
 
             //spawn bot Header on Canvas
@@ -320,7 +332,7 @@ public class GameManager : MonoBehaviour
         }
         playerObjects[index] = player;
         playerScripts[index] = playerScript;
-        playerHeader.GetComponent<PlayerHeader>().Init(playerScript);
+        playerHeader.GetComponent<PlayerHeader>().Init(playerScript, this);
     }
 
     private void BeginMatch()
@@ -357,6 +369,15 @@ public class GameManager : MonoBehaviour
             }
         }
 
+        for (int i = 0; i < allAlivePowerups.Count; i++)
+        {
+            Destroy(allAlivePowerups[i].gameObject);
+        }
+
+        allAlivePowerups.Clear();
+        powerUpTimeSpawn = UnityEngine.Random.Range(powerUpTimeSpawnMin, powerUpTimeSpawnMax);
+
+
         bulletManagers = FindObjectsOfType<BulletManager>();
 
         for (int i = 0; i < bulletManagers.Length; i++)
@@ -366,13 +387,23 @@ public class GameManager : MonoBehaviour
 
         bulletLevelUpCurrentTime = 0;
         bulletLevel = 1;
+        increaseLevelOnce = true;
+
+        //bullet level & Dunk value.
+        bulletLevelUI.text = "Bullets Level: " + bulletLevel;
+        dunkBonusValue = (bulletLevel * 2) - 2;
+        dunkBonusUI.text = "Dunk Bonus: +" + dunkBonusValue;
 
         ballControlScript.IsResetting = false;
     }
 
     public void SpawnRandomPowerUp()
     {
-        PowerupType type = (PowerupType)UnityEngine.Random.Range(0, 3);
+        PowerupType type = (PowerupType)UnityEngine.Random.Range(0, 4);
+        while (type == previousPowerupType)
+            type = (PowerupType)UnityEngine.Random.Range(0, 4);
+
+        previousPowerupType = type;
 
         bool closeToAnotherPowerup = false;
         float yPos, xPos;
@@ -397,9 +428,6 @@ public class GameManager : MonoBehaviour
             }
             closeChecks++;
         } while (closeToAnotherPowerup && closeChecks < 50);
-
-        if (closeChecks == 50)
-            return;
 
         GameObject p = Instantiate(powerUpPrefab, new Vector2(xPos, yPos), Quaternion.identity);
 
@@ -453,6 +481,22 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void SpawnAirStrike(int teamNumber)
+    {
+        GameObject airStrike = Instantiate(airStrikePrefab);
+        Airstrike airStrikeScript = airStrike.GetComponent<Airstrike>();
+        airStrikeScript.teamNumber = teamNumber;
+        airStrikeScript.gameManager = this;
+    }
+
+    public void SpawnSuperBullet(int teamNumber)
+    {
+        GameObject superBullet = Instantiate(superBulletPrefab);
+        SuperBullet superBulletScript = superBullet.GetComponent<SuperBullet>();
+        superBulletScript.Init(teamNumber, this);
+        StartCoroutine(cameraShake.Shake(.2f, .5f));
+    }
+
     void Update()
     {
         if (ball.transform.parent == null)
@@ -496,29 +540,6 @@ public class GameManager : MonoBehaviour
                 SceneManager.LoadScene(1);
                 return;
             }
-
-            // if (paused && Input.GetKeyDown(KeyCode.Alpha2))
-            // {
-            //     player1IsBot = true;
-            //     player2IsBot = true;
-            //     player1Script.isBot = true;
-            //     player2Script.isBot = true;
-            // }
-            // else if (paused && Input.GetKeyDown(KeyCode.Alpha1))
-            // {
-            //     player1IsBot = false;
-            //     player2IsBot = true;
-            //     player1Script.isBot = false;
-            //     player2Script.isBot = true;
-            // }
-            // else if (paused && Input.GetKeyDown(KeyCode.Alpha0))
-            // {
-            //     player1IsBot = false;
-            //     player2IsBot = false;
-            //     player1Script.isBot = false;
-            //     player2Script.isBot = false;
-            // }
-
 
             if (Input.GetKeyDown(KeyCode.Backspace))
             {
@@ -587,6 +608,26 @@ public class GameManager : MonoBehaviour
                 }
             }
 
+            if (powerUpsEnabled)
+            {
+                powerUpTimeSpawnCurrent += Time.deltaTime;
+                if (powerUpTimeSpawnCurrent >= powerUpTimeSpawn)
+                {
+                    SpawnRandomPowerUp();
+                    powerUpTimeSpawnCurrent = 0;
+                    powerUpTimeSpawn = UnityEngine.Random.Range(powerUpTimeSpawnMin, powerUpTimeSpawnMax);
+                    if (powerUpsSpawnInARow == 0)
+                    {
+                        powerUpsSpawnInARow = UnityEngine.Random.Range(0, 4);
+                    }
+                    else
+                    {
+                        powerUpsSpawnInARow--;
+                        powerUpTimeSpawn = .6f;
+                    }
+                }
+            }
+
             //Shows bullets increased UI element on regular interval.
             ShowBulletIncreaseUI();
         }
@@ -614,6 +655,26 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha4))
         {
             SpawnRandomPowerUp();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            SpawnAirStrike(0);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha6))
+        {
+            SpawnAirStrike(1);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha7))
+        {
+            SpawnSuperBullet(0);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha8))
+        {
+            SpawnSuperBullet(1);
         }
 
         // if (player1Script.controllerNumber == -1)
@@ -676,12 +737,13 @@ public class GameManager : MonoBehaviour
 
     public void ToggleHowToPlay()
     {
-        tempHud.SetActive(!tempHud.activeSelf);
+        pausedMenuUI.SetActive(!pausedMenuUI.activeSelf);
         paused = !paused;
 
         //toggles audio.
         if (paused)
         {
+            audioManager.Play("MusicPauseStart");
             pauseMusic.source.volume = 0.1f;
             music.source.volume = 0;
 
@@ -722,6 +784,18 @@ public class GameManager : MonoBehaviour
 
         bulletIncreaseUI.gameObject.SetActive(false);
         bulletTimerUI = 0;
+
+        HomingBullet[] homingBullets = FindObjectsOfType<HomingBullet>();
+        foreach (HomingBullet hb in homingBullets)
+        {
+            hb.Explode();
+        }
+
+        SuperBullet[] superBullets = FindObjectsOfType<SuperBullet>();
+        foreach (SuperBullet sb in superBullets)
+        {
+            sb.ForceDestroy();
+        }
     }
 
     public void ResetPlayersAndBall()
@@ -799,9 +873,23 @@ public class GameManager : MonoBehaviour
     private void ShowBallChevron(bool isAboveScreen)
     {
         if (isAboveScreen)
-            indicatorShevron.transform.position = new Vector3(ball.transform.position.x, 33, 0);
-
+        {
+            indicatorShevron.transform.position = cam.WorldToScreenPoint(new Vector3(ball.transform.position.x, 33, 0));
+        }
+        indicatorText.text = (ball.transform.position.y - 33).ToString("F0") + "M";
         indicatorShevron.SetActive(isAboveScreen);
+    }
+
+    public Powerup SwipePowerupCheck(BhbPlayerController source)
+    {
+        for (int i = 0; i < allAlivePowerups.Count; i++)
+        {
+            if (source.swipeRenderer.bounds.Intersects(allAlivePowerups[i].powerupCollider.bounds) || source.playerCollider.bounds.Intersects(allAlivePowerups[i].powerupCollider.bounds))
+            {
+                return allAlivePowerups[i];
+            }
+        }
+        return null;
     }
 
 

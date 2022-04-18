@@ -18,6 +18,7 @@ public class HomingBullet : MonoBehaviour
     public GameObject crosshair;
     public GameManager gameManager;
     private AudioManager audioManager;
+    public AudioSource beepingSounds;
     private float beepTimer = 0.0f;
     private bool hasPlayedOnce = false;
 
@@ -44,7 +45,7 @@ public class HomingBullet : MonoBehaviour
 
         transform.Translate(direction * speed * Time.deltaTime, Space.World);
 
-        crosshair.transform.position = Vector3.Lerp(crosshair.transform.position, new Vector3(ball.transform.position.x, ball.transform.position.y, 0), .5f);
+        crosshair.transform.position = Vector3.Lerp(crosshair.transform.position, new Vector3(ball.transform.position.x, ball.transform.position.y, 0), .1f);
 
         float bulletDistance = Vector2.Distance(transform.position, ball.transform.position);
 
@@ -53,12 +54,12 @@ public class HomingBullet : MonoBehaviour
 
         if (beepTimer >= (bulletDistance / 50.0f))
         {
-            beepTimer = 0.0f;   
-            audioManager.Play("HomingBulletBeep");
+            beepTimer = 0.0f;
+            beepingSounds.Play();
         }
 
         //Audio for when the homing bullet is very close to its target.
-        if (hasPlayedOnce && bulletDistance > 20.0f)
+        if (hasPlayedOnce && bulletDistance > 30.0f)
         {
             hasPlayedOnce = false;
         }
@@ -85,7 +86,6 @@ public class HomingBullet : MonoBehaviour
     public void Explode()
     {
         //Removes any sound effects. Explosion dealt with in Explosion.cs
-        audioManager.Stop("HomingBulletStart");
         audioManager.Stop("HomingBulletFlying");
         audioManager.Stop("HomingBulletClose");
 

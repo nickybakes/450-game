@@ -16,7 +16,6 @@ public enum BulletPatterns
     omni,
     front,
     down,
-    up,
     angular
 }
 
@@ -46,6 +45,7 @@ public class BulletManager : MonoBehaviour
     //Materials
     public Material player1Mat;
     public Material player2Mat;
+    public Material trailMatrialTeam1;
 
     public GameManager gameManager;
 
@@ -107,6 +107,7 @@ public class BulletManager : MonoBehaviour
         originalMaxTime = data.initialTimeBetweenBullets;
 
         numBullets = data.initialNumberOfBullets;
+        initialNumberOfBullets = data.initialNumberOfBullets;
 
         this.ownerNumber = playerNumber;
 
@@ -134,7 +135,7 @@ public class BulletManager : MonoBehaviour
         timer = maxTime;
         rotationAmountDegrees = 0;
         currentAngle = 0;
-        //bulletPattern = this.bulletPattern;
+        bulletPattern = BulletPatterns.front;
         numBullets = initialNumberOfBullets;
 
         //Add new patterns
@@ -166,22 +167,23 @@ public class BulletManager : MonoBehaviour
                 case BulletPatterns.front:
 
                     if (ownerNumber == 0)
-                        OneDirection(0);
+                        AngularPattern();
 
-                    else OneDirection(180);
+                    else AngularPattern();
 
                     break;
 
                 case BulletPatterns.angular:
-                    AngularPattern();
+
+                    if (ownerNumber == 0)
+                        AngularPattern();
+
+                    else AngularPattern();
+
                     break;
 
                 case BulletPatterns.down:
-                    OneDirection(270);
-                    break;
-
-                case BulletPatterns.up:
-                    OneDirection(90);
+                    AngularPattern();
                     break;
             }
 
@@ -355,6 +357,19 @@ public class BulletManager : MonoBehaviour
         bulletScript.sinLength = sinWaveLength;
         bulletScript.frequency = sinWaveFrequency;
 
+        if (gameManager.bulletSpawnage == BulletSpawnage.BothRegularAndBig && gameManager.bulletLevel >= 2)
+        {
+            //Make the bullet RNG more dynamic
+            int randomNumber = Random.Range(1, 6 + gameManager.bulletLevel);
+
+            //Debug.Log(randomNumber); 
+
+            if (randomNumber >= 6)
+            {
+                bulletScript.isBig = true;
+            }
+        }
+
         //Also mess with the speed of the big bullets
         if (ownerNumber == 0)
         {
@@ -367,7 +382,7 @@ public class BulletManager : MonoBehaviour
             bulletScript.speed = 10 + Mathf.Max((gameManager.team0Score - gameManager.team1Score) / 30, 0) + gameManager.bulletLevel;
         }
 
-        if (gameManager.allBigBullets)
+        if (gameManager.bulletSpawnage == BulletSpawnage.BigOnly)
         {
             bulletScript.isBig = true;
         }
@@ -380,6 +395,7 @@ public class BulletManager : MonoBehaviour
 
 
         MeshRenderer bulletMesh = newBullet.GetComponentInChildren<MeshRenderer>();
+        ParticleSystemRenderer ps = newBullet.transform.GetChild(1).GetComponent<ParticleSystemRenderer>();
 
         if (bulletScript.ownerNumber == 0)
         {
@@ -389,6 +405,7 @@ public class BulletManager : MonoBehaviour
         else
         {
             bulletMesh.material = player2Mat;
+            ps.trailMaterial = trailMatrialTeam1;
         }
 
         return newBullet;
@@ -422,28 +439,7 @@ public class BulletManager : MonoBehaviour
             float direction = startingAngle + i * bulletSeperationAngle;
 
             bulletScript.direction = new Vector2(Mathf.Cos(direction * Mathf.Deg2Rad), Mathf.Sin(direction * Mathf.Deg2Rad));
-
-            //Creates double helix
-            if(bulletMovement == BulletMovement.sine && gameManager.doubleHelix)
-            {
-                if(i % 2 != 0)
-                {
-                    bulletScript.movement = BulletMovement.counterSine;
-                }
-
-                else
-                {
-                    bulletScript.movement = BulletMovement.sine;
-                }
-            }
         }
-    }
-
-    private void OneDirection(float degreees)
-    {
-        GameObject newBullet = BulletSetup();
-        Bullet bulletScript = newBullet.GetComponent<Bullet>();
-        bulletScript.direction = new Vector2(Mathf.Cos(Mathf.Deg2Rad * (degreees)), Mathf.Sin(Mathf.Deg2Rad * (degreees)));
     }
 
 

@@ -14,6 +14,10 @@ public class BhbBallPhysics : NeonHeightsPhysicsObject
     private GameManager gameManager;
     private AudioManager audioManager;
 
+    public TrailRenderer trailRenderer;
+
+    public Vector3 prevPosition;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -90,7 +94,7 @@ public class BhbBallPhysics : NeonHeightsPhysicsObject
             }
             else if (velocity.y == 0 && leftCollision != null && leftCollision.segment.semiSolidPlatform && IsOverSegment(leftCollision.segment, 0))
             {
-               this.velocity = Vector2.Reflect(this.velocity, leftCollision.segment.normalNormalized) * speedDepletionAmount;
+                this.velocity = Vector2.Reflect(this.velocity, leftCollision.segment.normalNormalized) * speedDepletionAmount;
                 PlayBounce(true);
             }
         }
@@ -100,8 +104,9 @@ public class BhbBallPhysics : NeonHeightsPhysicsObject
             grounded = false;
             PlayBounce(false);
         }
-        
-        if(!onFlatGround && enableGravity && groundCollision != null && groundCollision.segment.downPointingTangent.y != 0 && Mathf.Abs(velocity.y) < 13){
+
+        if (!onFlatGround && enableGravity && groundCollision != null && groundCollision.segment.downPointingTangent.y != 0 && Mathf.Abs(velocity.y) < 13)
+        {
             velocity += (-gravity.y / 2 * Time.deltaTime) * groundCollision.segment.downPointingTangent;
         }
 
@@ -150,7 +155,18 @@ public class BhbBallPhysics : NeonHeightsPhysicsObject
     {
         if (gameManager.paused)
             return;
-            
+
+        float posDifference = Mathf.Max(Mathf.Abs(prevPosition.x - transform.position.x), Mathf.Abs(prevPosition.y - transform.position.y));
+        float speed = velocity.magnitude;
+
+        trailRenderer.widthMultiplier = Mathf.Lerp(1.5f, 3f, speed / 40);
+
+        if (transform.parent != null)
+            trailRenderer.widthMultiplier = 1.5f;
+
+
+        prevPosition = transform.position;
+
         if (simulatePhysics)
             SimulatePhysics();
     }

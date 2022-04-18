@@ -6,7 +6,7 @@ public enum BulletMovement
 {
     straight,
     sine,
-    counterSine, //Will be used for double helix
+    heatSeeking
 }
 
 
@@ -37,16 +37,13 @@ public class Bullet : MonoBehaviour
     private Vector2 normal;
     private Vector2 offset;
 
+    public bool explosive;
+
     // Start is called before the first frame update
     void Start()
     {
         ogPosition = transform.position;
         timeAlive = 0;
-
-        if (speed <= 0)
-        {
-            speed = 1;
-        }
 
         //Sets a default value if the given one isn't good
         if (timer <= 0)
@@ -61,6 +58,9 @@ public class Bullet : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (explosive)
+            transform.GetChild(2).gameObject.SetActive(true);
+
         if (dontUpdate && gameManager.ballControlScript.IsBullet)
         {
             if (transform.parent != null)
@@ -69,15 +69,22 @@ public class Bullet : MonoBehaviour
             }
             transform.rotation = Quaternion.Euler(0, 0, getAngle(Vector2.zero, gameManager.ballPhysicsScript.velocity));
         }
-
-        else if (movement != BulletMovement.straight)
+        
+        else if(movement == BulletMovement.sine)
         {
             transform.rotation = Quaternion.Euler(0, 0, getAngle(Vector2.zero, direction + offset));
         }
-
+        
         else
         {
-            transform.rotation = Quaternion.Euler(0, 0, getAngle(Vector2.zero, direction));
+            if (transform.parent != null)
+            {
+                transform.rotation = Quaternion.Euler(0, transform.parent.rotation.eulerAngles.y, getAngle(Vector2.zero, direction));
+            }
+            else
+            {
+                transform.rotation = Quaternion.Euler(0, 0, getAngle(Vector2.zero, direction));
+            }
         }
 
         if (dontUpdate)
@@ -86,10 +93,10 @@ public class Bullet : MonoBehaviour
         if (gameManager.paused)
             return;
 
-        if (transform.parent != null)
-        {
-            transform.localRotation = Quaternion.Inverse(transform.parent.rotation);
-        }
+        // if (transform.parent != null)
+        // {
+        //     transform.localRotation = Quaternion.Inverse(transform.parent.rotation);
+        // }
 
 
 
@@ -103,16 +110,16 @@ public class Bullet : MonoBehaviour
                 //Get the normal of direction multiply by length then both by the sin of the time alive
                 normal = perpCW(direction);
                 offset = (normal * sinLength) * Mathf.Sin(timeAlive * frequency);
-                transform.Translate((direction + offset) * Time.deltaTime * speed, Space.World);
+                transform.Translate((direction + offset) *  Time.deltaTime * speed, Space.World);
                 break;
 
-            case BulletMovement.counterSine:
-                normal = perpCCW(direction);
-                offset = (normal * sinLength) * Mathf.Sin(timeAlive * frequency);
-                transform.Translate((direction + offset) * Time.deltaTime * speed, Space.World);
-                break;
+            /*case BulletMovement.heatSeeking:
+                //Find the position of the basketball
+                Transform ball = FindObjectOfType<Ball>().gameObject.transform;
+                transform.Translate(ball.position * Time.deltaTime * speed, Space.World);
+                break;*/
         }
-
+        
     }
 
     private void FixedUpdate()
@@ -131,8 +138,10 @@ public class Bullet : MonoBehaviour
             if (ps != null)
             {
                 ps.transform.parent = null;
-                ps.Stop();
+                ps.Play();
             }
+            if (explosive)
+                gameManager.SpawnExplosion(ownerNumber, transform.position);
             Destroy(this.gameObject);
         }
     }
@@ -147,22 +156,28 @@ public class Bullet : MonoBehaviour
             {
                 // Debug.Log("Bullet hit!");
                 //Insert method for when player is hit
-                if (other.gameObject.transform.position.x < transform.position.x)
+                if (!explosive)
                 {
-                    playerScript.GetsHit(new Vector2(-40, 20), false);
+                    if (other.gameObject.transform.position.x < transform.position.x)
+                    {
+                        playerScript.GetsHit(new Vector2(-40, 20), false, false);
+                    }
+                    else if (other.gameObject.transform.position.x >= transform.position.x)
+                    {
+                        playerScript.GetsHit(new Vector2(40, 20), false, false);
+                    }
                 }
-                else if (other.gameObject.transform.position.x >= transform.position.x)
-                {
-                    playerScript.GetsHit(new Vector2(40, 20), false);
-                }
+
 
                 if (!dontUpdate)
                 {
                     if (ps != null)
                     {
                         ps.transform.parent = null;
-                        ps.Stop();
+                        ps.Play();
                     }
+                    if (explosive)
+                        gameManager.SpawnExplosion(ownerNumber, transform.position);
                     Destroy(this.gameObject);
                 }
             }
@@ -183,16 +198,6 @@ public class Bullet : MonoBehaviour
     private Vector2 perpCW(Vector2 vector)
     {
         return new Vector2(vector.y, -1 * vector.x);
-    }
-
-    /// <summary>
-    /// gets the perpidicular vector to this one, going around counter clock wise
-    /// </summary>
-    /// <param name="vector">The vector that will change</param>
-    /// <returns></returns>
-    private Vector2 perpCCW(Vector2 vector)
-    {
-        return new Vector2(-1 * vector.y, vector.x);
     }
 
 }

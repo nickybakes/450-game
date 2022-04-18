@@ -7,7 +7,8 @@ public enum PowerupType
     HomingBullet,
     Airstrike,
 
-    BulletShield
+    BulletShield,
+    SuperBullet
 }
 
 public class Powerup : MonoBehaviour
@@ -18,10 +19,20 @@ public class Powerup : MonoBehaviour
     public GameManager gameManager;
     public Vector2 originalPosition;
 
+    public Collider2D powerupCollider;
+
+    public ParticleSystem ps;
+
+    public GameObject bulletPrefab;
+    private AudioManager audioManager;
+
+    public Material explosiveBulletMatTeam0;
+    public Material explosiveBulletMatTeam1;
+
     // Start is called before the first frame update
     void Start()
     {
-
+        audioManager = FindObjectOfType<AudioManager>();
     }
 
     // Update is called once per frame
@@ -37,28 +48,77 @@ public class Powerup : MonoBehaviour
         transform.GetChild((int)type).gameObject.SetActive(true);
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    public void ActivatePowerup(BhbPlayerController player)
     {
-        if (other.gameObject.tag == "Player")
+        if (type == PowerupType.HomingBullet)
         {
-            BhbPlayerController playerScript = other.gameObject.GetComponent<BhbPlayerController>();
-
-            if (type == PowerupType.HomingBullet)
-            {
-                gameManager.SpawnHomingBullet();
-            }
-
-            gameManager.allAlivePowerups.Remove(this);
-            Destroy(gameObject);
-
-            // if (other.gameObject.transform.position.x < transform.position.x)
-            // {
-            //     playerScript.GetsHit(new Vector2(-80, 50), false);
-            // }
-            // else if (other.gameObject.transform.position.x >= transform.position.x)
-            // {
-            //     playerScript.GetsHit(new Vector2(80, 50), false);
-            // }
+            gameManager.SpawnHomingBullet();
         }
+        else if (type == PowerupType.Airstrike)
+        {
+            gameManager.SpawnAirStrike(player.teamNumber);
+        }
+        else if (type == PowerupType.BulletShield)
+        {
+            Vector2[] directions = new Vector2[] { new Vector2(.5f, .5f), new Vector2(0, 0), new Vector2(.5f, -.5f) };
+            Vector2[] positions = new Vector2[] { new Vector2(3, 4), new Vector2(3.5f, 0), new Vector2(3, -4) };
+
+            audioManager.Play("Shield");
+
+            for (int i = 0; i < directions.Length; i++)
+            {
+                GameObject newBullet = Instantiate(bulletPrefab, player.transform);
+                newBullet.transform.position = new Vector2(player.transform.position.x, player.transform.position.y + (player.height / 2.0f));
+                newBullet.transform.Translate(positions[i], Space.Self);
+                Bullet bulletScript = newBullet.GetComponent<Bullet>();
+                bulletScript.ownerNumber = player.teamNumber;
+                bulletScript.gameManager = gameManager;
+
+                bulletScript.speed = 0;
+                bulletScript.timer = 99999;
+                bulletScript.direction = directions[i];
+                bulletScript.explosive = true;
+
+                MeshRenderer bulletMesh = newBullet.GetComponentInChildren<MeshRenderer>();
+                ParticleSystemRenderer ps = newBullet.transform.GetChild(1).GetComponent<ParticleSystemRenderer>();
+                if (player.teamNumber == 0)
+                {
+                    bulletMesh.material = explosiveBulletMatTeam0;
+                }
+                else
+                {
+                    bulletMesh.material = explosiveBulletMatTeam1;
+                }
+            }
+        }
+        else if (type == PowerupType.SuperBullet)
+        {
+            gameManager.SpawnSuperBullet(player.teamNumber);
+        }
+
+        ps.transform.parent = null;
+        ps.Play();
+
+        gameManager.allAlivePowerups.Remove(this);
+        Destroy(gameObject);
     }
+
+    // private void OnTriggerEnter2D(Collider2D other)
+    // {
+    //     if (other.gameObject.tag == "Player")
+    //     {
+    //         BhbPlayerController playerScript = other.gameObject.GetComponent<BhbPlayerController>();
+
+
+
+    //         // if (other.gameObject.transform.position.x < transform.position.x)
+    //         // {
+    //         //     playerScript.GetsHit(new Vector2(-80, 50), false);
+    //         // }
+    //         // else if (other.gameObject.transform.position.x >= transform.position.x)
+    //         // {
+    //         //     playerScript.GetsHit(new Vector2(80, 50), false);
+    //         // }
+    //     }
+    // }
 }

@@ -2,6 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum BulletSpawnage
+{
+    RegularOnly,
+    BigOnly,
+    BothRegularAndBig,
+    None
+}
 public class GameData : MonoBehaviour
 {
 
@@ -17,8 +24,8 @@ public class GameData : MonoBehaviour
     8 = bot
 
     */
-    public List<int> playerNumbersTeam0;
-    public List<int> playerNumbersTeam1;
+    public List<int> playerNumbersTeam0 = new List<int>();
+    public List<int> playerNumbersTeam1 = new List<int>();
 
 
     /*
@@ -29,10 +36,19 @@ public class GameData : MonoBehaviour
     -1 = bot (nothing)
 
     */
-    public List<int> playerControlsTeam0;
-    public List<int> playerControlsTeam1;
+    public List<int> playerControlsTeam0 = new List<int>();
+    public List<int> playerControlsTeam1 = new List<int>();
 
-    public bool allBigBullets;
+    public BulletSpawnage bulletSpawnage = BulletSpawnage.RegularOnly;
+
+
+    public int numOfBulletLevelUps = 3;
+
+    public float matchLength = 120;
+
+    public bool powerUps = true;
+
+    public bool cameraShake = true;
 
 
     // Set up singleton here
@@ -41,14 +57,22 @@ public class GameData : MonoBehaviour
         if (Instance == null)
             Instance = this;
         else if (Instance != this)
+        {
             Destroy(this);
+            return;
+        }
+
+        DontDestroyOnLoad(this.gameObject);
     }
 
 
     // Start is called before the first frame update
     void Start()
     {
-
+        if (matchLength == 0)
+        {
+            matchLength = 120;
+        }
     }
 
     // Update is called once per frame

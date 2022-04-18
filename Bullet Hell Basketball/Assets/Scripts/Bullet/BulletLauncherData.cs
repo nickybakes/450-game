@@ -25,7 +25,7 @@ public class BulletLauncherData : MonoBehaviour
     public float arcMinAngle = 0;
     public float arcMaxAngle = 45;
 
-    public int initialNumberOfBullets = 2;
+    public int initialNumberOfBullets = 1;
 
     public float sinWaveLength;
 

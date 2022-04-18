@@ -1,5 +1,23 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &5432278588125275190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 24494743896741053}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 10
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &3082754990088966472
 GameObject:
   m_ObjectHideFlags: 0
@@ -116,6 +134,7 @@ MonoBehaviour:
   swipeCooldownTimeMax: 0.35
   flashTimeMax: 0.1
   stunTimeMax: 0.2
+  stunTimeCurrent: 0
   invinsibilityTimeMax: 0.4
   player1Mesh: {fileID: 7360498439145423850}
   player2Mesh: {fileID: 6184050031772670658}
@@ -124,6 +143,7 @@ MonoBehaviour:
   botShootRange: 0
   botAlwaysDoubleJump: 0
   isDummy: 0
+  outline: {fileID: 5432278588125275190}
 --- !u!61 &1963545057765774826
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -309,6 +329,24 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &2992298406724709686
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8407518451325531822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 10
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1001 &4273010171242251674
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -452,6 +490,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: d74291c08071cc84bb61bba078f2a8c1, type: 3}
   m_PrefabInstance: {fileID: 6418545828947863443}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &8407518451325531822 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -5927088884070723267, guid: d74291c08071cc84bb61bba078f2a8c1, type: 3}
+  m_PrefabInstance: {fileID: 6418545828947863443}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7702518228254834363
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -521,5 +564,10 @@ GameObject:
 --- !u!4 &7885362016144382288 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 8fc1207e94675414bacf20a1aa6db335, type: 3}
+  m_PrefabInstance: {fileID: 7702518228254834363}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &24494743896741053 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7688720239215634950, guid: 8fc1207e94675414bacf20a1aa6db335, type: 3}
   m_PrefabInstance: {fileID: 7702518228254834363}
   m_PrefabAsset: {fileID: 0}
