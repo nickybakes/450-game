@@ -9,6 +9,16 @@ public enum BulletSpawnage
     BothRegularAndBig,
     None
 }
+
+public enum PowerUpSpawnage
+{
+    Chaotic,
+    High,
+    Medium,
+    Low,
+    None
+}
+
 public class GameData : MonoBehaviour
 {
 
@@ -41,6 +51,7 @@ public class GameData : MonoBehaviour
 
     public BulletSpawnage bulletSpawnage = BulletSpawnage.RegularOnly;
 
+    public PowerUpSpawnage powerUpSpawnage = PowerUpSpawnage.Low;
 
     public int numOfBulletLevelUps = 3;
 

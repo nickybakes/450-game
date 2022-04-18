@@ -604,22 +604,27 @@ public class MainMenuManager : MonoBehaviour
         if (GameObject.Find("Power").GetComponentInChildren<Text>().text == "Off")
         {
             GameObject.Find("Power").GetComponentInChildren<Text>().text = "Low";
+            data.powerUpSpawnage = PowerUpSpawnage.Low;
         }
         else if (GameObject.Find("Power").GetComponentInChildren<Text>().text == "Low")
         {
             GameObject.Find("Power").GetComponentInChildren<Text>().text = "Medium";
+            data.powerUpSpawnage = PowerUpSpawnage.Medium;
         }
         else if (GameObject.Find("Power").GetComponentInChildren<Text>().text == "Medium")
         {
             GameObject.Find("Power").GetComponentInChildren<Text>().text = "High";
+            data.powerUpSpawnage = PowerUpSpawnage.High;
         }
         else if (GameObject.Find("Power").GetComponentInChildren<Text>().text == "High")
         {
             GameObject.Find("Power").GetComponentInChildren<Text>().text = "Chaotic";
+            data.powerUpSpawnage = PowerUpSpawnage.Chaotic;
         }
         else if (GameObject.Find("Power").GetComponentInChildren<Text>().text == "Chaotic")
         {
             GameObject.Find("Power").GetComponentInChildren<Text>().text = "Off";
+            data.powerUpSpawnage = PowerUpSpawnage.None;
         }
     }
 
