@@ -230,7 +230,7 @@ MonoBehaviour:
   - name: BigBulletStart
     clips:
     - {fileID: 8300000, guid: 913add3f2accbba47962b863cdbd3eab, type: 3}
-    volume: 0.5
+    volume: 1
     pitch: 1
     loop: 0
     source: {fileID: 0}

@@ -340,6 +340,9 @@ public class MainMenuManager : MonoBehaviour
             data.playerControlsTeam1.Add(inputId);
             data.playerNumbersTeam1.Add(playerNumber);
         }
+
+        //audio
+        audioManager.Play("ControllerOn");
     }
 
     public void RemovePlayerFromGame(int inputId)
@@ -362,6 +365,9 @@ public class MainMenuManager : MonoBehaviour
             data.playerControlsTeam1.RemoveAt(i);
             Destroy(gridTeam1.transform.GetChild(i).gameObject);
         }
+
+        //audio
+        audioManager.Play("ControllerOff");
     }
 
     public void SwapTeam(int inputId)
@@ -419,6 +425,9 @@ public class MainMenuManager : MonoBehaviour
             data.playerControlsTeam1.Add(-1);
             data.playerNumbersTeam1.Add(8);
         }
+
+        //audio
+        audioManager.Play("ControllerOn");
     }
 
     public void RemoveBotFromTeam(int teamNumber)
@@ -430,6 +439,9 @@ public class MainMenuManager : MonoBehaviour
             {
                 if (data.playerNumbersTeam0[i] == 8)
                 {
+                    //audio
+                    audioManager.Play("ControllerOff");
+
                     data.playerNumbersTeam0.RemoveAt(i);
                     data.playerControlsTeam0.RemoveAt(i);
                     Destroy(gridTeam0.transform.GetChild(i).gameObject);
@@ -444,6 +456,9 @@ public class MainMenuManager : MonoBehaviour
             {
                 if (data.playerNumbersTeam1[i] == 8)
                 {
+                    //audio
+                    audioManager.Play("ControllerOff");
+
                     data.playerNumbersTeam1.RemoveAt(i);
                     data.playerControlsTeam1.RemoveAt(i);
                     Destroy(gridTeam1.transform.GetChild(i).gameObject);
@@ -583,6 +598,8 @@ public class MainMenuManager : MonoBehaviour
             GameObject.Find("Squeak").GetComponentInChildren<Text>().text = "Semi-Frequent";
             BhbPlayerController.shoeSqueakRate = 0.5f;
         }
+
+        PlayClickSound();
     }
 
     public void CameraShakeOnClick()
@@ -597,6 +614,8 @@ public class MainMenuManager : MonoBehaviour
             GameObject.Find("CameraShake").GetComponentInChildren<Text>().text = "Enabled";
             data.cameraShake = true;
         }
+
+        PlayClickSound();
     }
 
     public void PowerOnClick()
@@ -626,6 +645,8 @@ public class MainMenuManager : MonoBehaviour
             GameObject.Find("Power").GetComponentInChildren<Text>().text = "Off";
             data.powerUpSpawnage = PowerUpSpawnage.None;
         }
+
+        PlayClickSound();
     }
 
     public void TimerOnClick()
@@ -650,6 +671,8 @@ public class MainMenuManager : MonoBehaviour
             GameObject.Find("Timer").GetComponentInChildren<Text>().text = "2:00";
             data.matchLength = 120;
         }
+
+        PlayClickSound();
     }
 
     public void BulletSizeOnClick()
@@ -674,6 +697,8 @@ public class MainMenuManager : MonoBehaviour
             GameObject.Find("Bullets").GetComponentInChildren<Text>().text = "Small Only";
             data.bulletSpawnage = BulletSpawnage.RegularOnly;
         }
+
+        PlayClickSound();
     }
 
     public void DunkBonusOnClick()
@@ -686,6 +711,13 @@ public class MainMenuManager : MonoBehaviour
         {
             GameObject.Find("DunkBonus").GetComponentInChildren<Text>().text = "Enabled";
         }
+
+        PlayClickSound();
+    }
+
+    private void PlayClickSound()
+    {
+        audioManager.Play("Hit", 0.1f, 2.5f, 3.0f);
     }
 
     //takes you back to the first menu
