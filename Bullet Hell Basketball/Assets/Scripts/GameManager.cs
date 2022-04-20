@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
     public GameObject airStrikePrefab;
 
     public GameObject superBulletPrefab;
+    public GameObject bulletPortalPrefab;
 
     public GameObject powerUpPrefab;
 
@@ -399,9 +400,9 @@ public class GameManager : MonoBehaviour
 
     public void SpawnRandomPowerUp()
     {
-        PowerupType type = (PowerupType)UnityEngine.Random.Range(0, 4);
+        PowerupType type = (PowerupType)UnityEngine.Random.Range(0, 5);
         while (type == previousPowerupType)
-            type = (PowerupType)UnityEngine.Random.Range(0, 4);
+            type = (PowerupType)UnityEngine.Random.Range(0, 5);
 
         previousPowerupType = type;
 
@@ -495,6 +496,14 @@ public class GameManager : MonoBehaviour
         SuperBullet superBulletScript = superBullet.GetComponent<SuperBullet>();
         superBulletScript.Init(teamNumber, this);
         StartCoroutine(cameraShake.Shake(.2f, .5f));
+    }
+
+    public void SpawnBulletPortal(int teamNumber, Vector2 location)
+    {
+        GameObject bulletPortal = Instantiate(bulletPortalPrefab);
+        bulletPortal.transform.position = location;
+        BulletPortal bulletPortalScript = bulletPortal.GetComponent<BulletPortal>();
+        bulletPortalScript.Init(teamNumber, this);
     }
 
     void Update()

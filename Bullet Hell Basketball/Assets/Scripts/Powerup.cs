@@ -8,7 +8,8 @@ public enum PowerupType
     Airstrike,
 
     BulletShield,
-    SuperBullet
+    SuperBullet,
+    BulletPortal
 }
 
 public class Powerup : MonoBehaviour
@@ -94,6 +95,10 @@ public class Powerup : MonoBehaviour
         else if (type == PowerupType.SuperBullet)
         {
             gameManager.SpawnSuperBullet(player.teamNumber);
+        }
+        else if (type == PowerupType.BulletPortal)
+        {
+            gameManager.SpawnBulletPortal(player.teamNumber, transform.position);
         }
 
         ps.transform.parent = null;

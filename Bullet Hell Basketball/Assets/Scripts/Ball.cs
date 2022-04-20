@@ -665,7 +665,7 @@ public class Ball : MonoBehaviour
         BulletPortal[] bulletPortals = FindObjectsOfType<BulletPortal>();
         foreach (BulletPortal portal in bulletPortals)
         {
-            // sb.ForceDestroy();
+            portal.ForceDestroy();
         }
 
         if (gameManager.overTime)
