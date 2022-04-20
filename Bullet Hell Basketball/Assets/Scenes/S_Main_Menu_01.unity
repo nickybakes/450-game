@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.7030984, g: 0.5460588, b: 0.378425, a: 1}
+  m_IndirectSpecularColor: {r: 0.5920968, g: 0.6219288, b: 0.4827311, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -16106,7 +16106,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1671047533
 RectTransform:
   m_ObjectHideFlags: 0
@@ -19021,7 +19021,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 118828420}
         m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
-        m_MethodName: StepUp
+        m_MethodName: PlaySwipeShotRally
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -19635,7 +19635,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2048296561
 RectTransform:
   m_ObjectHideFlags: 0

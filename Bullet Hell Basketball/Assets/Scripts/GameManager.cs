@@ -209,6 +209,7 @@ public class GameManager : MonoBehaviour
             data.playerNumbersTeam0 = new List<int>();
             data.playerControlsTeam1 = new List<int>();
             data.playerNumbersTeam1 = new List<int>();
+            data.isSwipeShotRally = false;
 
             for (int i = 0; i < numOfBotsTeam0; i++)
             {

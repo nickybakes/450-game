@@ -61,6 +61,8 @@ public class GameData : MonoBehaviour
 
     public bool cameraShake = true;
 
+    public bool isSwipeShotRally = false;
+
 
     // Set up singleton here
     private void Awake()

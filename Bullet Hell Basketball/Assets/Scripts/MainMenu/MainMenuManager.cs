@@ -581,6 +581,12 @@ public class MainMenuManager : MonoBehaviour
         SceneManager.LoadScene(2);
     }
 
+    public void PlaySwipeShotRally()
+    {
+        Destroy(FindObjectOfType<AudioManager>().gameObject);
+        SceneManager.LoadScene(3);
+    }
+
     public void SqueakyOnClick()
     {
         if (GameObject.Find("Squeak").GetComponentInChildren<Text>().text == "Semi-Frequent")
