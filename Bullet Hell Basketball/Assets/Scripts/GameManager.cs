@@ -43,6 +43,7 @@ public class GameManager : MonoBehaviour
     public float powerUpTimeSpawn;
     public float powerUpTimeSpawnCurrent;
     public int powerUpsSpawnInARow;
+    public int powerUpsSpawnInARowMax;
 
     private PowerupType previousPowerupType = PowerupType.SuperBullet;
 
@@ -256,6 +257,17 @@ public class GameManager : MonoBehaviour
         cameraShakeEnabled = data.cameraShake;
         bulletSpawnage = data.bulletSpawnage;
 
+        int[] powerUpSpawnMins = new int[] { 7, 12, 17, 24, -1 };
+        int[] powerUpSpawnMaxs = new int[] { 18, 25, 31, 36, -1 };
+        int[] powerUpSpawnRowMaxs = new int[] { 4, 3, 2, 1, -1 };
+
+        powerUpTimeSpawnMin = powerUpSpawnMins[(int)data.powerUpSpawnage];
+        powerUpTimeSpawnMax = powerUpSpawnMaxs[(int)data.powerUpSpawnage];
+        powerUpsSpawnInARow = powerUpSpawnRowMaxs[(int)data.powerUpSpawnage];
+
+        if (data.powerUpSpawnage == PowerUpSpawnage.None)
+            powerUpsEnabled = false;
+
         ball = Instantiate(ballPrefab);
         ballControlScript = ball.GetComponent<Ball>();
         ballPhysicsScript = ball.GetComponent<BhbBallPhysics>();
@@ -373,6 +385,12 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < allAlivePowerups.Count; i++)
         {
             Destroy(allAlivePowerups[i].gameObject);
+        }
+
+        BulletPortal[] bulletPortals = FindObjectsOfType<BulletPortal>();
+        foreach (BulletPortal portal in bulletPortals)
+        {
+            Destroy(portal.gameObject);
         }
 
         allAlivePowerups.Clear();
@@ -684,6 +702,11 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha8))
         {
             SpawnSuperBullet(1);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha9))
+        {
+            SpawnBulletPortal(0, new Vector2(0, 24));
         }
 
         // if (player1Script.controllerNumber == -1)
