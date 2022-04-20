@@ -112,8 +112,8 @@ MonoBehaviour:
     source: {fileID: 0}
   - name: Buzzer
     clips:
-    - {fileID: 8300000, guid: 789cbb3829141a545a0c38a1eb7771e2, type: 3}
-    volume: 1
+    - {fileID: 8300000, guid: a7c5624dde700b04fb722e940f580edd, type: 3}
+    volume: 0.2
     pitch: 1
     loop: 0
     source: {fileID: 0}
