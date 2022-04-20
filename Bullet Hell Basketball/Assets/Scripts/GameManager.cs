@@ -569,6 +569,11 @@ public class GameManager : MonoBehaviour
                 }
             }
 
+            if (paused)
+            {
+                
+            }
+
             if (paused || gameOver)
                 return;
 
