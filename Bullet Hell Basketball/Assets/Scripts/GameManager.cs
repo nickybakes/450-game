@@ -441,11 +441,17 @@ public class GameManager : MonoBehaviour
                 tipOffUI.GetComponentInChildren<Text>().text = "Tip Off!";
 
                 audioManager.Play("TipOffBuzzer");
-                tipOffUI.SetActive(false);
+
                 paused = !paused;
                 tipOffTimer = 0;
                 hasTippedOff = true;
             }
+        }
+        else
+        {
+            //turns off "tip off" text after short time
+            if ((int)matchTimeCurrent % 30 == 27)
+            tipOffUI.SetActive(false);
         }
     }
 
