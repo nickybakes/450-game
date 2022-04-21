@@ -68,6 +68,8 @@ public class GameManager : MonoBehaviour
     public float matchTimeCurrent;
 
     public Text matchTimeText;
+    private float tipOffTimer;
+    private bool hasTippedOff;
 
     public bool friendlyFireSwipe;
     public bool friendlyFireBullets;
@@ -97,6 +99,7 @@ public class GameManager : MonoBehaviour
     public GameObject pausedMenuUI;
     public GameObject panelUI;
     public GameObject playerHeadersPanel;
+    public GameObject tipOffUI;
 
     private BulletManager[] bulletManagers;
     public int bulletLevel;
@@ -163,7 +166,9 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        paused = true;
+        paused = false;
+        tipOffTimer = 3.0f;
+        hasTippedOff = false;
 
         cameraShake = FindObjectOfType<Camera>().GetComponent<CameraShake>();
         cameraShake.gameManager = this;
@@ -368,7 +373,9 @@ public class GameManager : MonoBehaviour
 
         playerOneWins.SetActive(false);
         playerTwoWins.SetActive(false);
+        pausedMenuUI.SetActive(false);
         previousScorer = -1;
+        paused = true;
         gameOver = false;
         overTime = false;
 
@@ -414,6 +421,32 @@ public class GameManager : MonoBehaviour
         dunkBonusUI.text = "Dunk Bonus: +" + dunkBonusValue;
 
         ballControlScript.IsResetting = false;
+    }
+
+    /// <summary>
+    /// Starts right after BeginMatch(). Counts down tip off.
+    /// </summary>
+    private void StartTipOff()
+    {
+        //After 3 seconds.
+        if (!hasTippedOff)
+        {
+            if (tipOffTimer > 0)
+            {
+                tipOffTimer -= Time.deltaTime;
+                tipOffUI.GetComponentInChildren<Text>().text = ((int)tipOffTimer + 1).ToString();
+            }
+            else
+            {
+                tipOffUI.GetComponentInChildren<Text>().text = "Tip Off!";
+
+                audioManager.Play("TipOffBuzzer");
+                tipOffUI.SetActive(false);
+                paused = !paused;
+                tipOffTimer = 0;
+                hasTippedOff = true;
+            }
+        }
     }
 
     public void SpawnRandomPowerUp()
@@ -526,6 +559,8 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        StartTipOff();
+
         if (ball.transform.parent == null)
             currentBallOwner = null;
         //If the ball is above the screen height (will also happen when held).

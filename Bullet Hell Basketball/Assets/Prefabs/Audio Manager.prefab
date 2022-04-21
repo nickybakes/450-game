@@ -79,6 +79,13 @@ MonoBehaviour:
     pitch: 1
     loop: 1
     source: {fileID: 0}
+  - name: TipOffBuzzer
+    clips:
+    - {fileID: 8300000, guid: 713920aeb9db63f44a862106423837e0, type: 3}
+    volume: 0.1
+    pitch: 1.2
+    loop: 0
+    source: {fileID: 0}
   - name: Overtime
     clips:
     - {fileID: 8300000, guid: cb7244f0b325f354e9a7b4a378ef5ab2, type: 3}
