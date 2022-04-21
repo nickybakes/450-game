@@ -810,22 +810,25 @@ public class GameManager : MonoBehaviour
 
     public void ToggleHowToPlay()
     {
-        pausedMenuUI.SetActive(!pausedMenuUI.activeSelf);
-        paused = !paused;
-
-        //toggles audio.
-        if (paused)
+        if (hasTippedOff)
         {
-            audioManager.Play("MusicPauseStart");
-            pauseMusic.source.volume = 0.1f;
-            music.source.volume = 0;
+            pausedMenuUI.SetActive(!pausedMenuUI.activeSelf);
+            paused = !paused;
 
-            midair.source.volume = 0;
-        }
-        else
-        {
-            pauseMusic.source.volume = 0;
-            music.source.volume = 0.1f;
+            //toggles audio.
+            if (paused)
+            {
+                audioManager.Play("MusicPauseStart");
+                pauseMusic.source.volume = 0.1f;
+                music.source.volume = 0;
+
+                midair.source.volume = 0;
+            }
+            else
+            {
+                pauseMusic.source.volume = 0;
+                music.source.volume = 0.1f;
+            }
         }
     }
 
