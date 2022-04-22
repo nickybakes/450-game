@@ -1587,6 +1587,7 @@ MonoBehaviour:
   powerUpTimeSpawn: 0
   powerUpTimeSpawnCurrent: 0
   powerUpsSpawnInARow: 0
+  powerUpsSpawnInARowMax: 0
   allAlivePowerups: []
   playerSpawnLocation: {fileID: 1366659346}
   basketLocation: {fileID: 1774745519}
@@ -1611,6 +1612,7 @@ MonoBehaviour:
   pausedMenuUI: {fileID: 0}
   panelUI: {fileID: 616705882}
   playerHeadersPanel: {fileID: 1020043865}
+  tipOffUI: {fileID: 0}
   bulletLevel: 0
   numOfBulletLevelUps: 3
   bulletLevelUpInterval: 30
@@ -1892,6 +1894,7 @@ GameObject:
   - component: {fileID: 485857203}
   - component: {fileID: 485857202}
   - component: {fileID: 485857204}
+  - component: {fileID: 485857205}
   m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
@@ -1971,6 +1974,20 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
   m_EffectDistance: {x: 7.5, y: -7.52}
   m_UseGraphicAlpha: 1
+--- !u!114 &485857205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 485857200}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0b14bc8463719e48bd5787e83cc05d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flashSpeed: 2
+  flashImageInstead: 1
 --- !u!1001 &486351780
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8243,7 +8260,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collisionVertexPrefab: {fileID: 2382589878411412825, guid: de94585aa4ffe794c8cc1e98a3d925ff, type: 3}
   collisionSegmentPrefab: {fileID: 71431853401964895, guid: 2d19e55d322709d41b35224430022a18, type: 3}
-  editorUpdateFrame: 0
+  editorUpdateFrame: 1
   vertexColor: {r: 1, g: 0, b: 0, a: 1}
   segmentColor: {r: 1, g: 0, b: 0, a: 1}
   semiSolidPlatformColor: {r: 0, g: 0, b: 1, a: 1}

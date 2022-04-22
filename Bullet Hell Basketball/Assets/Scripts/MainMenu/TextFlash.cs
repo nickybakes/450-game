@@ -8,18 +8,38 @@ public class TextFlash : MonoBehaviour
 
     private Text text;
 
+    private Image image;
+
     public float flashSpeed = 2;
+
+    public bool flashImageInstead;
 
     private float originalAlpha;
 
     void Awake()
     {
-        text = gameObject.GetComponent<Text>();
-        originalAlpha = text.color.a;
+
+        if (flashImageInstead)
+        {
+            image = gameObject.GetComponent<Image>();
+            originalAlpha = image.color.a;
+        }
+        else
+        {
+            text = gameObject.GetComponent<Text>();
+            originalAlpha = text.color.a;
+        }
     }
 
     void Update()
     {
-        text.color = new Color(text.color.r, text.color.g, text.color.b, originalAlpha * Mathf.Abs(Mathf.Sin(Time.time * flashSpeed)));
+        if (flashImageInstead)
+        {
+            image.color = new Color(image.color.r, image.color.g, image.color.b, originalAlpha * Mathf.Abs(Mathf.Sin(Time.time * flashSpeed)));
+        }
+        else
+        {
+            text.color = new Color(text.color.r, text.color.g, text.color.b, originalAlpha * Mathf.Abs(Mathf.Sin(Time.time * flashSpeed)));
+        }
     }
 }
