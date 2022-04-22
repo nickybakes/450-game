@@ -236,11 +236,6 @@ public class GameManager : MonoBehaviour
             data.playerNumbersTeam1 = new List<int>() { 1 };
         }
 
-        if (isTutorial)
-        {
-            data.numOfBulletLevelUps = 3;
-        }
-
         playersTeam0 = new GameObject[data.playerNumbersTeam0.Count];
         playerScriptsTeam0 = new BhbPlayerController[data.playerNumbersTeam0.Count];
         for (int i = 0; i < data.playerNumbersTeam0.Count; i++)
@@ -295,10 +290,13 @@ public class GameManager : MonoBehaviour
         {
             tutorialManager.gameManager = this;
             Destroy(pausedMenuUI);
+            Destroy(tipOffUI);
+            Destroy(dunkBonusUI);
             paused = false;
             matchTimeText.text = "";
             bulletLevelUI.text = "";
-            //dunkBonusUI.text = "";
+            data.numOfBulletLevelUps = 3;
+
 
             panelUI.transform.GetChild(0).gameObject.SetActive(false);
             panelUI.transform.GetChild(1).gameObject.SetActive(false);
@@ -367,18 +365,15 @@ public class GameManager : MonoBehaviour
         bulletLevelUI.text = "Bullets Level: " + bulletLevel;
         dunkBonusUI.text = "Dunk Bonus: +" + dunkBonusValue;
 
-        if (isTutorial)
-        {
-            bulletLevelUI.text = "";
-        }
-
         playerOneWins.SetActive(false);
         playerTwoWins.SetActive(false);
         pausedMenuUI.SetActive(false);
         previousScorer = -1;
-        paused = true;
         gameOver = false;
         overTime = false;
+
+        if (!isTutorial)
+            paused = true;
 
         Bullet[] bullets = FindObjectsOfType<Bullet>();
 
@@ -566,7 +561,8 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        StartTipOff();
+        if (!isTutorial)
+            StartTipOff();
 
         if (ball.transform.parent == null)
             currentBallOwner = null;
