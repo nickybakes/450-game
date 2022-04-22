@@ -43,6 +43,7 @@ public class GameManager : MonoBehaviour
     public float powerUpTimeSpawn;
     public float powerUpTimeSpawnCurrent;
     public int powerUpsSpawnInARow;
+    public int powerUpsSpawnInARowMax;
 
     private PowerupType previousPowerupType = PowerupType.SuperBullet;
 
@@ -67,6 +68,8 @@ public class GameManager : MonoBehaviour
     public float matchTimeCurrent;
 
     public Text matchTimeText;
+    private float tipOffTimer;
+    private bool hasTippedOff;
 
     public bool friendlyFireSwipe;
     public bool friendlyFireBullets;
@@ -96,6 +99,7 @@ public class GameManager : MonoBehaviour
     public GameObject pausedMenuUI;
     public GameObject panelUI;
     public GameObject playerHeadersPanel;
+    public GameObject tipOffUI;
 
     private BulletManager[] bulletManagers;
     public int bulletLevel;
@@ -162,7 +166,9 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        paused = true;
+        paused = false;
+        tipOffTimer = 3.0f;
+        hasTippedOff = false;
 
         cameraShake = FindObjectOfType<Camera>().GetComponent<CameraShake>();
         cameraShake.gameManager = this;
@@ -256,6 +262,17 @@ public class GameManager : MonoBehaviour
         powerUpsEnabled = data.powerUps;
         cameraShakeEnabled = data.cameraShake;
         bulletSpawnage = data.bulletSpawnage;
+
+        int[] powerUpSpawnMins = new int[] { 7, 12, 17, 24, -1 };
+        int[] powerUpSpawnMaxs = new int[] { 18, 25, 31, 36, -1 };
+        int[] powerUpSpawnRowMaxs = new int[] { 4, 3, 2, 1, -1 };
+
+        powerUpTimeSpawnMin = powerUpSpawnMins[(int)data.powerUpSpawnage];
+        powerUpTimeSpawnMax = powerUpSpawnMaxs[(int)data.powerUpSpawnage];
+        powerUpsSpawnInARow = powerUpSpawnRowMaxs[(int)data.powerUpSpawnage];
+
+        if (data.powerUpSpawnage == PowerUpSpawnage.None)
+            powerUpsEnabled = false;
 
         ball = Instantiate(ballPrefab);
         ballControlScript = ball.GetComponent<Ball>();
@@ -357,7 +374,9 @@ public class GameManager : MonoBehaviour
 
         playerOneWins.SetActive(false);
         playerTwoWins.SetActive(false);
+        pausedMenuUI.SetActive(false);
         previousScorer = -1;
+        paused = true;
         gameOver = false;
         overTime = false;
 
@@ -374,6 +393,12 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < allAlivePowerups.Count; i++)
         {
             Destroy(allAlivePowerups[i].gameObject);
+        }
+
+        BulletPortal[] bulletPortals = FindObjectsOfType<BulletPortal>();
+        foreach (BulletPortal portal in bulletPortals)
+        {
+            Destroy(portal.gameObject);
         }
 
         allAlivePowerups.Clear();
@@ -397,6 +422,38 @@ public class GameManager : MonoBehaviour
         dunkBonusUI.text = "Dunk Bonus: +" + dunkBonusValue;
 
         ballControlScript.IsResetting = false;
+    }
+
+    /// <summary>
+    /// Starts right after BeginMatch(). Counts down tip off.
+    /// </summary>
+    private void StartTipOff()
+    {
+        //After 3 seconds.
+        if (!hasTippedOff)
+        {
+            if (tipOffTimer > 0)
+            {
+                tipOffTimer -= Time.deltaTime;
+                tipOffUI.GetComponentInChildren<Text>().text = ((int)tipOffTimer + 1).ToString();
+            }
+            else
+            {
+                tipOffUI.GetComponentInChildren<Text>().text = "Tip Off!";
+
+                audioManager.Play("TipOffBuzzer");
+
+                paused = !paused;
+                tipOffTimer = 0;
+                hasTippedOff = true;
+            }
+        }
+        else
+        {
+            //turns off "tip off" text after short time
+            if ((int)matchTimeCurrent % 30 == 27)
+            tipOffUI.SetActive(false);
+        }
     }
 
     public void SpawnRandomPowerUp()
@@ -509,6 +566,8 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        StartTipOff();
+
         if (ball.transform.parent == null)
             currentBallOwner = null;
         //If the ball is above the screen height (will also happen when held).
@@ -687,6 +746,11 @@ public class GameManager : MonoBehaviour
             SpawnSuperBullet(1);
         }
 
+        if (Input.GetKeyDown(KeyCode.Alpha9))
+        {
+            SpawnBulletPortal(0, new Vector2(0, 24));
+        }
+
         // if (player1Script.controllerNumber == -1)
         // {
         //     for (int i = 1; i <= 8; i++)
@@ -747,22 +811,25 @@ public class GameManager : MonoBehaviour
 
     public void ToggleHowToPlay()
     {
-        pausedMenuUI.SetActive(!pausedMenuUI.activeSelf);
-        paused = !paused;
-
-        //toggles audio.
-        if (paused)
+        if (hasTippedOff)
         {
-            audioManager.Play("MusicPauseStart");
-            pauseMusic.source.volume = 0.1f;
-            music.source.volume = 0;
+            pausedMenuUI.SetActive(!pausedMenuUI.activeSelf);
+            paused = !paused;
 
-            midair.source.volume = 0;
-        }
-        else
-        {
-            pauseMusic.source.volume = 0;
-            music.source.volume = 0.1f;
+            //toggles audio.
+            if (paused)
+            {
+                audioManager.Play("MusicPauseStart");
+                pauseMusic.source.volume = 0.1f;
+                music.source.volume = 0;
+
+                midair.source.volume = 0;
+            }
+            else
+            {
+                pauseMusic.source.volume = 0;
+                music.source.volume = 0.1f;
+            }
         }
     }
 
