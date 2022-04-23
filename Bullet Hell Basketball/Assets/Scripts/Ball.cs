@@ -189,7 +189,6 @@ public class Ball : MonoBehaviour
                     boolWillHit = true;
                     calculateOnce = false;
                     swipeShotPasses++;
-                    Debug.Log(swipeShotPasses);
 
                     //special SFX for back n' forth swipes
                     if (swipeShotPasses > 0)
