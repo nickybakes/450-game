@@ -95,10 +95,12 @@ public class Powerup : MonoBehaviour
         else if (type == PowerupType.SuperBullet)
         {
             gameManager.SpawnSuperBullet(player.teamNumber);
+            audioManager.Play("PortalBullets");
         }
         else if (type == PowerupType.BulletPortal)
         {
             gameManager.SpawnBulletPortal(player.teamNumber, transform.position);
+            audioManager.Play("PortalBullets");
         }
 
         ps.transform.parent = null;

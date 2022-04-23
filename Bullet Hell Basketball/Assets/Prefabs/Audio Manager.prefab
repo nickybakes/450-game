@@ -248,6 +248,13 @@ MonoBehaviour:
     pitch: 1
     loop: 1
     source: {fileID: 0}
+  - name: PortalBullets
+    clips:
+    - {fileID: 8300000, guid: 295947b30a481aa40a2d6507b0b584eb, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
   - name: Shield
     clips:
     - {fileID: 8300000, guid: 3ea201551bf77904a96df4d0d5857eb3, type: 3}
