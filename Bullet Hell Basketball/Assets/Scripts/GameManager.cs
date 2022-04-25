@@ -45,6 +45,8 @@ public class GameManager : MonoBehaviour
     public int powerUpsSpawnInARow;
     public int powerUpsSpawnInARowMax;
 
+    private int maxAlivePowerups = 16;
+
     private PowerupType previousPowerupType = PowerupType.SuperBullet;
 
     public List<Powerup> allAlivePowerups;
@@ -209,24 +211,11 @@ public class GameManager : MonoBehaviour
         {
             GameObject gameDataObjectStandin = new GameObject("Game Data Object Standin");
             data = gameDataObjectStandin.AddComponent<GameData>();
-            int numOfBotsTeam0 = 4;
-            int numOfBotsTeam1 = 4;
             data.playerControlsTeam0 = new List<int>();
             data.playerNumbersTeam0 = new List<int>();
             data.playerControlsTeam1 = new List<int>();
             data.playerNumbersTeam1 = new List<int>();
             data.isSwipeShotRally = false;
-
-            for (int i = 0; i < numOfBotsTeam0; i++)
-            {
-                data.playerControlsTeam0.Add(8);
-                data.playerNumbersTeam0.Add(8);
-            }
-            for (int i = 0; i < numOfBotsTeam1; i++)
-            {
-                data.playerControlsTeam1.Add(8);
-                data.playerNumbersTeam1.Add(8);
-            }
 
             //uncommented this code to have 2 players on KB spawn in instead of Bots
 
@@ -234,6 +223,27 @@ public class GameManager : MonoBehaviour
             data.playerNumbersTeam0 = new List<int>() { 0 };
             data.playerControlsTeam1 = new List<int>() { 1 };
             data.playerNumbersTeam1 = new List<int>() { 1 };
+        }
+
+        if (isTutorial)
+        {
+            if (loadedData == null)
+            {
+                GameObject gameDataObjectStandin = new GameObject("Game Data Object Standin");
+                data = gameDataObjectStandin.AddComponent<GameData>();
+            }
+            data.playerControlsTeam0 = new List<int>();
+            data.playerNumbersTeam0 = new List<int>();
+            data.playerControlsTeam1 = new List<int>();
+            data.playerNumbersTeam1 = new List<int>();
+            data.isSwipeShotRally = false;
+
+            //uncommented this code to have 2 players on KB spawn in instead of Bots
+
+            data.playerControlsTeam0 = new List<int>() { 0 };
+            data.playerNumbersTeam0 = new List<int>() { 0 };
+            data.playerControlsTeam1 = new List<int>() { 8 };
+            data.playerNumbersTeam1 = new List<int>() { 8 };
         }
 
         playersTeam0 = new GameObject[data.playerNumbersTeam0.Count];
@@ -297,6 +307,8 @@ public class GameManager : MonoBehaviour
             bulletLevelUI.text = "";
             data.numOfBulletLevelUps = 3;
 
+            playerScriptsTeam1[0].isDummy = true;
+            tutorialManager.controlType = ControlType.Keyboard1;
 
             panelUI.transform.GetChild(0).gameObject.SetActive(false);
             panelUI.transform.GetChild(1).gameObject.SetActive(false);
@@ -447,12 +459,15 @@ public class GameManager : MonoBehaviour
         {
             //turns off "tip off" text after short time
             if ((int)matchTimeCurrent % 30 == 27)
-            tipOffUI.SetActive(false);
+                tipOffUI.SetActive(false);
         }
     }
 
     public void SpawnRandomPowerUp()
     {
+        if (allAlivePowerups.Count >= maxAlivePowerups)
+            return;
+
         PowerupType type = (PowerupType)UnityEngine.Random.Range(0, 5);
         while (type == previousPowerupType)
             type = (PowerupType)UnityEngine.Random.Range(0, 5);
@@ -574,9 +589,56 @@ public class GameManager : MonoBehaviour
 
         if (isTutorial)
         {
-            if (Input.GetKeyDown(KeyCode.Backspace))
+            if (playerScriptsTeam0[0].playerControlNumber == 0)
+            {
+                int controller = TutorialCheckAllGamepadInputs();
+                if (controller != -1)
+                {
+                    playerScriptsTeam0[0].playerControlNumber = controller + 1;
+                    tutorialManager.ChangeControlType(ControlType.Gamepad);
+                }
+                if (TutorialCheckKBInputs1())
+                {
+                    playerScriptsTeam0[0].playerControlNumber = 1;
+                    tutorialManager.ChangeControlType(ControlType.Keyboard2);
+                }
+            }
+            else if (playerScriptsTeam0[0].playerControlNumber == 1)
+            {
+                int controller = TutorialCheckAllGamepadInputs();
+                if (controller != -1)
+                {
+                    playerScriptsTeam0[0].playerControlNumber = controller + 1;
+                    tutorialManager.ChangeControlType(ControlType.Gamepad);
+                }
+                if (TutorialCheckKBInputs0())
+                {
+                    playerScriptsTeam0[0].playerControlNumber = 0;
+                    tutorialManager.ChangeControlType(ControlType.Keyboard1);
+                }
+            }
+            else if (playerScriptsTeam0[0].playerControlNumber > 1)
+            {
+                if (TutorialCheckKBInputs0())
+                {
+                    playerScriptsTeam0[0].playerControlNumber = 0;
+                    tutorialManager.ChangeControlType(ControlType.Keyboard1);
+                }
+                if (TutorialCheckKBInputs1())
+                {
+                    playerScriptsTeam0[0].playerControlNumber = 1;
+                    tutorialManager.ChangeControlType(ControlType.Keyboard2);
+                }
+            }
+
+            if (Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown(KeyCode.Escape))
             {
                 tutorialManager.DisplayNextMessage();
+                if (playerScriptsTeam0[0].playerControlNumber > 1)
+                {
+                    playerScriptsTeam0[0].playerControlNumber = 0;
+                    tutorialManager.ChangeControlType(ControlType.Keyboard1);
+                }
             }
 
             for (int i = 1; i <= 8; i++)
@@ -584,8 +646,28 @@ public class GameManager : MonoBehaviour
                 if (Input.GetButtonDown("J" + i + "Start"))
                 {
                     tutorialManager.DisplayNextMessage();
+                    if (playerScriptsTeam0[0].playerControlNumber <= 1)
+                    {
+                        playerScriptsTeam0[0].playerControlNumber = i + 1;
+                        tutorialManager.ChangeControlType(ControlType.Gamepad);
+                    }
                     break;
                 }
+            }
+
+            if (tutorialManager.controlChangeAlertTimeCurrent < tutorialManager.controlChangeAlertTimeMax)
+            {
+                tutorialManager.controlChangeAlertTimeCurrent += Time.deltaTime;
+                tutorialManager.controlChangeAlert.gameObject.SetActive(true);
+            }
+            else
+            {
+                tutorialManager.controlChangeAlert.gameObject.SetActive(false);
+            }
+
+            if (playerScriptsTeam0[0].playerControlNumber == 0)
+            {
+
             }
 
             // if (player1Script.controllerNumber == -1)
@@ -606,7 +688,7 @@ public class GameManager : MonoBehaviour
                 return;
             }
 
-            if (Input.GetKeyDown(KeyCode.Backspace))
+            if (Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown(KeyCode.Escape))
             {
                 if (gameOver)
                 {
@@ -763,6 +845,52 @@ public class GameManager : MonoBehaviour
         //             player2Script.controllerNumber = i;
         //     }
         // }
+    }
+
+    private int TutorialCheckAllGamepadInputs()
+    {
+        for (int i = 1; i <= 8; i++)
+        {
+            for (int j = 0; j < playerScriptsTeam0[0].GetControlsArrayGamepad().Length - 1; j++)
+            {
+                if (j < 4)
+                {
+                    if (Mathf.Abs(Input.GetAxisRaw("J" + i + playerScriptsTeam0[0].GetControlsArrayGamepad()[j])) > BhbPlayerController.axisDeadZone)
+                    {
+                        return i;
+                    }
+                }
+                if (Input.GetButton("J" + i + playerScriptsTeam0[0].GetControlsArrayGamepad()[j]))
+                {
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
+
+    private bool TutorialCheckKBInputs0()
+    {
+        for (int i = 0; i < playerScriptsTeam0[0].GetControlsArrayKb0().Length - 1; i++)
+        {
+            if (Input.GetKey(playerScriptsTeam0[0].GetControlsArrayKb0()[i]))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private bool TutorialCheckKBInputs1()
+    {
+        for (int i = 0; i < playerScriptsTeam0[0].GetControlsArrayKb1().Length - 1; i++)
+        {
+            if (Input.GetKey(playerScriptsTeam0[0].GetControlsArrayKb1()[i]))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     /// <summary>

@@ -61,8 +61,6 @@ public class BhbPlayerController : NeonHeightsCharacterController
     private KeyCode[] player2Controls = { KeyCode.P, KeyCode.Semicolon, KeyCode.L, KeyCode.Quote, KeyCode.LeftArrow, KeyCode.LeftArrow, KeyCode.DownArrow, KeyCode.Escape };
     private string[] gamepadControls = { "Vertical", "DVertical", "Horizontal", "DHorizontal", "A", "B", "X", "Y", "Start" };
 
-
-    public int controllerNumber = -1;
     public int playerNumber;
     public int teamNumber;
     public int playerControlNumber;
@@ -136,7 +134,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
     private Vector2 prevControlAxis = Vector2.zero;
 
-    private const float axisDeadZone = .3f;
+    public const float axisDeadZone = .3f;
 
     public bool isBot;
 
@@ -245,6 +243,21 @@ public class BhbPlayerController : NeonHeightsCharacterController
                 // gameObject.GetComponent<MeshRenderer>().enabled = true;
             }
         }
+    }
+
+    public KeyCode[] GetControlsArrayKb0()
+    {
+        return player1Controls;
+    }
+
+    public KeyCode[] GetControlsArrayKb1()
+    {
+        return player2Controls;
+    }
+
+    public string[] GetControlsArrayGamepad()
+    {
+        return gamepadControls;
     }
 
     public void Init(int playerNumber, int teamNumber, int playerControlNumber)
@@ -508,19 +521,6 @@ public class BhbPlayerController : NeonHeightsCharacterController
         }
 
         stoppedJumping = GetControlUp(Control.Jump);
-
-        if (controllerNumber != -1)
-        {
-            string gamepadIdentifier = "J" + controllerNumber;
-            //control sticks
-            float controlStickX = Input.GetAxisRaw(gamepadIdentifier + gamepadControls[2]);
-            float controlStickY = Input.GetAxisRaw(gamepadIdentifier + gamepadControls[0]);
-            //dpads
-            float dPadX = Input.GetAxisRaw(gamepadIdentifier + gamepadControls[3]);
-            float dPadY = Input.GetAxisRaw(gamepadIdentifier + gamepadControls[1]);
-            //in order to get the previous axis, we gotta take the max absolute value of either the dpad or control sticks
-            prevControlAxis = new Vector2((Mathf.Abs(controlStickX) > Mathf.Abs(dPadX) ? controlStickX : dPadX), (Mathf.Abs(controlStickY) > Mathf.Abs(dPadY) ? controlStickY : dPadY));
-        }
 
         if (invinsibilityTimeCurrent < invinsibilityTimeMax)
         {

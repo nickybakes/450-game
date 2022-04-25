@@ -29,19 +29,30 @@ public class TutorialManager : MonoBehaviour
 
     public Text messageIndexDisplay;
 
+    public GameObject instructionStart;
+    public GameObject instructionBackspace;
+
     public GameObject bulletProps;
 
     public BulletManager[] bulletManagers;
 
+    public Text controlChangeAlert;
+
+    private String[] controlTypes = new String[] {"Gamepad", "Keyboard 1", "Keyboard 2"};
+
+    public float controlChangeAlertTimeMax = 2;
+
+    public float controlChangeAlertTimeCurrent;
+
     void Start()
     {
+        controlChangeAlertTimeCurrent = controlChangeAlertTimeMax;
         functions = new TutorialEvent[messages.Length];
 
-        functions[0] = ResetPlayersAndBall;
-        functions[3] = ResetPlayersAndBall;
-        functions[10] = GiveBallToDummy;
-        functions[12] = StartBullets;
-        functions[13] = HideBulletProps;
+        functions[4] = ResetPlayersAndBall;
+        functions[11] = GiveBallToDummy;
+        functions[13] = StartBullets;
+        functions[14] = HideBulletProps;
         messageIndexDisplay.text = (currentMessageIndex + 1) + "/" + messages.Length;
         DisplayMessage();
     }
@@ -61,15 +72,32 @@ public class TutorialManager : MonoBehaviour
         DisplayMessage();
     }
 
+    public void ChangeControlType(ControlType type)
+    {
+        this.controlType = type;
+        controlChangeAlertTimeCurrent = 0;
+        controlChangeAlert.text = "Control scheme changed to " + controlTypes[(int) type];
+        UpdateControlTypeDisplay();
+    }
+
+    public void UpdateControlTypeDisplay()
+    {
+        if (messages[currentMessageIndex].transform.childCount >= 3)
+        {
+            // for (int i = 0; i < messages[currentMessageIndex].transform.childCount; i++)
+            // {
+            //     messages[currentMessageIndex].transform.GetChild(i).gameObject.SetActive(false);
+            // }
+            messages[currentMessageIndex].transform.GetChild((int)controlType).gameObject.SetActive(true);
+        }
+    }
+
     public void DisplayMessage()
     {
         messages[currentMessageIndex].SetActive(true);
 
         //check children for different control displays (gamepad, kb1, kb2)
-        if (messages[currentMessageIndex].transform.childCount >= 3)
-        {
-            messages[currentMessageIndex].transform.GetChild((int)controlType).gameObject.SetActive(true);
-        }
+        UpdateControlTypeDisplay();
 
         if (functions[currentMessageIndex] != null)
             functions[currentMessageIndex].Invoke();
