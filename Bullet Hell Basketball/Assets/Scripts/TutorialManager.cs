@@ -38,7 +38,7 @@ public class TutorialManager : MonoBehaviour
 
     public Text controlChangeAlert;
 
-    private String[] controlTypes = new String[] {"Gamepad", "Keyboard 1", "Keyboard 2"};
+    private String[] controlTypes = new String[] { "Gamepad", "Keyboard 1", "Keyboard 2" };
 
     public float controlChangeAlertTimeMax = 2;
 
@@ -76,7 +76,7 @@ public class TutorialManager : MonoBehaviour
     {
         this.controlType = type;
         controlChangeAlertTimeCurrent = 0;
-        controlChangeAlert.text = "Control scheme changed to " + controlTypes[(int) type];
+        controlChangeAlert.text = "Control scheme changed to " + controlTypes[(int)type];
         UpdateControlTypeDisplay();
     }
 
@@ -84,11 +84,21 @@ public class TutorialManager : MonoBehaviour
     {
         if (messages[currentMessageIndex].transform.childCount >= 3)
         {
-            // for (int i = 0; i < messages[currentMessageIndex].transform.childCount; i++)
-            // {
-            //     messages[currentMessageIndex].transform.GetChild(i).gameObject.SetActive(false);
-            // }
+            for (int i = 0; i < messages[currentMessageIndex].transform.childCount; i++)
+            {
+                messages[currentMessageIndex].transform.GetChild(i).gameObject.SetActive(false);
+            }
             messages[currentMessageIndex].transform.GetChild((int)controlType).gameObject.SetActive(true);
+        }
+        if (controlType == ControlType.Gamepad)
+        {
+            instructionStart.SetActive(true);
+            instructionBackspace.SetActive(false);
+        }
+        else
+        {
+            instructionStart.SetActive(false);
+            instructionBackspace.SetActive(true);
         }
     }
 

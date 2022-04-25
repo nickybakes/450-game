@@ -308,7 +308,7 @@ public class GameManager : MonoBehaviour
             data.numOfBulletLevelUps = 3;
 
             playerScriptsTeam1[0].isDummy = true;
-            tutorialManager.controlType = ControlType.Keyboard1;
+            tutorialManager.ChangeControlType(ControlType.Keyboard1);
 
             panelUI.transform.GetChild(0).gameObject.SetActive(false);
             panelUI.transform.GetChild(1).gameObject.SetActive(false);
