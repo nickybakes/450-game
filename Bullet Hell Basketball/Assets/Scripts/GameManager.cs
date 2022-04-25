@@ -463,6 +463,17 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void SpawnSpecificPowerup(PowerupType powerupType, Vector2 position)
+    {
+        GameObject p = Instantiate(powerUpPrefab, position, Quaternion.identity);
+
+        Powerup pScript = p.GetComponent<Powerup>();
+        pScript.originalPosition = position;
+        pScript.gameManager = this;
+        pScript.Init(powerupType);
+        allAlivePowerups.Add(pScript);
+    }
+
     public void SpawnRandomPowerUp()
     {
         if (allAlivePowerups.Count >= maxAlivePowerups)

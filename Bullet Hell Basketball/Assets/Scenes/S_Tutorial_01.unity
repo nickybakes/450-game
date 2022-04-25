@@ -3772,7 +3772,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collisionVertexPrefab: {fileID: 2382589878411412825, guid: de94585aa4ffe794c8cc1e98a3d925ff, type: 3}
   collisionSegmentPrefab: {fileID: 71431853401964895, guid: 2d19e55d322709d41b35224430022a18, type: 3}
-  editorUpdateFrame: 0
+  editorUpdateFrame: 1
   vertexColor: {r: 1, g: 0, b: 0, a: 1}
   segmentColor: {r: 1, g: 0, b: 0, a: 1}
   semiSolidPlatformColor: {r: 0, g: 0, b: 1, a: 1}
@@ -4949,6 +4949,18 @@ PrefabInstance:
       propertyPath: messages.Array.data[15]
       value: 
       objectReference: {fileID: 1309231121}
+    - target: {fileID: 3519191431275081514, guid: 984797ada813bd047a3ab4fb80fd45f8, type: 3}
+      propertyPath: messages.Array.data[16]
+      value: 
+      objectReference: {fileID: 8154566200416028906}
+    - target: {fileID: 3519191431275081514, guid: 984797ada813bd047a3ab4fb80fd45f8, type: 3}
+      propertyPath: messages.Array.data[17]
+      value: 
+      objectReference: {fileID: 8154566200416028905}
+    - target: {fileID: 3519191431275081514, guid: 984797ada813bd047a3ab4fb80fd45f8, type: 3}
+      propertyPath: messages.Array.data[18]
+      value: 
+      objectReference: {fileID: 8154566200416028904}
     - target: {fileID: 3519191431275081515, guid: 984797ada813bd047a3ab4fb80fd45f8, type: 3}
       propertyPath: m_Name
       value: Tutorial Manager
@@ -5055,5 +5067,20 @@ PrefabInstance:
 --- !u!1 &8154566200416028903 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7034748246034977270, guid: 0183ef35e7a660e459c7618a15a4600f, type: 3}
+  m_PrefabInstance: {fileID: 8154566200416028902}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8154566200416028904 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6439975382208463316, guid: 0183ef35e7a660e459c7618a15a4600f, type: 3}
+  m_PrefabInstance: {fileID: 8154566200416028902}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8154566200416028905 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4707500737317125949, guid: 0183ef35e7a660e459c7618a15a4600f, type: 3}
+  m_PrefabInstance: {fileID: 8154566200416028902}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8154566200416028906 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5500560893228691782, guid: 0183ef35e7a660e459c7618a15a4600f, type: 3}
   m_PrefabInstance: {fileID: 8154566200416028902}
   m_PrefabAsset: {fileID: 0}

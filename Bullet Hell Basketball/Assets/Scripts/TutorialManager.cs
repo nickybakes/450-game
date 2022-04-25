@@ -53,6 +53,7 @@ public class TutorialManager : MonoBehaviour
         functions[11] = GiveBallToDummy;
         functions[13] = StartBullets;
         functions[14] = HideBulletProps;
+        functions[16] = SpawnPowerups;
         messageIndexDisplay.text = (currentMessageIndex + 1) + "/" + messages.Length;
         DisplayMessage();
     }
@@ -136,5 +137,14 @@ public class TutorialManager : MonoBehaviour
     public void GiveBallToDummy()
     {
         gameManager.playerScriptsTeam1[0].GrabBall();
+    }
+
+    public void SpawnPowerups()
+    {
+        Vector2[] positions = new Vector2[] { new Vector2(-9.5f, 17.4f), new Vector2(9.5f, 17.4f), new Vector2(-10, 3.5f), new Vector2(0, 3.5f), new Vector2(10, 3.5f) };
+        for (int i = 0; i < positions.Length; i++)
+        {
+            gameManager.SpawnSpecificPowerup((PowerupType) i, positions[i]);
+        }
     }
 }

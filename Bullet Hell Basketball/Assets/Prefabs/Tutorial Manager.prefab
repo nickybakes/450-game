@@ -62,6 +62,9 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   messageIndexDisplay: {fileID: 0}
   instructionStart: {fileID: 0}
   instructionBackspace: {fileID: 0}
