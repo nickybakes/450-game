@@ -1041,5 +1041,17 @@ public class GameManager : MonoBehaviour
         return currentBallOwner.teamNumber != source.teamNumber;
     }
 
+    public void resumeGame(){
+        ToggleHowToPlay();
+    }
 
+    public void restart(){
+        EndGame();
+        BeginMatch();
+        ToggleHowToPlay();
+    }
+
+    public void backToMenu(){
+        SceneManager.LoadScene(0);
+    }
 }
