@@ -60,7 +60,7 @@ public class GameManager : MonoBehaviour
 
     private Vector2 team0SpawnPosition;
     private Vector2 team1SpawnPosition;
-    public Vector2 ballSpawnPosition;
+    private Vector2 ballSpawnPosition;
 
     //Players and Ball
     [HideInInspector]
@@ -71,7 +71,7 @@ public class GameManager : MonoBehaviour
 
     public Text matchTimeText;
     private float tipOffTimer;
-    private bool hasTippedOff;
+    public bool hasTippedOff;
 
     public bool friendlyFireSwipe;
     public bool friendlyFireBullets;
@@ -1049,11 +1049,11 @@ public class GameManager : MonoBehaviour
         }
         else if (previousScorer == 0)
         {
-            ball.transform.position = new Vector2(team1SpawnPosition.x - 5, team1SpawnPosition.y + 10);
+            ball.transform.position = new Vector2(team1SpawnPosition.x - 6, team1SpawnPosition.y + 10);
         }
         else if (previousScorer == 1)
         {
-            ball.transform.position = new Vector2(team0SpawnPosition.x + 5, team0SpawnPosition.y + 10);
+            ball.transform.position = new Vector2(team0SpawnPosition.x + 6, team0SpawnPosition.y + 10);
         }
 
         ballControlScript.lineRenderer.enabled = false;

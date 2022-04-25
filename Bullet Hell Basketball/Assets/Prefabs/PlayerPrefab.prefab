@@ -108,7 +108,6 @@ MonoBehaviour:
   jumpHoldTimerMax: 0.13
   jumpsInAir: 0
   jumpsInAirMax: 1
-  controllerNumber: -1
   playerNumber: 0
   teamNumber: 0
   playerControlNumber: 0
