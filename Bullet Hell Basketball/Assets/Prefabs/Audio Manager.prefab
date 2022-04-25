@@ -79,6 +79,13 @@ MonoBehaviour:
     pitch: 1
     loop: 1
     source: {fileID: 0}
+  - name: TipOffBuzzer
+    clips:
+    - {fileID: 8300000, guid: 713920aeb9db63f44a862106423837e0, type: 3}
+    volume: 0.1
+    pitch: 1.2
+    loop: 0
+    source: {fileID: 0}
   - name: Overtime
     clips:
     - {fileID: 8300000, guid: cb7244f0b325f354e9a7b4a378ef5ab2, type: 3}
@@ -112,8 +119,8 @@ MonoBehaviour:
     source: {fileID: 0}
   - name: Buzzer
     clips:
-    - {fileID: 8300000, guid: 789cbb3829141a545a0c38a1eb7771e2, type: 3}
-    volume: 1
+    - {fileID: 8300000, guid: a7c5624dde700b04fb722e940f580edd, type: 3}
+    volume: 0.2
     pitch: 1
     loop: 0
     source: {fileID: 0}
@@ -230,7 +237,7 @@ MonoBehaviour:
   - name: BigBulletStart
     clips:
     - {fileID: 8300000, guid: 913add3f2accbba47962b863cdbd3eab, type: 3}
-    volume: 0.5
+    volume: 1
     pitch: 1
     loop: 0
     source: {fileID: 0}
@@ -240,6 +247,13 @@ MonoBehaviour:
     volume: 0.5
     pitch: 1
     loop: 1
+    source: {fileID: 0}
+  - name: PortalBullets
+    clips:
+    - {fileID: 8300000, guid: 295947b30a481aa40a2d6507b0b584eb, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
     source: {fileID: 0}
   - name: Shield
     clips:

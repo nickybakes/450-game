@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.7030984, g: 0.5460588, b: 0.378425, a: 1}
+  m_IndirectSpecularColor: {r: 0.5920968, g: 0.6219288, b: 0.4827311, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -423,7 +423,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -999,7 +999,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -5667,7 +5667,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Off
+  m_Text: Medium
 --- !u!222 &599994437
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6344,7 +6344,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultButton: {fileID: 1886547287}
   mainMenuManager: {fileID: 118828420}
-  panelId: 0
+  panelId: 3
 --- !u!1 &650635351
 GameObject:
   m_ObjectHideFlags: 0
@@ -7422,7 +7422,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: -0.000030518, y: 39}
-  m_SizeDelta: {x: 993.5867, y: 128.89}
+  m_SizeDelta: {x: 603.92, y: 128.89}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &738339525
 MonoBehaviour:
@@ -7468,7 +7468,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -8836,7 +8836,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultButton: {fileID: 473598351}
   mainMenuManager: {fileID: 118828420}
-  panelId: 0
+  panelId: 5
 --- !u!1 &903390298
 GameObject:
   m_ObjectHideFlags: 0
@@ -9813,7 +9813,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: -0.000030518, y: 39}
-  m_SizeDelta: {x: 993.5867, y: 128.89}
+  m_SizeDelta: {x: 538.8, y: 128.89}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1005656600
 MonoBehaviour:
@@ -9859,7 +9859,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -14115,7 +14115,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultButton: {fileID: 1817983789}
   mainMenuManager: {fileID: 118828420}
-  panelId: 0
+  panelId: 1
 --- !u!1 &1435620252
 GameObject:
   m_ObjectHideFlags: 0
@@ -16016,7 +16016,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: -0.000030518, y: 39}
-  m_SizeDelta: {x: 993.5867, y: 128.89}
+  m_SizeDelta: {x: 283.7, y: 128.89}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1666664444
 MonoBehaviour:
@@ -16062,7 +16062,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -16106,7 +16106,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1671047533
 RectTransform:
   m_ObjectHideFlags: 0
@@ -16146,7 +16146,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultButton: {fileID: 1118810391}
   mainMenuManager: {fileID: 118828420}
-  panelId: 0
+  panelId: 4
 --- !u!1 &1671309758
 GameObject:
   m_ObjectHideFlags: 0
@@ -18449,7 +18449,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: -0.000030518, y: 39}
-  m_SizeDelta: {x: 993.5867, y: 128.89}
+  m_SizeDelta: {x: 283.7, y: 128.89}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1942224237
 MonoBehaviour:
@@ -18495,7 +18495,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -19021,7 +19021,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 118828420}
         m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
-        m_MethodName: StepUp
+        m_MethodName: PlaySwipeShotRally
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -19635,7 +19635,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2048296561
 RectTransform:
   m_ObjectHideFlags: 0
@@ -19675,7 +19675,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultButton: {fileID: 1671309760}
   mainMenuManager: {fileID: 118828420}
-  panelId: 0
+  panelId: 2
 --- !u!1 &2050089780
 GameObject:
   m_ObjectHideFlags: 0
@@ -19713,7 +19713,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: -0.000030518, y: 39}
-  m_SizeDelta: {x: 993.5867, y: 128.89}
+  m_SizeDelta: {x: 219.28, y: 62.9}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2050089782
 MonoBehaviour:
@@ -19759,7 +19759,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -19778,7 +19778,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Timer
+  m_Text: Match Length
 --- !u!222 &2050089785
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -20231,7 +20231,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -20371,7 +20371,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: -0.000030518, y: 39}
-  m_SizeDelta: {x: 993.5867, y: 128.89}
+  m_SizeDelta: {x: 603.92, y: 128.89}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2101883870
 MonoBehaviour:
@@ -20417,7 +20417,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:

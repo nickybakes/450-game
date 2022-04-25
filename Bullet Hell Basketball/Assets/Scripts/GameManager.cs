@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
     public GameObject airStrikePrefab;
 
     public GameObject superBulletPrefab;
+    public GameObject bulletPortalPrefab;
 
     public GameObject powerUpPrefab;
 
@@ -42,6 +43,7 @@ public class GameManager : MonoBehaviour
     public float powerUpTimeSpawn;
     public float powerUpTimeSpawnCurrent;
     public int powerUpsSpawnInARow;
+    public int powerUpsSpawnInARowMax;
 
     private PowerupType previousPowerupType = PowerupType.SuperBullet;
 
@@ -66,6 +68,8 @@ public class GameManager : MonoBehaviour
     public float matchTimeCurrent;
 
     public Text matchTimeText;
+    private float tipOffTimer;
+    private bool hasTippedOff;
 
     public bool friendlyFireSwipe;
     public bool friendlyFireBullets;
@@ -95,6 +99,7 @@ public class GameManager : MonoBehaviour
     public GameObject pausedMenuUI;
     public GameObject panelUI;
     public GameObject playerHeadersPanel;
+    public GameObject tipOffUI;
 
     private BulletManager[] bulletManagers;
     public int bulletLevel;
@@ -161,7 +166,9 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        paused = true;
+        paused = false;
+        tipOffTimer = 3.0f;
+        hasTippedOff = false;
 
         cameraShake = FindObjectOfType<Camera>().GetComponent<CameraShake>();
         cameraShake.gameManager = this;
@@ -208,6 +215,7 @@ public class GameManager : MonoBehaviour
             data.playerNumbersTeam0 = new List<int>();
             data.playerControlsTeam1 = new List<int>();
             data.playerNumbersTeam1 = new List<int>();
+            data.isSwipeShotRally = false;
 
             for (int i = 0; i < numOfBotsTeam0; i++)
             {
@@ -226,11 +234,6 @@ public class GameManager : MonoBehaviour
             data.playerNumbersTeam0 = new List<int>() { 0 };
             data.playerControlsTeam1 = new List<int>() { 1 };
             data.playerNumbersTeam1 = new List<int>() { 1 };
-        }
-
-        if (isTutorial)
-        {
-            data.numOfBulletLevelUps = 3;
         }
 
         playersTeam0 = new GameObject[data.playerNumbersTeam0.Count];
@@ -255,6 +258,17 @@ public class GameManager : MonoBehaviour
         cameraShakeEnabled = data.cameraShake;
         bulletSpawnage = data.bulletSpawnage;
 
+        int[] powerUpSpawnMins = new int[] { 7, 12, 17, 24, -1 };
+        int[] powerUpSpawnMaxs = new int[] { 18, 25, 31, 36, -1 };
+        int[] powerUpSpawnRowMaxs = new int[] { 4, 3, 2, 1, -1 };
+
+        powerUpTimeSpawnMin = powerUpSpawnMins[(int)data.powerUpSpawnage];
+        powerUpTimeSpawnMax = powerUpSpawnMaxs[(int)data.powerUpSpawnage];
+        powerUpsSpawnInARow = powerUpSpawnRowMaxs[(int)data.powerUpSpawnage];
+
+        if (data.powerUpSpawnage == PowerUpSpawnage.None)
+            powerUpsEnabled = false;
+
         ball = Instantiate(ballPrefab);
         ballControlScript = ball.GetComponent<Ball>();
         ballPhysicsScript = ball.GetComponent<BhbBallPhysics>();
@@ -276,10 +290,13 @@ public class GameManager : MonoBehaviour
         {
             tutorialManager.gameManager = this;
             Destroy(pausedMenuUI);
+            Destroy(tipOffUI);
+            Destroy(dunkBonusUI);
             paused = false;
             matchTimeText.text = "";
             bulletLevelUI.text = "";
-            //dunkBonusUI.text = "";
+            data.numOfBulletLevelUps = 3;
+
 
             panelUI.transform.GetChild(0).gameObject.SetActive(false);
             panelUI.transform.GetChild(1).gameObject.SetActive(false);
@@ -348,16 +365,15 @@ public class GameManager : MonoBehaviour
         bulletLevelUI.text = "Bullets Level: " + bulletLevel;
         dunkBonusUI.text = "Dunk Bonus: +" + dunkBonusValue;
 
-        if (isTutorial)
-        {
-            bulletLevelUI.text = "";
-        }
-
         playerOneWins.SetActive(false);
         playerTwoWins.SetActive(false);
+        pausedMenuUI.SetActive(false);
         previousScorer = -1;
         gameOver = false;
         overTime = false;
+
+        if (!isTutorial)
+            paused = true;
 
         Bullet[] bullets = FindObjectsOfType<Bullet>();
 
@@ -372,6 +388,12 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < allAlivePowerups.Count; i++)
         {
             Destroy(allAlivePowerups[i].gameObject);
+        }
+
+        BulletPortal[] bulletPortals = FindObjectsOfType<BulletPortal>();
+        foreach (BulletPortal portal in bulletPortals)
+        {
+            Destroy(portal.gameObject);
         }
 
         allAlivePowerups.Clear();
@@ -397,11 +419,43 @@ public class GameManager : MonoBehaviour
         ballControlScript.IsResetting = false;
     }
 
+    /// <summary>
+    /// Starts right after BeginMatch(). Counts down tip off.
+    /// </summary>
+    private void StartTipOff()
+    {
+        //After 3 seconds.
+        if (!hasTippedOff)
+        {
+            if (tipOffTimer > 0)
+            {
+                tipOffTimer -= Time.deltaTime;
+                tipOffUI.GetComponentInChildren<Text>().text = ((int)tipOffTimer + 1).ToString();
+            }
+            else
+            {
+                tipOffUI.GetComponentInChildren<Text>().text = "Tip Off!";
+
+                audioManager.Play("TipOffBuzzer");
+
+                paused = !paused;
+                tipOffTimer = 0;
+                hasTippedOff = true;
+            }
+        }
+        else
+        {
+            //turns off "tip off" text after short time
+            if ((int)matchTimeCurrent % 30 == 27)
+            tipOffUI.SetActive(false);
+        }
+    }
+
     public void SpawnRandomPowerUp()
     {
-        PowerupType type = (PowerupType)UnityEngine.Random.Range(0, 4);
+        PowerupType type = (PowerupType)UnityEngine.Random.Range(0, 5);
         while (type == previousPowerupType)
-            type = (PowerupType)UnityEngine.Random.Range(0, 4);
+            type = (PowerupType)UnityEngine.Random.Range(0, 5);
 
         previousPowerupType = type;
 
@@ -497,8 +551,19 @@ public class GameManager : MonoBehaviour
         StartCoroutine(cameraShake.Shake(.2f, .5f));
     }
 
+    public void SpawnBulletPortal(int teamNumber, Vector2 location)
+    {
+        GameObject bulletPortal = Instantiate(bulletPortalPrefab);
+        bulletPortal.transform.position = location;
+        BulletPortal bulletPortalScript = bulletPortal.GetComponent<BulletPortal>();
+        bulletPortalScript.Init(teamNumber, this);
+    }
+
     void Update()
     {
+        if (!isTutorial)
+            StartTipOff();
+
         if (ball.transform.parent == null)
             currentBallOwner = null;
         //If the ball is above the screen height (will also happen when held).
@@ -677,6 +742,11 @@ public class GameManager : MonoBehaviour
             SpawnSuperBullet(1);
         }
 
+        if (Input.GetKeyDown(KeyCode.Alpha9))
+        {
+            SpawnBulletPortal(0, new Vector2(0, 24));
+        }
+
         // if (player1Script.controllerNumber == -1)
         // {
         //     for (int i = 1; i <= 8; i++)
@@ -737,22 +807,25 @@ public class GameManager : MonoBehaviour
 
     public void ToggleHowToPlay()
     {
-        pausedMenuUI.SetActive(!pausedMenuUI.activeSelf);
-        paused = !paused;
-
-        //toggles audio.
-        if (paused)
+        if (hasTippedOff)
         {
-            audioManager.Play("MusicPauseStart");
-            pauseMusic.source.volume = 0.1f;
-            music.source.volume = 0;
+            pausedMenuUI.SetActive(!pausedMenuUI.activeSelf);
+            paused = !paused;
 
-            midair.source.volume = 0;
-        }
-        else
-        {
-            pauseMusic.source.volume = 0;
-            music.source.volume = 0.1f;
+            //toggles audio.
+            if (paused)
+            {
+                audioManager.Play("MusicPauseStart");
+                pauseMusic.source.volume = 0.1f;
+                music.source.volume = 0;
+
+                midair.source.volume = 0;
+            }
+            else
+            {
+                pauseMusic.source.volume = 0;
+                music.source.volume = 0.1f;
+            }
         }
     }
 
