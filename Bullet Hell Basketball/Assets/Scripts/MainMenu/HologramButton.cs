@@ -114,7 +114,7 @@ public class HologramButton : MonoBehaviour, ISelectHandler, IDeselectHandler// 
     public void SelectVisual()
     {
         transform.GetChild(0).gameObject.SetActive(true);
-        border.material = menuManager.borderFlashMaterial;
+        //border.material = menuManager.borderFlashMaterial;
         if (text != null)
         {
             text.fontSize = selectedFontSize;
