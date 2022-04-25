@@ -60,7 +60,7 @@ public class GameManager : MonoBehaviour
 
     private Vector2 team0SpawnPosition;
     private Vector2 team1SpawnPosition;
-    private Vector2 ballSpawnPosition;
+    public Vector2 ballSpawnPosition;
 
     //Players and Ball
     [HideInInspector]
@@ -168,10 +168,6 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        paused = false;
-        tipOffTimer = 3.0f;
-        hasTippedOff = false;
-
         cameraShake = FindObjectOfType<Camera>().GetComponent<CameraShake>();
         cameraShake.gameManager = this;
 
@@ -384,6 +380,10 @@ public class GameManager : MonoBehaviour
         gameOver = false;
         overTime = false;
 
+        hasTippedOff = false;
+        tipOffTimer = 3;
+        tipOffUI.SetActive(true);
+
         if (!isTutorial)
             paused = true;
 
@@ -450,7 +450,7 @@ public class GameManager : MonoBehaviour
 
                 audioManager.Play("TipOffBuzzer");
 
-                paused = !paused;
+                paused = false;
                 tipOffTimer = 0;
                 hasTippedOff = true;
             }
@@ -693,7 +693,6 @@ public class GameManager : MonoBehaviour
                 if (gameOver)
                 {
                     BeginMatch();
-                    paused = false;
                 }
                 else
                     ToggleHowToPlay();
@@ -708,7 +707,6 @@ public class GameManager : MonoBehaviour
                     if (gameOver)
                     {
                         BeginMatch();
-                        paused = false;
                     }
                     else
                         ToggleHowToPlay();
