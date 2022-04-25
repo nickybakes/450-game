@@ -371,14 +371,15 @@ public class BulletManager : MonoBehaviour
         }
 
         //Also mess with the speed of the big bullets
+        //Scales spawn rate based on score discrepincy
         if (ownerNumber == 0)
         {
-            bulletScript.timer = 4 + Mathf.Max((gameManager.team1Score - gameManager.team0Score) / 13, 0);
+            bulletScript.timer = 100 + Mathf.Max((gameManager.team1Score - gameManager.team0Score) / 13, 0);
             bulletScript.speed = 10 + Mathf.Max((gameManager.team1Score - gameManager.team0Score) / 30, 0) + gameManager.bulletLevel;
         }
         else
         {
-            bulletScript.timer = 4 + Mathf.Max((gameManager.team0Score - gameManager.team1Score) / 13, 0);
+            bulletScript.timer = 100 + Mathf.Max((gameManager.team0Score - gameManager.team1Score) / 13, 0);
             bulletScript.speed = 10 + Mathf.Max((gameManager.team0Score - gameManager.team1Score) / 30, 0) + gameManager.bulletLevel;
         }
 
