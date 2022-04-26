@@ -43,14 +43,16 @@ public class SwipeShotManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector3 currentPos0 = gameManager.playersTeam0[0].transform.position;
+        //Vector3 currentPos0 = gameManager.playersTeam0[0].transform.position;
         Vector3 currentPos1 = gameManager.playersTeam1[0].transform.position;
 
         //restrict player movement, only jumping/swiping
-        gameManager.playersTeam0[0].transform.position = new Vector3(-25, currentPos0.y, currentPos0.z);
+        //gameManager.playersTeam0[0].transform.position = new Vector3(-25, currentPos0.y, currentPos0.z);
         gameManager.playersTeam1[0].transform.position = new Vector3(25, currentPos1.y, currentPos1.z);
 
         gameManager.powerUpsEnabled = false;
+        gameManager.panelUI.SetActive(false);
+
 
         //Sets the ball either in front of team 0 or team 1.
         if (!gameManager.hasTippedOff && hasChosenSide)
@@ -61,9 +63,6 @@ public class SwipeShotManager : MonoBehaviour
             hasChosenSide = false; //Prevents ball from going back and forth.
         }
 
-        //Make it so somehow the player's can't grab the ball.
-
         //Limit to 1/2 players, if 1 player, bot. Bot usually* returns ball.
-        //*discuss w/ team, turn into its own game?
     }
 }

@@ -4,6 +4,13 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 
+public enum Gamemode
+{
+    Exhibition,
+    Tutorial,
+    Rally
+}
+
 public class GameManager : MonoBehaviour
 {
     /// <summary>
@@ -137,7 +144,7 @@ public class GameManager : MonoBehaviour
 
     public int previousScorer = -1;
 
-    public bool isTutorial;
+    public Gamemode gamemode;
 
     public TutorialManager tutorialManager;
 
@@ -221,7 +228,7 @@ public class GameManager : MonoBehaviour
             data.playerNumbersTeam1 = new List<int>() { 1 };
         }
 
-        if (isTutorial)
+        if (gamemode == Gamemode.Tutorial)
         {
             if (loadedData == null)
             {
@@ -292,7 +299,7 @@ public class GameManager : MonoBehaviour
         if (bulletSpawnage != BulletSpawnage.None)
             SpawnBulletSpawnersFromData();
 
-        if (isTutorial)
+        if (gamemode == Gamemode.Tutorial)
         {
             tutorialManager.gameManager = this;
             Destroy(pausedMenuUI);
@@ -384,7 +391,7 @@ public class GameManager : MonoBehaviour
         tipOffTimer = 3;
         tipOffUI.SetActive(true);
 
-        if (!isTutorial)
+        if (gamemode != Gamemode.Tutorial)
             paused = true;
 
         Bullet[] bullets = FindObjectsOfType<Bullet>();
@@ -587,7 +594,7 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        if (!isTutorial)
+        if (gamemode != Gamemode.Tutorial)
             StartTipOff();
 
         if (ball.transform.parent == null)
@@ -598,7 +605,7 @@ public class GameManager : MonoBehaviour
         else
             ShowBallChevron(false);
 
-        if (isTutorial)
+        if (gamemode == Gamemode.Tutorial)
         {
             if (playerScriptsTeam0[0].playerControlNumber == 0)
             {
@@ -689,6 +696,10 @@ public class GameManager : MonoBehaviour
             //             player1Script.controllerNumber = i;
             //     }
             // }
+        }
+        else if (gamemode == Gamemode.Rally)
+        {
+            //rally specifics
         }
         else
         {
@@ -787,73 +798,6 @@ public class GameManager : MonoBehaviour
             //Shows bullets increased UI element on regular interval.
             ShowBulletIncreaseUI();
         }
-
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            SpawnExplosion(-1, new Vector2(0, 20));
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            SpawnExplosion(0, new Vector2(0, 20));
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            SpawnExplosion(1, new Vector2(0, 20));
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            SpawnHomingBullet();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            SpawnRandomPowerUp();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha5))
-        {
-            SpawnAirStrike(0);
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha6))
-        {
-            SpawnAirStrike(1);
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha7))
-        {
-            SpawnSuperBullet(0);
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha8))
-        {
-            SpawnSuperBullet(1);
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha9))
-        {
-            SpawnBulletPortal(0, new Vector2(0, 24));
-        }
-
-        // if (player1Script.controllerNumber == -1)
-        // {
-        //     for (int i = 1; i <= 8; i++)
-        //     {
-        //         if ((Input.GetButton("J" + i + "A") || Input.GetButton("J" + i + "B") || Input.GetButton("J" + i + "X") || Input.GetButton("J" + i + "Y") || Input.GetButton("J" + i + "Start") || Mathf.Abs(Input.GetAxis("J" + i + "Horizontal")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "Vertical")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "DHorizontal")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "DVertical")) > .5f) && player2Script.controllerNumber != i)
-        //             player1Script.controllerNumber = i;
-        //     }
-        // }
-        // else if (player2Script.controllerNumber == -1)
-        // {
-        //     for (int i = 1; i <= 8; i++)
-        //     {
-        //         if ((Input.GetButton("J" + i + "A") || Input.GetButton("J" + i + "B") || Input.GetButton("J" + i + "X") || Input.GetButton("J" + i + "Y") || Input.GetButton("J" + i + "Start") || Mathf.Abs(Input.GetAxis("J" + i + "Horizontal")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "Vertical")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "DHorizontal")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "DVertical")) > .5f) && player1Script.controllerNumber != i)
-        //             player2Script.controllerNumber = i;
-        //     }
-        // }
     }
 
     private int TutorialCheckAllGamepadInputs()
@@ -1049,11 +993,11 @@ public class GameManager : MonoBehaviour
         }
         else if (previousScorer == 0)
         {
-            ball.transform.position = new Vector2(team1SpawnPosition.x - 6, team1SpawnPosition.y + 10);
+            ball.transform.position = new Vector2(team1SpawnPosition.x - 5, team1SpawnPosition.y + 10);
         }
         else if (previousScorer == 1)
         {
-            ball.transform.position = new Vector2(team0SpawnPosition.x + 6, team0SpawnPosition.y + 10);
+            ball.transform.position = new Vector2(team0SpawnPosition.x + 5, team0SpawnPosition.y + 10);
         }
 
         ballControlScript.lineRenderer.enabled = false;

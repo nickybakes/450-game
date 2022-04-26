@@ -759,6 +759,8 @@ public class BhbPlayerController : NeonHeightsCharacterController
                 return false;
             if (action == Control.Left)
             {
+                if (gameData.isSwipeShotRally)
+                    return false;
                 if (ball.transform.parent != transform)
                 {
                     if (teamNumber == 1 && ball.transform.parent != null && gameManager.isBallOwnerOppositeTeam(this) && gameManager.currentBallOwner.IsSwipeShooting && Mathf.Abs(transform.position.x - ball.transform.position.x) > 10)
@@ -811,6 +813,8 @@ public class BhbPlayerController : NeonHeightsCharacterController
             }
             if (action == Control.Right)
             {
+                if (gameData.isSwipeShotRally)
+                    return false;
                 if (ball.transform.parent != transform)
                 {
                     if (teamNumber == 0 && ball.transform.parent != null && gameManager.isBallOwnerOppositeTeam(this) && gameManager.currentBallOwner.IsSwipeShooting && Mathf.Abs(transform.position.x - ball.transform.position.x) > 10)
@@ -1002,6 +1006,10 @@ public class BhbPlayerController : NeonHeightsCharacterController
                 {
                     if (Vector2.Distance(transform.GetChild(0).transform.position, (Vector2)ball.transform.position + (ballPhysics.velocity * Time.deltaTime)) < 3)
                     {
+                        if (gameData.isSwipeShotRally)
+                        {
+                            return true;
+                        }
                         if (Mathf.PerlinNoise(-transform.position.y * Random.Range(-4, 4), -transform.position.x * Random.Range(-4, 4)) > .8)
                         {
                             return true;
