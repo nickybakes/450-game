@@ -17,6 +17,27 @@ public class SwipeShotManager : MonoBehaviour
         //No powerups, dunk bonus, etc.
         gameManager.powerUpsEnabled = false;
         hasChosenSide = true;
+
+        GameData loadedData = FindObjectOfType<GameData>();
+        GameData data = loadedData;
+
+        if (loadedData == null)
+        {
+            GameObject gameDataObjectStandin = new GameObject("Game Data Object Standin");
+            data = gameDataObjectStandin.AddComponent<GameData>();
+        }
+        data.playerControlsTeam0 = new List<int>();
+        data.playerNumbersTeam0 = new List<int>();
+        data.playerControlsTeam1 = new List<int>();
+        data.playerNumbersTeam1 = new List<int>();
+        data.isSwipeShotRally = true;
+
+        //uncommented this code to have 2 players on KB spawn in instead of Bots
+
+        data.playerControlsTeam0 = new List<int>() { 0 };
+        data.playerNumbersTeam0 = new List<int>() { 0 };
+        data.playerControlsTeam1 = new List<int>() { 8 };
+        data.playerNumbersTeam1 = new List<int>() { 8 };
     }
 
     // Update is called once per frame

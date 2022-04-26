@@ -79,6 +79,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
     private GameManager gameManager;
     private AudioManager audioManager;
     private float soundTimer;
+    private GameData gameData;
 
     public Animator animator;
     public Animator ballAnimator;
@@ -301,6 +302,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
         ballPhysics = ball.GetComponent<BhbBallPhysics>();
         swipeRenderer = transform.GetChild(0).GetComponent<Renderer>();
         playerCollider = gameObject.GetComponent<Collider2D>();
+        gameData = FindObjectOfType<GameData>();
     }
 
     // Update is called once per frame
@@ -508,7 +510,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
                     }
                 }
             }
-            else if (!ballScript.IsBullet && swipeCooldownTimeCurrent >= swipeCooldownTimeMax && !IsStunned && !IsSwiping && Vector2.Distance(ball.transform.position, transform.position) < 5.0f && autoCatchCooldownTimer > autoCatchCooldownTimerMax && ball.transform.parent == null)
+            else if (!ballScript.IsBullet && swipeCooldownTimeCurrent >= swipeCooldownTimeMax && !IsStunned && !IsSwiping && Vector2.Distance(ball.transform.position, transform.position) < 5.0f && autoCatchCooldownTimer > autoCatchCooldownTimerMax && ball.transform.parent == null && !gameData.isSwipeShotRally)
             {
                 GrabBall();
             }
