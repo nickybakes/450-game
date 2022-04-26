@@ -10,6 +10,13 @@ public class SwipeShotManager : MonoBehaviour
     public GameManager gameManager;
     private bool hasChosenSide;
 
+    public Canvas rallyCanvas;
+    private int currentScore = 0;
+    private int highScore = 0;
+    private Text currentScoreText;
+    private Text highScoreText;
+
+    private float tipOffTimer;
 
     // Start is called before the first frame update
     void Start()
@@ -17,6 +24,10 @@ public class SwipeShotManager : MonoBehaviour
         //No powerups, dunk bonus, etc.
         gameManager.powerUpsEnabled = false;
         hasChosenSide = true;
+        tipOffTimer = 3;
+
+        currentScoreText = rallyCanvas.GetComponentsInChildren<Text>()[0];
+        highScoreText = rallyCanvas.GetComponentsInChildren<Text>()[1];
 
         GameData loadedData = FindObjectOfType<GameData>();
         GameData data = loadedData;
@@ -52,7 +63,16 @@ public class SwipeShotManager : MonoBehaviour
 
         gameManager.powerUpsEnabled = false;
         gameManager.panelUI.SetActive(false);
+        //gameManager.tipOffUI.SetActive(false);
 
+        if (tipOffTimer > 0 && gameManager.hasTippedOff)
+        {
+            tipOffTimer -= Time.deltaTime;
+        }
+        else if (gameManager.hasTippedOff)
+        {
+            gameManager.tipOffUI.SetActive(false);
+        }
 
         //Sets the ball either in front of team 0 or team 1.
         if (!gameManager.hasTippedOff && hasChosenSide)
@@ -61,6 +81,16 @@ public class SwipeShotManager : MonoBehaviour
             gameManager.ballControlScript.gameObject.transform.position = new Vector3(randomBallStartPos, 5, 0);
 
             hasChosenSide = false; //Prevents ball from going back and forth.
+        }
+
+        //counting for current and high score.
+        currentScore = gameManager.ballControlScript.swipeShotPasses;
+        currentScoreText.text = "Score: " + currentScore;
+
+        if (currentScore > highScore)
+        {
+            highScore = currentScore;
+            highScoreText.text = "High Score: " + highScore;
         }
 
         //Limit to 1/2 players, if 1 player, bot. Bot usually* returns ball.

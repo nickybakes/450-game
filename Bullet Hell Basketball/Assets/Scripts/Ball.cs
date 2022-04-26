@@ -44,7 +44,8 @@ public class Ball : MonoBehaviour
 
     //true if the the ball was shot via a swipe and not a normal throw
     public bool isSwipeShot;
-    private int swipeShotPasses;
+    public int swipeShotPasses;
+    private int cappedPasses;
 
     public float bulletTimeMax = .23f;
     public float bulletTimeCurrent;
@@ -193,14 +194,15 @@ public class Ball : MonoBehaviour
                     //special SFX for back n' forth swipes
                     if (swipeShotPasses > 0)
                     {
+                        cappedPasses = swipeShotPasses;
                         //caps max passing speed at 4 passes.
                         if (swipeShotPasses > 4)
-                            swipeShotPasses = 4;
+                            cappedPasses = 4;
 
-                        float newSwipePitch = 1.0f + ((swipeShotPasses - 1.0f) / 12.0f);
+                        float newSwipePitch = 1.0f + ((cappedPasses - 1.0f) / 12.0f);
                         audioManager.Play("SwipeRally", 0.3f, newSwipePitch, newSwipePitch);
 
-                        switch (swipeShotPasses)
+                        switch (cappedPasses)
                         {
                             case 1:
                                 trailRenderer.startColor = new Color32(255, 200, 200, 1);

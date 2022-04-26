@@ -109,6 +109,7 @@ public class GameManager : MonoBehaviour
     public GameObject panelUI;
     public GameObject playerHeadersPanel;
     public GameObject tipOffUI;
+    private Text tipOffUIText;
 
     private BulletManager[] bulletManagers;
     public int bulletLevel;
@@ -198,6 +199,7 @@ public class GameManager : MonoBehaviour
         panelUI.transform.GetChild(0).GetComponent<Text>().text = "0";
         //player 2.
         panelUI.transform.GetChild(1).GetComponent<Text>().text = "0";
+        tipOffUIText = tipOffUI.GetComponentInChildren<Text>();
 
         matchTimeText = panelUI.transform.GetChild(2).GetComponent<Text>();
         matchTimeText.text = TimeSpan.FromSeconds(Mathf.Max(matchTimeCurrent, 0)).ToString("m\\:ss");
@@ -449,11 +451,14 @@ public class GameManager : MonoBehaviour
             if (tipOffTimer > 0)
             {
                 tipOffTimer -= Time.deltaTime;
-                tipOffUI.GetComponentInChildren<Text>().text = ((int)tipOffTimer + 1).ToString();
+                tipOffUIText.text = ((int)tipOffTimer + 1).ToString();
             }
             else
             {
-                tipOffUI.GetComponentInChildren<Text>().text = "Tip Off!";
+                if (gamemode == Gamemode.Exhibition)
+                    tipOffUIText.text = "Tip Off!";
+                else if (gamemode == Gamemode.Rally)
+                    tipOffUIText.text = "Rally!";
 
                 audioManager.Play("TipOffBuzzer");
 
@@ -700,6 +705,29 @@ public class GameManager : MonoBehaviour
         else if (gamemode == Gamemode.Rally)
         {
             //rally specifics
+            if (paused && Input.GetKeyDown(KeyCode.T))
+            {
+                Destroy(FindObjectOfType<AudioManager>().gameObject);
+                SceneManager.LoadScene(1);
+                return;
+            }
+
+            if (Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown(KeyCode.Escape))
+            {
+                ToggleHowToPlay();
+            }
+
+            for (int i = 1; i <= 8; i++)
+            {
+                if (Input.GetButtonDown("J" + i + "Start"))
+                {
+                    ToggleHowToPlay();
+                    break;
+                }
+            }
+
+            if (paused)
+                return;
         }
         else
         {
