@@ -7,13 +7,9 @@ public class CameraVolume : MonoBehaviour
 {
     private Slider slider;
 
-    private void Start()
-    {
-        slider = GetComponent<Slider>();
-    }
-
     public void ChangeMasterVolume()
     {
+        slider = GetComponent<Slider>();
         AudioListener.volume = slider.value;
     }
 }
