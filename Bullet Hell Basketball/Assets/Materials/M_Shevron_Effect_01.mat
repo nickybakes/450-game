@@ -32,6 +32,10 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - Texture2D_e786b8bd8b5c419eab4f2e8f25e97c22:
+        m_Texture: {fileID: 2800000, guid: 74dd0c654d7b74a49b26ce73797014cc, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _BaseMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -72,6 +76,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_3c5ade32dd3043079f97c127f10ff044_Texture_1:
+        m_Texture: {fileID: 2800000, guid: 041ffaabe8809d3468aef7cc207274f1, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_469207cf23114e099b9bc9cfed44971a_Texture_1:
         m_Texture: {fileID: 2800000, guid: 49ef4ccf2c4e69e469b75c0610b0f5d9, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -98,7 +106,9 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - Boolean_5a60694277354fe1a203f371f8c0a226: 0
+    - Boolean_93bd3628c2da4f91b8881491abdc8432: 0
     - Vector1_809b69cad2724fb5a162444e83dd6e43: 0.7
+    - Vector1_b6f878d8916842f388ff8f0cf4b2e2c9: 4.5
     - Vector1_da325d751ba24c7c9198338ec6a31fc4: 2
     - Vector1_fe2ba64b5cd24b2386888278a54b77e2: 24.12
     - _AlphaClip: 0
