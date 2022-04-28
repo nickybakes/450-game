@@ -708,7 +708,6 @@ public class GameManager : MonoBehaviour
         }
         else if (gamemode == Gamemode.Rally)
         {
-
             if (Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown(KeyCode.Escape))
             {
                 TogglePauseMenu();
@@ -1044,6 +1043,10 @@ public class GameManager : MonoBehaviour
                 pauseMusic.source.volume = 0;
                 music.source.volume = 0.1f;
             }
+
+            //if rally, makes sure ball spawns in front of a player.
+            if (gamemode == Gamemode.Rally)
+                FindObjectOfType<SwipeShotManager>().Reset();
         }
     }
 
