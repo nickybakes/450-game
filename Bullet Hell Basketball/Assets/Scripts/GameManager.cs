@@ -1010,6 +1010,7 @@ public class GameManager : MonoBehaviour
     {
         if (hasTippedOff)
         {
+            currentSelection = pauseDefault;
             pausedMenuUI.SetActive(!pausedMenuUI.activeSelf);
             paused = !paused;
 
