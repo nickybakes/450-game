@@ -1212,9 +1212,10 @@ public class GameManager : MonoBehaviour
 
     public void RestartGame()
     {
+        TogglePauseMenu();
+        //This EndGame call should NOT use the courotine.
         EndGame();
         BeginMatch();
-        TogglePauseMenu();
     }
 
     public void BackToMenu()
