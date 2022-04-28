@@ -12,7 +12,9 @@ public enum Menu
     GamemodeSelect,
     ExhibitionTeamSetup,
     Customize,
-    Options
+    Options,
+
+    SwipeShotSetup
 }
 
 public static class Controller
@@ -49,6 +51,9 @@ public class MainMenuManager : MonoBehaviour
 
     public GridLayoutGroup gridTeam0;
     public GridLayoutGroup gridTeam1;
+
+    public GridLayoutGroup gridDuo0;
+    public GridLayoutGroup gridDuo1;
 
     public GameObject teamSetupPlayerDisplayPrefab;
 
@@ -110,6 +115,23 @@ public class MainMenuManager : MonoBehaviour
             if (Input.GetButtonDown("J" + controllers[i] + "A"))
             {
                 if (currentPanelId == Menu.ExhibitionTeamSetup)
+                {
+                    int inputId = 0;
+
+                    if (i == 8 && Input.GetKeyDown(KeyCode.Return))
+                        inputId = 1;
+                    else if (i != 8)
+                        inputId = i + 2;
+
+                    if (!IsInputIdInGame(inputId))
+                    {
+                        AddPlayerToGame(inputId);
+                        break;
+                    }
+
+                }
+
+                if (currentPanelId == Menu.SwipeShotSetup)
                 {
                     int inputId = 0;
 
@@ -315,30 +337,98 @@ public class MainMenuManager : MonoBehaviour
         }
     }
 
-    public void AddPlayerToGame(int inputId)
+    public void OpenSwipeShotSetup()
     {
-        int playerNumber = GetSmalledAvailablePlayerNumber();
-        if (playerNumber == 8 || data.playerNumbersTeam0.Count + data.playerNumbersTeam1.Count >= 8)
+        SwitchToPanel(6);
+        data.playerNumbersTeam0 = new List<int>();
+        data.playerNumbersTeam1 = new List<int>();
+        data.playerControlsTeam0 = new List<int>();
+        data.playerControlsTeam1 = new List<int>();
+
+        foreach (Transform child in gridDuo0.transform)
         {
-            return;
+            GameObject.Destroy(child.gameObject);
         }
-        if (data.playerNumbersTeam0.Count <= data.playerNumbersTeam1.Count)
+
+        foreach (Transform child in gridDuo1.transform)
         {
-            //add to Yellow team
-            GameObject g = Instantiate(teamSetupPlayerDisplayPrefab, gridTeam0.transform);
-            TeamSetupPlayerDisplay gScript = g.GetComponent<TeamSetupPlayerDisplay>();
-            gScript.Init(playerNumber, inputId);
-            data.playerControlsTeam0.Add(inputId);
-            data.playerNumbersTeam0.Add(playerNumber);
+            GameObject.Destroy(child.gameObject);
+        }
+
+        if (masterController == "K" || masterController == "M")
+        {
+            AddPlayerToGame(0);
         }
         else
         {
-            //add to Blue team
-            GameObject g = Instantiate(teamSetupPlayerDisplayPrefab, gridTeam1.transform);
-            TeamSetupPlayerDisplay gScript = g.GetComponent<TeamSetupPlayerDisplay>();
-            gScript.Init(playerNumber, inputId);
-            data.playerControlsTeam1.Add(inputId);
-            data.playerNumbersTeam1.Add(playerNumber);
+            AddPlayerToGame(int.Parse(masterController) + 1);
+        }
+
+        AddBotTeam1();
+    }
+
+    public void AddPlayerToGame(int inputId)
+    {
+        if(currentPanelId == Menu.ExhibitionTeamSetup)
+        {
+            int playerNumber = GetSmalledAvailablePlayerNumber();
+            if (playerNumber == 8 || data.playerNumbersTeam0.Count + data.playerNumbersTeam1.Count >= 8)
+            {
+                return;
+            }
+            if (data.playerNumbersTeam0.Count <= data.playerNumbersTeam1.Count)
+            {
+                //add to Yellow team
+                GameObject g = Instantiate(teamSetupPlayerDisplayPrefab, gridTeam0.transform);
+                TeamSetupPlayerDisplay gScript = g.GetComponent<TeamSetupPlayerDisplay>();
+                gScript.Init(playerNumber, inputId);
+                data.playerControlsTeam0.Add(inputId);
+                data.playerNumbersTeam0.Add(playerNumber);
+            }
+            else
+            {
+                //add to Blue team
+                GameObject g = Instantiate(teamSetupPlayerDisplayPrefab, gridTeam1.transform);
+                TeamSetupPlayerDisplay gScript = g.GetComponent<TeamSetupPlayerDisplay>();
+                gScript.Init(playerNumber, inputId);
+                data.playerControlsTeam1.Add(inputId);
+                data.playerNumbersTeam1.Add(playerNumber);
+            }
+        }
+
+        if(currentPanelId == Menu.SwipeShotSetup)
+        {
+            int playerNumber = GetSmalledAvailablePlayerNumber();
+            if (playerNumber == 8 || data.playerNumbersTeam0.Count + data.playerNumbersTeam1.Count >= 2)
+            {
+                //add to Blue team
+                GameObject g = Instantiate(teamSetupPlayerDisplayPrefab, gridDuo1.transform);
+                TeamSetupPlayerDisplay gScript = g.GetComponent<TeamSetupPlayerDisplay>();
+                gScript.Init(playerNumber, inputId);
+                data.playerControlsTeam1.Add(inputId);
+                data.playerNumbersTeam1.Add(playerNumber);
+
+                RemoveBotTeam1();
+                return;
+            }
+            if (data.playerNumbersTeam0.Count <= data.playerNumbersTeam1.Count)
+            {
+                //add to Yellow team
+                GameObject g = Instantiate(teamSetupPlayerDisplayPrefab, gridDuo0.transform);
+                TeamSetupPlayerDisplay gScript = g.GetComponent<TeamSetupPlayerDisplay>();
+                gScript.Init(playerNumber, inputId);
+                data.playerControlsTeam0.Add(inputId);
+                data.playerNumbersTeam0.Add(playerNumber);
+            }
+            else
+            {
+                //add to Blue team
+                GameObject g = Instantiate(teamSetupPlayerDisplayPrefab, gridDuo1.transform);
+                TeamSetupPlayerDisplay gScript = g.GetComponent<TeamSetupPlayerDisplay>();
+                gScript.Init(playerNumber, inputId);
+                data.playerControlsTeam1.Add(inputId);
+                data.playerNumbersTeam1.Add(playerNumber);
+            }
         }
 
         //audio
@@ -349,21 +439,46 @@ public class MainMenuManager : MonoBehaviour
     {
         int teamNumber = GetWhichTeamPlayerIsIn(inputId);
 
-        if (teamNumber == 0)
+        if(currentPanelId == Menu.ExhibitionTeamSetup)
         {
-            //remove player from Yellow team
-            int i = data.playerControlsTeam0.IndexOf(inputId);
-            data.playerNumbersTeam0.RemoveAt(i);
-            data.playerControlsTeam0.RemoveAt(i);
-            Destroy(gridTeam0.transform.GetChild(i).gameObject);
+            if (teamNumber == 0)
+            {
+                //remove player from Yellow team
+                int i = data.playerControlsTeam0.IndexOf(inputId);
+                data.playerNumbersTeam0.RemoveAt(i);
+                data.playerControlsTeam0.RemoveAt(i);
+                Destroy(gridTeam0.transform.GetChild(i).gameObject);
+            }
+            else
+            {
+                //remove player from Blue team
+                int i = data.playerControlsTeam1.IndexOf(inputId);
+                data.playerNumbersTeam1.RemoveAt(i);
+                data.playerControlsTeam1.RemoveAt(i);
+                Destroy(gridTeam1.transform.GetChild(i).gameObject);
+            }
         }
-        else
+
+        if(currentPanelId == Menu.SwipeShotSetup)
         {
-            //remove player from Blue team
-            int i = data.playerControlsTeam1.IndexOf(inputId);
-            data.playerNumbersTeam1.RemoveAt(i);
-            data.playerControlsTeam1.RemoveAt(i);
-            Destroy(gridTeam1.transform.GetChild(i).gameObject);
+            if (teamNumber == 0)
+            {
+                //remove player from Yellow team
+                int i = data.playerControlsTeam0.IndexOf(inputId);
+                data.playerNumbersTeam0.RemoveAt(i);
+                data.playerControlsTeam0.RemoveAt(i);
+                Destroy(gridDuo0.transform.GetChild(i).gameObject);
+                AddBotTeam0();
+            }
+            else
+            {
+                //remove player from Blue team
+                int i = data.playerControlsTeam1.IndexOf(inputId);
+                data.playerNumbersTeam1.RemoveAt(i);
+                data.playerControlsTeam1.RemoveAt(i);
+                Destroy(gridDuo1.transform.GetChild(i).gameObject);
+                AddBotTeam1();
+            }
         }
 
         //audio
@@ -403,27 +518,56 @@ public class MainMenuManager : MonoBehaviour
 
     public void AddBotToTeam(int teamNumber)
     {
-        if (data.playerNumbersTeam0.Count + data.playerNumbersTeam1.Count >= 8)
+        if(currentPanelId == Menu.ExhibitionTeamSetup)
         {
-            return;
+            if (data.playerNumbersTeam0.Count + data.playerNumbersTeam1.Count >= 8)
+            {
+                return;
+            }
+            if (teamNumber == 0)
+            {
+                //add to Yellow team
+                GameObject g = Instantiate(teamSetupPlayerDisplayPrefab, gridTeam0.transform);
+                TeamSetupPlayerDisplay gScript = g.GetComponent<TeamSetupPlayerDisplay>();
+                gScript.Init(8, -1);
+                data.playerControlsTeam0.Add(-1);
+                data.playerNumbersTeam0.Add(8);
+            }
+            else
+            {
+                //add to Blue team
+                GameObject g = Instantiate(teamSetupPlayerDisplayPrefab, gridTeam1.transform);
+                TeamSetupPlayerDisplay gScript = g.GetComponent<TeamSetupPlayerDisplay>();
+                gScript.Init(8, -1);
+                data.playerControlsTeam1.Add(-1);
+                data.playerNumbersTeam1.Add(8);
+            }
         }
-        if (teamNumber == 0)
+
+        if(currentPanelId == Menu.SwipeShotSetup)
         {
-            //add to Yellow team
-            GameObject g = Instantiate(teamSetupPlayerDisplayPrefab, gridTeam0.transform);
-            TeamSetupPlayerDisplay gScript = g.GetComponent<TeamSetupPlayerDisplay>();
-            gScript.Init(8, -1);
-            data.playerControlsTeam0.Add(-1);
-            data.playerNumbersTeam0.Add(8);
-        }
-        else
-        {
-            //add to Blue team
-            GameObject g = Instantiate(teamSetupPlayerDisplayPrefab, gridTeam1.transform);
-            TeamSetupPlayerDisplay gScript = g.GetComponent<TeamSetupPlayerDisplay>();
-            gScript.Init(8, -1);
-            data.playerControlsTeam1.Add(-1);
-            data.playerNumbersTeam1.Add(8);
+            if (data.playerNumbersTeam0.Count + data.playerNumbersTeam1.Count >= 2)
+            {
+                return;
+            }
+            if (teamNumber == 0)
+            {
+                //add to Yellow team
+                GameObject g = Instantiate(teamSetupPlayerDisplayPrefab, gridDuo0.transform);
+                TeamSetupPlayerDisplay gScript = g.GetComponent<TeamSetupPlayerDisplay>();
+                gScript.Init(8, -1);
+                data.playerControlsTeam0.Add(-1);
+                data.playerNumbersTeam0.Add(8);
+            }
+            else
+            {
+                //add to Blue team
+                GameObject g = Instantiate(teamSetupPlayerDisplayPrefab, gridDuo1.transform);
+                TeamSetupPlayerDisplay gScript = g.GetComponent<TeamSetupPlayerDisplay>();
+                gScript.Init(8, -1);
+                data.playerControlsTeam1.Add(-1);
+                data.playerNumbersTeam1.Add(8);
+            }
         }
 
         //audio
@@ -432,37 +576,77 @@ public class MainMenuManager : MonoBehaviour
 
     public void RemoveBotFromTeam(int teamNumber)
     {
-        if (teamNumber == 0)
+        if(currentPanelId == Menu.ExhibitionTeamSetup)
         {
-            //remove most recently placed bot from Yellow team
-            for (int i = data.playerNumbersTeam0.Count - 1; i >= 0; i--)
+            if (teamNumber == 0)
             {
-                if (data.playerNumbersTeam0[i] == 8)
+                //remove most recently placed bot from Yellow team
+                for (int i = data.playerNumbersTeam0.Count - 1; i >= 0; i--)
                 {
-                    //audio
-                    audioManager.Play("ControllerOff");
+                    if (data.playerNumbersTeam0[i] == 8)
+                    {
+                        //audio
+                        audioManager.Play("ControllerOff");
 
-                    data.playerNumbersTeam0.RemoveAt(i);
-                    data.playerControlsTeam0.RemoveAt(i);
-                    Destroy(gridTeam0.transform.GetChild(i).gameObject);
-                    break;
+                        data.playerNumbersTeam0.RemoveAt(i);
+                        data.playerControlsTeam0.RemoveAt(i);
+                        Destroy(gridTeam0.transform.GetChild(i).gameObject);
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                //remove most recently placed bot from Blue team
+                for (int i = data.playerNumbersTeam1.Count - 1; i >= 0; i--)
+                {
+                    if (data.playerNumbersTeam1[i] == 8)
+                    {
+                        //audio
+                        audioManager.Play("ControllerOff");
+
+                        data.playerNumbersTeam1.RemoveAt(i);
+                        data.playerControlsTeam1.RemoveAt(i);
+                        Destroy(gridTeam1.transform.GetChild(i).gameObject);
+                        break;
+                    }
                 }
             }
         }
-        else
+        if(currentPanelId == Menu.SwipeShotSetup)
         {
-            //remove most recently placed bot from Blue team
-            for (int i = data.playerNumbersTeam1.Count - 1; i >= 0; i--)
+            if (teamNumber == 0)
             {
-                if (data.playerNumbersTeam1[i] == 8)
+                //remove most recently placed bot from Yellow team
+                for (int i = data.playerNumbersTeam0.Count - 1; i >= 0; i--)
                 {
-                    //audio
-                    audioManager.Play("ControllerOff");
+                    if (data.playerNumbersTeam0[i] == 8)
+                    {
+                        //audio
+                        audioManager.Play("ControllerOff");
 
-                    data.playerNumbersTeam1.RemoveAt(i);
-                    data.playerControlsTeam1.RemoveAt(i);
-                    Destroy(gridTeam1.transform.GetChild(i).gameObject);
-                    break;
+                        data.playerNumbersTeam0.RemoveAt(i);
+                        data.playerControlsTeam0.RemoveAt(i);
+                        Destroy(gridDuo0.transform.GetChild(i).gameObject);
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                //remove most recently placed bot from Blue team
+                for (int i = data.playerNumbersTeam1.Count - 1; i >= 0; i--)
+                {
+                    if (data.playerNumbersTeam1[i] == 8)
+                    {
+                        //audio
+                        audioManager.Play("ControllerOff");
+
+                        data.playerNumbersTeam1.RemoveAt(i);
+                        data.playerControlsTeam1.RemoveAt(i);
+                        Destroy(gridDuo1.transform.GetChild(i).gameObject);
+                        break;
+                    }
                 }
             }
         }
