@@ -109,6 +109,9 @@ public class GameManager : MonoBehaviour
 
     public GameObject pausedMenuUI;
     public GameObject panelUI;
+    public GameObject scoresUI;
+    private GameObject scoresUITeam0;
+    private GameObject scoresUITeam1;
     public GameObject playerHeadersPanel;
     public GameObject tipOffUI;
     private Text tipOffUIText;
@@ -190,8 +193,10 @@ public class GameManager : MonoBehaviour
         bulletLevelUI = panelUI.transform.GetChild(6).GetComponent<Text>();
         bulletIncreaseUI = panelUI.transform.GetChild(5).GetComponent<Text>();
         dunkBonusUI = panelUI.transform.GetChild(7).GetComponent<Text>();
+        scoresUITeam0 = scoresUI.transform.GetChild(0).gameObject;
+        scoresUITeam1 = scoresUI.transform.GetChild(1).gameObject;
 
-        audioManager = FindObjectOfType<AudioManager>();
+    audioManager = FindObjectOfType<AudioManager>();
         music = audioManager.Find("Music");
         pauseMusic = audioManager.Find("MusicPause");
         midair = audioManager.Find("Midair");
@@ -383,11 +388,13 @@ public class GameManager : MonoBehaviour
         team1Score = 0;
         panelUI.transform.GetChild(1).GetComponent<Text>().text = team1Score.ToString();
         panelUI.transform.GetChild(0).GetComponent<Text>().text = team0Score.ToString();
+        panelUI.transform.GetChild(2).GetComponent<Text>().text = TimeSpan.FromSeconds(Mathf.Max(matchTimeCurrent, 0)).ToString("m\\:ss");
 
         //sets bullet level and dunk value back to default.
         bulletLevelUI.text = "Bullets Level: " + bulletLevel;
         dunkBonusUI.text = "Dunk Bonus: +" + dunkBonusValue;
 
+        panelUI.SetActive(true);
         playerOneWins.SetActive(false);
         playerTwoWins.SetActive(false);
         pausedMenuUI.SetActive(false);
@@ -1030,10 +1037,36 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator EndGame()
     {
-        //panelUI.transform.GetChild(0).position = cam.WorldToScreenPoint(new Vector3(-15, 20, 0));
-        panelUI.transform.GetChild(0).GetComponent<Text>().fontSize = 300;
-        //panelUI.transform.GetChild(1).position = cam.WorldToScreenPoint(new Vector3(15, 20, 0));
-        panelUI.transform.GetChild(1).GetComponent<Text>().fontSize = 300;
+        //Explodes ball on end, sends ball offscreen, sets to is resetting, sets to not be a bullet.
+        SpawnExplosion(2, ball.transform.position);
+        ballControlScript.IsResetting = true;
+        ball.transform.position = new Vector3(0, -1000, 0);
+        ballControlScript.IsBullet = false;
+
+        //Removes UI, Adds scoresUI.
+        panelUI.SetActive(false);
+        scoresUI.SetActive(true);
+
+        scoresUITeam0.transform.GetChild(2).GetComponent<Text>().text = team0Score.ToString();
+        scoresUITeam1.transform.GetChild(2).GetComponent<Text>().text = team1Score.ToString();
+
+        //Light up the winning score.
+        if (team0Score > team1Score)
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                scoresUITeam0.transform.GetChild(i).GetComponent<Image>().enabled = true;
+                scoresUITeam1.transform.GetChild(i).GetComponent<Image>().enabled = false;
+            }
+        }
+        else
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                scoresUITeam0.transform.GetChild(i).GetComponent<Image>().enabled = false;
+                scoresUITeam1.transform.GetChild(i).GetComponent<Image>().enabled = true;
+            }
+        }
 
         audioManager.Play("Buzzer");
         midair.source.volume = 0;
@@ -1073,8 +1106,7 @@ public class GameManager : MonoBehaviour
         team1Score = 0;
         paused = true;
 
-        panelUI.transform.GetChild(0).GetComponent<Text>().fontSize = 185;
-        panelUI.transform.GetChild(1).GetComponent<Text>().fontSize = 185;
+        scoresUI.SetActive(false);
     }
 
     public void ResetPlayersAndBall()
