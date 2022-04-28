@@ -34,8 +34,8 @@ Material:
     m_TexEnvs:
     - _BackTex:
         m_Texture: {fileID: 2800000, guid: c713434f2733b874bba6c9b19b59708f, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
+        m_Scale: {x: 1, y: 1.98}
+        m_Offset: {x: 0, y: -0.78}
     - _BaseMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -58,20 +58,20 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _DownTex:
         m_Texture: {fileID: 2800000, guid: 7cf502525a8961d498cd9577c0bfe169, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
+        m_Scale: {x: 1, y: 1.98}
+        m_Offset: {x: 0, y: -0.78}
     - _EmissionMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _FrontTex:
         m_Texture: {fileID: 2800000, guid: 83c52b81f163c6947b42a57f1beddfc6, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
+        m_Scale: {x: 1, y: 1.98}
+        m_Offset: {x: 0, y: -0.78}
     - _LeftTex:
         m_Texture: {fileID: 2800000, guid: 975a8480281c3d74982faa1315fc9b8c, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
+        m_Scale: {x: 1, y: 1.98}
+        m_Offset: {x: 0, y: -0.78}
     - _MainTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -90,16 +90,16 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _RightTex:
         m_Texture: {fileID: 2800000, guid: 021b297229b33014c82ebaa953f4c2a9, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
+        m_Scale: {x: 1, y: 1.98}
+        m_Offset: {x: 0, y: -0.78}
     - _SpecGlossMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _UpTex:
         m_Texture: {fileID: 2800000, guid: 4b4c1edd103d19b4c91ec7fa7e786fdf, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
+        m_Scale: {x: 1, y: 1.98}
+        m_Offset: {x: 0, y: -0.78}
     - unity_Lightmaps:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
