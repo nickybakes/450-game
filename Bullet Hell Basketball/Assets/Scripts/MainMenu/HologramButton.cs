@@ -24,7 +24,6 @@ public class HologramButton : MonoBehaviour, ISelectHandler, IDeselectHandler// 
 
     void Awake()
     {
-        Debug.Log(gameObject.name);
         menuManager = FindObjectOfType<MainMenuManager>();
         buttonComponent = GetComponent<Button>();
         border = transform.GetChild(1).GetComponent<Image>();
@@ -43,10 +42,10 @@ public class HologramButton : MonoBehaviour, ISelectHandler, IDeselectHandler// 
         trigger.runInEditMode = true;
         entry.callback.AddListener((eventData) => { this.OnMouseEnter(); });
         exit.callback.AddListener((eventData) => { this.OnMouseExit(); });
-        click.callback.AddListener((eventData) => { this.OnMouseClick(); });
+        // click.callback.AddListener((eventData) => { this.OnMouseClick(); });
         trigger.triggers.Add(entry);
         trigger.triggers.Add(exit);
-        trigger.triggers.Add(click);
+        // trigger.triggers.Add(click);
 
         text = GetComponentInChildren<Text>();
         if (text != null)

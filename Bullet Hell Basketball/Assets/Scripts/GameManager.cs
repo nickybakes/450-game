@@ -142,6 +142,7 @@ public class GameManager : MonoBehaviour
     public bool paused;
 
     public Button currentSelection;
+    public Button defaultSelection;
     private bool[] canMoveSelection = new bool[9];
     private string[] controllers = { "1", "2", "3", "4", "5", "6", "7", "8", "K" };
 
@@ -1021,6 +1022,13 @@ public class GameManager : MonoBehaviour
         {
             pausedMenuUI.SetActive(!pausedMenuUI.activeSelf);
             paused = !paused;
+
+            HologramButton hb = currentSelection.GetComponent<HologramButton>();
+            if(hb != null)
+                hb.DeselectVisual();
+
+            defaultSelection.Select();
+            defaultSelection.GetComponent<HologramButton>().SelectVisual();
 
             //toggles audio.
             if (paused)
