@@ -1030,6 +1030,11 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator EndGame()
     {
+        //panelUI.transform.GetChild(0).position = cam.WorldToScreenPoint(new Vector3(-15, 20, 0));
+        panelUI.transform.GetChild(0).GetComponent<Text>().fontSize = 300;
+        //panelUI.transform.GetChild(1).position = cam.WorldToScreenPoint(new Vector3(15, 20, 0));
+        panelUI.transform.GetChild(1).GetComponent<Text>().fontSize = 300;
+
         audioManager.Play("Buzzer");
         midair.source.volume = 0;
 
@@ -1067,6 +1072,9 @@ public class GameManager : MonoBehaviour
         team0Score = 0;
         team1Score = 0;
         paused = true;
+
+        panelUI.transform.GetChild(0).GetComponent<Text>().fontSize = 185;
+        panelUI.transform.GetChild(1).GetComponent<Text>().fontSize = 185;
     }
 
     public void ResetPlayersAndBall()
@@ -1213,7 +1221,7 @@ public class GameManager : MonoBehaviour
     public void RestartGame()
     {
         TogglePauseMenu();
-        //This EndGame call should NOT use the courotine.
+        //This EndGame call should NOT use the coroutine.
         EndGame();
         BeginMatch();
     }
