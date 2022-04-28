@@ -697,36 +697,20 @@ public class GameManager : MonoBehaviour
             {
 
             }
-
-            // if (player1Script.controllerNumber == -1)
-            // {
-            //     for (int i = 1; i <= 8; i++)
-            //     {
-            //         if ((Input.GetButton("J" + i + "A") || Input.GetButton("J" + i + "B") || Input.GetButton("J" + i + "X") || Input.GetButton("J" + i + "Y") || Input.GetButton("J" + i + "Start") || Mathf.Abs(Input.GetAxis("J" + i + "Horizontal")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "Vertical")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "DHorizontal")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "DVertical")) > .5f) && player2Script.controllerNumber != i)
-            //             player1Script.controllerNumber = i;
-            //     }
-            // }
         }
         else if (gamemode == Gamemode.Rally)
         {
-            //rally specifics
-            if (paused && Input.GetKeyDown(KeyCode.T))
-            {
-                Destroy(FindObjectOfType<AudioManager>().gameObject);
-                SceneManager.LoadScene(1);
-                return;
-            }
 
             if (Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown(KeyCode.Escape))
             {
-                ToggleHowToPlay();
+                TogglePauseMenu();
             }
 
             for (int i = 1; i <= 8; i++)
             {
                 if (Input.GetButtonDown("J" + i + "Start"))
                 {
-                    ToggleHowToPlay();
+                    TogglePauseMenu();
                     break;
                 }
             }
@@ -736,13 +720,6 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            if (paused && Input.GetKeyDown(KeyCode.T))
-            {
-                Destroy(FindObjectOfType<AudioManager>().gameObject);
-                SceneManager.LoadScene(1);
-                return;
-            }
-
             if (Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown(KeyCode.Escape))
             {
                 if (gameOver)
@@ -750,7 +727,7 @@ public class GameManager : MonoBehaviour
                     BeginMatch();
                 }
                 else
-                    ToggleHowToPlay();
+                    TogglePauseMenu();
 
                 panelUI.SetActive(true);
             }
@@ -764,111 +741,14 @@ public class GameManager : MonoBehaviour
                         BeginMatch();
                     }
                     else
-                        ToggleHowToPlay();
+                        TogglePauseMenu();
                     break;
                 }
             }
 
-            if (paused)
+            if (paused && hasTippedOff)
             {
-                if (EventSystem.current.currentSelectedGameObject != null)
-                {
-                    currentSelection = EventSystem.current.currentSelectedGameObject.GetComponent<Button>();
-                }
-                else if (currentSelection is Button)
-                {
-                    currentSelection.Select();
-                }
-                else
-                {
-                    currentSelection = null;
-                }
-
-                for (int i = 0; currentSelection != null && i < 9; i++)
-                {
-                    //checks if controllers or keyboard have pressed "A" or space, if so, "click" the current button
-                    if (Input.GetButtonDown("J" + controllers[i] + "A"))
-                    {
-                        HologramButton hologramButton = currentSelection.gameObject.GetComponent<HologramButton>();
-                        ExecuteEvents.Execute(currentSelection.gameObject,
-                            new BaseEventData(EventSystem.current), ExecuteEvents.submitHandler);
-                        if (hologramButton != null)
-                        {
-                            hologramButton.DeselectVisual();
-                        }
-                        break;
-                    }
-                    //get the current direction the player is pressing in
-                    float horizontalInput = 0f;
-                    float verticalInput = 0f;
-
-                    //hover sound for buttons. Does not play on title screen.
-
-                    if (((Input.GetAxis("J" + controllers[i] + "Vertical") + (Input.GetAxis("J" + controllers[i] + "Horizontal")) == 0)))
-                    {
-                        horizontalInput += Mathf.Round(Input.GetAxis("J" + controllers[i] + "DHorizontal"));
-                        verticalInput += Mathf.Round(Input.GetAxis("J" + controllers[i] + "DVertical"));
-                    }
-                    else
-                    {
-                        horizontalInput += Mathf.Round(Input.GetAxis("J" + controllers[i] + "Horizontal"));
-                        verticalInput += Mathf.Round(Input.GetAxis("J" + controllers[i] + "Vertical"));
-                    }
-
-
-
-                    //this prevents the user from pressing same direction each frame (for controls sticks, dpad, and KB)
-                    if (horizontalInput == 0 && verticalInput == 0)
-                    {
-                        canMoveSelection[i] = true;
-                    }
-
-                    //this find the direction (right, left, up, down) the user pressed, and tries to select the button
-                    //that is next to the current selection in that direction
-                    if (canMoveSelection[i])
-                    {
-                        if (horizontalInput > 0)
-                        {
-                            if (currentSelection.navigation.selectOnRight != null)
-                            {
-                                //Debug.Log(currentSelection.navigation.selectOnRight);
-                                currentSelection.navigation.selectOnRight.Select();
-                            }
-                            canMoveSelection[i] = false;
-                            break;
-                        }
-                        else if (horizontalInput < 0)
-                        {
-                            if (currentSelection.navigation.selectOnLeft != null)
-                            {
-                                //Debug.Log(currentSelection.navigation.selectOnLeft);
-                                currentSelection.navigation.selectOnLeft.Select();
-                            }
-                            canMoveSelection[i] = false;
-                            break;
-                        }
-                        else if (verticalInput > 0)
-                        {
-                            if (currentSelection.navigation.selectOnUp != null)
-                            {
-                                //Debug.Log(currentSelection.navigation.selectOnUp);
-                                currentSelection.navigation.selectOnUp.Select();
-                            }
-                            canMoveSelection[i] = false;
-                            break;
-                        }
-                        else if (verticalInput < 0)
-                        {
-                            if (currentSelection.navigation.selectOnDown != null)
-                            {
-                                //Debug.Log(currentSelection.navigation.selectOnDown);
-                                currentSelection.navigation.selectOnDown.Select();
-                            }
-                            canMoveSelection[i] = false;
-                            break;
-                        }
-                    }
-                }
+                PauseMenuUpdate();
             }
 
             if (paused || gameOver)
@@ -935,6 +815,108 @@ public class GameManager : MonoBehaviour
         }
     }
 
+
+    private void PauseMenuUpdate()
+    {
+        if (EventSystem.current.currentSelectedGameObject != null)
+        {
+            currentSelection = EventSystem.current.currentSelectedGameObject.GetComponent<Button>();
+        }
+        else if (currentSelection is Button)
+        {
+            currentSelection.Select();
+        }
+        else
+        {
+            currentSelection = null;
+        }
+
+        for (int i = 0; currentSelection != null && i < 9; i++)
+        {
+            //checks if controllers or keyboard have pressed "A" or space, if so, "click" the current button
+            if (Input.GetButtonDown("J" + controllers[i] + "A"))
+            {
+                HologramButton hologramButton = currentSelection.gameObject.GetComponent<HologramButton>();
+                ExecuteEvents.Execute(currentSelection.gameObject,
+                    new BaseEventData(EventSystem.current), ExecuteEvents.submitHandler);
+                if (hologramButton != null)
+                {
+                    hologramButton.DeselectVisual();
+                }
+                break;
+            }
+            //get the current direction the player is pressing in
+            float horizontalInput = 0f;
+            float verticalInput = 0f;
+
+            //hover sound for buttons. Does not play on title screen.
+
+            if (((Input.GetAxis("J" + controllers[i] + "Vertical") + (Input.GetAxis("J" + controllers[i] + "Horizontal")) == 0)))
+            {
+                horizontalInput += Mathf.Round(Input.GetAxis("J" + controllers[i] + "DHorizontal"));
+                verticalInput += Mathf.Round(Input.GetAxis("J" + controllers[i] + "DVertical"));
+            }
+            else
+            {
+                horizontalInput += Mathf.Round(Input.GetAxis("J" + controllers[i] + "Horizontal"));
+                verticalInput += Mathf.Round(Input.GetAxis("J" + controllers[i] + "Vertical"));
+            }
+
+
+
+            //this prevents the user from pressing same direction each frame (for controls sticks, dpad, and KB)
+            if (horizontalInput == 0 && verticalInput == 0)
+            {
+                canMoveSelection[i] = true;
+            }
+
+            //this find the direction (right, left, up, down) the user pressed, and tries to select the button
+            //that is next to the current selection in that direction
+            if (canMoveSelection[i])
+            {
+                if (horizontalInput > 0)
+                {
+                    if (currentSelection.navigation.selectOnRight != null)
+                    {
+                        //Debug.Log(currentSelection.navigation.selectOnRight);
+                        currentSelection.navigation.selectOnRight.Select();
+                    }
+                    canMoveSelection[i] = false;
+                    break;
+                }
+                else if (horizontalInput < 0)
+                {
+                    if (currentSelection.navigation.selectOnLeft != null)
+                    {
+                        //Debug.Log(currentSelection.navigation.selectOnLeft);
+                        currentSelection.navigation.selectOnLeft.Select();
+                    }
+                    canMoveSelection[i] = false;
+                    break;
+                }
+                else if (verticalInput > 0)
+                {
+                    if (currentSelection.navigation.selectOnUp != null)
+                    {
+                        //Debug.Log(currentSelection.navigation.selectOnUp);
+                        currentSelection.navigation.selectOnUp.Select();
+                    }
+                    canMoveSelection[i] = false;
+                    break;
+                }
+                else if (verticalInput < 0)
+                {
+                    if (currentSelection.navigation.selectOnDown != null)
+                    {
+                        //Debug.Log(currentSelection.navigation.selectOnDown);
+                        currentSelection.navigation.selectOnDown.Select();
+                    }
+                    canMoveSelection[i] = false;
+                    break;
+                }
+            }
+        }
+    }
     private int TutorialCheckAllGamepadInputs()
     {
         for (int i = 1; i <= 8; i++)
@@ -1021,7 +1003,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void ToggleHowToPlay()
+    public void TogglePauseMenu()
     {
         if (hasTippedOff)
         {
@@ -1214,7 +1196,7 @@ public class GameManager : MonoBehaviour
         return victims;
     }
 
-    public bool isBallOwnerOppositeTeam(BhbPlayerController source)
+    public bool IsBallOwnerOppositeTeam(BhbPlayerController source)
     {
 
         if (currentBallOwner == null)
@@ -1223,17 +1205,21 @@ public class GameManager : MonoBehaviour
         return currentBallOwner.teamNumber != source.teamNumber;
     }
 
-    public void resumeGame(){
-        ToggleHowToPlay();
+    public void ResumeGame()
+    {
+        TogglePauseMenu();
     }
 
-    public void restart(){
+    public void RestartGame()
+    {
         EndGame();
         BeginMatch();
-        ToggleHowToPlay();
+        TogglePauseMenu();
     }
 
-    public void backToMenu(){
+    public void BackToMenu()
+    {
+        Destroy(FindObjectOfType<AudioManager>().gameObject);
         SceneManager.LoadScene(0);
     }
 }

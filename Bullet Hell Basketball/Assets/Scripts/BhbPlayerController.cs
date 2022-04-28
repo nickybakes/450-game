@@ -79,7 +79,6 @@ public class BhbPlayerController : NeonHeightsCharacterController
     private GameManager gameManager;
     private AudioManager audioManager;
     private float soundTimer;
-    private GameData gameData;
 
     public Animator animator;
     public Animator ballAnimator;
@@ -280,6 +279,11 @@ public class BhbPlayerController : NeonHeightsCharacterController
         }
     }
 
+    void Awake()
+    {
+        gameManager = FindObjectOfType<GameManager>();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -295,22 +299,17 @@ public class BhbPlayerController : NeonHeightsCharacterController
             shoeSqueakRate = 0.5f;
         }
 
-        gameManager = FindObjectOfType<GameManager>();
         audioManager = FindObjectOfType<AudioManager>();
         ball = GameObject.FindGameObjectWithTag("Ball");
         ballScript = ball.GetComponent<Ball>();
         ballPhysics = ball.GetComponent<BhbBallPhysics>();
         swipeRenderer = transform.GetChild(0).GetComponent<Renderer>();
         playerCollider = gameObject.GetComponent<Collider2D>();
-        gameData = FindObjectOfType<GameData>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (gameManager.paused)
-            return;
-
         //face towards the ball if not holding it
         if (ball.transform.parent != transform)
         {
@@ -366,6 +365,11 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
             if (throwCoolDownTimerCurrent <= throwCoolDownTimerMax)
                 throwCoolDownTimerCurrent += Time.deltaTime;
+        }
+
+        if (gameManager.paused)
+        {
+            return;
         }
 
         //If you just landed, plays landing sound.
@@ -510,7 +514,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
                     }
                 }
             }
-            else if (!ballScript.IsBullet && swipeCooldownTimeCurrent >= swipeCooldownTimeMax && !IsStunned && !IsSwiping && Vector2.Distance(ball.transform.position, transform.position) < 5.0f && autoCatchCooldownTimer > autoCatchCooldownTimerMax && ball.transform.parent == null && !gameData.isSwipeShotRally)
+            else if (!ballScript.IsBullet && swipeCooldownTimeCurrent >= swipeCooldownTimeMax && !IsStunned && !IsSwiping && Vector2.Distance(ball.transform.position, transform.position) < 5.0f && autoCatchCooldownTimer > autoCatchCooldownTimerMax && ball.transform.parent == null && gameManager.gamemode != Gamemode.Rally)
             {
                 GrabBall();
             }
@@ -607,6 +611,12 @@ public class BhbPlayerController : NeonHeightsCharacterController
             botAlwaysDoubleJump = true;
         else
             botAlwaysDoubleJump = false;
+
+        if (gameManager.gamemode == Gamemode.Rally)
+        {
+            botAlwaysDoubleJump = false;
+            botShootRange = 10;
+        }
     }
 
     public void GrabBall()
@@ -759,11 +769,11 @@ public class BhbPlayerController : NeonHeightsCharacterController
                 return false;
             if (action == Control.Left)
             {
-                if (gameData.isSwipeShotRally)
+                if (gameManager.gamemode == Gamemode.Rally)
                     return false;
                 if (ball.transform.parent != transform)
                 {
-                    if (teamNumber == 1 && ball.transform.parent != null && gameManager.isBallOwnerOppositeTeam(this) && gameManager.currentBallOwner.IsSwipeShooting && Mathf.Abs(transform.position.x - ball.transform.position.x) > 10)
+                    if (teamNumber == 1 && ball.transform.parent != null && gameManager.IsBallOwnerOppositeTeam(this) && gameManager.currentBallOwner.IsSwipeShooting && Mathf.Abs(transform.position.x - ball.transform.position.x) > 10)
                     {
                         return false;
                     }
@@ -771,7 +781,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
                     {
                         return false;
                     }
-                    if (teamNumber == 0 && ball.transform.parent != null && gameManager.isBallOwnerOppositeTeam(this) && gameManager.currentBallOwner.IsSwipeShooting && Mathf.Abs(transform.position.x - ball.transform.position.x) > 10)
+                    if (teamNumber == 0 && ball.transform.parent != null && gameManager.IsBallOwnerOppositeTeam(this) && gameManager.currentBallOwner.IsSwipeShooting && Mathf.Abs(transform.position.x - ball.transform.position.x) > 10)
                     {
                         return true;
                     }
@@ -813,11 +823,11 @@ public class BhbPlayerController : NeonHeightsCharacterController
             }
             if (action == Control.Right)
             {
-                if (gameData.isSwipeShotRally)
+                if (gameManager.gamemode == Gamemode.Rally)
                     return false;
                 if (ball.transform.parent != transform)
                 {
-                    if (teamNumber == 0 && ball.transform.parent != null && gameManager.isBallOwnerOppositeTeam(this) && gameManager.currentBallOwner.IsSwipeShooting && Mathf.Abs(transform.position.x - ball.transform.position.x) > 10)
+                    if (teamNumber == 0 && ball.transform.parent != null && gameManager.IsBallOwnerOppositeTeam(this) && gameManager.currentBallOwner.IsSwipeShooting && Mathf.Abs(transform.position.x - ball.transform.position.x) > 10)
                     {
                         return false;
                     }
@@ -825,7 +835,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
                     {
                         return false;
                     }
-                    if (teamNumber == 1 && ball.transform.parent != null && gameManager.isBallOwnerOppositeTeam(this) && gameManager.currentBallOwner.IsSwipeShooting && Mathf.Abs(transform.position.x - ball.transform.position.x) > 10)
+                    if (teamNumber == 1 && ball.transform.parent != null && gameManager.IsBallOwnerOppositeTeam(this) && gameManager.currentBallOwner.IsSwipeShooting && Mathf.Abs(transform.position.x - ball.transform.position.x) > 10)
                     {
                         return true;
                     }
@@ -944,12 +954,12 @@ public class BhbPlayerController : NeonHeightsCharacterController
             {
                 if (ball.transform.parent != null && ball.transform.parent != transform)
                 {
-                    if (gameManager.isBallOwnerOppositeTeam(this) && Vector2.Distance(transform.GetChild(0).transform.position, gameManager.currentBallOwner.transform.position) < 3.4f + Mathf.PerlinNoise(transform.position.x, transform.position.y) * 2.0f)
+                    if (gameManager.IsBallOwnerOppositeTeam(this) && Vector2.Distance(transform.GetChild(0).transform.position, gameManager.currentBallOwner.transform.position) < 3.4f + Mathf.PerlinNoise(transform.position.x, transform.position.y) * 2.0f)
                     {
                         if (Mathf.PerlinNoise(transform.position.y, transform.position.x) > .3)
                             return true;
                     }
-                    else if (gameManager.isBallOwnerOppositeTeam(this) && Vector2.Distance(transform.GetChild(0).transform.position, gameManager.currentBallOwner.transform.position) < 3.4f + Mathf.PerlinNoise(transform.position.x, transform.position.y) * 2.0f)
+                    else if (gameManager.IsBallOwnerOppositeTeam(this) && Vector2.Distance(transform.GetChild(0).transform.position, gameManager.currentBallOwner.transform.position) < 3.4f + Mathf.PerlinNoise(transform.position.x, transform.position.y) * 2.0f)
                     {
                         if (Mathf.PerlinNoise(transform.position.y, transform.position.x) > .3)
                             return true;
@@ -1006,7 +1016,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
                 {
                     if (Vector2.Distance(transform.GetChild(0).transform.position, (Vector2)ball.transform.position + (ballPhysics.velocity * Time.deltaTime)) < 3)
                     {
-                        if (gameData.isSwipeShotRally)
+                        if (gameManager.gamemode == Gamemode.Rally)
                         {
                             return true;
                         }

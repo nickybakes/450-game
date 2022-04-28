@@ -294,6 +294,11 @@ public class Ball : MonoBehaviour
                     }
                     else if (currentTarget == rightBasket)
                     {
+                        if (gameManager.gamemode == Gamemode.Rally && gameManager.playerScriptsTeam1[0].isBot)
+                        {
+                            gameManager.playerScriptsTeam1[0].IsSwipeShooting = true;
+                            return;
+                        }
                         ScoreRightBasket();
                     }
                     AfterScore();
@@ -314,7 +319,14 @@ public class Ball : MonoBehaviour
                     if (currentTarget == leftBasket)
                         ScoreLeftBasket();
                     else if (currentTarget == rightBasket)
+                    {
+                        if (gameManager.gamemode == Gamemode.Rally && gameManager.playerScriptsTeam1[0].isBot)
+                        {
+                            gameManager.playerScriptsTeam1[0].IsSwipeShooting = true;
+                            return;
+                        }
                         ScoreRightBasket();
+                    }
 
                     AfterScore();
                 }
@@ -432,6 +444,11 @@ public class Ball : MonoBehaviour
 
                 if (collision.collider.gameObject == gameManager.rightBasket)
                 {
+                    if (gameManager.gamemode == Gamemode.Rally && gameManager.playerScriptsTeam1[0].isBot)
+                    {
+                        gameManager.playerScriptsTeam1[0].IsSwipeShooting = true;
+                        return;
+                    }
                     ScoreRightBasket();
                 }
                 else if (collision.collider.gameObject == gameManager.leftBasket)
