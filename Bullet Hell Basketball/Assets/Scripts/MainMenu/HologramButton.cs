@@ -24,6 +24,7 @@ public class HologramButton : MonoBehaviour, ISelectHandler, IDeselectHandler// 
 
     void Awake()
     {
+        Debug.Log(gameObject.name);
         menuManager = FindObjectOfType<MainMenuManager>();
         buttonComponent = GetComponent<Button>();
         border = transform.GetChild(1).GetComponent<Image>();
@@ -66,50 +67,12 @@ public class HologramButton : MonoBehaviour, ISelectHandler, IDeselectHandler// 
     public void OnSelect(BaseEventData eventData)
     {
         SelectVisual();
-        // transform.GetChild(0).gameObject.SetActive(true);
-        // transform.GetChild(1).gameObject.SetActive(false);
-
-        // if (transform.GetChild(4).gameObject != null)
-        // {
-        // 	transform.GetChild(3).gameObject.SetActive(true);
-        // 	transform.GetChild(4).gameObject.SetActive(false);
-        // }
     }
 
     public void OnDeselect(BaseEventData eventData)
     {
         DeselectVisual();
-
-        // transform.GetChild(1).gameObject.SetActive(true);
-        // transform.GetChild(0).gameObject.SetActive(false);
-
-        // if (transform.GetChild(4).gameObject != null)
-        // {
-        // 	transform.GetChild(4).gameObject.SetActive(true);
-        // 	transform.GetChild(3).gameObject.SetActive(false);
-        // }
     }
-
-
-    public void OnModeSelect()
-    {
-        if (transform.GetChild(4).gameObject != null)
-        {
-            transform.GetChild(3).gameObject.SetActive(true);
-            transform.GetChild(4).gameObject.SetActive(false);
-        }
-    }
-
-
-    public void OnModeDeselect()
-    {
-        if (transform.GetChild(4).gameObject != null)
-        {
-            transform.GetChild(4).gameObject.SetActive(true);
-            transform.GetChild(3).gameObject.SetActive(false);
-        }
-    }
-
 
     public void SelectVisual()
     {

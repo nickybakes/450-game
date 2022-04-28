@@ -196,7 +196,7 @@ public class GameManager : MonoBehaviour
         scoresUITeam0 = scoresUI.transform.GetChild(0).gameObject;
         scoresUITeam1 = scoresUI.transform.GetChild(1).gameObject;
 
-    audioManager = FindObjectOfType<AudioManager>();
+        audioManager = FindObjectOfType<AudioManager>();
         music = audioManager.Find("Music");
         pauseMusic = audioManager.Find("MusicPause");
         midair = audioManager.Find("Midair");
@@ -721,6 +721,11 @@ public class GameManager : MonoBehaviour
                     TogglePauseMenu();
                     break;
                 }
+            }
+
+            if (paused && hasTippedOff)
+            {
+                PauseMenuUpdate();
             }
 
             if (paused)
