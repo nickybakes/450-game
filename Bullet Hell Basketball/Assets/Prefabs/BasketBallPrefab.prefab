@@ -5594,6 +5594,7 @@ MonoBehaviour:
   gameManager: {fileID: 0}
   lineRenderer: {fileID: 2396805206590203897}
   isSwipeShot: 0
+  swipeShotPasses: 0
   bulletTimeMax: 0.23
   bulletTimeCurrent: 0
   resetTimeMax: 2

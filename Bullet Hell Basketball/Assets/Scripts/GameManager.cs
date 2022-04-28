@@ -2,7 +2,16 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 using System.Collections.Generic;
+using System.Collections;
+
+public enum Gamemode
+{
+    Exhibition,
+    Tutorial,
+    Rally
+}
 
 public class GameManager : MonoBehaviour
 {
@@ -45,6 +54,8 @@ public class GameManager : MonoBehaviour
     public int powerUpsSpawnInARow;
     public int powerUpsSpawnInARowMax;
 
+    private int maxAlivePowerups = 16;
+
     private PowerupType previousPowerupType = PowerupType.SuperBullet;
 
     public List<Powerup> allAlivePowerups;
@@ -69,7 +80,7 @@ public class GameManager : MonoBehaviour
 
     public Text matchTimeText;
     private float tipOffTimer;
-    private bool hasTippedOff;
+    public bool hasTippedOff;
 
     public bool friendlyFireSwipe;
     public bool friendlyFireBullets;
@@ -98,8 +109,12 @@ public class GameManager : MonoBehaviour
 
     public GameObject pausedMenuUI;
     public GameObject panelUI;
+    public GameObject scoresUI;
+    private GameObject scoresUITeam0;
+    private GameObject scoresUITeam1;
     public GameObject playerHeadersPanel;
     public GameObject tipOffUI;
+    private Text tipOffUIText;
 
     private BulletManager[] bulletManagers;
     public int bulletLevel;
@@ -126,6 +141,11 @@ public class GameManager : MonoBehaviour
     public bool gameOver;
     public bool paused;
 
+    public Button currentSelection;
+    public Button defaultSelection;
+    private bool[] canMoveSelection = new bool[9];
+    private string[] controllers = { "1", "2", "3", "4", "5", "6", "7", "8", "K" };
+
     public bool overTime;
 
 
@@ -135,7 +155,7 @@ public class GameManager : MonoBehaviour
 
     public int previousScorer = -1;
 
-    public bool isTutorial;
+    public Gamemode gamemode;
 
     public TutorialManager tutorialManager;
 
@@ -166,10 +186,6 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        paused = false;
-        tipOffTimer = 3.0f;
-        hasTippedOff = false;
-
         cameraShake = FindObjectOfType<Camera>().GetComponent<CameraShake>();
         cameraShake.gameManager = this;
 
@@ -178,6 +194,8 @@ public class GameManager : MonoBehaviour
         bulletLevelUI = panelUI.transform.GetChild(6).GetComponent<Text>();
         bulletIncreaseUI = panelUI.transform.GetChild(5).GetComponent<Text>();
         dunkBonusUI = panelUI.transform.GetChild(7).GetComponent<Text>();
+        scoresUITeam0 = scoresUI.transform.GetChild(0).gameObject;
+        scoresUITeam1 = scoresUI.transform.GetChild(1).gameObject;
 
         audioManager = FindObjectOfType<AudioManager>();
         music = audioManager.Find("Music");
@@ -188,11 +206,11 @@ public class GameManager : MonoBehaviour
         audioManager.Play("MusicPause");
         pauseMusic.source.volume = 0.0f;
 
-        panelUI.SetActive(true);
         //player 1.
         panelUI.transform.GetChild(0).GetComponent<Text>().text = "0";
         //player 2.
         panelUI.transform.GetChild(1).GetComponent<Text>().text = "0";
+        tipOffUIText = tipOffUI.GetComponentInChildren<Text>();
 
         matchTimeText = panelUI.transform.GetChild(2).GetComponent<Text>();
         matchTimeText.text = TimeSpan.FromSeconds(Mathf.Max(matchTimeCurrent, 0)).ToString("m\\:ss");
@@ -209,24 +227,11 @@ public class GameManager : MonoBehaviour
         {
             GameObject gameDataObjectStandin = new GameObject("Game Data Object Standin");
             data = gameDataObjectStandin.AddComponent<GameData>();
-            int numOfBotsTeam0 = 4;
-            int numOfBotsTeam1 = 4;
             data.playerControlsTeam0 = new List<int>();
             data.playerNumbersTeam0 = new List<int>();
             data.playerControlsTeam1 = new List<int>();
             data.playerNumbersTeam1 = new List<int>();
             data.isSwipeShotRally = false;
-
-            for (int i = 0; i < numOfBotsTeam0; i++)
-            {
-                data.playerControlsTeam0.Add(8);
-                data.playerNumbersTeam0.Add(8);
-            }
-            for (int i = 0; i < numOfBotsTeam1; i++)
-            {
-                data.playerControlsTeam1.Add(8);
-                data.playerNumbersTeam1.Add(8);
-            }
 
             //uncommented this code to have 2 players on KB spawn in instead of Bots
 
@@ -234,6 +239,27 @@ public class GameManager : MonoBehaviour
             data.playerNumbersTeam0 = new List<int>() { 0 };
             data.playerControlsTeam1 = new List<int>() { 1 };
             data.playerNumbersTeam1 = new List<int>() { 1 };
+        }
+
+        if (gamemode == Gamemode.Tutorial)
+        {
+            if (loadedData == null)
+            {
+                GameObject gameDataObjectStandin = new GameObject("Game Data Object Standin");
+                data = gameDataObjectStandin.AddComponent<GameData>();
+            }
+            data.playerControlsTeam0 = new List<int>();
+            data.playerNumbersTeam0 = new List<int>();
+            data.playerControlsTeam1 = new List<int>();
+            data.playerNumbersTeam1 = new List<int>();
+            data.isSwipeShotRally = false;
+
+            //uncommented this code to have 2 players on KB spawn in instead of Bots
+
+            data.playerControlsTeam0 = new List<int>() { 0 };
+            data.playerNumbersTeam0 = new List<int>() { 0 };
+            data.playerControlsTeam1 = new List<int>() { 8 };
+            data.playerNumbersTeam1 = new List<int>() { 8 };
         }
 
         playersTeam0 = new GameObject[data.playerNumbersTeam0.Count];
@@ -286,7 +312,7 @@ public class GameManager : MonoBehaviour
         if (bulletSpawnage != BulletSpawnage.None)
             SpawnBulletSpawnersFromData();
 
-        if (isTutorial)
+        if (gamemode == Gamemode.Tutorial)
         {
             tutorialManager.gameManager = this;
             Destroy(pausedMenuUI);
@@ -297,6 +323,8 @@ public class GameManager : MonoBehaviour
             bulletLevelUI.text = "";
             data.numOfBulletLevelUps = 3;
 
+            playerScriptsTeam1[0].isDummy = true;
+            tutorialManager.ChangeControlType(ControlType.Keyboard1);
 
             panelUI.transform.GetChild(0).gameObject.SetActive(false);
             panelUI.transform.GetChild(1).gameObject.SetActive(false);
@@ -360,11 +388,13 @@ public class GameManager : MonoBehaviour
         team1Score = 0;
         panelUI.transform.GetChild(1).GetComponent<Text>().text = team1Score.ToString();
         panelUI.transform.GetChild(0).GetComponent<Text>().text = team0Score.ToString();
+        panelUI.transform.GetChild(2).GetComponent<Text>().text = TimeSpan.FromSeconds(Mathf.Max(matchTimeCurrent, 0)).ToString("m\\:ss");
 
         //sets bullet level and dunk value back to default.
         bulletLevelUI.text = "Bullets Level: " + bulletLevel;
         dunkBonusUI.text = "Dunk Bonus: +" + dunkBonusValue;
 
+        panelUI.SetActive(true);
         playerOneWins.SetActive(false);
         playerTwoWins.SetActive(false);
         pausedMenuUI.SetActive(false);
@@ -372,7 +402,11 @@ public class GameManager : MonoBehaviour
         gameOver = false;
         overTime = false;
 
-        if (!isTutorial)
+        hasTippedOff = false;
+        tipOffTimer = 3;
+        tipOffUI.SetActive(true);
+
+        if (gamemode != Gamemode.Tutorial)
             paused = true;
 
         Bullet[] bullets = FindObjectsOfType<Bullet>();
@@ -430,15 +464,18 @@ public class GameManager : MonoBehaviour
             if (tipOffTimer > 0)
             {
                 tipOffTimer -= Time.deltaTime;
-                tipOffUI.GetComponentInChildren<Text>().text = ((int)tipOffTimer + 1).ToString();
+                tipOffUIText.text = ((int)tipOffTimer + 1).ToString();
             }
             else
             {
-                tipOffUI.GetComponentInChildren<Text>().text = "Tip Off!";
+                if (gamemode == Gamemode.Exhibition)
+                    tipOffUIText.text = "Tip Off!";
+                else if (gamemode == Gamemode.Rally)
+                    tipOffUIText.text = "Rally!";
 
                 audioManager.Play("TipOffBuzzer");
 
-                paused = !paused;
+                paused = false;
                 tipOffTimer = 0;
                 hasTippedOff = true;
             }
@@ -447,12 +484,26 @@ public class GameManager : MonoBehaviour
         {
             //turns off "tip off" text after short time
             if ((int)matchTimeCurrent % 30 == 27)
-            tipOffUI.SetActive(false);
+                tipOffUI.SetActive(false);
         }
+    }
+
+    public void SpawnSpecificPowerup(PowerupType powerupType, Vector2 position)
+    {
+        GameObject p = Instantiate(powerUpPrefab, position, Quaternion.identity);
+
+        Powerup pScript = p.GetComponent<Powerup>();
+        pScript.originalPosition = position;
+        pScript.gameManager = this;
+        pScript.Init(powerupType);
+        allAlivePowerups.Add(pScript);
     }
 
     public void SpawnRandomPowerUp()
     {
+        if (allAlivePowerups.Count >= maxAlivePowerups)
+            return;
+
         PowerupType type = (PowerupType)UnityEngine.Random.Range(0, 5);
         while (type == previousPowerupType)
             type = (PowerupType)UnityEngine.Random.Range(0, 5);
@@ -561,7 +612,7 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        if (!isTutorial)
+        if (gamemode != Gamemode.Tutorial)
             StartTipOff();
 
         if (ball.transform.parent == null)
@@ -572,11 +623,58 @@ public class GameManager : MonoBehaviour
         else
             ShowBallChevron(false);
 
-        if (isTutorial)
+        if (gamemode == Gamemode.Tutorial)
         {
-            if (Input.GetKeyDown(KeyCode.Backspace))
+            if (playerScriptsTeam0[0].playerControlNumber == 0)
+            {
+                int controller = TutorialCheckAllGamepadInputs();
+                if (controller != -1)
+                {
+                    playerScriptsTeam0[0].playerControlNumber = controller + 1;
+                    tutorialManager.ChangeControlType(ControlType.Gamepad);
+                }
+                if (TutorialCheckKBInputs1())
+                {
+                    playerScriptsTeam0[0].playerControlNumber = 1;
+                    tutorialManager.ChangeControlType(ControlType.Keyboard2);
+                }
+            }
+            else if (playerScriptsTeam0[0].playerControlNumber == 1)
+            {
+                int controller = TutorialCheckAllGamepadInputs();
+                if (controller != -1)
+                {
+                    playerScriptsTeam0[0].playerControlNumber = controller + 1;
+                    tutorialManager.ChangeControlType(ControlType.Gamepad);
+                }
+                if (TutorialCheckKBInputs0())
+                {
+                    playerScriptsTeam0[0].playerControlNumber = 0;
+                    tutorialManager.ChangeControlType(ControlType.Keyboard1);
+                }
+            }
+            else if (playerScriptsTeam0[0].playerControlNumber > 1)
+            {
+                if (TutorialCheckKBInputs0())
+                {
+                    playerScriptsTeam0[0].playerControlNumber = 0;
+                    tutorialManager.ChangeControlType(ControlType.Keyboard1);
+                }
+                if (TutorialCheckKBInputs1())
+                {
+                    playerScriptsTeam0[0].playerControlNumber = 1;
+                    tutorialManager.ChangeControlType(ControlType.Keyboard2);
+                }
+            }
+
+            if (Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown(KeyCode.Escape))
             {
                 tutorialManager.DisplayNextMessage();
+                if (playerScriptsTeam0[0].playerControlNumber > 1)
+                {
+                    playerScriptsTeam0[0].playerControlNumber = 0;
+                    tutorialManager.ChangeControlType(ControlType.Keyboard1);
+                }
             }
 
             for (int i = 1; i <= 8; i++)
@@ -584,37 +682,64 @@ public class GameManager : MonoBehaviour
                 if (Input.GetButtonDown("J" + i + "Start"))
                 {
                     tutorialManager.DisplayNextMessage();
+                    if (playerScriptsTeam0[0].playerControlNumber <= 1)
+                    {
+                        playerScriptsTeam0[0].playerControlNumber = i + 1;
+                        tutorialManager.ChangeControlType(ControlType.Gamepad);
+                    }
                     break;
                 }
             }
 
-            // if (player1Script.controllerNumber == -1)
-            // {
-            //     for (int i = 1; i <= 8; i++)
-            //     {
-            //         if ((Input.GetButton("J" + i + "A") || Input.GetButton("J" + i + "B") || Input.GetButton("J" + i + "X") || Input.GetButton("J" + i + "Y") || Input.GetButton("J" + i + "Start") || Mathf.Abs(Input.GetAxis("J" + i + "Horizontal")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "Vertical")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "DHorizontal")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "DVertical")) > .5f) && player2Script.controllerNumber != i)
-            //             player1Script.controllerNumber = i;
-            //     }
-            // }
+            if (tutorialManager.controlChangeAlertTimeCurrent < tutorialManager.controlChangeAlertTimeMax)
+            {
+                tutorialManager.controlChangeAlertTimeCurrent += Time.deltaTime;
+                tutorialManager.controlChangeAlert.gameObject.SetActive(true);
+            }
+            else
+            {
+                tutorialManager.controlChangeAlert.gameObject.SetActive(false);
+            }
+
+            if (playerScriptsTeam0[0].playerControlNumber == 0)
+            {
+
+            }
+        }
+        else if (gamemode == Gamemode.Rally)
+        {
+            if (Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown(KeyCode.Escape))
+            {
+                TogglePauseMenu();
+            }
+
+            for (int i = 1; i <= 8; i++)
+            {
+                if (Input.GetButtonDown("J" + i + "Start"))
+                {
+                    TogglePauseMenu();
+                    break;
+                }
+            }
+
+            if (paused && hasTippedOff)
+            {
+                PauseMenuUpdate();
+            }
+
+            if (paused)
+                return;
         }
         else
         {
-            if (paused && Input.GetKeyDown(KeyCode.T))
-            {
-                Destroy(FindObjectOfType<AudioManager>().gameObject);
-                SceneManager.LoadScene(1);
-                return;
-            }
-
-            if (Input.GetKeyDown(KeyCode.Backspace))
+            if (Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown(KeyCode.Escape))
             {
                 if (gameOver)
                 {
                     BeginMatch();
-                    paused = false;
                 }
                 else
-                    ToggleHowToPlay();
+                    TogglePauseMenu();
 
                 panelUI.SetActive(true);
             }
@@ -626,12 +751,16 @@ public class GameManager : MonoBehaviour
                     if (gameOver)
                     {
                         BeginMatch();
-                        paused = false;
                     }
                     else
-                        ToggleHowToPlay();
+                        TogglePauseMenu();
                     break;
                 }
+            }
+
+            if (paused && hasTippedOff)
+            {
+                PauseMenuUpdate();
             }
 
             if (paused || gameOver)
@@ -668,7 +797,7 @@ public class GameManager : MonoBehaviour
                     }
                     else
                     {
-                        EndGame();
+                        StartCoroutine(EndGame());
                     }
                 }
             }
@@ -696,73 +825,154 @@ public class GameManager : MonoBehaviour
             //Shows bullets increased UI element on regular interval.
             ShowBulletIncreaseUI();
         }
+    }
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+
+    private void PauseMenuUpdate()
+    {
+        if (EventSystem.current.currentSelectedGameObject != null)
         {
-            SpawnExplosion(-1, new Vector2(0, 20));
+            currentSelection = EventSystem.current.currentSelectedGameObject.GetComponent<Button>();
+        }
+        else if (currentSelection is Button)
+        {
+            currentSelection.Select();
+        }
+        else
+        {
+            currentSelection = null;
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        for (int i = 0; currentSelection != null && i < 9; i++)
         {
-            SpawnExplosion(0, new Vector2(0, 20));
-        }
+            //checks if controllers or keyboard have pressed "A" or space, if so, "click" the current button
+            if (Input.GetButtonDown("J" + controllers[i] + "A"))
+            {
+                HologramButton hologramButton = currentSelection.gameObject.GetComponent<HologramButton>();
+                ExecuteEvents.Execute(currentSelection.gameObject,
+                    new BaseEventData(EventSystem.current), ExecuteEvents.submitHandler);
+                if (hologramButton != null)
+                {
+                    hologramButton.DeselectVisual();
+                }
+                break;
+            }
+            //get the current direction the player is pressing in
+            float horizontalInput = 0f;
+            float verticalInput = 0f;
 
-        if (Input.GetKeyDown(KeyCode.Alpha2))
+            //hover sound for buttons. Does not play on title screen.
+
+            if (((Input.GetAxis("J" + controllers[i] + "Vertical") + (Input.GetAxis("J" + controllers[i] + "Horizontal")) == 0)))
+            {
+                horizontalInput += Mathf.Round(Input.GetAxis("J" + controllers[i] + "DHorizontal"));
+                verticalInput += Mathf.Round(Input.GetAxis("J" + controllers[i] + "DVertical"));
+            }
+            else
+            {
+                horizontalInput += Mathf.Round(Input.GetAxis("J" + controllers[i] + "Horizontal"));
+                verticalInput += Mathf.Round(Input.GetAxis("J" + controllers[i] + "Vertical"));
+            }
+
+
+
+            //this prevents the user from pressing same direction each frame (for controls sticks, dpad, and KB)
+            if (horizontalInput == 0 && verticalInput == 0)
+            {
+                canMoveSelection[i] = true;
+            }
+
+            //this find the direction (right, left, up, down) the user pressed, and tries to select the button
+            //that is next to the current selection in that direction
+            if (canMoveSelection[i])
+            {
+                if (horizontalInput > 0)
+                {
+                    if (currentSelection.navigation.selectOnRight != null)
+                    {
+                        //Debug.Log(currentSelection.navigation.selectOnRight);
+                        currentSelection.navigation.selectOnRight.Select();
+                    }
+                    canMoveSelection[i] = false;
+                    break;
+                }
+                else if (horizontalInput < 0)
+                {
+                    if (currentSelection.navigation.selectOnLeft != null)
+                    {
+                        //Debug.Log(currentSelection.navigation.selectOnLeft);
+                        currentSelection.navigation.selectOnLeft.Select();
+                    }
+                    canMoveSelection[i] = false;
+                    break;
+                }
+                else if (verticalInput > 0)
+                {
+                    if (currentSelection.navigation.selectOnUp != null)
+                    {
+                        //Debug.Log(currentSelection.navigation.selectOnUp);
+                        currentSelection.navigation.selectOnUp.Select();
+                    }
+                    canMoveSelection[i] = false;
+                    break;
+                }
+                else if (verticalInput < 0)
+                {
+                    if (currentSelection.navigation.selectOnDown != null)
+                    {
+                        //Debug.Log(currentSelection.navigation.selectOnDown);
+                        currentSelection.navigation.selectOnDown.Select();
+                    }
+                    canMoveSelection[i] = false;
+                    break;
+                }
+            }
+        }
+    }
+    private int TutorialCheckAllGamepadInputs()
+    {
+        for (int i = 1; i <= 8; i++)
         {
-            SpawnExplosion(1, new Vector2(0, 20));
+            for (int j = 0; j < playerScriptsTeam0[0].GetControlsArrayGamepad().Length - 1; j++)
+            {
+                if (j < 4)
+                {
+                    if (Mathf.Abs(Input.GetAxisRaw("J" + i + playerScriptsTeam0[0].GetControlsArrayGamepad()[j])) > BhbPlayerController.axisDeadZone)
+                    {
+                        return i;
+                    }
+                }
+                if (Input.GetButton("J" + i + playerScriptsTeam0[0].GetControlsArrayGamepad()[j]))
+                {
+                    return i;
+                }
+            }
         }
+        return -1;
+    }
 
-        if (Input.GetKeyDown(KeyCode.Alpha3))
+    private bool TutorialCheckKBInputs0()
+    {
+        for (int i = 0; i < playerScriptsTeam0[0].GetControlsArrayKb0().Length - 1; i++)
         {
-            SpawnHomingBullet();
+            if (Input.GetKey(playerScriptsTeam0[0].GetControlsArrayKb0()[i]))
+            {
+                return true;
+            }
         }
+        return false;
+    }
 
-        if (Input.GetKeyDown(KeyCode.Alpha4))
+    private bool TutorialCheckKBInputs1()
+    {
+        for (int i = 0; i < playerScriptsTeam0[0].GetControlsArrayKb1().Length - 1; i++)
         {
-            SpawnRandomPowerUp();
+            if (Input.GetKey(playerScriptsTeam0[0].GetControlsArrayKb1()[i]))
+            {
+                return true;
+            }
         }
-
-        if (Input.GetKeyDown(KeyCode.Alpha5))
-        {
-            SpawnAirStrike(0);
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha6))
-        {
-            SpawnAirStrike(1);
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha7))
-        {
-            SpawnSuperBullet(0);
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha8))
-        {
-            SpawnSuperBullet(1);
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha9))
-        {
-            SpawnBulletPortal(0, new Vector2(0, 24));
-        }
-
-        // if (player1Script.controllerNumber == -1)
-        // {
-        //     for (int i = 1; i <= 8; i++)
-        //     {
-        //         if ((Input.GetButton("J" + i + "A") || Input.GetButton("J" + i + "B") || Input.GetButton("J" + i + "X") || Input.GetButton("J" + i + "Y") || Input.GetButton("J" + i + "Start") || Mathf.Abs(Input.GetAxis("J" + i + "Horizontal")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "Vertical")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "DHorizontal")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "DVertical")) > .5f) && player2Script.controllerNumber != i)
-        //             player1Script.controllerNumber = i;
-        //     }
-        // }
-        // else if (player2Script.controllerNumber == -1)
-        // {
-        //     for (int i = 1; i <= 8; i++)
-        //     {
-        //         if ((Input.GetButton("J" + i + "A") || Input.GetButton("J" + i + "B") || Input.GetButton("J" + i + "X") || Input.GetButton("J" + i + "Y") || Input.GetButton("J" + i + "Start") || Mathf.Abs(Input.GetAxis("J" + i + "Horizontal")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "Vertical")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "DHorizontal")) > .5f || Mathf.Abs(Input.GetAxis("J" + i + "DVertical")) > .5f) && player1Script.controllerNumber != i)
-        //             player2Script.controllerNumber = i;
-        //     }
-        // }
+        return false;
     }
 
     /// <summary>
@@ -805,12 +1015,19 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void ToggleHowToPlay()
+    public void TogglePauseMenu()
     {
         if (hasTippedOff)
         {
             pausedMenuUI.SetActive(!pausedMenuUI.activeSelf);
             paused = !paused;
+
+            HologramButton hb = currentSelection.GetComponent<HologramButton>();
+            if(hb != null)
+                hb.DeselectVisual();
+
+            defaultSelection.Select();
+            defaultSelection.GetComponent<HologramButton>().SelectVisual();
 
             //toggles audio.
             if (paused)
@@ -826,20 +1043,45 @@ public class GameManager : MonoBehaviour
                 pauseMusic.source.volume = 0;
                 music.source.volume = 0.1f;
             }
+
+            //if rally, makes sure ball spawns in front of a player.
+            if (gamemode == Gamemode.Rally)
+                FindObjectOfType<SwipeShotManager>().Reset();
         }
     }
 
-    public void EndGame()
+    public IEnumerator EndGame()
     {
-        //player 1.
-        panelUI.transform.GetChild(0).GetComponent<Text>().text = team0Score.ToString();
-        //player 2.
-        panelUI.transform.GetChild(1).GetComponent<Text>().text = team1Score.ToString();
+        //Explodes ball on end, sends ball offscreen, sets to is resetting, sets to not be a bullet.
+        SpawnExplosion(2, ball.transform.position);
+        ballControlScript.IsResetting = true;
+        ball.transform.position = new Vector3(0, -1000, 0);
+        ballControlScript.IsBullet = false;
 
+        //Removes UI, Adds scoresUI.
+        panelUI.SetActive(false);
+        scoresUI.SetActive(true);
+
+        scoresUITeam0.transform.GetChild(2).GetComponent<Text>().text = team0Score.ToString();
+        scoresUITeam1.transform.GetChild(2).GetComponent<Text>().text = team1Score.ToString();
+
+        //Light up the winning score.
         if (team0Score > team1Score)
-            playerOneWins.SetActive(!playerOneWins.activeSelf);
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                scoresUITeam0.transform.GetChild(i).GetComponent<Image>().enabled = true;
+                scoresUITeam1.transform.GetChild(i).GetComponent<Image>().enabled = false;
+            }
+        }
         else
-            playerTwoWins.SetActive(!playerTwoWins.activeSelf);
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                scoresUITeam0.transform.GetChild(i).GetComponent<Image>().enabled = false;
+                scoresUITeam1.transform.GetChild(i).GetComponent<Image>().enabled = true;
+            }
+        }
 
         audioManager.Play("Buzzer");
         midair.source.volume = 0;
@@ -848,11 +1090,8 @@ public class GameManager : MonoBehaviour
         audioManager.Play("Music");
         audioManager.Play("MusicPause");
 
-        paused = true;
         gameOver = true;
         overTime = false;
-        team0Score = 0;
-        team1Score = 0;
         bulletLevel = 1;
 
         bulletIncreaseUI.gameObject.SetActive(false);
@@ -869,6 +1108,20 @@ public class GameManager : MonoBehaviour
         {
             sb.ForceDestroy();
         }
+
+        yield return new WaitForSecondsRealtime(2);
+
+        if (team0Score > team1Score)
+            playerOneWins.SetActive(!playerOneWins.activeSelf);
+        else
+            playerTwoWins.SetActive(!playerTwoWins.activeSelf);
+
+        audioManager.Play("2points"); //change to applause?
+        team0Score = 0;
+        team1Score = 0;
+        paused = true;
+
+        scoresUI.SetActive(false);
     }
 
     public void ResetPlayersAndBall()
@@ -998,7 +1251,7 @@ public class GameManager : MonoBehaviour
         return victims;
     }
 
-    public bool isBallOwnerOppositeTeam(BhbPlayerController source)
+    public bool IsBallOwnerOppositeTeam(BhbPlayerController source)
     {
 
         if (currentBallOwner == null)
@@ -1007,5 +1260,22 @@ public class GameManager : MonoBehaviour
         return currentBallOwner.teamNumber != source.teamNumber;
     }
 
+    public void ResumeGame()
+    {
+        TogglePauseMenu();
+    }
 
+    public void RestartGame()
+    {
+        TogglePauseMenu();
+        //This EndGame call should NOT use the coroutine.
+        EndGame();
+        BeginMatch();
+    }
+
+    public void BackToMenu()
+    {
+        Destroy(FindObjectOfType<AudioManager>().gameObject);
+        SceneManager.LoadScene(0);
+    }
 }

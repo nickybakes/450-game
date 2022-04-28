@@ -61,8 +61,6 @@ public class BhbPlayerController : NeonHeightsCharacterController
     private KeyCode[] player2Controls = { KeyCode.P, KeyCode.Semicolon, KeyCode.L, KeyCode.Quote, KeyCode.LeftArrow, KeyCode.LeftArrow, KeyCode.DownArrow, KeyCode.Escape };
     private string[] gamepadControls = { "Vertical", "DVertical", "Horizontal", "DHorizontal", "A", "B", "X", "Y", "Start" };
 
-
-    public int controllerNumber = -1;
     public int playerNumber;
     public int teamNumber;
     public int playerControlNumber;
@@ -136,7 +134,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
     private Vector2 prevControlAxis = Vector2.zero;
 
-    private const float axisDeadZone = .3f;
+    public const float axisDeadZone = .3f;
 
     public bool isBot;
 
@@ -247,6 +245,21 @@ public class BhbPlayerController : NeonHeightsCharacterController
         }
     }
 
+    public KeyCode[] GetControlsArrayKb0()
+    {
+        return player1Controls;
+    }
+
+    public KeyCode[] GetControlsArrayKb1()
+    {
+        return player2Controls;
+    }
+
+    public string[] GetControlsArrayGamepad()
+    {
+        return gamepadControls;
+    }
+
     public void Init(int playerNumber, int teamNumber, int playerControlNumber)
     {
         this.playerNumber = playerNumber;
@@ -266,6 +279,11 @@ public class BhbPlayerController : NeonHeightsCharacterController
         }
     }
 
+    void Awake()
+    {
+        gameManager = FindObjectOfType<GameManager>();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -281,7 +299,6 @@ public class BhbPlayerController : NeonHeightsCharacterController
             shoeSqueakRate = 0.5f;
         }
 
-        gameManager = FindObjectOfType<GameManager>();
         audioManager = FindObjectOfType<AudioManager>();
         ball = GameObject.FindGameObjectWithTag("Ball");
         ballScript = ball.GetComponent<Ball>();
@@ -293,9 +310,6 @@ public class BhbPlayerController : NeonHeightsCharacterController
     // Update is called once per frame
     void Update()
     {
-        if (gameManager.paused)
-            return;
-
         //face towards the ball if not holding it
         if (ball.transform.parent != transform)
         {
@@ -351,6 +365,11 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
             if (throwCoolDownTimerCurrent <= throwCoolDownTimerMax)
                 throwCoolDownTimerCurrent += Time.deltaTime;
+        }
+
+        if (gameManager.paused)
+        {
+            return;
         }
 
         //If you just landed, plays landing sound.
@@ -495,7 +514,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
                     }
                 }
             }
-            else if (!ballScript.IsBullet && swipeCooldownTimeCurrent >= swipeCooldownTimeMax && !IsStunned && !IsSwiping && Vector2.Distance(ball.transform.position, transform.position) < 5.0f && autoCatchCooldownTimer > autoCatchCooldownTimerMax && ball.transform.parent == null)
+            else if (!ballScript.IsBullet && swipeCooldownTimeCurrent >= swipeCooldownTimeMax && !IsStunned && !IsSwiping && Vector2.Distance(ball.transform.position, transform.position) < 5.0f && autoCatchCooldownTimer > autoCatchCooldownTimerMax && ball.transform.parent == null && gameManager.gamemode != Gamemode.Rally)
             {
                 GrabBall();
             }
@@ -508,19 +527,6 @@ public class BhbPlayerController : NeonHeightsCharacterController
         }
 
         stoppedJumping = GetControlUp(Control.Jump);
-
-        if (controllerNumber != -1)
-        {
-            string gamepadIdentifier = "J" + controllerNumber;
-            //control sticks
-            float controlStickX = Input.GetAxisRaw(gamepadIdentifier + gamepadControls[2]);
-            float controlStickY = Input.GetAxisRaw(gamepadIdentifier + gamepadControls[0]);
-            //dpads
-            float dPadX = Input.GetAxisRaw(gamepadIdentifier + gamepadControls[3]);
-            float dPadY = Input.GetAxisRaw(gamepadIdentifier + gamepadControls[1]);
-            //in order to get the previous axis, we gotta take the max absolute value of either the dpad or control sticks
-            prevControlAxis = new Vector2((Mathf.Abs(controlStickX) > Mathf.Abs(dPadX) ? controlStickX : dPadX), (Mathf.Abs(controlStickY) > Mathf.Abs(dPadY) ? controlStickY : dPadY));
-        }
 
         if (invinsibilityTimeCurrent < invinsibilityTimeMax)
         {
@@ -605,6 +611,12 @@ public class BhbPlayerController : NeonHeightsCharacterController
             botAlwaysDoubleJump = true;
         else
             botAlwaysDoubleJump = false;
+
+        if (gameManager.gamemode == Gamemode.Rally)
+        {
+            botAlwaysDoubleJump = false;
+            botShootRange = 10;
+        }
     }
 
     public void GrabBall()
@@ -757,9 +769,11 @@ public class BhbPlayerController : NeonHeightsCharacterController
                 return false;
             if (action == Control.Left)
             {
+                if (gameManager.gamemode == Gamemode.Rally)
+                    return false;
                 if (ball.transform.parent != transform)
                 {
-                    if (teamNumber == 1 && ball.transform.parent != null && gameManager.isBallOwnerOppositeTeam(this) && gameManager.currentBallOwner.IsSwipeShooting && Mathf.Abs(transform.position.x - ball.transform.position.x) > 10)
+                    if (teamNumber == 1 && ball.transform.parent != null && gameManager.IsBallOwnerOppositeTeam(this) && gameManager.currentBallOwner.IsSwipeShooting && Mathf.Abs(transform.position.x - ball.transform.position.x) > 10)
                     {
                         return false;
                     }
@@ -767,7 +781,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
                     {
                         return false;
                     }
-                    if (teamNumber == 0 && ball.transform.parent != null && gameManager.isBallOwnerOppositeTeam(this) && gameManager.currentBallOwner.IsSwipeShooting && Mathf.Abs(transform.position.x - ball.transform.position.x) > 10)
+                    if (teamNumber == 0 && ball.transform.parent != null && gameManager.IsBallOwnerOppositeTeam(this) && gameManager.currentBallOwner.IsSwipeShooting && Mathf.Abs(transform.position.x - ball.transform.position.x) > 10)
                     {
                         return true;
                     }
@@ -809,9 +823,11 @@ public class BhbPlayerController : NeonHeightsCharacterController
             }
             if (action == Control.Right)
             {
+                if (gameManager.gamemode == Gamemode.Rally)
+                    return false;
                 if (ball.transform.parent != transform)
                 {
-                    if (teamNumber == 0 && ball.transform.parent != null && gameManager.isBallOwnerOppositeTeam(this) && gameManager.currentBallOwner.IsSwipeShooting && Mathf.Abs(transform.position.x - ball.transform.position.x) > 10)
+                    if (teamNumber == 0 && ball.transform.parent != null && gameManager.IsBallOwnerOppositeTeam(this) && gameManager.currentBallOwner.IsSwipeShooting && Mathf.Abs(transform.position.x - ball.transform.position.x) > 10)
                     {
                         return false;
                     }
@@ -819,7 +835,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
                     {
                         return false;
                     }
-                    if (teamNumber == 1 && ball.transform.parent != null && gameManager.isBallOwnerOppositeTeam(this) && gameManager.currentBallOwner.IsSwipeShooting && Mathf.Abs(transform.position.x - ball.transform.position.x) > 10)
+                    if (teamNumber == 1 && ball.transform.parent != null && gameManager.IsBallOwnerOppositeTeam(this) && gameManager.currentBallOwner.IsSwipeShooting && Mathf.Abs(transform.position.x - ball.transform.position.x) > 10)
                     {
                         return true;
                     }
@@ -938,12 +954,12 @@ public class BhbPlayerController : NeonHeightsCharacterController
             {
                 if (ball.transform.parent != null && ball.transform.parent != transform)
                 {
-                    if (gameManager.isBallOwnerOppositeTeam(this) && Vector2.Distance(transform.GetChild(0).transform.position, gameManager.currentBallOwner.transform.position) < 3.4f + Mathf.PerlinNoise(transform.position.x, transform.position.y) * 2.0f)
+                    if (gameManager.IsBallOwnerOppositeTeam(this) && Vector2.Distance(transform.GetChild(0).transform.position, gameManager.currentBallOwner.transform.position) < 3.4f + Mathf.PerlinNoise(transform.position.x, transform.position.y) * 2.0f)
                     {
                         if (Mathf.PerlinNoise(transform.position.y, transform.position.x) > .3)
                             return true;
                     }
-                    else if (gameManager.isBallOwnerOppositeTeam(this) && Vector2.Distance(transform.GetChild(0).transform.position, gameManager.currentBallOwner.transform.position) < 3.4f + Mathf.PerlinNoise(transform.position.x, transform.position.y) * 2.0f)
+                    else if (gameManager.IsBallOwnerOppositeTeam(this) && Vector2.Distance(transform.GetChild(0).transform.position, gameManager.currentBallOwner.transform.position) < 3.4f + Mathf.PerlinNoise(transform.position.x, transform.position.y) * 2.0f)
                     {
                         if (Mathf.PerlinNoise(transform.position.y, transform.position.x) > .3)
                             return true;
@@ -1000,6 +1016,10 @@ public class BhbPlayerController : NeonHeightsCharacterController
                 {
                     if (Vector2.Distance(transform.GetChild(0).transform.position, (Vector2)ball.transform.position + (ballPhysics.velocity * Time.deltaTime)) < 3)
                     {
+                        if (gameManager.gamemode == Gamemode.Rally)
+                        {
+                            return true;
+                        }
                         if (Mathf.PerlinNoise(-transform.position.y * Random.Range(-4, 4), -transform.position.x * Random.Range(-4, 4)) > .8)
                         {
                             return true;

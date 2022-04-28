@@ -44,7 +44,8 @@ public class Ball : MonoBehaviour
 
     //true if the the ball was shot via a swipe and not a normal throw
     public bool isSwipeShot;
-    private int swipeShotPasses;
+    public int swipeShotPasses;
+    private int cappedPasses;
 
     public float bulletTimeMax = .23f;
     public float bulletTimeCurrent;
@@ -120,7 +121,7 @@ public class Ball : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (gameManager.paused)
+        if (gameManager.paused || gameManager.gameOver)
             return;
 
         if (transform.parent == null)
@@ -193,14 +194,15 @@ public class Ball : MonoBehaviour
                     //special SFX for back n' forth swipes
                     if (swipeShotPasses > 0)
                     {
+                        cappedPasses = swipeShotPasses;
                         //caps max passing speed at 4 passes.
                         if (swipeShotPasses > 4)
-                            swipeShotPasses = 4;
+                            cappedPasses = 4;
 
-                        float newSwipePitch = 1.0f + ((swipeShotPasses - 1.0f) / 12.0f);
+                        float newSwipePitch = 1.0f + ((cappedPasses - 1.0f) / 12.0f);
                         audioManager.Play("SwipeRally", 0.3f, newSwipePitch, newSwipePitch);
 
-                        switch (swipeShotPasses)
+                        switch (cappedPasses)
                         {
                             case 1:
                                 trailRenderer.startColor = new Color32(255, 200, 200, 1);
@@ -292,6 +294,11 @@ public class Ball : MonoBehaviour
                     }
                     else if (currentTarget == rightBasket)
                     {
+                        if (gameManager.gamemode == Gamemode.Rally && gameManager.playerScriptsTeam1[0].isBot)
+                        {
+                            gameManager.playerScriptsTeam1[0].IsSwipeShooting = true;
+                            return;
+                        }
                         ScoreRightBasket();
                     }
                     AfterScore();
@@ -312,7 +319,14 @@ public class Ball : MonoBehaviour
                     if (currentTarget == leftBasket)
                         ScoreLeftBasket();
                     else if (currentTarget == rightBasket)
+                    {
+                        if (gameManager.gamemode == Gamemode.Rally && gameManager.playerScriptsTeam1[0].isBot)
+                        {
+                            gameManager.playerScriptsTeam1[0].IsSwipeShooting = true;
+                            return;
+                        }
                         ScoreRightBasket();
+                    }
 
                     AfterScore();
                 }
@@ -430,6 +444,11 @@ public class Ball : MonoBehaviour
 
                 if (collision.collider.gameObject == gameManager.rightBasket)
                 {
+                    if (gameManager.gamemode == Gamemode.Rally && gameManager.playerScriptsTeam1[0].isBot)
+                    {
+                        gameManager.playerScriptsTeam1[0].IsSwipeShooting = true;
+                        return;
+                    }
                     ScoreRightBasket();
                 }
                 else if (collision.collider.gameObject == gameManager.leftBasket)
@@ -669,9 +688,9 @@ public class Ball : MonoBehaviour
         }
 
         if (gameManager.overTime)
-            gameManager.EndGame();
-        else
-            IsResetting = true;
+            StartCoroutine(gameManager.EndGame());
+
+        IsResetting = true;
     }
 
     /// <summary>

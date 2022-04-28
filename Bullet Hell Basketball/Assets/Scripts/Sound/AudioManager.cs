@@ -23,18 +23,10 @@ public class AudioManager : MonoBehaviour
 
         foreach (Sound s in sounds)
         {
-            if (s.clips.Length == 1)
+            for (int i = 0; i < s.clips.Length; i++)
             {
                 s.source = gameObject.AddComponent<AudioSource>();
-                s.source.clip = s.clips[0];
-            }
-            else
-            {
-                for (int i = 0; i < s.clips.Length; i++)
-                {
-                    s.source = gameObject.AddComponent<AudioSource>();
-                    s.source.clip = s.clips[i];
-                }
+                s.source.clip = s.clips[i];
             }
 
             //All clips grouped together will have the same volume, pitch, loop status.
@@ -42,11 +34,6 @@ public class AudioManager : MonoBehaviour
             s.source.pitch = s.pitch;
             s.source.loop = s.loop;
         }
-    }
-
-    private void Start()
-    {
-
     }
 
     #region Parameter variations for Play()

@@ -42,10 +42,10 @@ public class HologramButton : MonoBehaviour, ISelectHandler, IDeselectHandler// 
         trigger.runInEditMode = true;
         entry.callback.AddListener((eventData) => { this.OnMouseEnter(); });
         exit.callback.AddListener((eventData) => { this.OnMouseExit(); });
-        click.callback.AddListener((eventData) => { this.OnMouseClick(); });
+        // click.callback.AddListener((eventData) => { this.OnMouseClick(); });
         trigger.triggers.Add(entry);
         trigger.triggers.Add(exit);
-        trigger.triggers.Add(click);
+        // trigger.triggers.Add(click);
 
         text = GetComponentInChildren<Text>();
         if (text != null)
@@ -66,55 +66,17 @@ public class HologramButton : MonoBehaviour, ISelectHandler, IDeselectHandler// 
     public void OnSelect(BaseEventData eventData)
     {
         SelectVisual();
-        // transform.GetChild(0).gameObject.SetActive(true);
-        // transform.GetChild(1).gameObject.SetActive(false);
-
-        // if (transform.GetChild(4).gameObject != null)
-        // {
-        // 	transform.GetChild(3).gameObject.SetActive(true);
-        // 	transform.GetChild(4).gameObject.SetActive(false);
-        // }
     }
 
     public void OnDeselect(BaseEventData eventData)
     {
         DeselectVisual();
-
-        // transform.GetChild(1).gameObject.SetActive(true);
-        // transform.GetChild(0).gameObject.SetActive(false);
-
-        // if (transform.GetChild(4).gameObject != null)
-        // {
-        // 	transform.GetChild(4).gameObject.SetActive(true);
-        // 	transform.GetChild(3).gameObject.SetActive(false);
-        // }
     }
-
-
-    public void OnModeSelect()
-    {
-        if (transform.GetChild(4).gameObject != null)
-        {
-            transform.GetChild(3).gameObject.SetActive(true);
-            transform.GetChild(4).gameObject.SetActive(false);
-        }
-    }
-
-
-    public void OnModeDeselect()
-    {
-        if (transform.GetChild(4).gameObject != null)
-        {
-            transform.GetChild(4).gameObject.SetActive(true);
-            transform.GetChild(3).gameObject.SetActive(false);
-        }
-    }
-
 
     public void SelectVisual()
     {
         transform.GetChild(0).gameObject.SetActive(true);
-        border.material = menuManager.borderFlashMaterial;
+        //border.material = menuManager.borderFlashMaterial;
         if (text != null)
         {
             text.fontSize = selectedFontSize;
