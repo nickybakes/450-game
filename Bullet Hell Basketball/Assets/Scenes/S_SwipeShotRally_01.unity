@@ -2152,6 +2152,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &973631578 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3430737192489485028, guid: 0183ef35e7a660e459c7618a15a4600f, type: 3}
+  m_PrefabInstance: {fileID: 973631570}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1060518226
 GameObject:
   m_ObjectHideFlags: 0
@@ -3848,6 +3853,10 @@ PrefabInstance:
       propertyPath: gamemode
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 383610472582880780, guid: 8e089f97609d8dc47bb7c72591aad447, type: 3}
+      propertyPath: scoresUI
+      value: 
+      objectReference: {fileID: 973631578}
     - target: {fileID: 383610472582880780, guid: 8e089f97609d8dc47bb7c72591aad447, type: 3}
       propertyPath: tipOffUI
       value: 
