@@ -205,7 +205,6 @@ public class GameManager : MonoBehaviour
         audioManager.Play("MusicPause");
         pauseMusic.source.volume = 0.0f;
 
-        panelUI.SetActive(true);
         //player 1.
         panelUI.transform.GetChild(0).GetComponent<Text>().text = "0";
         //player 2.
