@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
+using System.Collections;
 
 public enum Gamemode
 {
@@ -798,7 +799,7 @@ public class GameManager : MonoBehaviour
                     }
                     else
                     {
-                        EndGame();
+                        StartCoroutine(EndGame());
                     }
                 }
             }
@@ -938,18 +939,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void EndGame()
+    public IEnumerator EndGame()
     {
-        //player 1.
-        panelUI.transform.GetChild(0).GetComponent<Text>().text = team0Score.ToString();
-        //player 2.
-        panelUI.transform.GetChild(1).GetComponent<Text>().text = team1Score.ToString();
-
-        if (team0Score > team1Score)
-            playerOneWins.SetActive(!playerOneWins.activeSelf);
-        else
-            playerTwoWins.SetActive(!playerTwoWins.activeSelf);
-
         audioManager.Play("Buzzer");
         midair.source.volume = 0;
 
@@ -957,11 +948,8 @@ public class GameManager : MonoBehaviour
         audioManager.Play("Music");
         audioManager.Play("MusicPause");
 
-        paused = true;
         gameOver = true;
         overTime = false;
-        team0Score = 0;
-        team1Score = 0;
         bulletLevel = 1;
 
         bulletIncreaseUI.gameObject.SetActive(false);
@@ -978,6 +966,18 @@ public class GameManager : MonoBehaviour
         {
             sb.ForceDestroy();
         }
+
+        yield return new WaitForSecondsRealtime(2);
+
+        if (team0Score > team1Score)
+            playerOneWins.SetActive(!playerOneWins.activeSelf);
+        else
+            playerTwoWins.SetActive(!playerTwoWins.activeSelf);
+
+        audioManager.Play("2points"); //change to applause?
+        team0Score = 0;
+        team1Score = 0;
+        paused = true;
     }
 
     public void ResetPlayersAndBall()
