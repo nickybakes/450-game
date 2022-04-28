@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/S_Tutorial_01.unity
     guid: 7f1c2c7a277ab9541b065c0f83db9d05
+  - enabled: 1
+    path: Assets/Scenes/S_SwipeShotRally_01.unity
+    guid: 8a2a12b256b27d2489ab572a1102feb7
   m_configObjects: {}

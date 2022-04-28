@@ -176,6 +176,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flashSpeed: 2
+  flashImageInstead: 0
 --- !u!114 &6928822
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2436,6 +2437,7 @@ GameObject:
   m_Component:
   - component: {fileID: 282879137}
   - component: {fileID: 282879138}
+  - component: {fileID: 282879139}
   m_Layer: 5
   m_Name: MasterSlider
   m_TagString: Untagged
@@ -2516,7 +2518,31 @@ MonoBehaviour:
   m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 282879139}
+        m_TargetAssemblyTypeName: CameraVolume, Assembly-CSharp
+        m_MethodName: ChangeMasterVolume
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
+--- !u!114 &282879139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 282879136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d738187ca8122c48b034bff7d0c5176, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &285869801
 GameObject:
   m_ObjectHideFlags: 0
@@ -14696,6 +14722,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flashSpeed: 2
+  flashImageInstead: 0
 --- !u!1 &1497124644
 GameObject:
   m_ObjectHideFlags: 0
@@ -16106,7 +16133,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1671047533
 RectTransform:
   m_ObjectHideFlags: 0
@@ -19021,7 +19048,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 118828420}
         m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
-        m_MethodName: StepUp
+        m_MethodName: PlaySwipeShotRally
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -19635,7 +19662,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2048296561
 RectTransform:
   m_ObjectHideFlags: 0
