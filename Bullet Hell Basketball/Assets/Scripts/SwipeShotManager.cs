@@ -85,7 +85,8 @@ public class SwipeShotManager : MonoBehaviour
 
         //counting for current and high score.
         currentScore = gameManager.ballControlScript.swipeShotPasses;
-        currentScoreText.text = "Score: " + currentScore;
+        if(!gameManager.ballControlScript.IsResetting)
+            currentScoreText.text = "" + currentScore;
 
         if (currentScore > highScore)
         {

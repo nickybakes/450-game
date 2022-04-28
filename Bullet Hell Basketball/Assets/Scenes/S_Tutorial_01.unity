@@ -128,11 +128,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1562366387000651905, guid: 22097c38aed06a048b4fa9c14d90db4d, type: 3}
   m_PrefabInstance: {fileID: 1562366387007808052}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &29890431 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 847701840331003914, guid: 0183ef35e7a660e459c7618a15a4600f, type: 3}
-  m_PrefabInstance: {fileID: 847701840351448949}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &43333289
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3854,7 +3849,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collisionVertexPrefab: {fileID: 2382589878411412825, guid: de94585aa4ffe794c8cc1e98a3d925ff, type: 3}
   collisionSegmentPrefab: {fileID: 71431853401964895, guid: 2d19e55d322709d41b35224430022a18, type: 3}
-  editorUpdateFrame: 1
+  editorUpdateFrame: 0
   vertexColor: {r: 1, g: 0, b: 0, a: 1}
   segmentColor: {r: 1, g: 0, b: 0, a: 1}
   semiSolidPlatformColor: {r: 0, g: 0, b: 1, a: 1}
@@ -4770,7 +4765,7 @@ PrefabInstance:
     - target: {fileID: 383610472582880780, guid: 8e089f97609d8dc47bb7c72591aad447, type: 3}
       propertyPath: pausedMenuUI
       value: 
-      objectReference: {fileID: 29890431}
+      objectReference: {fileID: 847701840351448950}
     - target: {fileID: 383610472582880780, guid: 8e089f97609d8dc47bb7c72591aad447, type: 3}
       propertyPath: indicatorText
       value: 
@@ -4973,6 +4968,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0183ef35e7a660e459c7618a15a4600f, type: 3}
+--- !u!1 &847701840351448950 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9192827747394070648, guid: 0183ef35e7a660e459c7618a15a4600f, type: 3}
+  m_PrefabInstance: {fileID: 847701840351448949}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1191945934880364816 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 370429250099985188, guid: 22097c38aed06a048b4fa9c14d90db4d, type: 3}
