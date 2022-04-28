@@ -3,7 +3,32 @@ guid: 9e44f62c8969da541b53b9cbe16eaa12
 ModelImporter:
   serializedVersion: 20200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Metal
+    second: {fileID: 2100000, guid: f7f7393861091104fac3ce60ac0c9e48, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Metal 2
+    second: {fileID: 2100000, guid: dab1369fb7aa87641afeeebc150d300d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Neon Lights
+    second: {fileID: 2100000, guid: dab1369fb7aa87641afeeebc150d300d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Roof_Ground_01
+    second: {fileID: 2100000, guid: 851bdb4f2c89bfd478ec4a019f6137d4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Window_01
+    second: {fileID: 2100000, guid: 7fad7fd6a7184104cb90a5442ee63bd8, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
