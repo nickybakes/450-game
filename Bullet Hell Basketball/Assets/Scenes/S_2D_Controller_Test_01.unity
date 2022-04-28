@@ -978,6 +978,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1876949947}
     - target: {fileID: 383610472582880780, guid: 8e089f97609d8dc47bb7c72591aad447, type: 3}
+      propertyPath: defaultSelection
+      value: 
+      objectReference: {fileID: 1876949947}
+    - target: {fileID: 383610472582880780, guid: 8e089f97609d8dc47bb7c72591aad447, type: 3}
       propertyPath: indicatorShevron
       value: 
       objectReference: {fileID: 1667042359}
