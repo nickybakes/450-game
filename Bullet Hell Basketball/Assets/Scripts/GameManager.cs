@@ -138,6 +138,9 @@ public class GameManager : MonoBehaviour
     public bool paused;
 
     public Button currentSelection;
+    public Button pauseDefault;
+    public Button oneDefault;
+    public Button twoDefault;
     private bool[] canMoveSelection = new bool[9];
     private string[] controllers = { "1", "2", "3", "4", "5", "6", "7", "8", "K" };
 
@@ -1035,9 +1038,15 @@ public class GameManager : MonoBehaviour
         panelUI.transform.GetChild(1).GetComponent<Text>().text = team1Score.ToString();
 
         if (team0Score > team1Score)
+        {
             playerOneWins.SetActive(!playerOneWins.activeSelf);
+            currentSelection = oneDefault;
+        }
         else
+        {
             playerTwoWins.SetActive(!playerTwoWins.activeSelf);
+            currentSelection = twoDefault;
+        }
 
         audioManager.Play("Buzzer");
         midair.source.volume = 0;
