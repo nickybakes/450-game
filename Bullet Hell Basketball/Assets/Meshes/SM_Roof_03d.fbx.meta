@@ -1,9 +1,24 @@
 fileFormatVersion: 2
-guid: 1cce7728c57686a4b872950cbfd392e2
+guid: fab7e1fd6ad9beb4bbaa0430d2a8c20b
 ModelImporter:
   serializedVersion: 20200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Metal
+    second: {fileID: 2100000, guid: f7f7393861091104fac3ce60ac0c9e48, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Metal 2
+    second: {fileID: 2100000, guid: c72fdd163a814c1469aaf30a1d886185, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Roof_Ground_01
+    second: {fileID: 2100000, guid: 851bdb4f2c89bfd478ec4a019f6137d4, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -45,7 +60,7 @@ ModelImporter:
     importLights: 1
     fileIdsGeneration: 2
     swapUVChannels: 0
-    generateSecondaryUV: 1
+    generateSecondaryUV: 0
     useFileUnits: 1
     keepQuads: 0
     weldVertices: 1
@@ -85,7 +100,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 5
+    globalScale: 0.049999997
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0

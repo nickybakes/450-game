@@ -1,9 +1,24 @@
 fileFormatVersion: 2
-guid: c6baa6ca45bbea045b213c2935a01683
+guid: 97ddc05b3b344d845bae3b3a7a7a08a7
 ModelImporter:
   serializedVersion: 20200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Brick_01
+    second: {fileID: 2100000, guid: 25787f1a991ed00479803db420ce5611, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Facade_Trim_01
+    second: {fileID: 2100000, guid: a53b6a051d46cce469f57c36d840aad6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Facade_Trim_02
+    second: {fileID: 2100000, guid: e7e32da568f06c34985c18ac7e7f3434, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -45,7 +60,7 @@ ModelImporter:
     importLights: 1
     fileIdsGeneration: 2
     swapUVChannels: 0
-    generateSecondaryUV: 1
+    generateSecondaryUV: 0
     useFileUnits: 1
     keepQuads: 0
     weldVertices: 1
@@ -66,8 +81,8 @@ ModelImporter:
     useFileScale: 1
   tangentSpace:
     normalSmoothAngle: 60
-    normalImportMode: 0
-    tangentImportMode: 3
+    normalImportMode: 1
+    tangentImportMode: 2
     normalCalculationMode: 4
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
     blendShapeNormalImportMode: 1

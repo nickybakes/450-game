@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: f315fb038027e4442bfc3bc93ae79446
+guid: ed6f9e498ca81d7429d769b250521aaf
 ModelImporter:
   serializedVersion: 20200
   internalIDToNameTable: []
@@ -12,13 +12,8 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Metal 2
-    second: {fileID: 2100000, guid: dab1369fb7aa87641afeeebc150d300d, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
       name: Neon Lights
-    second: {fileID: 2100000, guid: dab1369fb7aa87641afeeebc150d300d, type: 2}
+    second: {fileID: 2100000, guid: fc3fe1f2b95b9874489147875e349ffa, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -70,7 +65,7 @@ ModelImporter:
     importLights: 1
     fileIdsGeneration: 2
     swapUVChannels: 0
-    generateSecondaryUV: 1
+    generateSecondaryUV: 0
     useFileUnits: 1
     keepQuads: 0
     weldVertices: 1
@@ -110,7 +105,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 5
+    globalScale: 0.049999997
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0

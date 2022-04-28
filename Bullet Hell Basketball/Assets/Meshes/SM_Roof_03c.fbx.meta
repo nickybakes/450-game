@@ -1,9 +1,24 @@
 fileFormatVersion: 2
-guid: 3aa4fc8a38b8c344da635d57422e1174
+guid: e93b6636912533548a711112eb1fc4d1
 ModelImporter:
   serializedVersion: 20200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Metal
+    second: {fileID: 2100000, guid: f7f7393861091104fac3ce60ac0c9e48, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Metal 2
+    second: {fileID: 2100000, guid: c72fdd163a814c1469aaf30a1d886185, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Roof_Ground_01
+    second: {fileID: 2100000, guid: 851bdb4f2c89bfd478ec4a019f6137d4, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
