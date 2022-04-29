@@ -163,6 +163,7 @@ public class GameManager : MonoBehaviour
 
     public bool cameraShakeEnabled;
     public bool powerUpsEnabled;
+    private bool dunkBonusEnabled;
 
 
     [HideInInspector] public bool winConditionMet = false;
@@ -219,6 +220,8 @@ public class GameManager : MonoBehaviour
         GameData loadedData = FindObjectOfType<GameData>();
         GameData data = loadedData;
 
+        
+        dunkBonusEnabled= data.dunkBonus;
 
         if (loadedData == null)
         {
@@ -348,6 +351,11 @@ public class GameManager : MonoBehaviour
         //leftBasket.transform.GetChild(0).GetComponent<SpriteRenderer>().color = new Color32(0, 146, 255, 255);
         //rightBasket.transform.GetChild(0).GetComponent<SpriteRenderer>().color = new Color32(255, 255, 0, 255);
 
+        if (!data.dunkBonus)
+        {
+            Destroy(dunkBonusUI);
+        }
+        
         BeginMatch();
     }
 
@@ -388,7 +396,8 @@ public class GameManager : MonoBehaviour
 
         //sets bullet level and dunk value back to default.
         bulletLevelUI.text = "Bullets Level: " + bulletLevel;
-        dunkBonusUI.text = "Dunk Bonus: +" + dunkBonusValue;
+        if (dunkBonusEnabled)
+            dunkBonusUI.text = "Dunk Bonus: +" + dunkBonusValue;
 
         playerOneWins.SetActive(false);
         playerTwoWins.SetActive(false);
@@ -442,8 +451,11 @@ public class GameManager : MonoBehaviour
 
         //bullet level & Dunk value.
         bulletLevelUI.text = "Bullets Level: " + bulletLevel;
-        dunkBonusValue = (bulletLevel * 2) - 2;
-        dunkBonusUI.text = "Dunk Bonus: +" + dunkBonusValue;
+        if (dunkBonusEnabled)
+        {
+            dunkBonusValue = (bulletLevel * 2) - 2;
+            dunkBonusUI.text = "Dunk Bonus: +" + dunkBonusValue;
+        }
 
         ballControlScript.IsResetting = false;
     }
@@ -987,8 +999,11 @@ public class GameManager : MonoBehaviour
             bulletLevelUpCurrentTime = 0;
             bulletIncreaseUI.gameObject.SetActive(true);
             bulletLevelUI.text = "Bullets Level: " + bulletLevel;
-            dunkBonusValue = (bulletLevel * 2) - 2;
-            dunkBonusUI.text = "Dunk Bonus: +" + dunkBonusValue;
+            if (dunkBonusEnabled)
+            {
+                dunkBonusValue = (bulletLevel * 2) - 2;
+                dunkBonusUI.text = "Dunk Bonus: +" + dunkBonusValue;
+            }
 
             bulletTimerUI += Time.deltaTime;
         }

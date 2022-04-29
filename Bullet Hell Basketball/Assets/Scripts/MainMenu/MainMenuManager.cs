@@ -895,10 +895,12 @@ public class MainMenuManager : MonoBehaviour
     {
         if (GameObject.Find("DunkBonus").GetComponentInChildren<Text>().text == "Enabled")
         {
+            data.dunkBonus = false;
             GameObject.Find("DunkBonus").GetComponentInChildren<Text>().text = "Disabled";
         }
         else if (GameObject.Find("DunkBonus").GetComponentInChildren<Text>().text == "Disabled")
         {
+            data.dunkBonus = true;
             GameObject.Find("DunkBonus").GetComponentInChildren<Text>().text = "Enabled";
         }
 

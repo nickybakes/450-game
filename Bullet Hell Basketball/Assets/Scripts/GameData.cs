@@ -63,6 +63,8 @@ public class GameData : MonoBehaviour
 
     public bool isSwipeShotRally = false;
 
+    public bool dunkBonus = true;
+
 
     // Set up singleton here
     private void Awake()
