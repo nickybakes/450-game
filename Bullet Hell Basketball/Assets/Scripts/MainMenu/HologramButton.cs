@@ -39,7 +39,7 @@ public class HologramButton : MonoBehaviour, ISelectHandler, IDeselectHandler// 
         entry.eventID = EventTriggerType.PointerEnter;
         exit.eventID = EventTriggerType.PointerExit;
         click.eventID = EventTriggerType.PointerClick;
-        trigger.runInEditMode = true;
+        // trigger.runInEditMode = true;
         entry.callback.AddListener((eventData) => { this.OnMouseEnter(); });
         exit.callback.AddListener((eventData) => { this.OnMouseExit(); });
         // click.callback.AddListener((eventData) => { this.OnMouseClick(); });
