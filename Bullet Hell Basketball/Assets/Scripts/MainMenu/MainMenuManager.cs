@@ -97,6 +97,66 @@ public class MainMenuManager : MonoBehaviour
             GameObject gameDataObject = new GameObject("Game Data Manager");
             data = gameDataObject.AddComponent<GameData>();
         }
+
+        if (data.bulletSpawnage == BulletSpawnage.RegularOnly)
+        {
+            GameObject.Find("Bullets").GetComponentInChildren<Text>().text = "Small Only";
+        }
+        else if (data.bulletSpawnage == BulletSpawnage.BigOnly)
+        {
+            GameObject.Find("Bullets").GetComponentInChildren<Text>().text = "Big Only";
+        }
+        else if (data.bulletSpawnage == BulletSpawnage.BothRegularAndBig)
+        {
+            GameObject.Find("Bullets").GetComponentInChildren<Text>().text = "Big & Small";
+        }
+        else if (data.bulletSpawnage == BulletSpawnage.None)
+        {
+            GameObject.Find("Bullets").GetComponentInChildren<Text>().text = "No Bullets";
+        }
+
+        if (data.powerUpSpawnage == PowerUpSpawnage.Low)
+        {
+            GameObject.Find("Power").GetComponentInChildren<Text>().text = "Low";
+        }
+        else if (data.powerUpSpawnage == PowerUpSpawnage.Medium)
+        {
+            GameObject.Find("Power").GetComponentInChildren<Text>().text = "Medium";
+        }
+        else if (data.powerUpSpawnage == PowerUpSpawnage.High)
+        {
+            GameObject.Find("Power").GetComponentInChildren<Text>().text = "High";
+        }
+        else if (data.powerUpSpawnage == PowerUpSpawnage.Chaotic)
+        {
+            GameObject.Find("Power").GetComponentInChildren<Text>().text = "Chaotic";
+        }
+
+        if (data.matchLength == 180)
+        {
+            GameObject.Find("Timer").GetComponentInChildren<Text>().text = "3:00";
+        }
+        else if (data.matchLength == 120)
+        {
+            GameObject.Find("Timer").GetComponentInChildren<Text>().text = "2:00";
+        }
+        else if (data.matchLength == 240)
+        {
+            GameObject.Find("Timer").GetComponentInChildren<Text>().text = "4:00";
+        }
+        else if (data.matchLength == 300)
+        {
+            GameObject.Find("Timer").GetComponentInChildren<Text>().text = "5:00";
+        }
+
+        if (data.dunkBonus)
+        {
+            GameObject.Find("DunkBonus").GetComponentInChildren<Text>().text = "Enabled";
+        }
+        else if (!data.dunkBonus)
+        {
+            GameObject.Find("DunkBonus").GetComponentInChildren<Text>().text = "Disabled";
+        }
     }
 
     // Update is called once per frame
