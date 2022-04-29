@@ -169,6 +169,9 @@ public class GameManager : MonoBehaviour
     public bool powerUpsEnabled;
     private bool dunkBonusEnabled;
 
+    public Material daySkybox;
+    public Material nightSkybox;
+
 
     [HideInInspector] public bool winConditionMet = false;
 
@@ -225,8 +228,8 @@ public class GameManager : MonoBehaviour
         GameData loadedData = FindObjectOfType<GameData>();
         GameData data = loadedData;
 
-        
-        dunkBonusEnabled= data.dunkBonus;
+
+        dunkBonusEnabled = data.dunkBonus;
 
         if (loadedData == null)
         {
@@ -245,6 +248,8 @@ public class GameManager : MonoBehaviour
             data.playerControlsTeam1 = new List<int>() { 1 };
             data.playerNumbersTeam1 = new List<int>() { 1 };
         }
+
+        SetTimeVisual(data.nightTime);
 
         if (gamemode == Gamemode.Tutorial)
         {
@@ -360,7 +365,7 @@ public class GameManager : MonoBehaviour
         {
             Destroy(dunkBonusUI);
         }
-        
+
         BeginMatch();
     }
 
@@ -1298,5 +1303,24 @@ public class GameManager : MonoBehaviour
     {
         Destroy(FindObjectOfType<AudioManager>().gameObject);
         SceneManager.LoadScene(0);
+    }
+
+
+    public void SetTimeVisual(bool nightTime)
+    {
+        if (nightTime)
+        {
+            RenderSettings.skybox = nightSkybox;
+            RenderSettings.ambientLight = new Color(67.0f / 255.0f, 67.0f / 255.0f, 77.0f / 255.0f);
+            RenderSettings.fogColor = new Color(63.0f / 255.0f, 63.0f / 255.0f, 204.0f / 255.0f);
+            RenderSettings.sun.color = new Color(131 / 255.0f, 142 / 255.0f, 173 / 255.0f);
+        }
+        else
+        {
+            RenderSettings.skybox = daySkybox;
+            RenderSettings.ambientLight = new Color(236.0f / 255.0f, 95.0f / 255.0f, 28.0f / 255.0f);
+            RenderSettings.fogColor = new Color(202.0f / 255.0f, 139.0f / 255.0f, 106.0f / 255.0f);
+            RenderSettings.sun.color = new Color(255 / 255.0f, 203 / 255.0f, 145 / 255.0f);
+        }
     }
 }
