@@ -8,15 +8,15 @@ public class SwipeShotManager : MonoBehaviour
     //needs:
     //access to players, UI, gameManager,
     public GameManager gameManager;
-    private bool hasChosenSide;
+    public bool hasChosenSide;
 
     public Canvas rallyCanvas;
     private int currentScore = 0;
     private int highScore = 0;
-    private Text currentScoreText;
+    public Text currentScoreText;
     private Text highScoreText;
 
-    private float tipOffTimer;
+    public float tipOffTimer;
 
     // Start is called before the first frame update
     void Start()
@@ -95,5 +95,11 @@ public class SwipeShotManager : MonoBehaviour
         }
 
         //Limit to 1/2 players, if 1 player, bot. Bot usually* returns ball.
+    }
+
+    public void Reset()
+    {
+        tipOffTimer = 3;
+        hasChosenSide = true;
     }
 }
