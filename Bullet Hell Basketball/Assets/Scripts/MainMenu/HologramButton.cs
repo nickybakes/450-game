@@ -22,11 +22,18 @@ public class HologramButton : MonoBehaviour, ISelectHandler, IDeselectHandler// 
 
     public bool hideBorderWhileSelected;
 
+    public bool isSlider;
+
+    public Slider sliderComponent;
+
+
     void Awake()
     {
         menuManager = FindObjectOfType<MainMenuManager>();
         buttonComponent = GetComponent<Button>();
-        border = transform.GetChild(1).GetComponent<Image>();
+
+        if (!isSlider)
+            border = transform.GetChild(1).GetComponent<Image>();
 
         EventTrigger trigger = GetComponent<EventTrigger>();
         if (trigger)
@@ -35,17 +42,23 @@ public class HologramButton : MonoBehaviour, ISelectHandler, IDeselectHandler// 
         trigger = gameObject.AddComponent<EventTrigger>();
         EventTrigger.Entry entry = new EventTrigger.Entry();
         EventTrigger.Entry exit = new EventTrigger.Entry();
-        EventTrigger.Entry click = new EventTrigger.Entry();
         entry.eventID = EventTriggerType.PointerEnter;
         exit.eventID = EventTriggerType.PointerExit;
-        click.eventID = EventTriggerType.PointerClick;
-        // trigger.runInEditMode = true;
+#if UNITY_EDITOR
+        trigger.runInEditMode = true;
+#endif
         entry.callback.AddListener((eventData) => { this.OnMouseEnter(); });
         exit.callback.AddListener((eventData) => { this.OnMouseExit(); });
-        // click.callback.AddListener((eventData) => { this.OnMouseClick(); });
         trigger.triggers.Add(entry);
         trigger.triggers.Add(exit);
-        // trigger.triggers.Add(click);
+
+        if (!isSlider)
+        {
+            EventTrigger.Entry click = new EventTrigger.Entry();
+            click.eventID = EventTriggerType.PointerClick;
+            click.callback.AddListener((eventData) => { this.OnMouseClick(); });
+            trigger.triggers.Add(click);
+        }
 
         text = GetComponentInChildren<Text>();
         if (text != null)
@@ -76,6 +89,9 @@ public class HologramButton : MonoBehaviour, ISelectHandler, IDeselectHandler// 
     public void SelectVisual()
     {
         transform.GetChild(0).gameObject.SetActive(true);
+
+        if (isSlider)
+            return;
         //border.material = menuManager.borderFlashMaterial;
         if (text != null)
         {
@@ -87,6 +103,10 @@ public class HologramButton : MonoBehaviour, ISelectHandler, IDeselectHandler// 
     public void DeselectVisual()
     {
         transform.GetChild(0).gameObject.SetActive(false);
+
+        if (isSlider)
+            return;
+
         border.material = null;
         if (text != null)
         {
@@ -97,11 +117,20 @@ public class HologramButton : MonoBehaviour, ISelectHandler, IDeselectHandler// 
 
     public void OnMouseClick()
     {
-        menuManager.masterController = "M";
+        if (isSlider)
+            return;
+
+        if(menuManager != null)
+            menuManager.masterController = "M";
     }
 
     public void OnMouseEnter()
     {
+        if (isSlider)
+        {
+            SelectVisual();
+        }
+
         buttonComponent.Select();
     }
 

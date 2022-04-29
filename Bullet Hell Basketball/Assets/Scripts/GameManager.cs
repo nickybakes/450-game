@@ -1084,6 +1084,9 @@ public class GameManager : MonoBehaviour
         panelUI.SetActive(false);
         scoresUI.SetActive(true);
 
+        scoresUITeam0.gameObject.SetActive(true);
+        scoresUITeam1.gameObject.SetActive(true);
+
         scoresUITeam0.transform.GetChild(2).GetComponent<Text>().text = team0Score.ToString();
         scoresUITeam1.transform.GetChild(2).GetComponent<Text>().text = team1Score.ToString();
 
@@ -1133,7 +1136,7 @@ public class GameManager : MonoBehaviour
             sb.ForceDestroy();
         }
 
-        yield return new WaitForSecondsRealtime(2);
+        yield return new WaitForSecondsRealtime(3);
 
         if (team0Score > team1Score)
             playerOneWins.SetActive(!playerOneWins.activeSelf);
@@ -1183,17 +1186,36 @@ public class GameManager : MonoBehaviour
             playersTeam1[i].transform.position = new Vector2(posX, team1SpawnPosition.y);
         }
 
-        if (previousScorer == -1)
+        if (gamemode == Gamemode.Rally)
         {
-            ball.transform.position = ballSpawnPosition;
+            if (previousScorer == -1)
+            {
+                ball.transform.position = ballSpawnPosition;
+                previousScorer = UnityEngine.Random.Range(0, 2);
+            }
+            if (previousScorer == 0)
+            {
+                ball.transform.position = new Vector2(-20, 5);
+            }
+            else if (previousScorer == 1)
+            {
+                ball.transform.position = new Vector2(20, 5);
+            }
         }
-        else if (previousScorer == 0)
+        else
         {
-            ball.transform.position = new Vector2(team1SpawnPosition.x - 5, team1SpawnPosition.y + 10);
-        }
-        else if (previousScorer == 1)
-        {
-            ball.transform.position = new Vector2(team0SpawnPosition.x + 5, team0SpawnPosition.y + 10);
+            if (previousScorer == -1)
+            {
+                ball.transform.position = ballSpawnPosition;
+            }
+            else if (previousScorer == 0)
+            {
+                ball.transform.position = new Vector2(team1SpawnPosition.x - 5, team1SpawnPosition.y + 10);
+            }
+            else if (previousScorer == 1)
+            {
+                ball.transform.position = new Vector2(team0SpawnPosition.x + 5, team0SpawnPosition.y + 10);
+            }
         }
 
         ballControlScript.lineRenderer.enabled = false;
@@ -1299,6 +1321,7 @@ public class GameManager : MonoBehaviour
 
     public void BackToMenu()
     {
+        Destroy(pausedMenuUI.gameObject);
         Destroy(FindObjectOfType<AudioManager>().gameObject);
         SceneManager.LoadScene(0);
     }

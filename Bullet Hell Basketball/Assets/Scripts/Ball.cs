@@ -620,7 +620,14 @@ public class Ball : MonoBehaviour
             onScoreTextRight.text = "+" + dunkValue;
             audioManager.Play("Dunk");
         }
-        gameManager.previousScorer = 0;
+        if (gameManager.gamemode == Gamemode.Rally)
+        {
+            gameManager.previousScorer = gameManager.previousScorer - 1;
+        }
+        else
+        {
+            gameManager.previousScorer = 0;
+        }
         if (!gameManager.overTime)
             gameManager.panelUI.transform.GetChild(3).gameObject.SetActive(true);
         gameManager.panelUI.transform.GetChild(0).GetComponent<Text>().text = gameManager.team0Score.ToString();
@@ -657,7 +664,14 @@ public class Ball : MonoBehaviour
             onScoreTextLeft.text = "+" + dunkValue;
             audioManager.Play("Dunk");
         }
-        gameManager.previousScorer = 1;
+        if (gameManager.gamemode == Gamemode.Rally)
+        {
+            gameManager.previousScorer = gameManager.previousScorer - 1;
+        }
+        else
+        {
+            gameManager.previousScorer = 1;
+        }
         if (!gameManager.overTime)
             gameManager.panelUI.transform.GetChild(4).gameObject.SetActive(true);
         gameManager.panelUI.transform.GetChild(1).GetComponent<Text>().text = gameManager.team1Score.ToString();

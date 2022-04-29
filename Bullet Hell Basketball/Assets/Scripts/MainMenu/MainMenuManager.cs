@@ -44,10 +44,10 @@ public class MainMenuManager : MonoBehaviour
 
     public PanelManager[] panels;
 
-    public Button currentSelection;
+    public Selectable currentSelection;
 
     private AudioManager audioManager;
-    private Button prevSelection;
+    private Selectable prevSelection;
     public Menu currentPanelId;
 
     private GameData data;
@@ -61,6 +61,7 @@ public class MainMenuManager : MonoBehaviour
     public GameObject teamSetupPlayerDisplayPrefab;
 
     public Text maxPlayersReachedWarning;
+    public Text maxPlayersReachedWarningSwipeShot;
 
     public VolumeProfile menuProfile;
 
@@ -75,9 +76,9 @@ public class MainMenuManager : MonoBehaviour
 
     public GameObject middlePlatform;
 
-    public Text spawnText, bulletText, lengthText, dunkText;
+    public Text spawnText, bulletText, lengthText, dunkText, shoeSqueakText, cameraShakeText, timeOfDayText, midPlatformText;
 
-
+    public Slider masterVolumeSlider;
 
 
     // Start is called before the first frame update
@@ -104,6 +105,42 @@ public class MainMenuManager : MonoBehaviour
         {
             GameObject gameDataObject = new GameObject("Game Data Manager");
             data = gameDataObject.AddComponent<GameData>();
+        }
+        else
+        {
+            for (int i = 0; i < panels.Length; i++)
+            {
+                panels[i].gameObject.SetActive(false);
+                panels[i].panelId = (Menu)i;
+            }
+            if (data.gamemode == Gamemode.Exhibition)
+            {
+                panels[(int)Menu.ExhibitionTeamSetup].EnableMenu();
+                for (int i = 0; i < data.playerNumbersTeam0.Count; i++)
+                {
+                    ReaddPlayerToGameAfterReturningFromGame(data.playerControlsTeam0[i], data.playerNumbersTeam0[i], 0);
+                }
+                for (int i = 0; i < data.playerNumbersTeam1.Count; i++)
+                {
+                    ReaddPlayerToGameAfterReturningFromGame(data.playerControlsTeam1[i], data.playerNumbersTeam1[i], 1);
+                }
+            }
+            else if (data.gamemode == Gamemode.Tutorial)
+            {
+                panels[(int)Menu.GamemodeSelect].EnableMenu();
+            }
+            else if (data.gamemode == Gamemode.Rally)
+            {
+                panels[(int)Menu.SwipeShotSetup].EnableMenu();
+                for (int i = 0; i < data.playerNumbersTeam0.Count; i++)
+                {
+                    ReaddPlayerToGameAfterReturningFromGame(data.playerControlsTeam0[i], data.playerNumbersTeam0[i], 0);
+                }
+                for (int i = 0; i < data.playerNumbersTeam1.Count; i++)
+                {
+                    ReaddPlayerToGameAfterReturningFromGame(data.playerControlsTeam1[i], data.playerNumbersTeam1[i], 1);
+                }
+            }
         }
 
         if (data.bulletSpawnage == BulletSpawnage.RegularOnly)
@@ -161,10 +198,54 @@ public class MainMenuManager : MonoBehaviour
         {
             dunkText.text = "Enabled";
         }
-        else if (!data.dunkBonus)
+        else
         {
             dunkText.text = "Disabled";
         }
+
+        if (BhbPlayerController.shoeSqueakRate == 0.01f)
+        {
+            shoeSqueakText.text = "Frequent";
+        }
+        else if (BhbPlayerController.shoeSqueakRate == 10000.0f)
+        {
+            shoeSqueakText.text = "Never";
+        }
+        else if (BhbPlayerController.shoeSqueakRate == 0.5f)
+        {
+            shoeSqueakText.text = "Semi-Frequent";
+        }
+
+        if (data.cameraShake)
+        {
+            cameraShakeText.text = "Enabled";
+        }
+        else
+        {
+            cameraShakeText.text = "Disabled";
+        }
+
+        SetTimeVisual(data.nightTime);
+        if (data.nightTime)
+        {
+            timeOfDayText.text = "Midnight";
+        }
+        else
+        {
+            timeOfDayText.text = "Golden Hour";
+        }
+
+        middlePlatform.SetActive(data.middlePlatform);
+        if (data.middlePlatform)
+        {
+            midPlatformText.text = "Enabled";
+        }
+        else
+        {
+            midPlatformText.text = "Disabled";
+        }
+
+        masterVolumeSlider.value = AudioListener.volume;
     }
 
     // Update is called once per frame
@@ -173,6 +254,17 @@ public class MainMenuManager : MonoBehaviour
         if (currentPanelId == Menu.ExhibitionTeamSetup)
         {
             maxPlayersReachedWarning.gameObject.SetActive(data.playerNumbersTeam0.Count + data.playerNumbersTeam1.Count == 8);
+        }
+        else if (currentPanelId == Menu.SwipeShotSetup)
+        {
+            if (data.playerNumbersTeam1.Count > 0 && data.playerNumbersTeam1[0] != 8)
+            {
+                maxPlayersReachedWarningSwipeShot.gameObject.SetActive(data.playerNumbersTeam0.Count + data.playerNumbersTeam1.Count == 2);
+            }
+            else
+            {
+                maxPlayersReachedWarningSwipeShot.gameObject.SetActive(false);
+            }
         }
 
         //checks to make sure we are selecting a valid selection (Button)
@@ -231,6 +323,8 @@ public class MainMenuManager : MonoBehaviour
                 masterController = controllers[i];
 
                 HologramButton hologramButton = currentSelection.gameObject.GetComponent<HologramButton>();
+                if (hologramButton.isSlider)
+                    break;
                 Menu previousPanelId = currentPanelId;
                 ExecuteEvents.Execute(currentSelection.gameObject,
                     new BaseEventData(EventSystem.current), ExecuteEvents.submitHandler);
@@ -265,6 +359,8 @@ public class MainMenuManager : MonoBehaviour
                 }
             }
 
+
+
             if (currentPanelId == Menu.ExhibitionTeamSetup && Input.GetButtonDown("J" + controllers[i] + "B") && i != 8)
             {
                 if (IsInputIdInGame(i + 2))
@@ -272,12 +368,33 @@ public class MainMenuManager : MonoBehaviour
                     RemovePlayerFromGame(i + 2);
                 }
             }
-
             if (currentPanelId == Menu.ExhibitionTeamSetup && Input.GetButtonDown("J" + controllers[i] + "X") && i != 8)
             {
                 if (IsInputIdInGame(i + 2))
                 {
                     SwapTeam(i + 2);
+                }
+            }
+
+            if (currentPanelId == Menu.SwipeShotSetup && i == 8)
+            {
+                if (Input.GetKeyDown(KeyCode.Q) && IsInputIdInGame(0) && data.playerControlsTeam0[0] != 0)
+                {
+                    RemovePlayerFromGame(0);
+                    break;
+                }
+                else if (Input.GetKeyDown(KeyCode.O) && IsInputIdInGame(1) && data.playerControlsTeam0[0] != 1)
+                {
+                    RemovePlayerFromGame(1);
+                    break;
+                }
+            }
+
+            if (currentPanelId == Menu.SwipeShotSetup && Input.GetButtonDown("J" + controllers[i] + "B") && i != 8)
+            {
+                if (IsInputIdInGame(i + 2) && data.playerControlsTeam0[0] != i + 2)
+                {
+                    RemovePlayerFromGame(i + 2);
                 }
             }
 
@@ -303,8 +420,6 @@ public class MainMenuManager : MonoBehaviour
                 verticalInput += Mathf.Round(Input.GetAxis("J" + controllers[i] + "Vertical"));
             }
 
-
-
             //this prevents the user from pressing same direction each frame (for controls sticks, dpad, and KB)
             if (horizontalInput == 0 && verticalInput == 0)
             {
@@ -317,6 +432,13 @@ public class MainMenuManager : MonoBehaviour
             {
                 if (horizontalInput > 0)
                 {
+                    HologramButton hologramButton = currentSelection.GetComponent<HologramButton>();
+                    if (hologramButton != null && hologramButton.isSlider)
+                    {
+                        Slider s = hologramButton.sliderComponent;
+                        s.value = Mathf.Clamp(s.value + (((float)(s.maxValue - s.minValue)) * Time.deltaTime), s.minValue, s.maxValue);
+                        break;
+                    }
                     if (currentSelection.navigation.selectOnRight != null)
                     {
                         //Debug.Log(currentSelection.navigation.selectOnRight);
@@ -327,6 +449,13 @@ public class MainMenuManager : MonoBehaviour
                 }
                 else if (horizontalInput < 0)
                 {
+                    HologramButton hologramButton = currentSelection.GetComponent<HologramButton>();
+                    if (hologramButton != null && hologramButton.isSlider)
+                    {
+                        Slider s = hologramButton.sliderComponent;
+                        s.value = Mathf.Clamp(s.value - (((float)(s.maxValue - s.minValue)) * Time.deltaTime), s.minValue, s.maxValue);
+                        break;
+                    }
                     if (currentSelection.navigation.selectOnLeft != null)
                     {
                         //Debug.Log(currentSelection.navigation.selectOnLeft);
@@ -392,6 +521,7 @@ public class MainMenuManager : MonoBehaviour
     public void OpenExhibitionTeamSetup()
     {
         StepUp();
+        data.gamemode = Gamemode.Exhibition;
         data.playerNumbersTeam0 = new List<int>();
         data.playerNumbersTeam1 = new List<int>();
         data.playerControlsTeam0 = new List<int>();
@@ -420,6 +550,7 @@ public class MainMenuManager : MonoBehaviour
     public void OpenSwipeShotSetup()
     {
         SwitchToPanel(6);
+        data.gamemode = Gamemode.Rally;
         data.playerNumbersTeam0 = new List<int>();
         data.playerNumbersTeam1 = new List<int>();
         data.playerControlsTeam0 = new List<int>();
@@ -445,6 +576,44 @@ public class MainMenuManager : MonoBehaviour
         }
 
         AddBotTeam1();
+    }
+
+    public void ReaddPlayerToGameAfterReturningFromGame(int inputId, int playerNumber, int teamNumber)
+    {
+        if (currentPanelId == Menu.ExhibitionTeamSetup)
+        {
+            if (teamNumber == 0)
+            {
+                //add to Yellow team
+                GameObject g = Instantiate(teamSetupPlayerDisplayPrefab, gridTeam0.transform);
+                TeamSetupPlayerDisplay gScript = g.GetComponent<TeamSetupPlayerDisplay>();
+                gScript.Init(playerNumber, inputId);
+            }
+            else
+            {
+                //add to Blue team
+                GameObject g = Instantiate(teamSetupPlayerDisplayPrefab, gridTeam1.transform);
+                TeamSetupPlayerDisplay gScript = g.GetComponent<TeamSetupPlayerDisplay>();
+                gScript.Init(playerNumber, inputId);
+            }
+        }
+        else if (currentPanelId == Menu.SwipeShotSetup)
+        {
+            if (teamNumber == 0)
+            {
+                //add to Yellow team
+                GameObject g = Instantiate(teamSetupPlayerDisplayPrefab, gridDuo0.transform);
+                TeamSetupPlayerDisplay gScript = g.GetComponent<TeamSetupPlayerDisplay>();
+                gScript.Init(playerNumber, inputId);
+            }
+            else
+            {
+                //add to Blue team
+                GameObject g = Instantiate(teamSetupPlayerDisplayPrefab, gridDuo1.transform);
+                TeamSetupPlayerDisplay gScript = g.GetComponent<TeamSetupPlayerDisplay>();
+                gScript.Init(playerNumber, inputId);
+            }
+        }
     }
 
     public void AddPlayerToGame(int inputId)
@@ -828,51 +997,53 @@ public class MainMenuManager : MonoBehaviour
     public void PlayGame()
     {
         Destroy(FindObjectOfType<AudioManager>().gameObject);
+        if (data.gamemode == Gamemode.Exhibition)
+        {
+            if (data.middlePlatform)
+            {
+                SceneManager.LoadScene(1);
+            }
+            else
+            {
+                SceneManager.LoadScene(2);
+            }
+        }
+        else if (data.gamemode == Gamemode.Rally)
+        {
+            if (data.middlePlatform)
+            {
+                SceneManager.LoadScene(4);
+            }
+            else
+            {
+                SceneManager.LoadScene(5);
+            }
+        }
 
-        if (data.middlePlatform)
-        {
-            SceneManager.LoadScene(1);
-        }
-        else
-        {
-            SceneManager.LoadScene(2);
-        }
     }
 
     public void PlayTutorial()
     {
+        data.gamemode = Gamemode.Tutorial;
         Destroy(FindObjectOfType<AudioManager>().gameObject);
         SceneManager.LoadScene(3);
     }
 
-    public void PlaySwipeShotRally()
-    {
-        Destroy(FindObjectOfType<AudioManager>().gameObject);
-        if (data.middlePlatform)
-        {
-            SceneManager.LoadScene(4);
-        }
-        else
-        {
-            SceneManager.LoadScene(5);
-        }
-    }
-
     public void SqueakyOnClick()
     {
-        if (GameObject.Find("Squeak").GetComponentInChildren<Text>().text == "Semi-Frequent")
+        if (currentSelection.GetComponentInChildren<Text>().text == "Semi-Frequent")
         {
-            GameObject.Find("Squeak").GetComponentInChildren<Text>().text = "Frequent";
+            currentSelection.GetComponentInChildren<Text>().text = "Frequent";
             BhbPlayerController.shoeSqueakRate = 0.01f;
         }
-        else if (GameObject.Find("Squeak").GetComponentInChildren<Text>().text == "Frequent")
+        else if (currentSelection.GetComponentInChildren<Text>().text == "Frequent")
         {
-            GameObject.Find("Squeak").GetComponentInChildren<Text>().text = "Never";
+            currentSelection.GetComponentInChildren<Text>().text = "Never";
             BhbPlayerController.shoeSqueakRate = 10000.0f;
         }
-        else if (GameObject.Find("Squeak").GetComponentInChildren<Text>().text == "Never")
+        else if (currentSelection.GetComponentInChildren<Text>().text == "Never")
         {
-            GameObject.Find("Squeak").GetComponentInChildren<Text>().text = "Semi-Frequent";
+            currentSelection.GetComponentInChildren<Text>().text = "Semi-Frequent";
             BhbPlayerController.shoeSqueakRate = 0.5f;
         }
 
@@ -881,14 +1052,14 @@ public class MainMenuManager : MonoBehaviour
 
     public void CameraShakeOnClick()
     {
-        if (GameObject.Find("CameraShake").GetComponentInChildren<Text>().text == "Enabled")
+        if (currentSelection.GetComponentInChildren<Text>().text == "Enabled")
         {
-            GameObject.Find("CameraShake").GetComponentInChildren<Text>().text = "Disabled";
+            currentSelection.GetComponentInChildren<Text>().text = "Disabled";
             data.cameraShake = false;
         }
-        else if (GameObject.Find("CameraShake").GetComponentInChildren<Text>().text == "Disabled")
+        else if (currentSelection.GetComponentInChildren<Text>().text == "Disabled")
         {
-            GameObject.Find("CameraShake").GetComponentInChildren<Text>().text = "Enabled";
+            currentSelection.GetComponentInChildren<Text>().text = "Enabled";
             data.cameraShake = true;
         }
 
@@ -897,29 +1068,29 @@ public class MainMenuManager : MonoBehaviour
 
     public void PowerOnClick()
     {
-        if (GameObject.Find("Power").GetComponentInChildren<Text>().text == "Off")
+        if (currentSelection.GetComponentInChildren<Text>().text == "Off")
         {
-            GameObject.Find("Power").GetComponentInChildren<Text>().text = "Low";
+            currentSelection.GetComponentInChildren<Text>().text = "Low";
             data.powerUpSpawnage = PowerUpSpawnage.Low;
         }
-        else if (GameObject.Find("Power").GetComponentInChildren<Text>().text == "Low")
+        else if (currentSelection.GetComponentInChildren<Text>().text == "Low")
         {
-            GameObject.Find("Power").GetComponentInChildren<Text>().text = "Medium";
+            currentSelection.GetComponentInChildren<Text>().text = "Medium";
             data.powerUpSpawnage = PowerUpSpawnage.Medium;
         }
-        else if (GameObject.Find("Power").GetComponentInChildren<Text>().text == "Medium")
+        else if (currentSelection.GetComponentInChildren<Text>().text == "Medium")
         {
-            GameObject.Find("Power").GetComponentInChildren<Text>().text = "High";
+            currentSelection.GetComponentInChildren<Text>().text = "High";
             data.powerUpSpawnage = PowerUpSpawnage.High;
         }
-        else if (GameObject.Find("Power").GetComponentInChildren<Text>().text == "High")
+        else if (currentSelection.GetComponentInChildren<Text>().text == "High")
         {
-            GameObject.Find("Power").GetComponentInChildren<Text>().text = "Chaotic";
+            currentSelection.GetComponentInChildren<Text>().text = "Chaotic";
             data.powerUpSpawnage = PowerUpSpawnage.Chaotic;
         }
-        else if (GameObject.Find("Power").GetComponentInChildren<Text>().text == "Chaotic")
+        else if (currentSelection.GetComponentInChildren<Text>().text == "Chaotic")
         {
-            GameObject.Find("Power").GetComponentInChildren<Text>().text = "Off";
+            currentSelection.GetComponentInChildren<Text>().text = "Off";
             data.powerUpSpawnage = PowerUpSpawnage.None;
         }
 
@@ -928,24 +1099,24 @@ public class MainMenuManager : MonoBehaviour
 
     public void TimerOnClick()
     {
-        if (GameObject.Find("Timer").GetComponentInChildren<Text>().text == "2:00")
+        if (currentSelection.GetComponentInChildren<Text>().text == "2:00")
         {
-            GameObject.Find("Timer").GetComponentInChildren<Text>().text = "3:00";
+            currentSelection.GetComponentInChildren<Text>().text = "3:00";
             data.matchLength = 180;
         }
-        else if (GameObject.Find("Timer").GetComponentInChildren<Text>().text == "3:00")
+        else if (currentSelection.GetComponentInChildren<Text>().text == "3:00")
         {
-            GameObject.Find("Timer").GetComponentInChildren<Text>().text = "4:00";
+            currentSelection.GetComponentInChildren<Text>().text = "4:00";
             data.matchLength = 240;
         }
-        else if (GameObject.Find("Timer").GetComponentInChildren<Text>().text == "4:00")
+        else if (currentSelection.GetComponentInChildren<Text>().text == "4:00")
         {
-            GameObject.Find("Timer").GetComponentInChildren<Text>().text = "5:00";
+            currentSelection.GetComponentInChildren<Text>().text = "5:00";
             data.matchLength = 300;
         }
-        else if (GameObject.Find("Timer").GetComponentInChildren<Text>().text == "5:00")
+        else if (currentSelection.GetComponentInChildren<Text>().text == "5:00")
         {
-            GameObject.Find("Timer").GetComponentInChildren<Text>().text = "2:00";
+            currentSelection.GetComponentInChildren<Text>().text = "2:00";
             data.matchLength = 120;
         }
 
@@ -954,24 +1125,24 @@ public class MainMenuManager : MonoBehaviour
 
     public void BulletSizeOnClick()
     {
-        if (GameObject.Find("Bullets").GetComponentInChildren<Text>().text == "Small Only")
+        if (currentSelection.GetComponentInChildren<Text>().text == "Small Only")
         {
-            GameObject.Find("Bullets").GetComponentInChildren<Text>().text = "Big Only";
+            currentSelection.GetComponentInChildren<Text>().text = "Big Only";
             data.bulletSpawnage = BulletSpawnage.BigOnly;
         }
-        else if (GameObject.Find("Bullets").GetComponentInChildren<Text>().text == "Big Only")
+        else if (currentSelection.GetComponentInChildren<Text>().text == "Big Only")
         {
-            GameObject.Find("Bullets").GetComponentInChildren<Text>().text = "Big & Small";
+            currentSelection.GetComponentInChildren<Text>().text = "Big & Small";
             data.bulletSpawnage = BulletSpawnage.BothRegularAndBig;
         }
-        else if (GameObject.Find("Bullets").GetComponentInChildren<Text>().text == "Big & Small")
+        else if (currentSelection.GetComponentInChildren<Text>().text == "Big & Small")
         {
-            GameObject.Find("Bullets").GetComponentInChildren<Text>().text = "No Bullets";
+            currentSelection.GetComponentInChildren<Text>().text = "No Bullets";
             data.bulletSpawnage = BulletSpawnage.None;
         }
-        else if (GameObject.Find("Bullets").GetComponentInChildren<Text>().text == "No Bullets")
+        else if (currentSelection.GetComponentInChildren<Text>().text == "No Bullets")
         {
-            GameObject.Find("Bullets").GetComponentInChildren<Text>().text = "Small Only";
+            currentSelection.GetComponentInChildren<Text>().text = "Small Only";
             data.bulletSpawnage = BulletSpawnage.RegularOnly;
         }
 
@@ -980,15 +1151,15 @@ public class MainMenuManager : MonoBehaviour
 
     public void DunkBonusOnClick()
     {
-        if (GameObject.Find("DunkBonus").GetComponentInChildren<Text>().text == "Enabled")
+        if (currentSelection.GetComponentInChildren<Text>().text == "Enabled")
         {
             data.dunkBonus = false;
-            GameObject.Find("DunkBonus").GetComponentInChildren<Text>().text = "Disabled";
+            currentSelection.GetComponentInChildren<Text>().text = "Disabled";
         }
-        else if (GameObject.Find("DunkBonus").GetComponentInChildren<Text>().text == "Disabled")
+        else if (currentSelection.GetComponentInChildren<Text>().text == "Disabled")
         {
             data.dunkBonus = true;
-            GameObject.Find("DunkBonus").GetComponentInChildren<Text>().text = "Enabled";
+            currentSelection.GetComponentInChildren<Text>().text = "Enabled";
         }
 
         PlayClickSound();
@@ -1057,7 +1228,7 @@ public class MainMenuManager : MonoBehaviour
             panels[i].DisableMenu();
         }
         panels[(int)Menu.CustomizeCourt].EnableMenu();
-        PlayClickSound();
+        audioManager.Play("ButtonSelect");
     }
 
     public void BackOutOfCustomizeCourt()

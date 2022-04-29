@@ -51,7 +51,7 @@ public class GameData : MonoBehaviour
 
     public BulletSpawnage bulletSpawnage = BulletSpawnage.RegularOnly;
 
-    public PowerUpSpawnage powerUpSpawnage = PowerUpSpawnage.Low;
+    public PowerUpSpawnage powerUpSpawnage = PowerUpSpawnage.Medium;
 
     public int numOfBulletLevelUps = 3;
 

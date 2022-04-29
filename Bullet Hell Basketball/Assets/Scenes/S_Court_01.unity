@@ -4546,6 +4546,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1876949947}
     - target: {fileID: 383610472582880780, guid: 8e089f97609d8dc47bb7c72591aad447, type: 3}
+      propertyPath: defaultSelection
+      value: 
+      objectReference: {fileID: 1876949947}
+    - target: {fileID: 383610472582880780, guid: 8e089f97609d8dc47bb7c72591aad447, type: 3}
       propertyPath: indicatorShevron
       value: 
       objectReference: {fileID: 1667042359}
@@ -16779,6 +16783,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 25595213360011388, guid: 0183ef35e7a660e459c7618a15a4600f, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 844554098}
+    - target: {fileID: 25595213360011388, guid: 0183ef35e7a660e459c7618a15a4600f, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: BackToMenu
+      objectReference: {fileID: 0}
     - target: {fileID: 847701840572923181, guid: 0183ef35e7a660e459c7618a15a4600f, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -16791,6 +16803,18 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 883140405825295002, guid: 0183ef35e7a660e459c7618a15a4600f, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 844554098}
+    - target: {fileID: 883140405825295002, guid: 0183ef35e7a660e459c7618a15a4600f, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: RestartGame
+      objectReference: {fileID: 0}
+    - target: {fileID: 1489852003098543098, guid: 0183ef35e7a660e459c7618a15a4600f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2910432408831823411, guid: 0183ef35e7a660e459c7618a15a4600f, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -16799,6 +16823,14 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 844554098}
+    - target: {fileID: 5580964764746964125, guid: 0183ef35e7a660e459c7618a15a4600f, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 844554098}
+    - target: {fileID: 5580964764746964125, guid: 0183ef35e7a660e459c7618a15a4600f, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: BackToMenu
+      objectReference: {fileID: 0}
     - target: {fileID: 8154566199949718751, guid: 0183ef35e7a660e459c7618a15a4600f, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -16895,6 +16927,14 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 844554098}
+    - target: {fileID: 9023413467710044391, guid: 0183ef35e7a660e459c7618a15a4600f, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 844554098}
+    - target: {fileID: 9023413467710044391, guid: 0183ef35e7a660e459c7618a15a4600f, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: RestartGame
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0183ef35e7a660e459c7618a15a4600f, type: 3}
 --- !u!114 &1876949947 stripped
