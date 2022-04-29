@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEngine.Rendering;
 
 public enum Menu
 {
@@ -14,7 +15,9 @@ public enum Menu
     Customize,
     Options,
 
-    SwipeShotSetup
+    SwipeShotSetup,
+
+    CustomizeCourt
 }
 
 public static class Controller
@@ -58,6 +61,15 @@ public class MainMenuManager : MonoBehaviour
     public GameObject teamSetupPlayerDisplayPrefab;
 
     public Text maxPlayersReachedWarning;
+
+    public VolumeProfile menuProfile;
+
+    public VolumeProfile gameProfile;
+
+    public Volume postProcessingVolume;
+
+    public Image backgroundOverlay;
+
 
 
     // Start is called before the first frame update
@@ -369,7 +381,7 @@ public class MainMenuManager : MonoBehaviour
 
     public void AddPlayerToGame(int inputId)
     {
-        if(currentPanelId == Menu.ExhibitionTeamSetup)
+        if (currentPanelId == Menu.ExhibitionTeamSetup)
         {
             int playerNumber = GetSmalledAvailablePlayerNumber();
             if (playerNumber == 8 || data.playerNumbersTeam0.Count + data.playerNumbersTeam1.Count >= 8)
@@ -396,7 +408,7 @@ public class MainMenuManager : MonoBehaviour
             }
         }
 
-        if(currentPanelId == Menu.SwipeShotSetup)
+        if (currentPanelId == Menu.SwipeShotSetup)
         {
             int playerNumber = GetSmalledAvailablePlayerNumber();
             if (playerNumber == 8 || data.playerNumbersTeam0.Count + data.playerNumbersTeam1.Count >= 2)
@@ -439,7 +451,7 @@ public class MainMenuManager : MonoBehaviour
     {
         int teamNumber = GetWhichTeamPlayerIsIn(inputId);
 
-        if(currentPanelId == Menu.ExhibitionTeamSetup)
+        if (currentPanelId == Menu.ExhibitionTeamSetup)
         {
             if (teamNumber == 0)
             {
@@ -459,7 +471,7 @@ public class MainMenuManager : MonoBehaviour
             }
         }
 
-        if(currentPanelId == Menu.SwipeShotSetup)
+        if (currentPanelId == Menu.SwipeShotSetup)
         {
             if (teamNumber == 0)
             {
@@ -518,7 +530,7 @@ public class MainMenuManager : MonoBehaviour
 
     public void AddBotToTeam(int teamNumber)
     {
-        if(currentPanelId == Menu.ExhibitionTeamSetup)
+        if (currentPanelId == Menu.ExhibitionTeamSetup)
         {
             if (data.playerNumbersTeam0.Count + data.playerNumbersTeam1.Count >= 8)
             {
@@ -544,7 +556,7 @@ public class MainMenuManager : MonoBehaviour
             }
         }
 
-        if(currentPanelId == Menu.SwipeShotSetup)
+        if (currentPanelId == Menu.SwipeShotSetup)
         {
             if (data.playerNumbersTeam0.Count + data.playerNumbersTeam1.Count >= 2)
             {
@@ -576,7 +588,7 @@ public class MainMenuManager : MonoBehaviour
 
     public void RemoveBotFromTeam(int teamNumber)
     {
-        if(currentPanelId == Menu.ExhibitionTeamSetup)
+        if (currentPanelId == Menu.ExhibitionTeamSetup)
         {
             if (teamNumber == 0)
             {
@@ -613,7 +625,7 @@ public class MainMenuManager : MonoBehaviour
                 }
             }
         }
-        if(currentPanelId == Menu.SwipeShotSetup)
+        if (currentPanelId == Menu.SwipeShotSetup)
         {
             if (teamNumber == 0)
             {
@@ -905,6 +917,69 @@ public class MainMenuManager : MonoBehaviour
         }
 
         PlayClickSound();
+    }
+
+    public void TimeOfDayClick()
+    {
+        if (currentSelection.GetComponentInChildren<Text>().text == "Golden Hour")
+        {
+            data.nightTime = true;
+            currentSelection.GetComponentInChildren<Text>().text = "Midnight";
+        }
+        else if (currentSelection.GetComponentInChildren<Text>().text == "Midnight")
+        {
+            data.nightTime = false;
+            currentSelection.GetComponentInChildren<Text>().text = "Golden Hour";
+        }
+
+        PlayClickSound();
+    }
+
+    public void MiddlePlatformClick()
+    {
+        if (currentSelection.GetComponentInChildren<Text>().text == "Enabled")
+        {
+            data.middlePlatform = false;
+            currentSelection.GetComponentInChildren<Text>().text = "Disabled";
+        }
+        else if (currentSelection.GetComponentInChildren<Text>().text == "Disabled")
+        {
+            data.middlePlatform = true;
+            currentSelection.GetComponentInChildren<Text>().text = "Enabled";
+        }
+
+        PlayClickSound();
+    }
+
+    public void GoToCustomizeCourt()
+    {
+        backgroundOverlay.gameObject.SetActive(false);
+        postProcessingVolume.profile = gameProfile;
+        for (int i = 0; i < panels.Length; i++)
+        {
+            panels[i].DisableMenu();
+        }
+        panels[(int)Menu.CustomizeCourt].EnableMenu();
+        PlayClickSound();
+    }
+
+    public void BackOutOfCustomizeCourt()
+    {
+        backgroundOverlay.gameObject.SetActive(true);
+        postProcessingVolume.profile = menuProfile;
+        for (int i = 0; i < panels.Length; i++)
+        {
+            panels[i].DisableMenu();
+        }
+        if (data.gamemode == Gamemode.Rally)
+        {
+            panels[(int)Menu.SwipeShotSetup].EnableMenu();
+        }
+        else
+        {
+            panels[(int)Menu.ExhibitionTeamSetup].EnableMenu();
+        }
+        audioManager.Play("ButtonBack");
     }
 
     private void PlayClickSound()

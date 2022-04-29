@@ -61,7 +61,11 @@ public class GameData : MonoBehaviour
 
     public bool cameraShake = true;
 
-    public bool isSwipeShotRally = false;
+    public Gamemode gamemode;
+
+    public bool nightTime = false;
+
+    public bool middlePlatform = true;
 
     public bool dunkBonus = true;
 

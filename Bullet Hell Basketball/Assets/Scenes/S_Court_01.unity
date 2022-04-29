@@ -30,7 +30,7 @@ RenderSettings:
   m_HaloStrength: 1
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
-  m_HaloTexture: {fileID: 2800000, guid: 0fdaeb511463a4444b674fd54c18541a, type: 3}
+  m_HaloTexture: {fileID: 0}
   m_SpotCookie: {fileID: 10001, guid: 0000000000000000e000000000000000, type: 0}
   m_DefaultReflectionMode: 0
   m_DefaultReflectionResolution: 16
@@ -15701,7 +15701,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collisionVertexPrefab: {fileID: 2382589878411412825, guid: de94585aa4ffe794c8cc1e98a3d925ff, type: 3}
   collisionSegmentPrefab: {fileID: 71431853401964895, guid: 2d19e55d322709d41b35224430022a18, type: 3}
-  editorUpdateFrame: 1
+  editorUpdateFrame: 0
   vertexColor: {r: 1, g: 0, b: 0, a: 1}
   segmentColor: {r: 1, g: 0, b: 0, a: 1}
   semiSolidPlatformColor: {r: 0, g: 0, b: 1, a: 1}

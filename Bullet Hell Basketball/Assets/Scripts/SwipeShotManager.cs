@@ -41,7 +41,7 @@ public class SwipeShotManager : MonoBehaviour
         data.playerNumbersTeam0 = new List<int>();
         data.playerControlsTeam1 = new List<int>();
         data.playerNumbersTeam1 = new List<int>();
-        data.isSwipeShotRally = true;
+        data.gamemode = Gamemode.Rally;
 
         //uncommented this code to have 2 players on KB spawn in instead of Bots
 

@@ -142,7 +142,6 @@ public class GameManager : MonoBehaviour
     public bool paused;
 
     public Button currentSelection;
-    public Button pauseDefault;
     public Button oneDefault;
     public Button twoDefault;
     public Button defaultSelection;
@@ -237,7 +236,7 @@ public class GameManager : MonoBehaviour
             data.playerNumbersTeam0 = new List<int>();
             data.playerControlsTeam1 = new List<int>();
             data.playerNumbersTeam1 = new List<int>();
-            data.isSwipeShotRally = false;
+            data.gamemode = Gamemode.Exhibition;
 
             //uncommented this code to have 2 players on KB spawn in instead of Bots
 
@@ -258,7 +257,7 @@ public class GameManager : MonoBehaviour
             data.playerNumbersTeam0 = new List<int>();
             data.playerControlsTeam1 = new List<int>();
             data.playerNumbersTeam1 = new List<int>();
-            data.isSwipeShotRally = false;
+            data.gamemode = Gamemode.Tutorial;
 
             //uncommented this code to have 2 players on KB spawn in instead of Bots
 
@@ -1037,12 +1036,11 @@ public class GameManager : MonoBehaviour
     {
         if (hasTippedOff)
         {
-            currentSelection = pauseDefault;
             pausedMenuUI.SetActive(!pausedMenuUI.activeSelf);
             paused = !paused;
 
             HologramButton hb = currentSelection.GetComponent<HologramButton>();
-            if(hb != null)
+            if (hb != null)
                 hb.DeselectVisual();
 
             defaultSelection.Select();
@@ -1089,11 +1087,6 @@ public class GameManager : MonoBehaviour
         {
             playerOneWins.SetActive(!playerOneWins.activeSelf);
             currentSelection = oneDefault;
-        }
-        else
-        {
-            playerTwoWins.SetActive(!playerTwoWins.activeSelf);
-            currentSelection = twoDefault;
             for (int i = 0; i < 2; i++)
             {
                 scoresUITeam0.transform.GetChild(i).GetComponent<Image>().enabled = true;
@@ -1102,6 +1095,8 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            playerTwoWins.SetActive(!playerTwoWins.activeSelf);
+            currentSelection = twoDefault;
             for (int i = 0; i < 2; i++)
             {
                 scoresUITeam0.transform.GetChild(i).GetComponent<Image>().enabled = false;
