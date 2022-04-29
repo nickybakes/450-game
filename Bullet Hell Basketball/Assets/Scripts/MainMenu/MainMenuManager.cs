@@ -70,6 +70,11 @@ public class MainMenuManager : MonoBehaviour
 
     public Image backgroundOverlay;
 
+    public Material daySkybox;
+    public Material nightSkybox;
+
+    public GameObject middlePlatform;
+
 
 
     // Start is called before the first frame update
@@ -760,27 +765,34 @@ public class MainMenuManager : MonoBehaviour
     public void PlayGame()
     {
         Destroy(FindObjectOfType<AudioManager>().gameObject);
-        //if(GameObject.Find("Squeak").GetComponentInChildren<Text>().text == "Semi-Frequent")
-        //{
-        //BhbPlayerController.shoeSqueakRate = 0.5f;
-        //}
-        //if(GameObject.Find("Timer").GetComponentInChildren<Text>().text == "3:00")
-        //{
-        //GameManager.matchTimeMax = 180;
-        //}
-        SceneManager.LoadScene(1);
+
+        if (data.middlePlatform)
+        {
+            SceneManager.LoadScene(1);
+        }
+        else
+        {
+            SceneManager.LoadScene(2);
+        }
     }
 
     public void PlayTutorial()
     {
         Destroy(FindObjectOfType<AudioManager>().gameObject);
-        SceneManager.LoadScene(2);
+        SceneManager.LoadScene(3);
     }
 
     public void PlaySwipeShotRally()
     {
         Destroy(FindObjectOfType<AudioManager>().gameObject);
-        SceneManager.LoadScene(3);
+        if (data.middlePlatform)
+        {
+            SceneManager.LoadScene(4);
+        }
+        else
+        {
+            SceneManager.LoadScene(5);
+        }
     }
 
     public void SqueakyOnClick()
@@ -925,14 +937,34 @@ public class MainMenuManager : MonoBehaviour
         {
             data.nightTime = true;
             currentSelection.GetComponentInChildren<Text>().text = "Midnight";
+            SetTimeVisual(true);
         }
         else if (currentSelection.GetComponentInChildren<Text>().text == "Midnight")
         {
             data.nightTime = false;
             currentSelection.GetComponentInChildren<Text>().text = "Golden Hour";
+            SetTimeVisual(false);
         }
 
         PlayClickSound();
+    }
+
+    public void SetTimeVisual(bool nightTime)
+    {
+        if (nightTime)
+        {
+            RenderSettings.skybox = nightSkybox;
+            RenderSettings.ambientLight = new Color(67.0f / 255.0f, 67.0f / 255.0f, 77.0f / 255.0f);
+            RenderSettings.fogColor = new Color(63.0f / 255.0f, 63.0f / 255.0f, 204.0f / 255.0f);
+            RenderSettings.sun.color = new Color(131 / 255.0f, 142 / 255.0f, 173 / 255.0f);
+        }
+        else
+        {
+            RenderSettings.skybox = daySkybox;
+            RenderSettings.ambientLight = new Color(236.0f / 255.0f, 95.0f / 255.0f, 28.0f / 255.0f);
+            RenderSettings.fogColor = new Color(202.0f / 255.0f, 139.0f / 255.0f, 106.0f / 255.0f);
+            RenderSettings.sun.color = new Color(255 / 255.0f, 203 / 255.0f, 145 / 255.0f);
+        }
     }
 
     public void MiddlePlatformClick()
@@ -940,11 +972,13 @@ public class MainMenuManager : MonoBehaviour
         if (currentSelection.GetComponentInChildren<Text>().text == "Enabled")
         {
             data.middlePlatform = false;
+            middlePlatform.SetActive(false);
             currentSelection.GetComponentInChildren<Text>().text = "Disabled";
         }
         else if (currentSelection.GetComponentInChildren<Text>().text == "Disabled")
         {
             data.middlePlatform = true;
+            middlePlatform.SetActive(true);
             currentSelection.GetComponentInChildren<Text>().text = "Enabled";
         }
 

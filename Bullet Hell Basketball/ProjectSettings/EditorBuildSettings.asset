@@ -9,12 +9,18 @@ EditorBuildSettings:
     path: Assets/Scenes/S_Main_Menu_01.unity
     guid: 92cce8fa81158994a9a529447dfef544
   - enabled: 1
-    path: Assets/Scenes/S_2D_Controller_Test_01.unity
-    guid: 347f19b89487b6d42a70c02bc7b3a305
+    path: Assets/Scenes/S_Court_01.unity
+    guid: 7472e53b5e531e3458758c98d7d54fca
+  - enabled: 1
+    path: Assets/Scenes/S_Court_02.unity
+    guid: f582b1d9e09851b4295eac6170d4b6d0
   - enabled: 1
     path: Assets/Scenes/S_Tutorial_01.unity
     guid: 7f1c2c7a277ab9541b065c0f83db9d05
   - enabled: 1
     path: Assets/Scenes/S_SwipeShotRally_01.unity
     guid: 8a2a12b256b27d2489ab572a1102feb7
+  - enabled: 1
+    path: Assets/Scenes/S_SwipeShotRally_02.unity
+    guid: 7ca87f2619eb0fb44922511449491774
   m_configObjects: {}

@@ -86,6 +86,7 @@ MonoBehaviour:
   horizontalEdge: 35
   pausedMenuUI: {fileID: 0}
   panelUI: {fileID: 0}
+  scoresUI: {fileID: 0}
   playerHeadersPanel: {fileID: 0}
   tipOffUI: {fileID: 0}
   bulletLevel: 0
@@ -100,6 +101,10 @@ MonoBehaviour:
   indicatorText: {fileID: 0}
   gameOver: 0
   paused: 0
+  currentSelection: {fileID: 0}
+  oneDefault: {fileID: 0}
+  twoDefault: {fileID: 0}
+  defaultSelection: {fileID: 0}
   overTime: 0
   team0Score: 0
   team1Score: 0
@@ -111,4 +116,6 @@ MonoBehaviour:
   cameraShake: {fileID: 0}
   cameraShakeEnabled: 0
   powerUpsEnabled: 0
+  daySkybox: {fileID: 2100000, guid: 646464f92b55f8d4590d7d3839e2fa0c, type: 2}
+  nightSkybox: {fileID: 2100000, guid: f524193522038ce40b242e23b1dcdd02, type: 2}
   winConditionMet: 0
