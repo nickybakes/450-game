@@ -1090,7 +1090,6 @@ public class GameManager : MonoBehaviour
         //Light up the winning score.
         if (team0Score > team1Score)
         {
-            playerOneWins.SetActive(!playerOneWins.activeSelf);
             currentSelection = oneDefault;
             for (int i = 0; i < 2; i++)
             {
@@ -1100,7 +1099,6 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            playerTwoWins.SetActive(!playerTwoWins.activeSelf);
             currentSelection = twoDefault;
             for (int i = 0; i < 2; i++)
             {
