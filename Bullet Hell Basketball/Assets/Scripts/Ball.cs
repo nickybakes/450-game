@@ -121,7 +121,7 @@ public class Ball : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (gameManager.paused)
+        if (gameManager.paused || gameManager.gameOver)
             return;
 
         if (transform.parent == null)
@@ -688,9 +688,9 @@ public class Ball : MonoBehaviour
         }
 
         if (gameManager.overTime)
-            gameManager.EndGame();
-        else
-            IsResetting = true;
+            StartCoroutine(gameManager.EndGame());
+
+        IsResetting = true;
     }
 
     /// <summary>

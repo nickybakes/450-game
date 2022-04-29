@@ -187,14 +187,19 @@ public class BulletManager : MonoBehaviour
                     break;
             }
 
+            float difference;
+            
             if (ownerNumber == 0)
             {
-                timer = Mathf.Max(maxTime - Mathf.Max((gameManager.team1Score - gameManager.team0Score) / 13, 0), 0.25f);
+                difference = Mathf.Min((gameManager.team1Score - gameManager.team0Score)/11.3f, 2.55f);
+                timer = Mathf.Max(maxTime - difference, 0);
             }
             
             else
             {
-                timer = Mathf.Max(maxTime - Mathf.Max((gameManager.team0Score - gameManager.team1Score) / 13, 0), 0.25f);
+                difference = Mathf.Min((gameManager.team0Score - gameManager.team1Score)/11.3f, 2.55f);
+                timer = Mathf.Max(maxTime - difference, 0);
+                //Debug.Log(difference);
             }
 
 
@@ -371,14 +376,15 @@ public class BulletManager : MonoBehaviour
         }
 
         //Also mess with the speed of the big bullets
+        //Scales spawn rate based on score discrepincy
         if (ownerNumber == 0)
         {
-            bulletScript.timer = 4 + Mathf.Max((gameManager.team1Score - gameManager.team0Score) / 13, 0);
+            //bulletScript.timer = 100 + Mathf.Max((gameManager.team1Score - gameManager.team0Score) / 13, 0);
             bulletScript.speed = 10 + Mathf.Max((gameManager.team1Score - gameManager.team0Score) / 30, 0) + gameManager.bulletLevel;
         }
         else
         {
-            bulletScript.timer = 4 + Mathf.Max((gameManager.team0Score - gameManager.team1Score) / 13, 0);
+            //bulletScript.timer = 100 + Mathf.Max((gameManager.team0Score - gameManager.team1Score) / 13, 0);
             bulletScript.speed = 10 + Mathf.Max((gameManager.team0Score - gameManager.team1Score) / 30, 0) + gameManager.bulletLevel;
         }
 

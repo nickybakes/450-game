@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
+using System.Collections;
 
 public enum Gamemode
 {
@@ -108,6 +109,9 @@ public class GameManager : MonoBehaviour
 
     public GameObject pausedMenuUI;
     public GameObject panelUI;
+    public GameObject scoresUI;
+    private GameObject scoresUITeam0;
+    private GameObject scoresUITeam1;
     public GameObject playerHeadersPanel;
     public GameObject tipOffUI;
     private Text tipOffUIText;
@@ -141,6 +145,7 @@ public class GameManager : MonoBehaviour
     public Button pauseDefault;
     public Button oneDefault;
     public Button twoDefault;
+    public Button defaultSelection;
     private bool[] canMoveSelection = new bool[9];
     private string[] controllers = { "1", "2", "3", "4", "5", "6", "7", "8", "K" };
 
@@ -192,6 +197,8 @@ public class GameManager : MonoBehaviour
         bulletLevelUI = panelUI.transform.GetChild(6).GetComponent<Text>();
         bulletIncreaseUI = panelUI.transform.GetChild(5).GetComponent<Text>();
         dunkBonusUI = panelUI.transform.GetChild(7).GetComponent<Text>();
+        scoresUITeam0 = scoresUI.transform.GetChild(0).gameObject;
+        scoresUITeam1 = scoresUI.transform.GetChild(1).gameObject;
 
         audioManager = FindObjectOfType<AudioManager>();
         music = audioManager.Find("Music");
@@ -202,7 +209,6 @@ public class GameManager : MonoBehaviour
         audioManager.Play("MusicPause");
         pauseMusic.source.volume = 0.0f;
 
-        panelUI.SetActive(true);
         //player 1.
         panelUI.transform.GetChild(0).GetComponent<Text>().text = "0";
         //player 2.
@@ -385,11 +391,13 @@ public class GameManager : MonoBehaviour
         team1Score = 0;
         panelUI.transform.GetChild(1).GetComponent<Text>().text = team1Score.ToString();
         panelUI.transform.GetChild(0).GetComponent<Text>().text = team0Score.ToString();
+        panelUI.transform.GetChild(2).GetComponent<Text>().text = TimeSpan.FromSeconds(Mathf.Max(matchTimeCurrent, 0)).ToString("m\\:ss");
 
         //sets bullet level and dunk value back to default.
         bulletLevelUI.text = "Bullets Level: " + bulletLevel;
         dunkBonusUI.text = "Dunk Bonus: +" + dunkBonusValue;
 
+        panelUI.SetActive(true);
         playerOneWins.SetActive(false);
         playerTwoWins.SetActive(false);
         pausedMenuUI.SetActive(false);
@@ -703,7 +711,6 @@ public class GameManager : MonoBehaviour
         }
         else if (gamemode == Gamemode.Rally)
         {
-
             if (Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown(KeyCode.Escape))
             {
                 TogglePauseMenu();
@@ -716,6 +723,11 @@ public class GameManager : MonoBehaviour
                     TogglePauseMenu();
                     break;
                 }
+            }
+
+            if (paused && hasTippedOff)
+            {
+                PauseMenuUpdate();
             }
 
             if (paused)
@@ -788,7 +800,7 @@ public class GameManager : MonoBehaviour
                     }
                     else
                     {
-                        EndGame();
+                        StartCoroutine(EndGame());
                     }
                 }
             }
@@ -1014,6 +1026,13 @@ public class GameManager : MonoBehaviour
             pausedMenuUI.SetActive(!pausedMenuUI.activeSelf);
             paused = !paused;
 
+            HologramButton hb = currentSelection.GetComponent<HologramButton>();
+            if(hb != null)
+                hb.DeselectVisual();
+
+            defaultSelection.Select();
+            defaultSelection.GetComponent<HologramButton>().SelectVisual();
+
             //toggles audio.
             if (paused)
             {
@@ -1028,16 +1047,29 @@ public class GameManager : MonoBehaviour
                 pauseMusic.source.volume = 0;
                 music.source.volume = 0.1f;
             }
+
+            //if rally, makes sure ball spawns in front of a player.
+            if (gamemode == Gamemode.Rally)
+                FindObjectOfType<SwipeShotManager>().Reset();
         }
     }
 
-    public void EndGame()
+    public IEnumerator EndGame()
     {
-        //player 1.
-        panelUI.transform.GetChild(0).GetComponent<Text>().text = team0Score.ToString();
-        //player 2.
-        panelUI.transform.GetChild(1).GetComponent<Text>().text = team1Score.ToString();
+        //Explodes ball on end, sends ball offscreen, sets to is resetting, sets to not be a bullet.
+        SpawnExplosion(2, ball.transform.position);
+        ballControlScript.IsResetting = true;
+        ball.transform.position = new Vector3(0, -1000, 0);
+        ballControlScript.IsBullet = false;
 
+        //Removes UI, Adds scoresUI.
+        panelUI.SetActive(false);
+        scoresUI.SetActive(true);
+
+        scoresUITeam0.transform.GetChild(2).GetComponent<Text>().text = team0Score.ToString();
+        scoresUITeam1.transform.GetChild(2).GetComponent<Text>().text = team1Score.ToString();
+
+        //Light up the winning score.
         if (team0Score > team1Score)
         {
             playerOneWins.SetActive(!playerOneWins.activeSelf);
@@ -1047,6 +1079,19 @@ public class GameManager : MonoBehaviour
         {
             playerTwoWins.SetActive(!playerTwoWins.activeSelf);
             currentSelection = twoDefault;
+            for (int i = 0; i < 2; i++)
+            {
+                scoresUITeam0.transform.GetChild(i).GetComponent<Image>().enabled = true;
+                scoresUITeam1.transform.GetChild(i).GetComponent<Image>().enabled = false;
+            }
+        }
+        else
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                scoresUITeam0.transform.GetChild(i).GetComponent<Image>().enabled = false;
+                scoresUITeam1.transform.GetChild(i).GetComponent<Image>().enabled = true;
+            }
         }
 
         audioManager.Play("Buzzer");
@@ -1056,11 +1101,8 @@ public class GameManager : MonoBehaviour
         audioManager.Play("Music");
         audioManager.Play("MusicPause");
 
-        paused = true;
         gameOver = true;
         overTime = false;
-        team0Score = 0;
-        team1Score = 0;
         bulletLevel = 1;
 
         bulletIncreaseUI.gameObject.SetActive(false);
@@ -1077,6 +1119,20 @@ public class GameManager : MonoBehaviour
         {
             sb.ForceDestroy();
         }
+
+        yield return new WaitForSecondsRealtime(2);
+
+        if (team0Score > team1Score)
+            playerOneWins.SetActive(!playerOneWins.activeSelf);
+        else
+            playerTwoWins.SetActive(!playerTwoWins.activeSelf);
+
+        audioManager.Play("2points"); //change to applause?
+        team0Score = 0;
+        team1Score = 0;
+        paused = true;
+
+        scoresUI.SetActive(false);
     }
 
     public void ResetPlayersAndBall()
@@ -1222,9 +1278,10 @@ public class GameManager : MonoBehaviour
 
     public void RestartGame()
     {
+        TogglePauseMenu();
+        //This EndGame call should NOT use the coroutine.
         EndGame();
         BeginMatch();
-        TogglePauseMenu();
     }
 
     public void BackToMenu()
