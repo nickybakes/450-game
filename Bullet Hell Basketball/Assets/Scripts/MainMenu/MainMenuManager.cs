@@ -1081,7 +1081,7 @@ public class MainMenuManager : MonoBehaviour
 
     private void PlayClickSound()
     {
-        audioManager.Play("Hit", 0.1f, 2.5f, 3.0f);
+        audioManager.Play("Hit", 0.2f, 2.5f, 3.0f);
     }
 
     //takes you back to the first menu
