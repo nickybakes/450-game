@@ -1267,6 +1267,9 @@ public class MainMenuManager : MonoBehaviour
     //closes application window or ends Unity editor playing
     public void QuitGame()
     {
+        if (Application.platform == RuntimePlatform.WebGLPlayer)
+            return;
+
 #if UNITY_EDITOR
         // Application.Quit() does not work in the editor so
         // UnityEditor.EditorApplication.isPlaying need to be set to false to end the game

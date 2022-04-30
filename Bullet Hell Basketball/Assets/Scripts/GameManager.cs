@@ -172,6 +172,10 @@ public class GameManager : MonoBehaviour
     public Material daySkybox;
     public Material nightSkybox;
 
+    private float menuButtonDelayTimeMax = .4f;
+
+    private float menuButtonDelayTime = 0;
+
 
     [HideInInspector] public bool winConditionMet = false;
 
@@ -397,6 +401,7 @@ public class GameManager : MonoBehaviour
 
     private void BeginMatch()
     {
+        menuButtonDelayTime = menuButtonDelayTimeMax;
         matchTimeCurrent = matchTimeMax;
 
         team0Score = 0;
@@ -849,6 +854,11 @@ public class GameManager : MonoBehaviour
 
     private void PauseMenuUpdate()
     {
+        if(menuButtonDelayTime < menuButtonDelayTimeMax){
+            menuButtonDelayTime += Time.deltaTime;
+            return;
+        }
+
         if (EventSystem.current.currentSelectedGameObject != null)
         {
             currentSelection = EventSystem.current.currentSelectedGameObject.GetComponent<Button>();
@@ -1041,6 +1051,7 @@ public class GameManager : MonoBehaviour
     {
         if (hasTippedOff)
         {
+            menuButtonDelayTime = 0;
             pausedMenuUI.SetActive(!pausedMenuUI.activeSelf);
             paused = !paused;
 
@@ -1093,7 +1104,6 @@ public class GameManager : MonoBehaviour
         //Light up the winning score.
         if (team0Score > team1Score)
         {
-            currentSelection = oneDefault;
             for (int i = 0; i < 2; i++)
             {
                 scoresUITeam0.transform.GetChild(i).GetComponent<Image>().enabled = true;
@@ -1102,7 +1112,6 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            currentSelection = twoDefault;
             for (int i = 0; i < 2; i++)
             {
                 scoresUITeam0.transform.GetChild(i).GetComponent<Image>().enabled = false;
@@ -1138,15 +1147,22 @@ public class GameManager : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(3);
 
-        if (team0Score > team1Score)
-            playerOneWins.SetActive(!playerOneWins.activeSelf);
-        else
-            playerTwoWins.SetActive(!playerTwoWins.activeSelf);
+        if (team0Score > team1Score){
+            playerOneWins.SetActive(true);
+            oneDefault.Select();
+            oneDefault.GetComponent<HologramButton>().SelectVisual();
+        }
+        else{
+            playerTwoWins.SetActive(true);
+            twoDefault.Select();
+            twoDefault.GetComponent<HologramButton>().SelectVisual();
+        }
 
         audioManager.Play("2points"); //change to applause?
         team0Score = 0;
         team1Score = 0;
         paused = true;
+        menuButtonDelayTime = 0;
 
         scoresUI.SetActive(false);
     }
