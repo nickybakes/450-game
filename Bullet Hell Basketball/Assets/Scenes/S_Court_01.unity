@@ -4573,6 +4573,10 @@ PrefabInstance:
       propertyPath: powerUpTimeSpawnMin
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 383610472582880780, guid: 8e089f97609d8dc47bb7c72591aad447, type: 3}
+      propertyPath: loadingScreenAnimator
+      value: 
+      objectReference: {fileID: 1876949957}
     - target: {fileID: 383610472582880781, guid: 8e089f97609d8dc47bb7c72591aad447, type: 3}
       propertyPath: m_RootOrder
       value: 5
@@ -12398,7 +12402,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1366659345}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -25.5, y: 9.4, z: 0}
+  m_LocalPosition: {x: -25.5, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -15209,7 +15213,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collisionVertexPrefab: {fileID: 2382589878411412825, guid: de94585aa4ffe794c8cc1e98a3d925ff, type: 3}
   collisionSegmentPrefab: {fileID: 71431853401964895, guid: 2d19e55d322709d41b35224430022a18, type: 3}
-  editorUpdateFrame: 1
+  editorUpdateFrame: 0
   vertexColor: {r: 1, g: 0, b: 0, a: 1}
   segmentColor: {r: 1, g: 0, b: 0, a: 1}
   semiSolidPlatformColor: {r: 0, g: 0, b: 1, a: 1}
@@ -17005,6 +17009,11 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2467740680990723211, guid: 0183ef35e7a660e459c7618a15a4600f, type: 3}
   m_PrefabInstance: {fileID: 1876949946}
   m_PrefabAsset: {fileID: 0}
+--- !u!95 &1876949957 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 1861445003150664096, guid: 0183ef35e7a660e459c7618a15a4600f, type: 3}
+  m_PrefabInstance: {fileID: 1876949946}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1885419209
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18130,7 +18139,7 @@ PrefabInstance:
     - target: {fileID: -7511558181221131132, guid: b02ee26acdb15ef44beb1ce592569c01, type: 3}
       propertyPath: m_Materials.Array.data[3]
       value: 
-      objectReference: {fileID: 2100000, guid: fc3fe1f2b95b9874489147875e349ffa, type: 2}
+      objectReference: {fileID: 2100000, guid: 9beff5a9bdeb83b46a30d085461030c9, type: 2}
     - target: {fileID: 919132149155446097, guid: b02ee26acdb15ef44beb1ce592569c01, type: 3}
       propertyPath: m_Name
       value: SM_Building_09

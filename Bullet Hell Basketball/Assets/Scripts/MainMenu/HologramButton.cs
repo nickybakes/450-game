@@ -26,6 +26,8 @@ public class HologramButton : MonoBehaviour, ISelectHandler, IDeselectHandler// 
 
     public Slider sliderComponent;
 
+    private PanelManager parentPanel;
+
 
     void Awake()
     {
@@ -74,6 +76,21 @@ public class HologramButton : MonoBehaviour, ISelectHandler, IDeselectHandler// 
             textShadow.enabled = false;
         }
 
+        GameObject currentPanelSearchObject = gameObject;
+        for (int i = 0; i < 50; i++)
+        {
+            parentPanel = currentPanelSearchObject.GetComponentInParent<PanelManager>();
+            if (parentPanel == null)
+            {
+                if (currentPanelSearchObject.transform.parent == null)
+                    break;
+                currentPanelSearchObject = currentPanelSearchObject.transform.parent.gameObject;
+            }
+            else
+            {
+                break;
+            }
+        }
     }
 
     public void OnSelect(BaseEventData eventData)
@@ -117,15 +134,25 @@ public class HologramButton : MonoBehaviour, ISelectHandler, IDeselectHandler// 
 
     public void OnMouseClick()
     {
+        if (parentPanel != null && parentPanel.IsInTransition())
+        {
+            return;
+        }
+
         if (isSlider)
             return;
 
-        if(menuManager != null)
+        if (menuManager != null)
             menuManager.masterController = "M";
     }
 
     public void OnMouseEnter()
     {
+        if (parentPanel != null && parentPanel.IsInTransition())
+        {
+            return;
+        }
+
         if (isSlider)
         {
             SelectVisual();

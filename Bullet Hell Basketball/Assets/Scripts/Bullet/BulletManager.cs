@@ -145,6 +145,10 @@ public class BulletManager : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!gameManager.hasTippedOff)
+            transform.GetChild(ownerNumber).gameObject.SetActive(false);
+        else
+            transform.GetChild(ownerNumber).gameObject.SetActive(true);
 
         if (gameManager.paused)
             return;
@@ -188,16 +192,16 @@ public class BulletManager : MonoBehaviour
             }
 
             float difference;
-            
+
             if (ownerNumber == 0)
             {
-                difference = Mathf.Min((gameManager.team1Score - gameManager.team0Score)/11.3f, 2.55f);
+                difference = Mathf.Min((gameManager.team1Score - gameManager.team0Score) / 11.3f, 2.55f);
                 timer = Mathf.Max(maxTime - difference, 0);
             }
-            
+
             else
             {
-                difference = Mathf.Min((gameManager.team0Score - gameManager.team1Score)/11.3f, 2.55f);
+                difference = Mathf.Min((gameManager.team0Score - gameManager.team1Score) / 11.3f, 2.55f);
                 timer = Mathf.Max(maxTime - difference, 0);
                 //Debug.Log(difference);
             }
@@ -497,7 +501,7 @@ public class BulletManager : MonoBehaviour
 
         //Add some more randomness later
     }*/
-    
+
     public float getAngle(Vector2 me, Vector2 target)
     {
         return Mathf.Atan2(target.y - me.y, target.x - me.x) * (180 / Mathf.PI);

@@ -8011,7 +8011,7 @@ PrefabInstance:
     - target: {fileID: -7511558181221131132, guid: b02ee26acdb15ef44beb1ce592569c01, type: 3}
       propertyPath: m_Materials.Array.data[3]
       value: 
-      objectReference: {fileID: 2100000, guid: fc3fe1f2b95b9874489147875e349ffa, type: 2}
+      objectReference: {fileID: 2100000, guid: 9beff5a9bdeb83b46a30d085461030c9, type: 2}
     - target: {fileID: 919132149155446097, guid: b02ee26acdb15ef44beb1ce592569c01, type: 3}
       propertyPath: m_Name
       value: SM_Building_09
@@ -9216,6 +9216,11 @@ GameObject:
 --- !u!1 &973631580 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2467740680990723211, guid: 0183ef35e7a660e459c7618a15a4600f, type: 3}
+  m_PrefabInstance: {fileID: 973631570}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &973631581 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 1861445003150664096, guid: 0183ef35e7a660e459c7618a15a4600f, type: 3}
   m_PrefabInstance: {fileID: 973631570}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &981230613
@@ -12761,7 +12766,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1366659345}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -25.5, y: 9.4, z: 0}
+  m_LocalPosition: {x: -25.5, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -15146,6 +15151,10 @@ PrefabInstance:
       propertyPath: playerSpawnLocation
       value: 
       objectReference: {fileID: 1366659346}
+    - target: {fileID: 383610472582880780, guid: 8e089f97609d8dc47bb7c72591aad447, type: 3}
+      propertyPath: loadingScreenAnimator
+      value: 
+      objectReference: {fileID: 973631581}
     - target: {fileID: 383610472582880781, guid: 8e089f97609d8dc47bb7c72591aad447, type: 3}
       propertyPath: m_RootOrder
       value: 3

@@ -176,6 +176,8 @@ public class GameManager : MonoBehaviour
 
     private float menuButtonDelayTime = 0;
 
+    public Animator loadingScreenAnimator;
+
 
     [HideInInspector] public bool winConditionMet = false;
 
@@ -196,6 +198,10 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
+        loadingScreenAnimator.gameObject.SetActive(true);
+        loadingScreenAnimator.SetTrigger(PanelAnimationState.Center_To_Left.ToString());
+        StartCoroutine(HideLoadingScreen());
+
         cameraShake = FindObjectOfType<Camera>().GetComponent<CameraShake>();
         cameraShake.gameManager = this;
 
@@ -373,6 +379,12 @@ public class GameManager : MonoBehaviour
         BeginMatch();
     }
 
+    private IEnumerator HideLoadingScreen()
+    {
+        yield return new WaitForSecondsRealtime(.2f);
+        Destroy(loadingScreenAnimator.gameObject);
+    }
+
     private void SpawnPlayer(GameObject[] playerObjects, BhbPlayerController[] playerScripts, List<int> playerNumbers, List<int> controlNumbers, int index, int team)
     {
         GameObject player = Instantiate(playerPrefab);
@@ -507,7 +519,7 @@ public class GameManager : MonoBehaviour
         else
         {
             //turns off "tip off" text after short time
-            if ((int)matchTimeCurrent % 30 == 27)
+            if ((int)matchTimeCurrent % 30 == 28)
                 tipOffUI.SetActive(false);
         }
     }
@@ -854,7 +866,8 @@ public class GameManager : MonoBehaviour
 
     private void PauseMenuUpdate()
     {
-        if(menuButtonDelayTime < menuButtonDelayTimeMax){
+        if (menuButtonDelayTime < menuButtonDelayTimeMax)
+        {
             menuButtonDelayTime += Time.deltaTime;
             return;
         }
@@ -1147,12 +1160,14 @@ public class GameManager : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(3);
 
-        if (team0Score > team1Score){
+        if (team0Score > team1Score)
+        {
             playerOneWins.SetActive(true);
             oneDefault.Select();
             oneDefault.GetComponent<HologramButton>().SelectVisual();
         }
-        else{
+        else
+        {
             playerTwoWins.SetActive(true);
             twoDefault.Select();
             twoDefault.GetComponent<HologramButton>().SelectVisual();
@@ -1189,15 +1204,20 @@ public class GameManager : MonoBehaviour
         {
             playerScriptsTeam0[i].velocity = Vector2.zero;
             playerScriptsTeam0[i].autoCatchCooldownTimer = playerScriptsTeam0[i].autoCatchCooldownTimerMax;
+            playerScriptsTeam0[i].stunTimeCurrent = playerScriptsTeam0[i].stunTimeMax;
+            playerScriptsTeam0[i].bottomCollision = null;
+            playerScriptsTeam0[i].groundCollision = null;
             float posX = startingPosition0X + i * playerSpawnSeparationAmount;
             playersTeam0[i].transform.position = new Vector2(posX, team0SpawnPosition.y);
-
         }
 
         for (int i = 0; i < playerScriptsTeam1.Length; i++)
         {
             playerScriptsTeam1[i].velocity = Vector2.zero;
             playerScriptsTeam1[i].autoCatchCooldownTimer = playerScriptsTeam1[i].autoCatchCooldownTimerMax;
+            playerScriptsTeam1[i].stunTimeCurrent = playerScriptsTeam1[i].stunTimeMax;
+            playerScriptsTeam1[i].bottomCollision = null;
+            playerScriptsTeam1[i].groundCollision = null;
             float posX = startingPosition1X - i * playerSpawnSeparationAmount;
             playersTeam1[i].transform.position = new Vector2(posX, team1SpawnPosition.y);
         }

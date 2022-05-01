@@ -17,7 +17,8 @@ public enum Menu
 
     SwipeShotSetup,
 
-    CustomizeCourt
+    CustomizeCourt,
+    Loading
 }
 
 public static class Controller
@@ -90,6 +91,7 @@ public class MainMenuManager : MonoBehaviour
         for (int i = 0; i < panels.Length; i++)
         {
             panels[i].gameObject.SetActive(false);
+            panels[i].FindAnimator();
             panels[i].panelId = (Menu)i;
         }
 
@@ -115,7 +117,7 @@ public class MainMenuManager : MonoBehaviour
             }
             if (data.gamemode == Gamemode.Exhibition)
             {
-                panels[(int)Menu.ExhibitionTeamSetup].EnableMenu();
+                SwitchToPanelInstant(Menu.ExhibitionTeamSetup);
                 for (int i = 0; i < data.playerNumbersTeam0.Count; i++)
                 {
                     ReaddPlayerToGameAfterReturningFromGame(data.playerControlsTeam0[i], data.playerNumbersTeam0[i], 0);
@@ -127,11 +129,11 @@ public class MainMenuManager : MonoBehaviour
             }
             else if (data.gamemode == Gamemode.Tutorial)
             {
-                panels[(int)Menu.GamemodeSelect].EnableMenu();
+                SwitchToPanelInstant(Menu.GamemodeSelect);
             }
             else if (data.gamemode == Gamemode.Rally)
             {
-                panels[(int)Menu.SwipeShotSetup].EnableMenu();
+                SwitchToPanelInstant(Menu.SwipeShotSetup);
                 for (int i = 0; i < data.playerNumbersTeam0.Count; i++)
                 {
                     ReaddPlayerToGameAfterReturningFromGame(data.playerControlsTeam0[i], data.playerNumbersTeam0[i], 0);
@@ -251,6 +253,12 @@ public class MainMenuManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (currentPanelId == Menu.Loading)
+            return;
+
+        if (panels[(int)currentPanelId].IsInTransition())
+            return;
+
         if (currentPanelId == Menu.ExhibitionTeamSetup)
         {
             maxPlayersReachedWarning.gameObject.SetActive(data.playerNumbersTeam0.Count + data.playerNumbersTeam1.Count == 8);
@@ -366,6 +374,12 @@ public class MainMenuManager : MonoBehaviour
                 if (IsInputIdInGame(i + 2))
                 {
                     RemovePlayerFromGame(i + 2);
+                    continue;
+                }
+                else
+                {
+                    PressBack();
+                    break;
                 }
             }
             if (currentPanelId == Menu.ExhibitionTeamSetup && Input.GetButtonDown("J" + controllers[i] + "X") && i != 8)
@@ -373,6 +387,7 @@ public class MainMenuManager : MonoBehaviour
                 if (IsInputIdInGame(i + 2))
                 {
                     SwapTeam(i + 2);
+                    continue;
                 }
             }
 
@@ -395,7 +410,19 @@ public class MainMenuManager : MonoBehaviour
                 if (IsInputIdInGame(i + 2) && data.playerControlsTeam0[0] != i + 2)
                 {
                     RemovePlayerFromGame(i + 2);
+                    continue;
                 }
+                else
+                {
+                    PressBack();
+                    break;
+                }
+            }
+
+            if ((i != 8 && Input.GetButtonDown("J" + controllers[i] + "B") && currentPanelId != Menu.ExhibitionTeamSetup && currentPanelId != Menu.SwipeShotSetup) || Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Backspace) || Input.GetMouseButtonDown(1))
+            {
+                PressBack();
+                break;
             }
 
             //get the current direction the player is pressing in
@@ -488,6 +515,43 @@ public class MainMenuManager : MonoBehaviour
         }
     }
 
+    public void PressBack()
+    {
+        if (panels[(int)currentPanelId].backButton != null)
+        {
+            panels[(int)currentPanelId].backButton.OnMouseEnter();
+            HologramButton hologramButton = panels[(int)currentPanelId].backButton.gameObject.GetComponent<HologramButton>();
+            Menu previousPanelId = currentPanelId;
+            ExecuteEvents.Execute(panels[(int)currentPanelId].backButton.gameObject,
+                new BaseEventData(EventSystem.current), ExecuteEvents.submitHandler);
+            if (hologramButton != null && previousPanelId != currentPanelId)
+            {
+                hologramButton.DeselectVisual();
+            }
+        }
+    }
+
+    public void SwitchToPanelForward(PanelManager menu)
+    {
+        panels[(int)currentPanelId].AnimateDisableMenu(true);
+        panels[(int)menu.panelId].AnimateEnableMenu(true);
+        audioManager.Play("ButtonSelect");
+    }
+
+
+    public void SwitchToPanelBackward(PanelManager menu)
+    {
+        panels[(int)currentPanelId].AnimateDisableMenu(false);
+        panels[(int)menu.panelId].AnimateEnableMenu(false);
+        audioManager.Play("ButtonBack");
+    }
+
+    public void SwitchToPanelInstant(Menu menu)
+    {
+        panels[(int)menu].AnimateEnableMenu(true);
+        // panels[(int)menu].GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+    }
+
     //the method to call when the top left button on the titlePanel is submitted
     public void SwitchToPanel(int i)
     {
@@ -510,8 +574,8 @@ public class MainMenuManager : MonoBehaviour
         {
             if (i != panels.Length - 1 && panels[i].gameObject.activeSelf)
             {
-                panels[i].DisableMenu();
-                panels[i + 1].EnableMenu();
+                panels[i].AnimateDisableMenu(true);
+                panels[i + 1].AnimateEnableMenu(true);
                 audioManager.Play("ButtonSelect");
                 break;
             }
@@ -549,7 +613,7 @@ public class MainMenuManager : MonoBehaviour
 
     public void OpenSwipeShotSetup()
     {
-        SwitchToPanel(6);
+        SwitchToPanelForward(panels[(int)Menu.SwipeShotSetup]);
         data.gamemode = Gamemode.Rally;
         data.playerNumbersTeam0 = new List<int>();
         data.playerNumbersTeam1 = new List<int>();
@@ -572,7 +636,14 @@ public class MainMenuManager : MonoBehaviour
         }
         else
         {
-            AddPlayerToGame(int.Parse(masterController) + 1);
+            try
+            {
+                AddPlayerToGame(int.Parse(masterController) + 1);
+            }
+            catch(System.Exception){
+                Debug.Log(masterController);
+                AddPlayerToGame(0);
+            }
         }
 
         AddBotTeam1();
@@ -986,11 +1057,50 @@ public class MainMenuManager : MonoBehaviour
         {
             if (i != 0 && panels[i].gameObject.activeSelf)
             {
-                panels[i].DisableMenu();
-                panels[i - 1].EnableMenu();
+                panels[i].AnimateDisableMenu(false);
+                panels[i - 1].AnimateEnableMenu(false);
                 audioManager.Play("ButtonBack");
                 break;
             }
+        }
+    }
+
+    public void LoadGameScene()
+    {
+        Destroy(FindObjectOfType<AudioManager>().gameObject);
+        if (data.gamemode == Gamemode.Exhibition)
+        {
+            if (data.middlePlatform)
+            {
+                CheckIfLoadingDone(SceneManager.LoadSceneAsync(1, LoadSceneMode.Single));
+            }
+            else
+            {
+                CheckIfLoadingDone(SceneManager.LoadSceneAsync(2, LoadSceneMode.Single));
+            }
+        }
+        else if (data.gamemode == Gamemode.Tutorial)
+        {
+            CheckIfLoadingDone(SceneManager.LoadSceneAsync(3, LoadSceneMode.Single));
+        }
+        else if (data.gamemode == Gamemode.Rally)
+        {
+            if (data.middlePlatform)
+            {
+                CheckIfLoadingDone(SceneManager.LoadSceneAsync(4, LoadSceneMode.Single));
+            }
+            else
+            {
+                CheckIfLoadingDone(SceneManager.LoadSceneAsync(5, LoadSceneMode.Single));
+            }
+        }
+    }
+
+    public IEnumerator CheckIfLoadingDone(AsyncOperation operation)
+    {
+        if (!operation.isDone)
+        {
+            yield return null;
         }
     }
 
@@ -1025,8 +1135,7 @@ public class MainMenuManager : MonoBehaviour
     public void PlayTutorial()
     {
         data.gamemode = Gamemode.Tutorial;
-        Destroy(FindObjectOfType<AudioManager>().gameObject);
-        SceneManager.LoadScene(3);
+        SwitchToPanelForward(panels[(int)Menu.Loading]);
     }
 
     public void SqueakyOnClick()
@@ -1223,11 +1332,7 @@ public class MainMenuManager : MonoBehaviour
     {
         backgroundOverlay.gameObject.SetActive(false);
         postProcessingVolume.profile = gameProfile;
-        for (int i = 0; i < panels.Length; i++)
-        {
-            panels[i].DisableMenu();
-        }
-        panels[(int)Menu.CustomizeCourt].EnableMenu();
+        SwitchToPanelForward(panels[(int)Menu.CustomizeCourt]);
         audioManager.Play("ButtonSelect");
     }
 
@@ -1235,17 +1340,13 @@ public class MainMenuManager : MonoBehaviour
     {
         backgroundOverlay.gameObject.SetActive(true);
         postProcessingVolume.profile = menuProfile;
-        for (int i = 0; i < panels.Length; i++)
-        {
-            panels[i].DisableMenu();
-        }
         if (data.gamemode == Gamemode.Rally)
         {
-            panels[(int)Menu.SwipeShotSetup].EnableMenu();
+            SwitchToPanelBackward(panels[(int)Menu.SwipeShotSetup]);
         }
         else
         {
-            panels[(int)Menu.ExhibitionTeamSetup].EnableMenu();
+            SwitchToPanelBackward(panels[(int)Menu.ExhibitionTeamSetup]);
         }
         audioManager.Play("ButtonBack");
     }
