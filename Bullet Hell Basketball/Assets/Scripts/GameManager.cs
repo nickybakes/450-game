@@ -172,7 +172,7 @@ public class GameManager : MonoBehaviour
     public Material daySkybox;
     public Material nightSkybox;
 
-    private float menuButtonDelayTimeMax = .4f;
+    private float menuButtonDelayTimeMax = .25f;
 
     private float menuButtonDelayTime = 0;
 
@@ -1162,24 +1162,44 @@ public class GameManager : MonoBehaviour
 
         if (team0Score > team1Score)
         {
+            playerOneWins.transform.GetChild(playerOneWins.transform.childCount - 1).gameObject.SetActive(false);
             playerOneWins.SetActive(true);
+        }
+        else
+        {
+            playerTwoWins.transform.GetChild(playerTwoWins.transform.childCount - 1).gameObject.SetActive(false);
+            playerTwoWins.SetActive(true);
+        }
+
+        audioManager.Play("2points"); //change to applause?
+
+        paused = true;
+        menuButtonDelayTime = 0;
+        scoresUI.SetActive(false);
+
+        StartCoroutine(EnableEndGameButtons(team0Score > team1Score));
+
+        team0Score = 0;
+        team1Score = 0;
+    }
+
+    public IEnumerator EnableEndGameButtons(bool team0Wins)
+    {
+        menuButtonDelayTime = - 1.3f;
+        yield return new WaitForSecondsRealtime(1.3f);
+
+        if (team0Wins)
+        {
+            playerOneWins.transform.GetChild(playerOneWins.transform.childCount - 1).gameObject.SetActive(true);
             oneDefault.Select();
             oneDefault.GetComponent<HologramButton>().SelectVisual();
         }
         else
         {
-            playerTwoWins.SetActive(true);
+            playerTwoWins.transform.GetChild(playerTwoWins.transform.childCount - 1).gameObject.SetActive(true);
             twoDefault.Select();
             twoDefault.GetComponent<HologramButton>().SelectVisual();
         }
-
-        audioManager.Play("2points"); //change to applause?
-        team0Score = 0;
-        team1Score = 0;
-        paused = true;
-        menuButtonDelayTime = 0;
-
-        scoresUI.SetActive(false);
     }
 
     public void ResetPlayersAndBall()
