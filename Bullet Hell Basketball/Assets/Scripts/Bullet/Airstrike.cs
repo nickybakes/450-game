@@ -18,7 +18,7 @@ public class Airstrike : MonoBehaviour
 
     public GameManager gameManager;
 
-    public int bulletSpeed = 10;
+    public float bulletSpeed = 10;
     public float firingInterval = .3f;
 
     public Material player1Mat;
@@ -65,14 +65,20 @@ public class Airstrike : MonoBehaviour
             }
             else if (numberOfBulletsFired < numberOfTargets)
             {
-                float heightPercentage = (float)(numberOfTargets - numberOfBulletsFired)/(float)numberOfTargets;
+                float heightPercentage = (float)(numberOfTargets - numberOfBulletsFired) / (float)numberOfTargets;
                 if (teamNumber == 0)
                 {
-                    Bullet b = BulletSetup(crosshairs[numberOfBulletsFired].transform.position + (new Vector3(-15, 45) *  heightPercentage));
+                    if (gameManager.wideCourt)
+                        BulletSetup(crosshairs[numberOfBulletsFired].transform.position + (new Vector3(-15, 45) * 1.34f * heightPercentage));
+                    else
+                        BulletSetup(crosshairs[numberOfBulletsFired].transform.position + (new Vector3(-15, 45) * heightPercentage));
                 }
                 else
                 {
-                    Bullet b = BulletSetup(crosshairs[numberOfBulletsFired].transform.position + (new Vector3(15, 45) * heightPercentage));
+                    if (gameManager.wideCourt)
+                        BulletSetup(crosshairs[numberOfBulletsFired].transform.position + (new Vector3(15, 45) * 1.34f * heightPercentage));
+                    else
+                        BulletSetup(crosshairs[numberOfBulletsFired].transform.position + (new Vector3(15, 45) * heightPercentage));
                 }
                 numberOfBulletsFired++;
             }
@@ -99,8 +105,15 @@ public class Airstrike : MonoBehaviour
         bulletScript.ownerNumber = teamNumber;
         bulletScript.gameManager = gameManager;
 
-        bulletScript.timer = Vector2.Distance(crosshairs[numberOfBulletsFired].transform.position, spawnPosition) / bulletSpeed;
-        bulletScript.speed = bulletSpeed;
+        if (gameManager.wideCourt)
+            bulletScript.timer = Vector2.Distance(crosshairs[numberOfBulletsFired].transform.position, spawnPosition) / (bulletSpeed * 1.34f);
+        else
+            bulletScript.timer = Vector2.Distance(crosshairs[numberOfBulletsFired].transform.position, spawnPosition) / bulletSpeed;
+
+        if (gameManager.wideCourt)
+            bulletScript.speed = bulletSpeed * 1.34f;
+        else
+            bulletScript.speed = bulletSpeed;
 
         bulletScript.direction = (crosshairs[numberOfBulletsFired].transform.position - spawnPosition).normalized;
         bulletScript.explosive = true;

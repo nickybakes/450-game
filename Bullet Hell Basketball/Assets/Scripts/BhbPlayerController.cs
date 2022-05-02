@@ -711,7 +711,7 @@ public class BhbPlayerController : NeonHeightsCharacterController
 
     public void SetAnimationStateAlways(AnimationState state)
     {
-        if (ball.transform.parent == transform)
+        if (ball != null && ball.transform.parent == transform)
         {
             if (state == AnimationState.Jump_No_Ball)
                 state = AnimationState.Jump_With_Ball;
@@ -789,9 +789,19 @@ public class BhbPlayerController : NeonHeightsCharacterController
                     {
                         return true;
                     }
-                    if (ball.transform.position.x > -14 && ball.transform.position.x < 14 && ball.transform.position.y < 6.5f)
+                    if (!gameManager.wideCourt && ball.transform.position.x > -14 && ball.transform.position.x < 14 && ball.transform.position.y < 6.5f)
                     {
                         if (transform.position.x > -18 && transform.position.x < 18 && transform.position.y > 8)
+                        {
+                            if (teamNumber == 0)
+                                return true;
+                            else
+                                return false;
+                        }
+                    }
+                    else if (gameManager.wideCourt && ball.transform.position.x > -16.5 && ball.transform.position.x < 16.5 && ball.transform.position.y < 7.5f)
+                    {
+                        if (transform.position.x > -20.5 && transform.position.x < 20.5 && transform.position.y > 9)
                         {
                             if (teamNumber == 0)
                                 return true;
@@ -843,9 +853,19 @@ public class BhbPlayerController : NeonHeightsCharacterController
                     {
                         return true;
                     }
-                    if (ball.transform.position.x > -14 && ball.transform.position.x < 14 && ball.transform.position.y < 6.5f)
+                    if (!gameManager.wideCourt && ball.transform.position.x > -14 && ball.transform.position.x < 14 && ball.transform.position.y < 6.5f)
                     {
                         if (transform.position.x > -18 && transform.position.x < 18 && transform.position.y > 8)
+                        {
+                            if (teamNumber == 1)
+                                return true;
+                            else
+                                return false;
+                        }
+                    }
+                    else if (gameManager.wideCourt && ball.transform.position.x > -16.5 && ball.transform.position.x < 16.5 && ball.transform.position.y < 7.5f)
+                    {
+                        if (transform.position.x > -20.5 && transform.position.x < 20.5 && transform.position.y > 9)
                         {
                             if (teamNumber == 1)
                                 return true;

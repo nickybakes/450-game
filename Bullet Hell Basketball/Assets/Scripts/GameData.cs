@@ -64,10 +64,14 @@ public class GameData : MonoBehaviour
     public Gamemode gamemode;
 
     public bool nightTime = false;
+    public bool wideCourt = false;
 
     public bool middlePlatform = true;
 
     public bool dunkBonus = true;
+
+    public bool music = true;
+    public bool announcer = true;
 
 
     // Set up singleton here

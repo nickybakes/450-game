@@ -142,6 +142,7 @@ public class GameManager : MonoBehaviour
     public bool paused;
 
     public Button currentSelection;
+    public Button prevSelection;
     public Button oneDefault;
     public Button twoDefault;
     public Button defaultSelection;
@@ -168,6 +169,10 @@ public class GameManager : MonoBehaviour
     public bool cameraShakeEnabled;
     public bool powerUpsEnabled;
     private bool dunkBonusEnabled;
+    private bool musicEnabled;
+    private bool announcerEnabled;
+
+    public bool wideCourt;
 
     public Material daySkybox;
     public Material nightSkybox;
@@ -177,6 +182,8 @@ public class GameManager : MonoBehaviour
     private float menuButtonDelayTime = 0;
 
     public Animator loadingScreenAnimator;
+
+    public Animator screenCoverAnimator;
 
 
     [HideInInspector] public bool winConditionMet = false;
@@ -218,8 +225,6 @@ public class GameManager : MonoBehaviour
         pauseMusic = audioManager.Find("MusicPause");
         midair = audioManager.Find("Midair");
 
-        audioManager.Play("Music");
-        audioManager.Play("MusicPause");
         pauseMusic.source.volume = 0.0f;
 
         //player 1.
@@ -237,9 +242,6 @@ public class GameManager : MonoBehaviour
 
         GameData loadedData = FindObjectOfType<GameData>();
         GameData data = loadedData;
-
-
-        dunkBonusEnabled = data.dunkBonus;
 
         if (loadedData == null)
         {
@@ -259,7 +261,18 @@ public class GameManager : MonoBehaviour
             data.playerNumbersTeam1 = new List<int>() { 1 };
         }
 
+        dunkBonusEnabled = data.dunkBonus;
+        musicEnabled = data.music;
+        announcerEnabled = data.announcer;
+
+        if (musicEnabled)
+        {
+            audioManager.Play("Music");
+            audioManager.Play("MusicPause");
+        }
+
         SetTimeVisual(data.nightTime);
+        wideCourt = data.wideCourt;
 
         if (gamemode == Gamemode.Tutorial)
         {
@@ -359,8 +372,11 @@ public class GameManager : MonoBehaviour
             }
             tutorialManager.bulletManagers = bulletManagers;
 
-            audioManager.Stop("Music");
-            audioManager.Play("MusicTutorial");
+            if (musicEnabled)
+            {
+                audioManager.Stop("Music");
+                audioManager.Play("MusicTutorial");
+            }
         }
         else
         {
@@ -428,6 +444,10 @@ public class GameManager : MonoBehaviour
             dunkBonusUI.text = "Dunk Bonus: +" + dunkBonusValue;
 
         panelUI.SetActive(true);
+        if (gamemode == Gamemode.Rally)
+        {
+            panelUI.SetActive(false);
+        }
         playerOneWins.SetActive(false);
         playerTwoWins.SetActive(false);
         pausedMenuUI.SetActive(false);
@@ -499,15 +519,31 @@ public class GameManager : MonoBehaviour
         {
             if (tipOffTimer > 0)
             {
+                if (tipOffTimer == 3)
+                    if (announcerEnabled)
+                        audioManager.Play("Announcer3", .7f);
                 tipOffTimer -= Time.deltaTime;
                 tipOffUIText.text = ((int)tipOffTimer + 1).ToString();
+                if ((int)tipOffTimer != (int)(tipOffTimer + Time.deltaTime))
+                {
+                    if (announcerEnabled)
+                        audioManager.Play("Announcer" + ((int)tipOffTimer + 1), .7f);
+                }
             }
             else
             {
                 if (gamemode == Gamemode.Exhibition)
+                {
                     tipOffUIText.text = "Tip Off!";
+                    if (announcerEnabled)
+                        audioManager.Play("AnnouncerTipOff", 1);
+                }
                 else if (gamemode == Gamemode.Rally)
+                {
                     tipOffUIText.text = "Rally!";
+                    if (announcerEnabled)
+                        audioManager.Play("AnnouncerRally", 1);
+                }
 
                 audioManager.Play("TipOffBuzzer");
 
@@ -557,6 +593,9 @@ public class GameManager : MonoBehaviour
                 yPos = UnityEngine.Random.Range(16f, 32f);
             }
             xPos = UnityEngine.Random.Range(-10f, 10f);
+            if (wideCourt)
+                xPos = UnityEngine.Random.Range(-16f, 16f);
+
 
             closeToAnotherPowerup = false;
             foreach (Powerup powerup in allAlivePowerups)
@@ -609,6 +648,8 @@ public class GameManager : MonoBehaviour
     public void SpawnHomingBullet()
     {
         Vector2[] startPositions = new Vector2[] { new Vector2(0, 40), new Vector2(40, 20), new Vector2(-40, 20) };
+        if (wideCourt)
+            startPositions = new Vector2[] { new Vector2(0, 55), new Vector2(55, 25), new Vector2(-55, 25) };
         Vector2[] directions = new Vector2[] { Vector2.down, Vector2.right, Vector2.left };
 
         for (int i = 0; i < startPositions.Length; i++)
@@ -654,7 +695,7 @@ public class GameManager : MonoBehaviour
         if (ball.transform.parent == null)
             currentBallOwner = null;
         //If the ball is above the screen height (will also happen when held).
-        if (ball.transform.position.y > 33)
+        if ((!wideCourt && ball.transform.position.y > 33) || (wideCourt && ball.transform.position.y > 42))
             ShowBallChevron(true);
         else
             ShowBallChevron(false);
@@ -705,6 +746,7 @@ public class GameManager : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown(KeyCode.Escape))
             {
+                audioManager.Play("ButtonSelect");
                 tutorialManager.DisplayNextMessage();
                 if (playerScriptsTeam0[0].playerControlNumber > 1)
                 {
@@ -717,6 +759,7 @@ public class GameManager : MonoBehaviour
             {
                 if (Input.GetButtonDown("J" + i + "Start"))
                 {
+                    audioManager.Play("ButtonSelect");
                     tutorialManager.DisplayNextMessage();
                     if (playerScriptsTeam0[0].playerControlNumber <= 1)
                     {
@@ -808,6 +851,13 @@ public class GameManager : MonoBehaviour
                 bulletLevelUpCurrentTime += Time.deltaTime;
                 if (matchTimeCurrent <= 10)
                 {
+                    if (matchTimeCurrent + Time.deltaTime > 10 && announcerEnabled)
+                        audioManager.Play("Announcer10SecondsLeft", 1);
+
+                    int matchTimeInt = (int)matchTimeCurrent;
+                    if (matchTimeInt <= 5 && matchTimeCurrent >= 1 && matchTimeInt != (int)(matchTimeCurrent + Time.deltaTime) && announcerEnabled)
+                        audioManager.Play("AnnouncerCountdown" + matchTimeInt, 1);
+
                     matchTimeText.text = Mathf.Max(matchTimeCurrent, 0).ToString("0.000");
 
                     //changes text color to pulsing red, increases font size.
@@ -824,12 +874,15 @@ public class GameManager : MonoBehaviour
                 {
                     if (team0Score == team1Score)
                     {
+                        if (!overTime && announcerEnabled)
+                            audioManager.Play("AnnouncerOvertime", 1);
                         overTime = true;
                         matchTimeText.text = "Overtime";
                         //play overtime music.
                         audioManager.Stop("Music");
                         audioManager.Stop("MusicPause");
-                        audioManager.Play("Overtime");
+                        if (musicEnabled)
+                            audioManager.Play("Overtime");
                     }
                     else
                     {
@@ -903,7 +956,12 @@ public class GameManager : MonoBehaviour
             float horizontalInput = 0f;
             float verticalInput = 0f;
 
-            //hover sound for buttons. Does not play on title screen.
+            //hover sound for buttons
+            if (prevSelection != currentSelection)
+            {
+                audioManager.Play("ButtonHover");
+            }
+            prevSelection = currentSelection;
 
             if (((Input.GetAxis("J" + controllers[i] + "Vertical") + (Input.GetAxis("J" + controllers[i] + "Horizontal")) == 0)))
             {
@@ -1136,8 +1194,11 @@ public class GameManager : MonoBehaviour
         midair.source.volume = 0;
 
         audioManager.Stop("Overtime");
-        audioManager.Play("Music");
-        audioManager.Play("MusicPause");
+        if (musicEnabled)
+        {
+            audioManager.Play("Music");
+            audioManager.Play("MusicPause");
+        }
 
         gameOver = true;
         overTime = false;
@@ -1164,11 +1225,15 @@ public class GameManager : MonoBehaviour
         {
             playerOneWins.transform.GetChild(playerOneWins.transform.childCount - 1).gameObject.SetActive(false);
             playerOneWins.SetActive(true);
+            if (announcerEnabled)
+                audioManager.Play("AnnouncerYellowTeamWins", 1);
         }
         else
         {
             playerTwoWins.transform.GetChild(playerTwoWins.transform.childCount - 1).gameObject.SetActive(false);
             playerTwoWins.SetActive(true);
+            if (announcerEnabled)
+                audioManager.Play("AnnouncerBlueTeamWins", 1);
         }
 
         audioManager.Play("2points"); //change to applause?
@@ -1185,7 +1250,7 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator EnableEndGameButtons(bool team0Wins)
     {
-        menuButtonDelayTime = - 1.3f;
+        menuButtonDelayTime = -1.3f;
         yield return new WaitForSecondsRealtime(1.3f);
 
         if (team0Wins)
@@ -1217,6 +1282,8 @@ public class GameManager : MonoBehaviour
         }
 
         float playerSpawnSeparationAmount = 2;
+        if (wideCourt)
+            playerSpawnSeparationAmount = 4;
         float startingPosition0X = team0SpawnPosition.x - ((playerScriptsTeam0.Length / 2f) - .5f) * playerSpawnSeparationAmount;
         float startingPosition1X = team1SpawnPosition.x + ((playerScriptsTeam1.Length / 2f) - .5f) * playerSpawnSeparationAmount;
 
@@ -1229,6 +1296,7 @@ public class GameManager : MonoBehaviour
             playerScriptsTeam0[i].groundCollision = null;
             float posX = startingPosition0X + i * playerSpawnSeparationAmount;
             playersTeam0[i].transform.position = new Vector2(posX, team0SpawnPosition.y);
+            playerScriptsTeam0[i].SetAnimationStateAlways(AnimationState.Idle_No_Ball);
         }
 
         for (int i = 0; i < playerScriptsTeam1.Length; i++)
@@ -1240,6 +1308,7 @@ public class GameManager : MonoBehaviour
             playerScriptsTeam1[i].groundCollision = null;
             float posX = startingPosition1X - i * playerSpawnSeparationAmount;
             playersTeam1[i].transform.position = new Vector2(posX, team1SpawnPosition.y);
+            playerScriptsTeam1[i].SetAnimationStateAlways(AnimationState.Idle_No_Ball);
         }
 
         if (gamemode == Gamemode.Rally)
@@ -1251,11 +1320,19 @@ public class GameManager : MonoBehaviour
             }
             if (previousScorer == 0)
             {
-                ball.transform.position = new Vector2(-20, 5);
+                if (wideCourt)
+                    ball.transform.position = new Vector2(-26.8f, 5);
+                else
+                    ball.transform.position = new Vector2(-20, 5);
+
             }
             else if (previousScorer == 1)
             {
-                ball.transform.position = new Vector2(20, 5);
+                if (wideCourt)
+                    ball.transform.position = new Vector2(26.8f, 5);
+                else
+                    ball.transform.position = new Vector2(20, 5);
+
             }
         }
         else
@@ -1287,7 +1364,8 @@ public class GameManager : MonoBehaviour
         yellowShevrons.SetActive(false);
         blueShevrons.SetActive(false);
 
-        panelUI.SetActive(true);
+        if (gamemode != Gamemode.Rally)
+            panelUI.SetActive(true);
         matchTimeText.fontSize = 75;
         matchTimeText.color = new Color(255, 255, 255);
 
@@ -1302,9 +1380,15 @@ public class GameManager : MonoBehaviour
     {
         if (isAboveScreen)
         {
-            indicatorShevron.transform.position = cam.WorldToScreenPoint(new Vector3(ball.transform.position.x, 33, 0));
+            if (!wideCourt)
+                indicatorShevron.transform.position = cam.WorldToScreenPoint(new Vector3(ball.transform.position.x, 33, 0));
+            else
+                indicatorShevron.transform.position = cam.WorldToScreenPoint(new Vector3(ball.transform.position.x, 42, 0));
+
 
             float sizeChange = (ball.transform.position.y - 33);
+            if (wideCourt)
+                sizeChange = (ball.transform.position.y - 42);
             float scaleChange = 1.0f + (sizeChange / 20.0f);
 
             indicatorText.text = sizeChange.ToString("F0") + "m";
@@ -1364,11 +1448,13 @@ public class GameManager : MonoBehaviour
 
     public void ResumeGame()
     {
+        audioManager.Play("ButtonSelect");
         TogglePauseMenu();
     }
 
     public void RestartGame()
     {
+        audioManager.Play("ButtonSelect");
         TogglePauseMenu();
         //This EndGame call should NOT use the coroutine.
         EndGame();
@@ -1377,6 +1463,15 @@ public class GameManager : MonoBehaviour
 
     public void BackToMenu()
     {
+        audioManager.Play("ButtonSelect");
+        screenCoverAnimator.gameObject.SetActive(true);
+        screenCoverAnimator.SetTrigger(PanelAnimationState.Right_To_Center.ToString());
+        StartCoroutine(LoadMenuScene());
+    }
+
+    public IEnumerator LoadMenuScene()
+    {
+        yield return new WaitForSecondsRealtime(.3f);
         Destroy(pausedMenuUI.gameObject);
         Destroy(FindObjectOfType<AudioManager>().gameObject);
         SceneManager.LoadScene(0);

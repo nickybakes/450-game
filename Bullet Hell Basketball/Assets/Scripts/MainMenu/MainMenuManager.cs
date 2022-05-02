@@ -76,17 +76,23 @@ public class MainMenuManager : MonoBehaviour
     public Material nightSkybox;
 
     public GameObject middlePlatform;
+    public GameObject regularSizedPlatform;
+    public GameObject wideSizedPlatform;
 
-    public Text spawnText, bulletText, lengthText, dunkText, shoeSqueakText, cameraShakeText, timeOfDayText, midPlatformText;
+    public GameObject regularSizedForeground;
+    public GameObject wideSizedForeground;
+
+    public Text spawnText, bulletText, lengthText, dunkText, shoeSqueakText, cameraShakeText, timeOfDayText, midPlatformText, courtSizeText, musicText, announcerText;
 
     public Slider masterVolumeSlider;
+
+    public Animator startupOverlayAnimator;
 
 
     // Start is called before the first frame update
     void Start()
     {
         audioManager = FindObjectOfType<AudioManager>();
-        audioManager.Play("MusicMenu");
 
         for (int i = 0; i < panels.Length; i++)
         {
@@ -107,6 +113,7 @@ public class MainMenuManager : MonoBehaviour
         {
             GameObject gameDataObject = new GameObject("Game Data Manager");
             data = gameDataObject.AddComponent<GameData>();
+            audioManager.Play("AnnouncerTitle", 1);
         }
         else
         {
@@ -227,6 +234,26 @@ public class MainMenuManager : MonoBehaviour
             cameraShakeText.text = "Disabled";
         }
 
+        if (data.music)
+        {
+            musicText.text = "Enabled";
+            audioManager.Play("MusicMenu");
+        }
+        else
+        {
+            musicText.text = "Disabled";
+        }
+
+        if (data.announcer)
+        {
+            announcerText.text = "Talkin'";
+        }
+        else
+        {
+            announcerText.text = "Silenced";
+        }
+
+
         SetTimeVisual(data.nightTime);
         if (data.nightTime)
         {
@@ -247,7 +274,20 @@ public class MainMenuManager : MonoBehaviour
             midPlatformText.text = "Disabled";
         }
 
+        SetCourtSizeVisual(data.wideCourt);
+        if (data.wideCourt)
+        {
+            courtSizeText.text = "Wide";
+        }
+        else
+        {
+            courtSizeText.text = "Regular";
+        }
+
         masterVolumeSlider.value = AudioListener.volume;
+
+        startupOverlayAnimator.gameObject.SetActive(true);
+        startupOverlayAnimator.SetTrigger(PanelAnimationState.Center_To_Left.ToString());
     }
 
     // Update is called once per frame
@@ -609,6 +649,9 @@ public class MainMenuManager : MonoBehaviour
         {
             AddPlayerToGame(int.Parse(masterController) + 1);
         }
+
+        if (data.announcer)
+            audioManager.Play("AnnouncerExhibition", 1);
     }
 
     public void OpenSwipeShotSetup()
@@ -640,13 +683,16 @@ public class MainMenuManager : MonoBehaviour
             {
                 AddPlayerToGame(int.Parse(masterController) + 1);
             }
-            catch(System.Exception){
+            catch (System.Exception)
+            {
                 Debug.Log(masterController);
                 AddPlayerToGame(0);
             }
         }
 
         AddBotTeam1();
+        if (data.announcer)
+            audioManager.Play("AnnouncerSwipeShotRally", .8f);
     }
 
     public void ReaddPlayerToGameAfterReturningFromGame(int inputId, int playerNumber, int teamNumber)
@@ -1072,11 +1118,17 @@ public class MainMenuManager : MonoBehaviour
         {
             if (data.middlePlatform)
             {
-                CheckIfLoadingDone(SceneManager.LoadSceneAsync(1, LoadSceneMode.Single));
+                if (data.wideCourt)
+                    CheckIfLoadingDone(SceneManager.LoadSceneAsync(6, LoadSceneMode.Single));
+                else
+                    CheckIfLoadingDone(SceneManager.LoadSceneAsync(1, LoadSceneMode.Single));
             }
             else
             {
-                CheckIfLoadingDone(SceneManager.LoadSceneAsync(2, LoadSceneMode.Single));
+                if (data.wideCourt)
+                    CheckIfLoadingDone(SceneManager.LoadSceneAsync(7, LoadSceneMode.Single));
+                else
+                    CheckIfLoadingDone(SceneManager.LoadSceneAsync(2, LoadSceneMode.Single));
             }
         }
         else if (data.gamemode == Gamemode.Tutorial)
@@ -1087,11 +1139,17 @@ public class MainMenuManager : MonoBehaviour
         {
             if (data.middlePlatform)
             {
-                CheckIfLoadingDone(SceneManager.LoadSceneAsync(4, LoadSceneMode.Single));
+                if (data.wideCourt)
+                    CheckIfLoadingDone(SceneManager.LoadSceneAsync(8, LoadSceneMode.Single));
+                else
+                    CheckIfLoadingDone(SceneManager.LoadSceneAsync(4, LoadSceneMode.Single));
             }
             else
             {
-                CheckIfLoadingDone(SceneManager.LoadSceneAsync(5, LoadSceneMode.Single));
+                if (data.wideCourt)
+                    CheckIfLoadingDone(SceneManager.LoadSceneAsync(9, LoadSceneMode.Single));
+                else
+                    CheckIfLoadingDone(SceneManager.LoadSceneAsync(5, LoadSceneMode.Single));
             }
         }
     }
@@ -1170,6 +1228,42 @@ public class MainMenuManager : MonoBehaviour
         {
             currentSelection.GetComponentInChildren<Text>().text = "Enabled";
             data.cameraShake = true;
+        }
+
+        PlayClickSound();
+    }
+
+    public void MusicToggleOnClick()
+    {
+        if (currentSelection.GetComponentInChildren<Text>().text == "Enabled")
+        {
+            currentSelection.GetComponentInChildren<Text>().text = "Disabled";
+            data.music = false;
+            audioManager.Stop("MusicMenu");
+        }
+        else if (currentSelection.GetComponentInChildren<Text>().text == "Disabled")
+        {
+            currentSelection.GetComponentInChildren<Text>().text = "Enabled";
+            data.music = true;
+            audioManager.Play("MusicMenu");
+        }
+
+        PlayClickSound();
+    }
+
+    public void AnnouncerToggleOnClick()
+    {
+        if (currentSelection.GetComponentInChildren<Text>().text == "Talkin'")
+        {
+            currentSelection.GetComponentInChildren<Text>().text = "Silenced";
+            data.announcer = false;
+            audioManager.Play("AnnouncerDisable", 1);
+        }
+        else if (currentSelection.GetComponentInChildren<Text>().text == "Silenced")
+        {
+            currentSelection.GetComponentInChildren<Text>().text = "Talkin'";
+            data.announcer = true;
+            audioManager.Play("AnnouncerEnable", .78f);
         }
 
         PlayClickSound();
@@ -1307,6 +1401,46 @@ public class MainMenuManager : MonoBehaviour
             RenderSettings.ambientLight = new Color(236.0f / 255.0f, 95.0f / 255.0f, 28.0f / 255.0f);
             RenderSettings.fogColor = new Color(202.0f / 255.0f, 139.0f / 255.0f, 106.0f / 255.0f);
             RenderSettings.sun.color = new Color(255 / 255.0f, 203 / 255.0f, 145 / 255.0f);
+        }
+    }
+
+    public void CourtSizeClick()
+    {
+        if (currentSelection.GetComponentInChildren<Text>().text == "Regular")
+        {
+            data.wideCourt = true;
+            currentSelection.GetComponentInChildren<Text>().text = "Wide";
+            SetCourtSizeVisual(true);
+        }
+        else if (currentSelection.GetComponentInChildren<Text>().text == "Wide")
+        {
+            data.wideCourt = false;
+            currentSelection.GetComponentInChildren<Text>().text = "Regular";
+            SetCourtSizeVisual(false);
+        }
+
+        PlayClickSound();
+    }
+
+    public void SetCourtSizeVisual(bool wideCourt)
+    {
+        if (wideCourt)
+        {
+            Camera.main.transform.parent.position = new Vector3(0, 19.125f, -57);
+            Camera.main.transform.parent.rotation = new Quaternion(0.00471484102f, 0, 0, 0.999988914f);
+            regularSizedPlatform.SetActive(false);
+            wideSizedPlatform.SetActive(true);
+            regularSizedForeground.SetActive(false);
+            wideSizedForeground.SetActive(true);
+        }
+        else
+        {
+            Camera.main.transform.parent.position = new Vector3(0, 17.5f, -43.2900009f);
+            Camera.main.transform.parent.rotation = new Quaternion(0.019412851f, 0, 0, 0.99981153f);
+            regularSizedPlatform.SetActive(true);
+            wideSizedPlatform.SetActive(false);
+            regularSizedForeground.SetActive(true);
+            wideSizedForeground.SetActive(false);
         }
     }
 

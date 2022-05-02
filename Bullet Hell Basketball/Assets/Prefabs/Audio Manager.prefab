@@ -304,3 +304,140 @@ MonoBehaviour:
     pitch: 1
     loop: 0
     source: {fileID: 0}
+  - name: AnnouncerTitle
+    clips:
+    - {fileID: 8300000, guid: dddf2c1bec4241c4c9cd2af7ae34f7d2, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: AnnouncerExhibition
+    clips:
+    - {fileID: 8300000, guid: c5dc20772f09b854cae63fc3a9a073ee, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: AnnouncerSwipeShotRally
+    clips:
+    - {fileID: 8300000, guid: 7be13f34f38d459428f52b47170dce2c, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Announcer3
+    clips:
+    - {fileID: 8300000, guid: fcedbd1253134674696dc6e1c0218523, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Announcer2
+    clips:
+    - {fileID: 8300000, guid: ed3bf8d2ca0c8d342ba58dbf4640bfd2, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Announcer1
+    clips:
+    - {fileID: 8300000, guid: 7b0bdbe196db8464582aea5c56d0db0e, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: AnnouncerTipOff
+    clips:
+    - {fileID: 8300000, guid: 658fe1e367a5f2b47ac15093ed0c03f8, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: AnnouncerRally
+    clips:
+    - {fileID: 8300000, guid: 676139cb0a508a34eaad0a0465cc1e32, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: AnnouncerYellowTeamWins
+    clips:
+    - {fileID: 8300000, guid: a5a0852f0b2c4d1449c845a008871121, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: AnnouncerBlueTeamWins
+    clips:
+    - {fileID: 8300000, guid: 744300c828b1c6c45b25be285b51da13, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: AnnouncerDisable
+    clips:
+    - {fileID: 8300000, guid: 09c6837689bca144abcbe74050cadc4c, type: 3}
+    - {fileID: 8300000, guid: 165314841e9958644a7fad675a1ff6c9, type: 3}
+    - {fileID: 8300000, guid: 09c6837689bca144abcbe74050cadc4c, type: 3}
+    - {fileID: 8300000, guid: 09c6837689bca144abcbe74050cadc4c, type: 3}
+    volume: 0.8
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: AnnouncerEnable
+    clips:
+    - {fileID: 8300000, guid: f3e4d5eabecb120439b2a888c94ebaef, type: 3}
+    - {fileID: 8300000, guid: f8e898d7c3f7f78428b2e4d18abadf80, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: AnnouncerOvertime
+    clips:
+    - {fileID: 8300000, guid: de116c6273817ff4283e8ed7fec3bb3f, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Announcer10SecondsLeft
+    clips:
+    - {fileID: 8300000, guid: 0ef9529fb14e72249a15883d8c26f05a, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: AnnouncerCountdown5
+    clips:
+    - {fileID: 8300000, guid: 3bfaeb4ee82200740b54fa66dc3dfc9f, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: AnnouncerCountdown4
+    clips:
+    - {fileID: 8300000, guid: 26c80553c3127f64c81c5bb188f58dfe, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: AnnouncerCountdown3
+    clips:
+    - {fileID: 8300000, guid: 9cbc10c730784094883ac27999f04f52, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: AnnouncerCountdown2
+    clips:
+    - {fileID: 8300000, guid: 82794610a2b6bd14cb7057c6f5e042dd, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: AnnouncerCountdown1
+    clips:
+    - {fileID: 8300000, guid: 7bf19c30a29a7034d8010c8d94c01eed, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}

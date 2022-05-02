@@ -42,12 +42,16 @@ public class SuperBullet : MonoBehaviour
         {
             transform.GetChild(0).gameObject.GetComponent<MeshRenderer>().material = bulletMaterialTeam0;
             transform.position = new Vector2(-50, 15);
+            if (gameManager.wideCourt)
+                transform.position = new Vector2(-60, 15);
         }
         else if (teamNumber == 1)
         {
             transform.GetChild(0).gameObject.GetComponent<MeshRenderer>().material = bulletMaterialTeam1;
             ps.GetComponent<ParticleSystemRenderer>().trailMaterial = bulletTrailMaterialTeam1;
             transform.position = new Vector2(50, 15);
+            if (gameManager.wideCourt)
+                transform.position = new Vector2(60, 15);
             transform.rotation = Quaternion.Euler(0, 0, 180);
         }
     }
@@ -97,7 +101,7 @@ public class SuperBullet : MonoBehaviour
                 module.stopAction = ParticleSystemStopAction.Destroy;
                 ps.Play();
             }
-            if(timer < shrinkInterval)
+            if (timer < shrinkInterval)
                 gameManager.SpawnExplosion(teamNumber, transform.position);
             Destroy(this.gameObject);
         }

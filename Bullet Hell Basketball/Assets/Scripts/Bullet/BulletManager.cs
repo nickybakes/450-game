@@ -145,7 +145,7 @@ public class BulletManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!gameManager.hasTippedOff)
+        if (!gameManager.hasTippedOff && gameManager.gamemode != Gamemode.Tutorial)
             transform.GetChild(ownerNumber).gameObject.SetActive(false);
         else
             transform.GetChild(ownerNumber).gameObject.SetActive(true);
@@ -365,6 +365,9 @@ public class BulletManager : MonoBehaviour
 
         bulletScript.sinLength = sinWaveLength;
         bulletScript.frequency = sinWaveFrequency;
+
+        if (gameManager.wideCourt)
+            bulletScript.timer = bulletScript.timer * 1.34f;
 
         if (gameManager.bulletSpawnage == BulletSpawnage.BothRegularAndBig && gameManager.bulletLevel >= 2)
         {

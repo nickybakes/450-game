@@ -65,8 +65,7 @@ public class TutorialManager : MonoBehaviour
         if (currentMessageIndex == messages.Length)
         {
             //switch to game scene, they are done the tutorial
-            Destroy(FindObjectOfType<AudioManager>().gameObject);
-            SceneManager.LoadScene(0);
+            gameManager.BackToMenu();
             return;
         }
         messageIndexDisplay.text = (currentMessageIndex + 1) + "/" + messages.Length;

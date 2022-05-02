@@ -12,9 +12,9 @@ public enum BulletMovement
 
 public class Bullet : MonoBehaviour
 {
-    public int speed; //Multiplies this by time.deltaTime to increase the speed
+    public float speed; //Multiplies this by time.deltaTime to increase the speed
     public Vector2 direction;
-    public float timer;
+    public float timer = 3;
     private float timeAlive;
     public int ownerNumber = 0;
 

@@ -62,11 +62,19 @@ public class SwipeShotManager : MonoBehaviour
         //gameManager.playersTeam0[0].transform.position = new Vector3(-25, currentPos0.y, currentPos0.z);
         if (gameManager.playerScriptsTeam0[0].playerNumber == 8)
         {
-            gameManager.playersTeam0[0].transform.position = new Vector3(-25, currentPos0.y, currentPos0.z);
+            if (gameManager.wideCourt)
+                gameManager.playersTeam0[0].transform.position = new Vector3(-33.5f, currentPos0.y, currentPos0.z);
+            else
+                gameManager.playersTeam0[0].transform.position = new Vector3(-25, currentPos0.y, currentPos0.z);
+
         }
         else if (gameManager.playerScriptsTeam1[0].playerNumber == 8)
         {
-            gameManager.playersTeam1[0].transform.position = new Vector3(25, currentPos1.y, currentPos1.z);
+            if (gameManager.wideCourt)
+                gameManager.playersTeam1[0].transform.position = new Vector3(33.5f, currentPos1.y, currentPos1.z);
+            else
+                gameManager.playersTeam1[0].transform.position = new Vector3(25, currentPos1.y, currentPos1.z);
+
         }
 
         gameManager.powerUpsEnabled = false;
